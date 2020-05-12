@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 use App\Services\AuthHandler;
 
-if(class_exists(AuthHandler::class))
+if (class_exists(AuthHandler::class))
     $login = app()->make('SystemService')->authorize()->global->login_route;
 //Endpoint
 Route::get($login, 'SystemController@login')->name('login');
@@ -23,7 +23,7 @@ Route::get($login, 'SystemController@login')->name('login');
 //Route::middleware('entitlements')->group(function () {
 
 Route::get('/', 'ProjectController@index')->name('home');
-Route::get('/project/create', 'ProjectController@create')->name('project_create');
+Route::get('/project/create', 'ProjectController@edit')->name('project_create');
 Route::post('/project', 'ProjectController@store')->name('project_store');
 Route::get('/project/{project}', 'ProjectController@show')->name('project_detail');
 Route::get('/project/{project}/edit', 'ProjectController@edit')->name('project_edit');

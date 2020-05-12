@@ -14,5 +14,9 @@ yarn-error.log
 .idea
 /users
 /systemconfig/*.ini
+.editorconfig
+.gitattributes
+.styleci.yml
+package-lock.json
 .DS_Store
 *~

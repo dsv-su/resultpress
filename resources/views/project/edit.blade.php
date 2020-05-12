@@ -4,6 +4,9 @@
         <div class="col">
             <h4>Update {{$project->name}}</h4>
         </div>
+        <div class="col">
+            <h3><span class="badge badge-secondary">Status</span></h3>
+        </div>
     </div>
     <form action="/project/{{ $project->id }}" method="POST">
         @csrf

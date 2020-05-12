@@ -1,0 +1,14 @@
+[global]
+app_env=local                           ; Make sure this is set to production for production enviroments
+app_debug=true                          ; Make sure this is set to false for production enviroments
+app_url=http://localhost                ; Set this to your domain
+authorization_parameter=entitlement     ; The authorization parameter
+authorization=                          ; Authorization entitlements
+
+[database]
+db=mysql                                ; Here you can specify which database you use: mysql, sqlite, pgsql, sqlsrv or redis
+db_host=127.0.0.1
+db_port=3306
+db_database=
+db_username=
+db_password=

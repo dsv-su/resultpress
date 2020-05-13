@@ -1,5 +1,5 @@
 ## 1. Overview
-Development setup for ResulPress.
+Development setup for ResultPress.
 
 ## 2. Requirements
 Requirements are best determined using Server Requirements page of corresponding Laravel 7 version
@@ -37,7 +37,7 @@ Currently used version is 7.10.3
 
 * Move into the directory. Move into the `/systemconfig` folder.
 
-* Make sure that `/systemconfig/gdpr.ini` file is present and configured with the configuration details for your requirements and for the server (copy gdpr.ini.example to .ini and fill in with your data)
+* Make sure that `/systemconfig/resultpress.ini` file is present and configured with the configuration details for your requirements and for the server (copy resultpress.ini.example to .ini and fill in with your data)
 
         [global]
         app_env=local                           ; Make sure this is set to local NOTE! For production enviroment the settings should be set to: app_env=production and app_debug=false.
@@ -45,7 +45,7 @@ Currently used version is 7.10.3
         app_url=http://localhost                ; Set this to localhost or your domain
         authorization_parameter=entitlement     ; The authorization parameter NOTE! Not used for dev enviroments
         authorization=                          ; Authorization entitlements NOTE! Not used for dev enviroments
-        login_route=/login                      ; The SSO login route for your application (Server) NOTE! Not used for dev enviroments
+        login_route=/login                      ; The SSO login route for your application (The production server should be set ut with this route) 
         
         [database]
         db=mysql                                ; Here you can specify which database you use: mysql, sqlite, pgsql, sqlsrv or redis 

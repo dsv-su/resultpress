@@ -25,7 +25,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-       // return view('project.form');
+
     }
 
     /**
@@ -72,7 +72,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('project.edit', ['project' => $project]);
+        return view('project.form', ['project' => $project]);
     }
 
     /**

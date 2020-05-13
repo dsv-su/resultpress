@@ -55,7 +55,7 @@ class ProjectController extends Controller
      * @param  Project  $project
      *
      */
-    public function update(Project $project, Activity $activity)
+    public function update(Project $project)
     {
         request()->validate([
             'project_name' => 'required',
@@ -81,7 +81,7 @@ class ProjectController extends Controller
         // Remove deleted activities
         foreach (Activity::where('project_id', $project->id)->get() as $a) {
             if (!$activity_array['id'] || !in_array($a->id, $activity_array['id'])) {
-                $activity->findOrFail($a->id)->delete();
+                Activity::findOrFail($a->id)->delete();
             }
         }
 
@@ -93,9 +93,9 @@ class ProjectController extends Controller
                 $data['budget'] = $activity_array['budget'][$key];
                 $data['project_id'] = $project->id;
                 if ($id) {
-                    $activity->update($data);
+                    Activity::where('id', $id)->update($data);
                 } else {
-                    $activity->create($data);
+                    Activity::create($data);
                 }
             }
         }

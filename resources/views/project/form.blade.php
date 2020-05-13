@@ -40,7 +40,7 @@
                         class="fas fa-user-times"></i></button>
 
                 <table class="table table-sm" id="item_table">
-                    @if($project->activities == 1)
+                    @if($activities)
                     <tr>
                         <th scope="row">Activity Name</th>
                         <th scope="row">Start</th>
@@ -50,9 +50,9 @@
                     </tr>
                     <!-- Here comes a foreach to show the activities -->
 
-                    @if ($activities)
                     @foreach ($activities as $activity)
                     <tr>
+                        <input type="hidden" name="activity_id[]" value="{{$activity->id}}">
                         <td><input type="text" name="activity_name[]" value="{{$activity->title}}"
                                 class="form-control form-control-sm">
                         </td>
@@ -69,10 +69,6 @@
                                     class="glyphicon glyphicon-minus"></span></button></td>
                     </tr>
                     @endforeach
-                    <input type="hidden" name="activities" value=1>
-                    @endif
-
-                    @else <input type="hidden" name="activities" value=0>
                     @endif
                 </table>
             </div>
@@ -102,8 +98,7 @@
             $(document).on('click', '.add', function(){
                 var html = '';
                 html += '<tr>';
-                html += '<input type="hidden" name="activities" value=1>';
-                html += '<input type="hidden" name="add_flag" value=1>';
+                html += '<input type="hidden" name="activity_id[]" value=0>';
                 html += '<td><input type="text" name="activity_name[]" class="form-control form-control-sm" placeholder="Activity Name"></td>';
                 html += '<td><input type="date" name="activity_start[]" class="form-control form-control-sm"  placeholder="Startdate" size="1" required></td>';
                 html += '<td><input type="date" name="activity_end[]"  class="form-control form-control-sm" placeholder="Enddate" size="1" required></td></td>';

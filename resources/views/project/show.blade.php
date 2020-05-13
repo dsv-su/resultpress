@@ -40,12 +40,16 @@
         <!-- Here comes a foreach to show the activities -->
         @foreach ($activities as $activity)
         <tr>
-        <td><input type="text" name="activity_name[]" value="{{$activity->title}}" class="form-control form-control-sm">
+            <td><input type="text" name="activity_name[]" value="{{$activity->title}}"
+                    class="form-control form-control-sm">
             </td>
-            <td><input type="date" name="activity_start[]" value="{{$activity->start}}" class="form-control form-control-sm">
+            <td><input type="date" name="activity_start[]" value="{{$activity->start}}"
+                    class="form-control form-control-sm">
             </td>
-            <td><input type="date" name="activity_end[]" value="{{$activity->end}}" class="form-control form-control-sm"></td>
-            <td><input type="number" name="activity_budget[]" value="{{$activity->budget}}" class="form-control form-control-sm">
+            <td><input type="date" name="activity_end[]" value="{{$activity->end}}"
+                    class="form-control form-control-sm"></td>
+            <td><input type="number" name="activity_budget[]" value="{{$activity->budget}}"
+                    class="form-control form-control-sm">
             </td>
         </tr>
         @endforeach

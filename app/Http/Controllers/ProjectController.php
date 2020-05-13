@@ -11,7 +11,6 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      *
-     *
      */
     public function index()
     {
@@ -22,92 +21,38 @@ class ProjectController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     *
      */
     public function create()
     {
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     *
-     */
-    public function store(Activity $activity)
-    {
-
-        request()->validate([
-            'project_name' => 'required',
-            'project_description' => 'required'
-        ]);
-
-        $project = Project::create([
-            'name' => request('project_name'),
-            'description' => request('project_description'),
-            'status' => request('project_status'),
-            'activities' => request('activities'),
-            'outputs' => 0,
-            'aggregated_outputs' => 0
-        ]);
-
-        //Activities
-
-        if (request('activities') == 1) {
-            //Request from form --> this should later be refactored
-            $activity_array['name'] = request('activity_name');
-            $activity_array['start'] = request('activity_start');
-            $activity_array['end'] = request('activity_end');
-            $activity_array['name'] = request('activity_name');
-            $activity_array['budget'] = request('activity_budget');
-            //
-            $n = 0;
-            $added_activities = count($activity_array['name']);
-            $added_activities = $added_activities - $n;
-            $y = $n;
-            for ($x = 0; $x < $added_activities; $x++) {
-                $data['title'] = $activity_array['name'][$y + $x];
-                $data['start'] = $activity_array['start'][$y + $x];
-                $data['end'] = $activity_array['end'][$y + $x];
-                $data['budget'] = $activity_array['budget'][$y + $x];
-                $data['project_id'] = $project->id;
-
-                $activity->create($data);
-            }
-        }
-        // -->
-        return redirect()->route('home');
-    }
-
-    /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Project  $project
      *
      */
     public function show(Project $project)
     {
-        $activities = \DB::table('activities')->where('project_id', $project->id)->get();
-        return view('project.show', ['project' => $project, 'activities' => $activities]);
+        return view('project.show', ['project' => $project, 'activities' => Activity::where('project_id', $project->id)->get()]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Project  $project
      *
      */
     public function edit(Project $project)
     {
-        $activities = \DB::table('activities')->where('project_id', $project->id)->get() ?? null;
-        return view('project.form', ['project' => $project, 'activities' => $activities]);
+        return view('project.form', ['project' => $project, 'activities' => Activity::where('project_id', $project->id)->get()]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Project  $project
      *
      */
     public function update(Project $project, Activity $activity)
@@ -120,32 +65,41 @@ class ProjectController extends Controller
         $project->name = request('project_name');
         $project->description = request('project_description');
         $project->status = request('project_status');
-        $project->activities = request('activities');
-        $project->update();
+        $project->activities = is_array(request('activity_id')) ? 1 : 0;
+        $project->save();
 
         //Activities
-        if (request('activities') == 1) {
-            //Request from form --> this should later be refactored
-            $activity_array['name'] = request('activity_name');
-            $activity_array['start'] = request('activity_start');
-            $activity_array['end'] = request('activity_end');
-            $activity_array['name'] = request('activity_name');
-            $activity_array['budget'] = request('activity_budget');
-            //
-            $n = 0;
-            $added_activities = count($activity_array['name']);
-            $added_activities = $added_activities - $n;
-            $y = $n;
-            for ($x = 0; $x < $added_activities; $x++) {
-                $data['title'] = $activity_array['name'][$y + $x];
-                $data['start'] = $activity_array['start'][$y + $x];
-                $data['end'] = $activity_array['end'][$y + $x];
-                $data['budget'] = $activity_array['budget'][$y + $x];
-                $data['project_id'] = $project->id;
+        //Request from form --> this should later be refactored
+        $activity_array['id'] = request('activity_id') ?? null;
+        $activity_array['name'] = request('activity_name');
+        $activity_array['start'] = request('activity_start');
+        $activity_array['end'] = request('activity_end');
+        $activity_array['name'] = request('activity_name');
+        $activity_array['budget'] = request('activity_budget');
+        //
 
-                $activity->create($data);
+        // Remove deleted activities
+        foreach (Activity::where('project_id', $project->id)->get() as $a) {
+            if (!$activity_array['id'] || !in_array($a->id, $activity_array['id'])) {
+                $activity->findOrFail($a->id)->delete();
             }
         }
+
+        if (!empty($activity_array['id'])) {
+            foreach ($activity_array['id'] as $key => $id) {
+                $data['title'] = $activity_array['name'][$key];
+                $data['start'] = $activity_array['start'][$key];
+                $data['end'] = $activity_array['end'][$key];
+                $data['budget'] = $activity_array['budget'][$key];
+                $data['project_id'] = $project->id;
+                if ($id) {
+                    $activity->update($data);
+                } else {
+                    $activity->create($data);
+                }
+            }
+        }
+
         // -->
 
         return redirect()->route('home');

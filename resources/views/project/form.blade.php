@@ -50,38 +50,48 @@
                     </tr>
                     <!-- Here comes a foreach to show the activities -->
 
+                    @if ($activities)
+                    @foreach ($activities as $activity)
                     <tr>
-                        <td><input type="text" name="activity_name[]" value="" class="form-control form-control-sm">
+                        <td><input type="text" name="activity_name[]" value="{{$activity->title}}"
+                                class="form-control form-control-sm">
                         </td>
-                        <td><input type="date" name="activity_start[]" value="" class="form-control form-control-sm">
+                        <td><input type="date" name="activity_start[]" value="{{$activity->start}}"
+                                class="form-control form-control-sm">
                         </td>
-                        <td><input type="date" name="activity_end[]" value="" class="form-control form-control-sm"></td>
-                        <td><input type="number" name="activity_budget[]" value="" class="form-control form-control-sm">
+                        <td><input type="date" name="activity_end[]" value="{{$activity->end}}"
+                                class="form-control form-control-sm"></td>
+                        <td><input type="number" name="activity_budget[]" value="{{$activity->budget}}"
+                                class="form-control form-control-sm">
                         </td>
-                        <td>
-                            <a class="btn btn-danger btn-sm" href=""><i class="far fa-trash-alt"></i></a>
-                        </td>
+                        <td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i
+                                    class="fas fa-user-times"></i><span
+                                    class="glyphicon glyphicon-minus"></span></button></td>
                     </tr>
-                     
+                    @endforeach
+                    <input type="hidden" name="activities" value=1>
+                    @endif
+
                     @else <input type="hidden" name="activities" value=0>
                     @endif
                 </table>
             </div>
             <div class="col">
-            <!-- Status change -->
-            <label for="status">Project Status:</label>
-            <br>
-            <select id="status" name="project_status">
-                <option value="1">In progress</option>
-                <option value="2">Delayed</option>
-                <option value="3">Done</option>
-            </select>
+                <!-- Status change -->
+                <label for="status">Project Status:</label>
+                <br>
+                <select id="status" name="project_status">
+                    <option value="1">In progress</option>
+                    <option value="2">Delayed</option>
+                    <option value="3">Done</option>
+                </select>
 
-            <!-- end Status change -->
+                <!-- end Status change -->
             </div>
             <div class="col">
                 <br>
-                <input class="btn btn-primary btn-lg" @empty($project->id) value="SAVE" @else value="UPDATE" @endempty type="submit">
+                <input class="btn btn-primary btn-lg" @empty($project->id) value="SAVE" @else value="UPDATE" @endempty
+                type="submit">
             </div>
 
         </div>

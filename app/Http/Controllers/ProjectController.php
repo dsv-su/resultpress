@@ -26,7 +26,6 @@ class ProjectController extends Controller
      */
     public function create()
     {
-
     }
 
     /**
@@ -54,7 +53,7 @@ class ProjectController extends Controller
 
         //Activities
 
-        if(request('activities') == 1) {
+        if (request('activities') == 1) {
             //Request from form --> this should later be refactored
             $activity_array['name'] = request('activity_name');
             $activity_array['start'] = request('activity_start');
@@ -88,7 +87,8 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return view('project.show', ['project' => $project]);
+        $activities = \DB::table('activities')->where('project_id', $project->id)->get();
+        return view('project.show', ['project' => $project, 'activities' => $activities]);
     }
 
     /**
@@ -99,7 +99,8 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('project.form', ['project' => $project]);
+        $activities = \DB::table('activities')->where('project_id', $project->id)->get() ?? null;
+        return view('project.form', ['project' => $project, 'activities' => $activities]);
     }
 
     /**
@@ -123,7 +124,7 @@ class ProjectController extends Controller
         $project->update();
 
         //Activities
-        if(request('activities') == 1) {
+        if (request('activities') == 1) {
             //Request from form --> this should later be refactored
             $activity_array['name'] = request('activity_name');
             $activity_array['start'] = request('activity_start');
@@ -145,7 +146,7 @@ class ProjectController extends Controller
                 $activity->create($data);
             }
         }
-            // -->
+        // -->
 
         return redirect()->route('home');
     }

@@ -38,7 +38,7 @@
             <div class=" ">
                 <button type="button" name="add" class="btn btn-outline-primary btn-sm add">Add Activities <i
                         class="fas fa-user-times"></i></button>
-                <input type="hidden" name="status" value=1>
+
                 <table class="table table-sm" id="item_table">
                     @if($project->activities == 1)
                     <tr>
@@ -48,7 +48,7 @@
                         <th scope="row">Budget</th>
                         <th></th>
                     </tr>
-
+                    <!-- Here comes a foreach to show the activities -->
 
                     <tr>
                         <td><input type="text" name="activity_name[]" value="" class="form-control form-control-sm">
@@ -62,10 +62,23 @@
                             <a class="btn btn-danger btn-sm" href=""><i class="far fa-trash-alt"></i></a>
                         </td>
                     </tr>
+                     
+                    @else <input type="hidden" name="activities" value=0>
                     @endif
                 </table>
             </div>
+            <div class="col">
+            <!-- Status change -->
+            <label for="status">Project Status:</label>
+            <br>
+            <select id="status" name="project_status">
+                <option value="1">In progress</option>
+                <option value="2">Delayed</option>
+                <option value="3">Done</option>
+            </select>
 
+            <!-- end Status change -->
+            </div>
             <div class="col">
                 <br>
                 <input class="btn btn-primary btn-lg" @empty($project->id) value="SAVE" @else value="UPDATE" @endempty type="submit">

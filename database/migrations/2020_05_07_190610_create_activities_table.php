@@ -19,7 +19,7 @@ class CreateActivitiesTable extends Migration
             $table->text('description')->nullable();
             $table->date('start');
             $table->date('end');
-            $table->decimal('budget', 8, 2);
+            $table->decimal('budget');
             $table->foreignId('project_id')->constrained();
             $table->timestamps();
         });

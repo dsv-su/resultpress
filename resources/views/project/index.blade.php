@@ -18,8 +18,8 @@
             <td><a href="/project/{{$project->id}}">{{ $project->name}}</a></td>
             <td>
                 @if($project->status == 1) <span class="badge badge-warning">In progress</span>
-                @elseif($project->status == 2) <span class="badge badge-success">Done</span>
-                @elseif($project->status == 3) <span class="badge badge-danger">Delayed</span>
+                @elseif($project->status == 2) <span class="badge badge-danger">Delayed</span>
+                @elseif($project->status == 3) <span class="badge badge-success">Done</span>
                 @endif
             </td>
             <td class="text-center">

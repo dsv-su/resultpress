@@ -7,9 +7,15 @@
 
     </div>
 </div>
-<form action="/project/{{ $project->id }}" method="POST">
+@empty($project->id)
+<form action="{{ route('update', $project) }}" method="POST">
+@else
+<form action="{{ route('project_update', $project) }}" method="POST">
+@method('PUT')
+@endempty
+
     @csrf
-    @if ($project->id) @method('PUT') @endif
+
     <div class="form-group  ">
         <label for="project" class="text-primary">Project administration</label>
         <div class=" ">

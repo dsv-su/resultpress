@@ -24,7 +24,7 @@ Route::get($login, 'SystemController@login')->name('login');
 
 Route::get('/', 'ProjectController@index')->name('home');
 Route::get('/project/create', 'ProjectController@edit')->name('project_create');
-Route::post('/project', 'ProjectController@update')->name('project_update');
+Route::post('/project', 'ProjectController@update')->name('update');
 Route::get('/project/{project}', 'ProjectController@show')->name('project_detail');
 Route::get('/project/{project}/edit', 'ProjectController@edit')->name('project_edit');
 Route::put('/project/{project}', 'ProjectController@update')->name('project_update');

@@ -57,9 +57,9 @@ class ProjectController extends Controller
      */
     public function update(Project $project)
     {
-        request()->validate([
+        $validatedAttributes = request()->validate([
             'project_name' => 'required',
-            'project_description' => 'required'
+            'project_description' => 'required',
         ]);
 
         $project->name = request('project_name');
@@ -72,6 +72,7 @@ class ProjectController extends Controller
         //Request from form --> this should later be refactored
         $activity_array['id'] = request('activity_id') ?? null;
         $activity_array['name'] = request('activity_name');
+        $activity_array['description'] = request('activity_description') ?? null;
         $activity_array['start'] = request('activity_start');
         $activity_array['end'] = request('activity_end');
         $activity_array['name'] = request('activity_name');
@@ -88,6 +89,7 @@ class ProjectController extends Controller
         if (!empty($activity_array['id'])) {
             foreach ($activity_array['id'] as $key => $id) {
                 $data['title'] = $activity_array['name'][$key];
+                $data['description'] = $activity_array['description'][$key];
                 $data['start'] = $activity_array['start'][$key];
                 $data['end'] = $activity_array['end'][$key];
                 $data['budget'] = $activity_array['budget'][$key];
@@ -102,7 +104,7 @@ class ProjectController extends Controller
 
         // -->
 
-        return redirect()->route('home');
+        return redirect()->route('project_show', $project);
     }
 
     /**

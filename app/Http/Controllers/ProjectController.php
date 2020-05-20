@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Activity;
+use App\Output;
 use App\Project;
 use Illuminate\Http\Request;
 
@@ -34,7 +35,11 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return view('project.show', ['project' => $project, 'activities' => Activity::where('project_id', $project->id)->get()]);
+        return view('project.show', [
+            'project' => $project,
+            'activities' => Activity::where('project_id', $project->id)->get(),
+            'outputs' => Output::where('project_id', $project->id)->get()
+            ]);
     }
 
     /**
@@ -45,7 +50,11 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('project.form', ['project' => $project, 'activities' => Activity::where('project_id', $project->id)->get()]);
+        return view('project.form', [
+            'project' => $project,
+            'activities' => Activity::where('project_id', $project->id)->get(),
+            'outputs' => Output::where('project_id', $project->id)->get()
+            ]);
     }
 
     /**
@@ -77,7 +86,11 @@ class ProjectController extends Controller
         $activity_array['end'] = request('activity_end');
         $activity_array['name'] = request('activity_name');
         $activity_array['budget'] = request('activity_budget');
-        //
+
+        // Outputs
+        $output_array['id'] = request('output_id') ?? null;
+        $output_array['indicator'] = request('output_indicator');
+        $output_array['target'] = request('output_target');
 
         // Remove deleted activities
         foreach (Activity::where('project_id', $project->id)->get() as $a) {
@@ -88,6 +101,7 @@ class ProjectController extends Controller
 
         if (!empty($activity_array['id'])) {
             foreach ($activity_array['id'] as $key => $id) {
+                $data = array();
                 $data['title'] = $activity_array['name'][$key];
                 $data['description'] = $activity_array['description'][$key];
                 $data['start'] = $activity_array['start'][$key];
@@ -98,6 +112,27 @@ class ProjectController extends Controller
                     Activity::where('id', $id)->update($data);
                 } else {
                     Activity::create($data);
+                }
+            }
+        }
+
+        // Remove deleted outputs
+        foreach (Output::where('project_id', $project->id)->get() as $o) {
+            if (!$output_array['id'] || !in_array($o->id, $output_array['id'])) {
+                Output::findOrFail($o->id)->delete();
+            }
+        }
+
+        if (!empty($output_array['id'])) {
+            foreach ($output_array['id'] as $key => $id) {
+                $data = array();
+                $data['indicator'] = $output_array['indicator'][$key];
+                $data['target'] = $output_array['target'][$key];
+                $data['project_id'] = $project->id;
+                if ($id) {
+                    Output::where('id', $id)->update($data);
+                } else {
+                    Output::create($data);
                 }
             }
         }

@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-<table id="example" class="table table-sm table-striped table-bordered" style="width:100%">
+<table class="table table-sm table-striped table-bordered" style="width:100%">
     <thead>
         <tr>
             <th>Id</th>
@@ -29,30 +29,51 @@
         <tr>
             <td colspan="4">{{ $project->description }}</td>
         </tr>
-        <tr>
-            @if(!$activities->isEmpty())
-        <tr>
-            <th scope="row">Activity Name</th>
-            <th scope="row">Start</th>
-            <th scope="row">End</th>
-            <th scope="row">Budget</th>
-        </tr>
-        <!-- Here comes a foreach to show the activities -->
-        @foreach ($activities as $activity)
-        <tr>
-            <td>
-                <p>{{$activity->title}}</p>
-            </td>
-            <td>{{$activity->start->format('d/m/Y')}}
-            </td>
-            <td>{{$activity->end->format('d/m/Y')}}</td>
-            <td>{{$activity->budget}}
-            </td>
-        </tr>
-        @if ($activity->description)<tr><td colspan="4">{{$activity->description}}</td></tr>@endif
-        @endforeach
-        @endif
-        </tr>
     </tbody>
 </table>
+
+@if(!$activities->isEmpty())
+<table class="table table-sm table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>Activity name</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Budget</th>
+        </tr>
+    </thead>
+    @foreach ($activities as $activity)
+    <tr>
+        <td>{{$activity->title}}</td>
+        <td>{{$activity->start->format('d/m/Y')}}</td>
+        <td>{{$activity->end->format('d/m/Y')}}</td>
+        <td>{{$activity->budget}}</td>
+    </tr>
+    @if ($activity->description)
+    <tr>
+        <td colspan="4">{{$activity->description}}</td>
+    </tr>
+    @endif
+    @endforeach
+    @endif
+</table>
+
+@if(!$outputs->isEmpty())
+<table class="table table-sm table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>Indicator</th>
+            <th>Target</th>
+        </tr>
+    </thead>
+    <!-- Here comes a foreach to show the outputs -->
+    @foreach ($outputs as $output)
+    <tr>
+        <td>{{$output->indicator}}</td>
+        <td>{{$output->target}}</td>
+    </tr>
+    @endforeach
+    @endif
+</table>
+
 @endsection

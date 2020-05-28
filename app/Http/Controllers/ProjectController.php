@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Activity;
+use App\ActivityUpdate;
 use App\Output;
+use App\OutputUpdate;
 use App\Project;
+use App\ProjectUpdate;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -39,7 +42,7 @@ class ProjectController extends Controller
             'project' => $project,
             'activities' => Activity::where('project_id', $project->id)->get(),
             'outputs' => Output::where('project_id', $project->id)->get()
-            ]);
+        ]);
     }
 
     /**
@@ -54,7 +57,7 @@ class ProjectController extends Controller
             'project' => $project,
             'activities' => Activity::where('project_id', $project->id)->get(),
             'outputs' => Output::where('project_id', $project->id)->get()
-            ]);
+        ]);
     }
 
     /**
@@ -141,6 +144,74 @@ class ProjectController extends Controller
 
         return redirect()->route('project_show', $project);
     }
+
+
+    public function write_update(Project $project)
+    {
+        return view('project.update', [
+            'project' => $project,
+            'activities' => Activity::where('project_id', $project->id)->get(),
+            'outputs' => Output::where('project_id', $project->id)->get()
+        ]);
+    }
+
+    public function save_update(Project $project)
+    {
+        $projectupdate = new ProjectUpdate(array('project_id' => $project->id, 'summary' => request('project_update_summary')));
+        $projectupdate->save();
+        $projectupdate_id = $projectupdate->id;
+
+        $activity_update_array['id'] = request('activity_update_id') ?? null;
+        $activity_update_array['activity_id'] = request('activity_id');
+        $activity_update_array['comment'] = request('activity_comment');
+        $activity_update_array['status'] = request('activity_status');
+        $activity_update_array['money'] = request('activity_money');
+        $activity_update_array['date'] = request('activity_date');
+
+        if (!empty($activity_update_array['id'])) {
+            foreach ($activity_update_array['id'] as $key => $id) {
+                $activityupdate = new ActivityUpdate;
+                $activityupdate->activity_id = Activity::findOrFail($activity_update_array['activity_id'][$key])->id;
+                $activityupdate->comment = $activity_update_array['comment'][$key];
+                $activityupdate->status = $activity_update_array['status'][$key];
+                $activityupdate->money = $activity_update_array['money'][$key];
+                $activityupdate->date = $activity_update_array['date'][$key];
+                $activityupdate->project_update_id = $projectupdate_id;
+                $activityupdate->save();
+            }
+        }
+
+        $output_update_array['id'] = request('output_update_id') ?? null;
+        $output_update_array['output_id'] = request('output_id');
+        $output_update_array['value'] = request('output_value');
+
+        if (!empty($output_update_array['id'])) {
+            foreach ($output_update_array['id'] as $key => $id) {
+                $outputupdate = new OutputUpdate();
+                $outputupdate->output_id = Output::findOrFail($output_update_array['output_id'][$key])->id;
+                $outputupdate->value = $output_update_array['value'][$key];
+                $outputupdate->project_update_id = $projectupdate_id;
+                $outputupdate->save();
+            }
+        }
+
+        return redirect()->route('projectupdate_show', $projectupdate_id);
+    }
+
+    /*
+    public function list_updates(Project $project)
+    {
+        $projectupdates = ProjectUpdate::where('project_id', $project->id)->get();
+        return view('project.details', [
+            'project' => $project,
+            'activities' => Activity::where('project_id', $project->id)->get(),
+            'outputs' => Output::where('project_id', $project->id)->get(),
+            'project_updates' => $projectupdates
+       //     'activity_updates' => ActivityUpdate::where('project_update_id', $projectupdate->id)->get(),
+       //     'output_updates' => OutputUpdate::where('project_update_id', $projectupdate->id)->get()
+        ]);
+    }
+*/
 
     /**
      * Remove the specified resource from storage.

@@ -48,14 +48,14 @@
                 <div>
                     <table class="table table-sm" id="activities_table">
                         @if(!$activities->isEmpty())
-                        <tr>
+                        <thead>
                             <th scope="row">Activity Name</th>
                             <th scope="row">Description</th>
                             <th scope="row">Start</th>
                             <th scope="row">End</th>
                             <th scope="row">Budget</th>
                             <th></th>
-                        </tr>
+                        </thead>
                         <!-- Here comes a foreach to show the activities -->
 
                         @foreach ($activities as $activity)
@@ -90,11 +90,11 @@
                 <div>
                     <table class="table table-sm" id="outputs_table">
                         @if(!$outputs->isEmpty())
-                        <tr>
+                        <thead>
                             <th scope="row">Indicator</th>
                             <th scope="row">Target</th>
                             <th></th>
-                        </tr>
+                        </thead>
                         <!-- Here comes a foreach to show the activities -->
 
                         @foreach ($outputs as $output)
@@ -165,14 +165,13 @@
             });
             $(document).on('click', '.remove', function(){
                 $(this).closest('tr').remove();
-                if($('tr', $('#activities_table').find('tbody')).length < 2) {
-                    $('#activities_table').remove();
+                if($('tr', $('#activities_table')).length < 2) {
+                    $('#activities_table').hide();
                 }
-                if($('tr', $('#outputs_table').find('tbody')).length < 2) {
+                if($('tr', $('#outputs_table')).length < 2) {
                     $('#outputs_table').hide();
                 }
             });
-            // add: if there's no elements in table, remove the table.
         });
     </script>
 

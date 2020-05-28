@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
+<h4>Project details</h4>
 <table class="table table-sm table-striped table-bordered" style="width:100%">
     <thead>
         <tr>
@@ -33,6 +34,7 @@
 </table>
 
 @if(!$activities->isEmpty())
+<h4>Activities</h4>
 <table class="table table-sm table-striped table-bordered" style="width:100%">
     <thead>
         <tr>
@@ -59,6 +61,7 @@
 </table>
 
 @if(!$outputs->isEmpty())
+<h4>Outputs</h4>
 <table class="table table-sm table-striped table-bordered" style="width:100%">
     <thead>
         <tr>

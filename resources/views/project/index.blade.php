@@ -27,6 +27,10 @@
                         class="fas fa-eye"></i></a>
                 <a href="/project/{{$project->id}}/edit" class="btn btn-outline-primary btn-sm"><i
                         class="far fa-edit"></i></a>
+                <a href="/project/{{$project->id}}/update" class="btn btn-outline-primary btn-sm"><i
+                        class="fas fa-folder-plus"></i></a>
+                <a href="/project/{{$project->id}}/updates" class="btn btn-outline-primary btn-sm"><i
+                        class="far fa-list-alt"></i></a>
             </td>
         </tr>
         @endforeach

@@ -13,7 +13,7 @@
     <button type="button" name="add_activities" class="btn btn-outline-primary btn-sm add-activities">Add
         Activities <i class="fas fa-user-times"></i></button>
 
-    <table class="table table-sm table-striped table-bordered" style="width:100%; display: none" id="activities_table">
+    <table class="table table-sm table-striped table-bordered" style="width:100%; display: none;" id="activities_table">
         <thead>
             <th>Activity</th>
             <th>Status</th>
@@ -22,12 +22,13 @@
             <th>Date(s)</th>
             <th></th>
         </thead>
+
     </table>
     <h5>Affected outputs:</h5>
     <button type="button" name="add_outputs" class="btn btn-outline-primary btn-sm add-outputs">Add
         Outputs <i class="fas fa-user-times"></i></button>
 
-    <table class="table table-sm table-striped table-bordered" style="width:100%; display: none" id="outputs_table">
+    <table class="table table-sm table-striped table-bordered" style="width:100%; display: none;" id="outputs_table">
         <thead>
             <th>Output</th>
             <th>Value</th>
@@ -43,7 +44,7 @@
 <script>
     $(document).ready(function(){
         $(document).on('click', '.add-activities', function(){
-            var activities = @json($activities);
+            var activities = @json($project->activity);
             $('#activities_table').show();
             var html = '';
             html += '<tr>';
@@ -62,7 +63,7 @@
             $('#activities_table').append(html);
         });
         $(document).on('click', '.add-outputs', function(){
-            var outputs = @json($outputs);
+            var outputs = @json($project->output);
             $('#outputs_table').show();
             var html = '';
             html += '<tr>';

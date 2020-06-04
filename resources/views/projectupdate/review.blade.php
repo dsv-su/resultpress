@@ -28,9 +28,6 @@
         <td>{{$au->money}}</td>
         <td>{{$au->date}}</td>
     </tr>
-    @if($review)
-    <tr><td colspan=5></td></tr>
-    @endif
     @endforeach
 </table>
 @endif
@@ -49,9 +46,6 @@
     </tr>
     @endforeach
 </table>
-@endif
-
-@if($review)
 @endif
 
 @endsection

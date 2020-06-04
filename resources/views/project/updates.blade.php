@@ -3,7 +3,7 @@
 @section('content')
 <h4>Project updates</h4>
 <p>Project: {{$project->name}}</p>
-@if(!$project_updates->isEmpty())
+@if($project->projectupdate)
 <table>
     <thead>
         <th>#</th>
@@ -12,7 +12,7 @@
         <th>Action</th>
     </thead>
 
-    @foreach ($project_updates as $pu)
+    @foreach ($project->projectupdate as $pu)
     <tr>
         <td>{{$pu->id}}</td>
         <td>{{$pu->summary}}</td>

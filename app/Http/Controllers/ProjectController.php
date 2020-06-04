@@ -148,11 +148,17 @@ class ProjectController extends Controller
 
     public function write_update(Project $project)
     {
+
+       return view('project.update', ['project' => $project]);
+
+
+       /*
         return view('project.update', [
             'project' => $project,
             'activities' => Activity::where('project_id', $project->id)->get(),
             'outputs' => Output::where('project_id', $project->id)->get()
         ]);
+        */
     }
 
     public function save_update(Project $project)

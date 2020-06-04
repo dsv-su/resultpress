@@ -7,4 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Output extends Model
 {
     protected $fillable = ['indicator', 'target', 'project_id'];
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

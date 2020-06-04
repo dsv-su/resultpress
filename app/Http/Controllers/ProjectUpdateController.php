@@ -19,10 +19,13 @@ class ProjectUpdateController extends Controller
      */
     public function index(Project $project)
     {
+        return view('project.updates', ['project' => $project]);
+        /*
         return view('project.updates', [
             'project' => $project,
             'project_updates' => ProjectUpdate::where('project_id', $project->id)->latest()->get()
         ]);
+        */
     }
 
     /**

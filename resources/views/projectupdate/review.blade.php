@@ -20,13 +20,13 @@
     @foreach($activity_updates as $au)
     <tr>
         <td>{{$au->title}}</td>
-        <td>@if($au->status == 1) <span class="badge badge-warning">In progress</span>
-            @elseif($au->status == 2) <span class="badge badge-danger">Delayed</span>
-            @elseif($au->status == 3) <span class="badge badge-success">Done</span>
-            @endif</td>
+        @if($au->status == 1)<td class="status inprogress">Started</td>
+        @elseif($au->status == 2)<td class="status delayed">Delayed</td>
+        @elseif($au->status == 3)<td class="status done">Done</td>
+        @endif
         <td>{{$au->comment}}</td>
         <td>{{$au->money}}</td>
-        <td>{{$au->date}}</td>
+        <td>{{$au->date->format('d/m/Y')}}</td>
     </tr>
     @endforeach
 </table>

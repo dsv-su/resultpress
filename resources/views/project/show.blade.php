@@ -15,12 +15,10 @@
         <tr>
             <td>{{ $project->id }}</td>
             <td>{{ $project->name}}</td>
-            <td>
-                @if($project->status == 1) <span class="badge badge-warning">In progress</span>
-                @elseif($project->status == 2) <span class="badge badge-success">Done</span>
-                @elseif($project->status == 2) <span class="badge badge-danger">Delayed</span>
-                @endif
-            </td>
+            @if($project->status == 1)<td class="status inprogress">Started</td>
+            @elseif($project->status == 2)<td class="status delayed">Delayed</td>
+            @elseif($project->status == 3)<td class="status done">Done</td>
+            @endif
             <td class="text-center">
                 <a href="/project/{{$project->id}}/edit" class="btn btn-outline-primary btn-sm"><i
                         class="far fa-edit"></i></a>

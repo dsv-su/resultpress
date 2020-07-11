@@ -6,7 +6,7 @@
     @csrf
     <h4>Write a project update</h4>
 
-    <h5>Date: {{Carbon\Carbon::now()->format('d-m-Y')}}</h5>
+    <h5 class="field auto">Date: {{Carbon\Carbon::now()->format('d-m-Y')}}</h5>
     <h5>Project name: {{ $project->name }}</h5>
 
     <h5>Covered activities:</h5>
@@ -49,12 +49,12 @@
             var html = '';
             html += '<tr>';
             html += '<input type="hidden" name="activity_update_id[]" value=0>';
-            html += '<td><select id="activity" name="activity_id[]">';
+            html += '<td class="field auto"><select id="activity" name="activity_id[]">';
             $.each(activities, function(key, activity){
                 html += '<option value="' + activity.id + '">' + activity.title + '</option>';
             })
             html += '</select></td>';
-            html += '<td><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
+            html += '<td class="field editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
             html += '<td><input type="text" name="activity_comment[]" class="form-control form-control-sm" placeholder="Comment" required></td>';
             html += '<td><input type="number" name="activity_money[]"  class="form-control form-control-sm" placeholder="Money" size="3" required></td></td>';
             html += '<td><input type="date" name="activity_date[]" class="form-control form-control-sm" placeholder="Date" size="1" required></td>';
@@ -68,7 +68,7 @@
             var html = '';
             html += '<tr>';
             html += '<input type="hidden" name="output_update_id[]" value=0>';
-            html += '<td><select id="output" name="output_id[]">';
+            html += '<td class="field auto"><select id="output" name="output_id[]">';
             $.each(outputs, function(key, output){
                 html += '<option value="' + output.id + '">' + output.indicator + '</option>';
             })
@@ -86,6 +86,23 @@
             if($('tr', $('#outputs_table')).length < 2) {
                 $('#outputs_table').hide();
             }
+        });
+        $(document).on('change', '#status', function() {
+            value = this.options[this.selectedIndex].value;
+            var status = '';
+            switch(value){
+                case '1': 
+                    status = 'inprogress';
+                break;
+                case '2': 
+                    status = 'delayed';
+                break;
+                case '3':
+                    status = 'done';
+                break;
+            }
+            this.closest('td').classList.remove('inprogress', 'delayed', 'done');
+            this.closest('td').classList.add('status', status);
         });
     });
 </script>

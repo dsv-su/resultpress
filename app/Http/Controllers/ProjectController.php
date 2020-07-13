@@ -149,10 +149,10 @@ class ProjectController extends Controller
     public function write_update(Project $project)
     {
 
-       return view('project.update', ['project' => $project]);
+        return view('project.update', ['project' => $project]);
 
 
-       /*
+        /*
         return view('project.update', [
             'project' => $project,
             'activities' => Activity::where('project_id', $project->id)->get(),
@@ -204,29 +204,28 @@ class ProjectController extends Controller
         return redirect()->route('projectupdate_show', $projectupdate_id);
     }
 
-    /*
-    public function list_updates(Project $project)
-    {
-        $projectupdates = ProjectUpdate::where('project_id', $project->id)->get();
-        return view('project.details', [
-            'project' => $project,
-            'activities' => Activity::where('project_id', $project->id)->get(),
-            'outputs' => Output::where('project_id', $project->id)->get(),
-            'project_updates' => $projectupdates
-       //     'activity_updates' => ActivityUpdate::where('project_update_id', $projectupdate->id)->get(),
-       //     'output_updates' => OutputUpdate::where('project_update_id', $projectupdate->id)->get()
-        ]);
-    }
-*/
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      *
      */
-    public function destroy($id)
+    public function destroy(Project $project)
     {
-        //
+        // Delete associated updates
+        $project_updates = ProjectUpdate::where('project_id', $project->id)->get();
+        foreach ($project_updates as $pu) {
+            ActivityUpdate::where('project_update_id', $pu->id)->delete();
+            OutputUpdate::where('project_update_id', $pu->id)->delete();
+            ProjectUpdate::destroy($pu->id);
+        }
+
+        // Delete outputs and activities
+        $activities = Activity::where('project_id', $project->id)->forcedelete();
+        $outputs = Output::where('project_id', $project->id)->forcedelete();
+
+        // Delete project
+        $project->delete();
+        return redirect()->route('home');
     }
 }

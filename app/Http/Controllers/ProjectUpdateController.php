@@ -107,9 +107,11 @@ class ProjectUpdateController extends Controller
                 $index = $key + 1;
             }
         }
+
         $activityupdates = $this->calculateActivities($activityupdates);
         $outputupdates = $this->calculateOutputs($outputupdates);
         $project_update->index = $index;
+
         return view('projectupdate.show', [
             'project_update' => $project_update,
             'project' => Project::where('id', $project_update->project_id),
@@ -180,8 +182,7 @@ class ProjectUpdateController extends Controller
                     $budgetstring .= $moneyspent . ' over bugdet';
                 } else if ($totalmoneyspent < $activity->budget) {
                     $budgetstring .= $moneyspent . ' under budget';
-                }
-                else {
+                } else {
                     $budgetstring .= ' on budget';
                 }
             } else {
@@ -197,8 +198,7 @@ class ProjectUpdateController extends Controller
                 $deadlinestring .= ' ahead of schedule';
             } elseif ($activity->end->lt($au->date)) {
                 $deadlinestring .= ' behind of schedule';
-            }
-            else {
+            } else {
                 $deadlinestring .= ' on schedule';
             }
             $au->budgetstring = $budgetstring;
@@ -241,8 +241,11 @@ class ProjectUpdateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(ProjectUpdate $project_update)
     {
-        //
+        // Delete associated updates
+        $activityupdates = ActivityUpdate::where('project_update_id', $id)->delete();
+        $outputupdates = OutputUpdate::where('project_update_id', $id)->delete();
+        $project_update->delete();
     }
 }

@@ -3,6 +3,7 @@
 @section('content')
 <h4>Project updates</h4>
 <p>Project: {{$project->name}}</p>
+<p><a href="{{ route('project_show', $project->id) }}">Back to project page</a></p>
 @if($project->projectupdate)
 <table>
     <thead>

@@ -5,7 +5,7 @@
     @method('PUT')
     @csrf
     <h4>Write a project update</h4>
-
+    <p><a href="{{ route('project_show', $project->id) }}">Back to project page</a></p>
     <h5 class="field auto">Date: {{Carbon\Carbon::now()->format('d-m-Y')}}</h5>
     <h5>Project name: {{ $project->name }}</h5>
 

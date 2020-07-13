@@ -22,7 +22,13 @@
             <td class="text-center">
                 <a href="/project/{{$project->id}}/edit" class="btn btn-outline-primary btn-sm"><i
                         class="far fa-edit"></i></a>
-                <a class="btn btn-danger btn-sm" href=""><i class="far fa-trash-alt"></i></a>
+                <a href="/project/{{$project->id}}/update" class="btn btn-outline-primary btn-sm"><i
+                        class="fas fa-folder-plus"></i></a>
+                <a href="/project/{{$project->id}}/updates" class="btn btn-outline-primary btn-sm"><i
+                        class="far fa-list-alt"></i></a>
+                <a href="/project/{{$project->id}}/delete" class="btn btn-danger btn-sm" href=""
+                    onclick="return confirm('Are you sure you want to delete this item?');"><i
+                        class="far fa-trash-alt"></i></a>
             </td>
         </tr>
         <tr>

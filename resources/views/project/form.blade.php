@@ -4,7 +4,6 @@
 <div class="form-row">
     <div class="col">
         <h4>@empty($project->id) Add a new project @else Update {{$project->name}} @endempty</h4>
-
     </div>
 </div>
 @empty($project->id)

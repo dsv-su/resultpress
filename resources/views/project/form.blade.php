@@ -147,7 +147,7 @@
                 html += '<input type="hidden" name="activity_id[]" value=0>';
                 html += '<td><input type="text" name="activity_name[]" class="form-control form-control-sm" placeholder="Activity Name" required></td>';
                 html += '<td><input type="text" name="activity_description[]" class="form-control form-control-sm" placeholder="Activity description" required></td>';
-                html += '<td><input type="date" name="activity_start[]" class="form-control form-control-sm"  placeholder="Startdate" size="1" required></td>';
+                html += '<td><input type="date" name="activity_start[]" class="form-control form-control-sm" placeholder="Startdate" size="1" required></td>';
                 html += '<td><input type="date" name="activity_end[]"  class="form-control form-control-sm" placeholder="Enddate" size="1" required></td></td>';
                 html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="Budget" size="3" required></td></td>';
                 html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-user-times"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';

@@ -49,12 +49,12 @@
             var html = '';
             html += '<tr>';
             html += '<input type="hidden" name="activity_update_id[]" value=0>';
-            html += '<td class="field auto"><select id="activity" name="activity_id[]">';
+            html += '<td class="auto"><select id="activity" name="activity_id[]">';
             $.each(activities, function(key, activity){
                 html += '<option value="' + activity.id + '">' + activity.title + '</option>';
             })
             html += '</select></td>';
-            html += '<td class="field editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
+            html += '<td class="editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
             html += '<td><input type="text" name="activity_comment[]" class="form-control form-control-sm" placeholder="Comment" required></td>';
             html += '<td><input type="number" name="activity_money[]"  class="form-control form-control-sm" placeholder="Money" size="3" required></td></td>';
             html += '<td><input type="date" name="activity_date[]" class="form-control form-control-sm" placeholder="Date" size="1" required></td>';
@@ -68,7 +68,7 @@
             var html = '';
             html += '<tr>';
             html += '<input type="hidden" name="output_update_id[]" value=0>';
-            html += '<td class="field auto"><select id="output" name="output_id[]">';
+            html += '<td class="auto"><select id="output" name="output_id[]">';
             $.each(outputs, function(key, output){
                 html += '<option value="' + output.id + '">' + output.indicator + '</option>';
             })

@@ -57,6 +57,14 @@ class ProjectUpdateController extends Controller
      */
     public function show(ProjectUpdate $project_update)
     {
+        $pus = ProjectUpdate::where('project_id', $project_update->project_id)->get();
+        $index = 0;
+        foreach ($pus as $key => $pu) {
+            if ($pu->id == $project_update->id) {
+                $index = $key + 1;
+            }
+        }
+        $project_update->index = $index;
         return view('projectupdate.show', [
             'project_update' => $project_update,
             'project' => Project::where('id', $project_update->project_id),
@@ -91,6 +99,35 @@ class ProjectUpdateController extends Controller
             ->join('outputs', 'output_id', '=', 'outputs.id')
             ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
             ->get();
+
+        $pus = ProjectUpdate::where('project_id', $project_update->project_id)->get();
+        $index = 0;
+        foreach ($pus as $key => $pu) {
+            if ($pu->id == $project_update->id) {
+                $index = $key + 1;
+            }
+        }
+        $activityupdates = $this->calculate($activityupdates);
+        $project_update->index = $index;
+        return view('projectupdate.show', [
+            'project_update' => $project_update,
+            'project' => Project::where('id', $project_update->project_id),
+            'activities' => Activity::where('project_id', $project_update->project_id)->get(),
+            'outputs' => Output::where('project_id', $project_update->project_id)->get(),
+            'activity_updates' => $activityupdates,
+            'output_updates' => $outputupdates,
+            'review' => true
+        ]);
+    }
+
+    /**
+     * Calculates budget and timing based on activities data.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function calculate($activityupdates)
+    {
         foreach ($activityupdates as $au) {
             $deadlinestring = 'Activity ';
             $budgetstring = 'Activity ';
@@ -102,7 +139,7 @@ class ProjectUpdateController extends Controller
             }
 
             $remainingpercentage = number_format(abs(1 - ($totalmoneyspent / $activity->budget)) * 100) . '%';
-            $moneyspent = ' '.abs($activity->budget - $totalmoneyspent) . ' (' . $remainingpercentage . ')';
+            $moneyspent = ' ' . abs($activity->budget - $totalmoneyspent) . ' (' . $remainingpercentage . ')';
 
             if ($au->status == 3) {
                 $deadlinestring .= ' was completed';
@@ -135,15 +172,8 @@ class ProjectUpdateController extends Controller
             $au->budgetstring = $budgetstring;
             $au->deadlinestring = $deadlinestring;
         }
-        return view('projectupdate.show', [
-            'project_update' => $project_update,
-            'project' => Project::where('id', $project_update->project_id),
-            'activities' => Activity::where('project_id', $project_update->project_id)->get(),
-            'outputs' => Output::where('project_id', $project_update->project_id)->get(),
-            'activity_updates' => $activityupdates,
-            'output_updates' => $outputupdates,
-            'review' => true
-        ]);
+
+        return $activityupdates;
     }
 
     /**
@@ -164,9 +194,13 @@ class ProjectUpdateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProjectUpdate $project_update)
     {
-        //
+        $project_update->internal_comment = request('internal_comment');
+        $project_update->partner_comment = request('partner_comment');
+        $project_update->approved = request('approved');
+        $project_update->save();
+        return redirect()->route('projectupdate_index', $project_update->project_id);
     }
 
     /**

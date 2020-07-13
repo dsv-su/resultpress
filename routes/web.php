@@ -27,6 +27,7 @@ Route::get('/project/create', 'ProjectController@edit')->name('project_create');
 Route::post('/project', 'ProjectController@update')->name('update');
 Route::get('/project/update/{project_update}', 'ProjectUpdateController@show')->name('projectupdate_show');
 Route::get('/project/update/{project_update}/review', 'ProjectUpdateController@review')->name('projectupdate_review');
+Route::put('/project/update/{project_update}/review', 'ProjectUpdateController@update')->name('projectupdate_update');
 Route::get('/project/{project}', 'ProjectController@show')->name('project_show');
 Route::get('/project/{project}/edit', 'ProjectController@edit')->name('project_edit');
 Route::get('/project/{project}/update', 'ProjectController@write_update')->name('project_write_update');

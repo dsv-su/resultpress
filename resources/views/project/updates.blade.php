@@ -12,11 +12,11 @@
         <th>Action</th>
     </thead>
 
-    @foreach ($project->projectupdate as $pu)
+    @foreach ($project->projectupdate as $index => $pu)
     <tr>
-        <td>{{$pu->id}}</td>
-        <td>{{$pu->summary}}</td>
-        <td>{{$pu->created_at}}</td>
+        <td>{{$index+1}}</td>
+        <td>@if($pu->summary){{$pu->summary}} @else No summary provided @endif</td>
+        <td>{{$pu->created_at->format('d/m/Y')}}</td>
         <td><a href="/project/update/{{$pu->id}}" class="btn btn-outline-primary btn-sm"><i
                     class="fas fa-info-circle"></i></a>
             <a href="/project/update/{{$pu->id}}/review" class="btn btn-outline-primary btn-sm"><i

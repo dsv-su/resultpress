@@ -163,7 +163,7 @@ class ProjectController extends Controller
 
     public function save_update(Project $project)
     {
-        $projectupdate = new ProjectUpdate(array('project_id' => $project->id, 'summary' => request('project_update_summary')));
+        $projectupdate = new ProjectUpdate(array('project_id' => $project->id, 'summary' => request('project_update_summary') ?? null));
         $projectupdate->save();
         $projectupdate_id = $projectupdate->id;
 

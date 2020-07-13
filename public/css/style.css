@@ -212,7 +212,7 @@ td {
 
 /* Fields */
 
-.field.editable {
+.editable {
   background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
   background-image: -moz-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
   background-image: -ms-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
@@ -222,11 +222,11 @@ td {
   background-size: 3px 3px;
 }
 
-.field.auto {
+.auto {
   background-color: aquamarine;
 }
 
-.field.derived {
+.derived {
   background-color: darksalmon;
 }
 
@@ -239,5 +239,21 @@ td {
 }
 
 .delayed {
+  background-color: red;
+}
+
+.btn {
+  border-radius: 0 !important;
+}
+
+.btn.active {
+  /*filter: brightness(85%);*/
+}
+
+.btn.approve:not(.active):not(.focus):hover, .btn.approve.active {
+  background-color: green;
+}
+
+.btn.approve.active:not(.focus):hover, .btn.approve:not(.active) {
   background-color: red;
 }

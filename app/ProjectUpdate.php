@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectUpdate extends Model
 {
-    protected $fillable = ['project_id', 'summary', 'comment', 'approved'];
+    protected $dates = ['created_at'];
+    protected $fillable = ['project_id', 'summary', 'comment', 'approved', 'reviewer_comment', 'internal_comment'];
 
     public function project()
     {

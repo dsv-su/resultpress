@@ -251,7 +251,7 @@ td {
 }
 
 .btn.approve:not(.active):not(.focus):hover, .btn.approve.active {
-  background-color: green;
+  background-color: lightgreen;
 }
 
 .btn.approve.active:not(.focus):hover, .btn.approve:not(.active) {

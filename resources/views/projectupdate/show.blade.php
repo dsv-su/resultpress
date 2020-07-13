@@ -48,6 +48,11 @@
         <td>{{$ou->indicator}}</td>
         <td>{{$ou->value}}</td>
     </tr>
+    @if($review)
+    <tr>
+        <td colspan=2 class="derived">{{$ou->contributionstring}}<br />{{$ou->totalstring}}</td>
+    </tr>
+    @endif
     @endforeach
 </table>
 @endif

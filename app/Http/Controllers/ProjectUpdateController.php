@@ -107,7 +107,8 @@ class ProjectUpdateController extends Controller
                 $index = $key + 1;
             }
         }
-        $activityupdates = $this->calculate($activityupdates);
+        $activityupdates = $this->calculateActivities($activityupdates);
+        $outputupdates = $this->calculateOutputs($outputupdates);
         $project_update->index = $index;
         return view('projectupdate.show', [
             'project_update' => $project_update,
@@ -121,12 +122,43 @@ class ProjectUpdateController extends Controller
     }
 
     /**
+     * Calculates outputs progress.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function calculateOutputs($outputupdates)
+    {
+        foreach ($outputupdates as $ou) {
+            $contributionstring = 'Contributes ';
+            $totalstring = 'Output is ';
+            $output = Output::where('id', $ou->output_id)->first();
+            $alloutputupdates = OutputUpdate::where('output_id', $output->id)->get();
+            $totalcontribution = 0;
+            foreach ($alloutputupdates as $aou) {
+                $totalcontribution += $aou->value;
+            }
+
+            $outputcontribution = number_format(($ou->value / $output->target) * 100) . '%';
+            $totalcontribution = number_format(($totalcontribution / $output->target) * 100) . '%';
+
+            $contributionstring .= $outputcontribution . ' of target.';
+            $totalstring .= $totalcontribution . ' done.';
+
+            $ou->contributionstring = $contributionstring;
+            $ou->totalstring = $totalstring;
+        }
+
+        return $outputupdates;
+    }
+
+    /**
      * Calculates budget and timing based on activities data.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function calculate($activityupdates)
+    public function calculateActivities($activityupdates)
     {
         foreach ($activityupdates as $au) {
             $deadlinestring = 'Activity ';

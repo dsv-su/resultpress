@@ -244,8 +244,8 @@ class ProjectUpdateController extends Controller
     public function destroy(ProjectUpdate $project_update)
     {
         // Delete associated updates
-        $activityupdates = ActivityUpdate::where('project_update_id', $id)->delete();
-        $outputupdates = OutputUpdate::where('project_update_id', $id)->delete();
+        $activityupdates = ActivityUpdate::where('project_update_id', $project_update->id)->delete();
+        $outputupdates = OutputUpdate::where('project_update_id', $project_update->id)->delete();
         $project_update->delete();
     }
 }

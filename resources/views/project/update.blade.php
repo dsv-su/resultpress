@@ -57,7 +57,7 @@
             html += '<td class="editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
             html += '<td><input type="text" name="activity_comment[]" class="form-control form-control-sm" placeholder="Comment" required></td>';
             html += '<td><input type="number" name="activity_money[]"  class="form-control form-control-sm" placeholder="Money" size="3" required></td></td>';
-            html += '<td><input type="date" name="activity_date[]" class="form-control form-control-sm" placeholder="Date" size="1" required></td>';
+            html += '<td><input type="date" name="activity_date[]" class="form-control form-control-sm" placeholder="Date" size="1"></td>';
             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-user-times"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
             html += '</tr>';
             $('#activities_table').append(html);

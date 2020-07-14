@@ -172,7 +172,7 @@ class ProjectController extends Controller
         $activity_update_array['comment'] = request('activity_comment');
         $activity_update_array['status'] = request('activity_status');
         $activity_update_array['money'] = request('activity_money');
-        $activity_update_array['date'] = request('activity_date');
+        $activity_update_array['date'] = request('activity_date') ?? null;
 
         if (!empty($activity_update_array['id'])) {
             foreach ($activity_update_array['id'] as $key => $id) {
@@ -204,10 +204,77 @@ class ProjectController extends Controller
         return redirect()->route('projectupdate_show', $projectupdate_id);
     }
 
+    public function summary(Project $project)
+    {
+        $project_updates = ProjectUpdate::where('project_id', $project->id)->get();
+        $activities = Activity::where('project_id', $project->id)->get();
+        $outputs = Output::where('project_id', $project->id)->get();
+        $moneyspent = 0;
+        $budget = 0;
+        foreach ($activities as $a) {
+            $activityupdates = ActivityUpdate::where('activity_id', $a->id)->orderBy('date', 'asc')->get();
+            $comments = array();
+            foreach ($activityupdates as $au) {
+                $moneyspent += $au->money;
+                $puindex = 0;
+                foreach ($project_updates as $index => $pu) {
+                    if ($pu->id == $au->project_update_id) {
+                        $puindex = $index + 1;
+                    }
+                }
+                $comments[$puindex] = $au->comment;
+            }
+
+            ksort($comments);
+            $a->comments = $comments;
+            $budget += $a->budget;
+
+            $latestupdate = ActivityUpdate::where('activity_id', $a->id)->latest()->first();
+            if ($latestupdate) {
+                $a->status = $latestupdate->status;
+                switch ($a->status) {
+                    case 3:
+                        $a->statusdate = 'on ' . $latestupdate->date->format('d/m/Y');
+                        break;
+                    case 0:
+                        $a->statusdate = '';
+                        break;
+                    default:
+                        $a->statusdate = $latestupdate->date ? 'since ' . $latestupdate->date->format('d/m/Y') : '';
+                        break;
+                }
+            }
+        }
+        foreach ($outputs as $o) {
+            $outputupdates = OutputUpdate::where('output_id', $o->id)->get();
+            $valuesum = 0;
+            foreach ($outputupdates as $ou) {
+                $valuesum += $ou->value;
+            }
+            $o->valuesum = $valuesum;
+            if ($valuesum == 0) {
+                $o->valuestatus = 2;
+            } elseif ($valuesum >= $o->target) {
+                $o->valuestatus = 3;
+            } else {
+                $o->valuestatus = 1;
+            }
+        }
+
+        $project->projectstart = Activity::where('project_id', $project->id)->orderBy('start', 'asc')->first()->start->format('d/m/Y');
+        $project->projectend = Activity::where('project_id', $project->id)->orderBy('end', 'desc')->first()->end->format('d/m/Y');
+        $project->updatesnumber = count($project_updates);
+        $project->recentupdate = Activity::where('project_id', $project->id)->latest()->first()->created_at->format('d/m/Y');
+        $project->moneyspent = $moneyspent;
+        $project->budget = $budget;
+
+        return view('project.summary', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      */
     public function destroy(Project $project)

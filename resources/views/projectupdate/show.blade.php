@@ -26,7 +26,7 @@
         @endif
         <td>{{$au->comment}}</td>
         <td>{{$au->money}}</td>
-        <td>{{$au->date->format('d/m/Y')}}</td>
+        <td>@if ($au->date) {{$au->date->format('d/m/Y')}} @endif</td>
     </tr>
     @if($review)
     <tr>

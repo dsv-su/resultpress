@@ -263,3 +263,7 @@ td {
 .btn.approve.active:not(.focus):hover, .btn.approve:not(.active) {
   background-color: red;
 }
+
+.link {
+  cursor: hand;
+}

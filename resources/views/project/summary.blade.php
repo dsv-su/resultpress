@@ -78,7 +78,7 @@
     });
     $(document).on('click', '.expanded', function(){
         name = $(this).parent().attr('id');
-        $('tr#'+name).addClass('d-none');
+        $('tr#'+name+'.update').addClass('d-none');
         $(this).removeClass('expanded');
         $(this).addClass('collapsed');
     });

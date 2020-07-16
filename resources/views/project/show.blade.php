@@ -2,7 +2,7 @@
 
 @section('content')
 <h4>Project details</h4>
-<table class="table table-sm table-striped table-bordered" style="width:100%">
+<table class="table" style="width:100%">
     <thead>
         <tr>
             <th>Id</th>
@@ -15,7 +15,7 @@
         <tr>
             <td>{{ $project->id }}</td>
             <td>{{ $project->name}}</td>
-            @if($project->status == 1)<td class="status inprogress">Started</td>
+            @if($project->status == 1)<td class="status inprogress">In progress</td>
             @elseif($project->status == 2)<td class="status delayed">Delayed</td>
             @elseif($project->status == 3)<td class="status done">Done</td>
             @endif
@@ -41,7 +41,7 @@
 
 @if(!$activities->isEmpty())
 <h4>Activities</h4>
-<table class="table table-sm table-striped table-bordered" style="width:100%">
+<table class="table" style="width:100%">
     <thead>
         <tr>
             <th>Activity name</th>
@@ -51,24 +51,24 @@
         </tr>
     </thead>
     @foreach ($activities as $activity)
-    <tr>
-        <td>{{$activity->title}}</td>
-        <td>{{$activity->start->format('d/m/Y')}}</td>
-        <td>{{$activity->end->format('d/m/Y')}}</td>
-        <td>{{$activity->budget}}</td>
-    </tr>
-    @if ($activity->description)
-    <tr>
-        <td colspan="4">{{$activity->description}}</td>
-    </tr>
-    @endif
+        <tr id="activity-{{$activity->id}}">
+            <td class="collapsed link">@if($activity->description)<i class="fas fa-caret-square-right"></i><i class="fas fa-caret-square-down d-none"></i>@endif{{$activity->title}}</td>
+            <td>{{$activity->start->format('d/m/Y')}}</td>
+            <td>{{$activity->end->format('d/m/Y')}}</td>
+            <td>{{$activity->budget}}</td>
+        </tr>
+        @if ($activity->description)
+            <tr id="activity-{{$activity->id}}" class="d-none update"><td colspan="4"><table class="table">
+            <tr><td><b>{{$activity->description}}</td></tr>
+            </table></td></tr>
+        @endif
     @endforeach
     @endif
 </table>
 
 @if(!$outputs->isEmpty())
 <h4>Outputs</h4>
-<table class="table table-sm table-striped table-bordered" style="width:100%">
+<table class="table" style="width:100%">
     <thead>
         <tr>
             <th>Indicator</th>
@@ -84,5 +84,21 @@
     @endforeach
     @endif
 </table>
+
+<script>
+    $(document).on('click', '.collapsed', function(){
+        name = $(this).parent().attr('id');
+        $('tr#'+name).removeClass('d-none');
+        console.log('tr#'+name);
+        $(this).children('.fas').toggleClass('fa-caret-square-right fa-caret-square-down');
+        $(this).toggleClass('collapsed expanded');
+    });
+    $(document).on('click', '.expanded', function(){
+        name = $(this).parent().attr('id');
+        $('tr#'+name+'.update').addClass('d-none');
+        $(this).children('.fas').toggleClass('fa-caret-square-right fa-caret-square-down');
+        $(this).toggleClass('expanded collapsed');
+    });
+</script>
 
 @endsection

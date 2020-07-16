@@ -267,3 +267,19 @@ td {
 .link {
   cursor: pointer;
 }
+
+.link .fas {
+  margin-right: 6px;
+}
+
+tr.update {
+  border: none;
+  box-shadow: none;
+}
+
+tr.update>td {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0px 0px 0px 30px;
+}

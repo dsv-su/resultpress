@@ -20,7 +20,7 @@
     @foreach($activity_updates as $au)
     <tr>
         <td>{{$au->title}}</td>
-        @if($au->status == 1)<td class="status inprogress">Started</td>
+        @if($au->status == 1)<td class="status inprogress">In progress</td>
         @elseif($au->status == 2)<td class="status delayed">Delayed</td>
         @elseif($au->status == 3)<td class="status done">Done</td>
         @endif

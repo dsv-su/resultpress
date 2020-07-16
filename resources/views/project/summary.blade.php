@@ -22,23 +22,25 @@
 </table>
 
 <h5 class="my-4">Activities</h5>
-<table class="table table-bordered">
+<table class="table">
     @foreach ($activities as $index => $a)
-    <tr id="activity-{{$a->id}}">
-        <td class="collapsed link">{{$a->title}}</td>
-        @if($a->status == 1)<td class="status inprogress">Started {{$a->statusdate}}</td>
-        @elseif($a->status == 2)<td class="status delayed">Delayed {{$a->statusdate}}</td>
-        @elseif($a->status == 3)<td class="status done">Done {{$a->statusdate}}</td>
-        @elseif($a->status == 0)<td class="status">Not started</td>
+        <tr id="activity-{{$a->id}}">
+            <td class="collapsed link">@if($a->comments)<i class="fas fa-caret-square-right mr-2"></i><i class="fas fa-caret-square-down d-none"></i>@endif{{$a->title}}</td>
+            @if($a->status == 1)<td class="status inprogress">In progress {{$a->statusdate}}</td>
+            @elseif($a->status == 2)<td class="status delayed">Delayed {{$a->statusdate}}</td>
+            @elseif($a->status == 3)<td class="status done">Done {{$a->statusdate}}</td>
+            @elseif($a->status == 0)<td class="status">Not started</td>
+            @endif
+        </tr>
+        @if ($a->comments)
+        <tr id="activity-{{$a->id}}" class="d-none update"><td colspan="2"><table class="table">
+            @foreach ($a->comments as $puindex => $comment)
+                <tr>
+                    <td><b>Update {{$puindex}}</b>: {{$comment}}</td>
+                </tr>
+            @endforeach
+        </table></td></tr>
         @endif
-    </tr>
-    @if ($a->comments)
-    @foreach ($a->comments as $puindex => $comment)
-    <tr id="activity-{{$a->id}}" class="d-none update">
-        <td colspan=2><b>Update {{$puindex}}</b>: {{$comment}}</td>
-    </tr>
-    @endforeach
-    @endif
     @endforeach
 </table>
 
@@ -73,16 +75,15 @@
     $(document).on('click', '.collapsed', function(){
         name = $(this).parent().attr('id');
         $('tr#'+name).removeClass('d-none');
-        $(this).addClass('expanded');
-        $(this).removeClass('collapsed');
+        $(this).children('.fas').toggleClass('fa-caret-square-right fa-caret-square-down');
+        $(this).toggleClass('collapsed expanded');
     });
     $(document).on('click', '.expanded', function(){
         name = $(this).parent().attr('id');
         $('tr#'+name+'.update').addClass('d-none');
-        $(this).removeClass('expanded');
-        $(this).addClass('collapsed');
+        $(this).children('.fas').toggleClass('fa-caret-square-right fa-caret-square-down');
+        $(this).toggleClass('expanded collapsed');
     });
-
 </script>
 
 @endsection

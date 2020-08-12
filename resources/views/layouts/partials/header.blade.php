@@ -1,6 +1,6 @@
 <div id="header">
     <a id="header-su-responsive" href="http://www.su.se/english" title="Stockholm University home">
-        <img src="{{ asset('images/su_logo_responsive_en.png') }}" alt="Stockholm University" />
+        <img src="{{ asset('images/su_logo_responsive_en.png') }}" alt="Stockholm University"/>
     </a>
 
     <a id="header-dsv" href="http://dsv.su.se/en/" title="To DSV's start page" accesskey="1">

@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Activity;
 use App\ActivityUpdate;
+use App\File;
 use App\Output;
 use App\OutputUpdate;
 use App\Project;
 use App\ProjectUpdate;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
@@ -33,8 +37,9 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Project  $project
+     * @param Project $project
      *
+     * @return Application|Factory|View
      */
     public function show(Project $project)
     {
@@ -48,8 +53,9 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Project  $project
+     * @param Project $project
      *
+     * @return Application|Factory|View
      */
     public function edit(Project $project)
     {
@@ -63,13 +69,13 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Project  $project
+     * @param Project $project
      *
+     * @return RedirectResponse
      */
     public function update(Project $project)
     {
-        $validatedAttributes = request()->validate([
+        request()->validate([
             'project_name' => 'required',
             'project_description' => 'required',
         ]);
@@ -148,17 +154,7 @@ class ProjectController extends Controller
 
     public function write_update(Project $project)
     {
-
         return view('project.update', ['project' => $project]);
-
-
-        /*
-        return view('project.update', [
-            'project' => $project,
-            'activities' => Activity::where('project_id', $project->id)->get(),
-            'outputs' => Output::where('project_id', $project->id)->get()
-        ]);
-        */
     }
 
     public function save_update(Project $project)
@@ -167,6 +163,7 @@ class ProjectController extends Controller
         $projectupdate->save();
         $projectupdate_id = $projectupdate->id;
 
+        // Process activity updates
         $activity_update_array['id'] = request('activity_update_id') ?? null;
         $activity_update_array['activity_id'] = request('activity_id');
         $activity_update_array['comment'] = request('activity_comment');
@@ -187,6 +184,7 @@ class ProjectController extends Controller
             }
         }
 
+        // Process output updates
         $output_update_array['id'] = request('output_update_id') ?? null;
         $output_update_array['output_id'] = request('output_id');
         $output_update_array['value'] = request('output_value');
@@ -201,6 +199,14 @@ class ProjectController extends Controller
             }
         }
 
+        // Update file reference
+        $file_id = request('file_id') ?? null;
+        if ($file_id) {
+            $file = File::findOrFail($file_id);
+            $file->itemid = $projectupdate_id;
+            $file->save();
+        }
+
         return redirect()->route('projectupdate_show', $projectupdate_id);
     }
 
@@ -212,7 +218,12 @@ class ProjectController extends Controller
         $moneyspent = 0;
         $budget = 0;
         foreach ($activities as $a) {
-            $activityupdates = ActivityUpdate::where('activity_id', $a->id)->orderBy('date', 'asc')->get();
+            $activityupdates = ActivityUpdate::where('activity_id', $a->id)
+                ->join('project_updates', 'project_update_id', '=', 'project_updates.id')
+                ->where('project_updates.approved', 1)
+                ->orderBy('date', 'asc')
+                ->get();
+
             $comments = array();
             foreach ($activityupdates as $au) {
                 $moneyspent += $au->money;
@@ -229,7 +240,7 @@ class ProjectController extends Controller
             $a->comments = $comments;
             $budget += $a->budget;
 
-            $latestupdate = ActivityUpdate::where('activity_id', $a->id)->latest()->first();
+            $latestupdate = $activityupdates->last();
             if ($latestupdate) {
                 $a->status = $latestupdate->status;
                 switch ($a->status) {
@@ -246,7 +257,10 @@ class ProjectController extends Controller
             }
         }
         foreach ($outputs as $o) {
-            $outputupdates = OutputUpdate::where('output_id', $o->id)->get();
+            $outputupdates = OutputUpdate::where('output_id', $o->id)
+                ->join('project_updates', 'project_update_id', '=', 'project_updates.id')
+                ->where('project_updates.approved', 1)
+                ->get();
             $valuesum = 0;
             foreach ($outputupdates as $ou) {
                 $valuesum += $ou->value;
@@ -274,8 +288,9 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     *
+     * @param Project $project
+     * @return RedirectResponse
+     * @throws \Exception
      */
     public function destroy(Project $project)
     {
@@ -288,8 +303,8 @@ class ProjectController extends Controller
         }
 
         // Delete outputs and activities
-        $activities = Activity::where('project_id', $project->id)->forcedelete();
-        $outputs = Output::where('project_id', $project->id)->forcedelete();
+        Activity::where('project_id', $project->id)->forcedelete();
+        Output::where('project_id', $project->id)->forcedelete();
 
         // Delete project
         $project->delete();

@@ -2,20 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Activity;
 use App\ActivityUpdate;
+use App\File;
 use App\Output;
 use App\OutputUpdate;
 use App\Project;
 use App\ProjectUpdate;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class ProjectUpdateController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Project $project
+     * @return Application|Factory|Response|View
      */
     public function index(Project $project)
     {
@@ -31,7 +40,7 @@ class ProjectUpdateController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function create()
     {
@@ -41,19 +50,17 @@ class ProjectUpdateController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
      */
-    public function store(Request $request)
+    public function store_file(Request $request)
     {
-        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param ProjectUpdate $project_update
+     * @return Application|Factory|Response|View
      */
     public function show(ProjectUpdate $project_update)
     {
@@ -65,6 +72,13 @@ class ProjectUpdateController extends Controller
             }
         }
         $project_update->index = $index;
+
+        // Grab files
+        $files = File::where('filearea', 'project_update')->where('itemid', $project_update->id)->get() ?? null;
+        foreach ($files as $file) {
+            $file->path = Storage::url($file->filepath . '/' . $file->name);
+        }
+
         return view('projectupdate.show', [
             'project_update' => $project_update,
             'project' => Project::where('id', $project_update->project_id),
@@ -78,6 +92,7 @@ class ProjectUpdateController extends Controller
                 ->join('outputs', 'output_id', '=', 'outputs.id')
                 ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
                 ->get(),
+            'files' => $files,
             'review' => false
         ]);
     }
@@ -85,8 +100,8 @@ class ProjectUpdateController extends Controller
     /**
      * Show the form for reviewing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param ProjectUpdate $project_update
+     * @return Application|Factory|Response|View
      */
     public function review(ProjectUpdate $project_update)
     {
@@ -126,8 +141,8 @@ class ProjectUpdateController extends Controller
     /**
      * Calculates outputs progress.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $outputupdates
+     * @return Response
      */
     public function calculateOutputs($outputupdates)
     {
@@ -157,8 +172,8 @@ class ProjectUpdateController extends Controller
     /**
      * Calculates budget and timing based on activities data.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $activityupdates
+     * @return Response
      */
     public function calculateActivities($activityupdates)
     {
@@ -169,7 +184,7 @@ class ProjectUpdateController extends Controller
             $allactivityupdates = ActivityUpdate::where('activity_id', $activity->id)->get();
             $totalmoneyspent = 0;
             foreach ($allactivityupdates as $aau) {
-                $totalmoneyspent += $au->money;
+                $totalmoneyspent += $aau->money;
             }
 
             $remainingpercentage = number_format(abs(1 - ($totalmoneyspent / $activity->budget)) * 100) . '%';
@@ -211,8 +226,8 @@ class ProjectUpdateController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return void
      */
     public function edit($id)
     {
@@ -222,9 +237,8 @@ class ProjectUpdateController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param ProjectUpdate $project_update
+     * @return RedirectResponse
      */
     public function update(ProjectUpdate $project_update)
     {
@@ -238,14 +252,15 @@ class ProjectUpdateController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param ProjectUpdate $project_update
+     * @return void
+     * @throws \Exception
      */
     public function destroy(ProjectUpdate $project_update)
     {
         // Delete associated updates
-        $activityupdates = ActivityUpdate::where('project_update_id', $project_update->id)->delete();
-        $outputupdates = OutputUpdate::where('project_update_id', $project_update->id)->delete();
+        ActivityUpdate::where('project_update_id', $project_update->id)->delete();
+        OutputUpdate::where('project_update_id', $project_update->id)->delete();
         $project_update->delete();
     }
 }

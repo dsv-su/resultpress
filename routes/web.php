@@ -37,5 +37,5 @@ Route::get('/project/{project}/updates', 'ProjectUpdateController@index')->name(
 Route::put('/project/{project}/update', 'ProjectController@save_update')->name('project_save_update');
 Route::put('/project/{project}', 'ProjectController@update')->name('project_update');
 Route::get('/project/{project}/delete', 'ProjectController@destroy')->name('project_delete');
-
+Route::post('/store_file', 'FileController@store')->name('store_file');
 //});

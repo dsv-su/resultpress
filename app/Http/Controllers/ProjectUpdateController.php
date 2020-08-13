@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Activity;
@@ -64,20 +63,7 @@ class ProjectUpdateController extends Controller
      */
     public function show(ProjectUpdate $project_update)
     {
-        $pus = ProjectUpdate::where('project_id', $project_update->project_id)->get();
-        $index = 0;
-        foreach ($pus as $key => $pu) {
-            if ($pu->id == $project_update->id) {
-                $index = $key + 1;
-            }
-        }
-        $project_update->index = $index;
-
-        // Grab files
-        $files = File::where('filearea', 'project_update')->where('itemid', $project_update->id)->get() ?? null;
-        foreach ($files as $file) {
-            $file->path = Storage::url($file->filepath . '/' . $file->name);
-        }
+        $project_update->index = $this->get_update_index($project_update);
 
         return view('projectupdate.show', [
             'project_update' => $project_update,
@@ -92,9 +78,32 @@ class ProjectUpdateController extends Controller
                 ->join('outputs', 'output_id', '=', 'outputs.id')
                 ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
                 ->get(),
-            'files' => $files,
+            'files' => $this->get_files($project_update),
             'review' => false
         ]);
+    }
+
+    public function get_update_index(ProjectUpdate $project_update)
+    {
+        $pus = ProjectUpdate::where('project_id', $project_update->project_id)->get();
+        $index = 0;
+        foreach ($pus as $key => $pu) {
+            if ($pu->id == $project_update->id) {
+                $index = $key + 1;
+            }
+        }
+        return $index;
+    }
+
+    public function get_files(ProjectUpdate $project_update)
+    {
+        // Grab files
+        $files = File::where('filearea', 'project_update')->where('itemid', $project_update->id)->get() ?? null;
+        foreach ($files as $file) {
+            $file->path = Storage::url($file->filepath);
+        }
+
+        return $files;
     }
 
     /**
@@ -115,17 +124,10 @@ class ProjectUpdateController extends Controller
             ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
             ->get();
 
-        $pus = ProjectUpdate::where('project_id', $project_update->project_id)->get();
-        $index = 0;
-        foreach ($pus as $key => $pu) {
-            if ($pu->id == $project_update->id) {
-                $index = $key + 1;
-            }
-        }
+        $project_update->index = $this->get_update_index($project_update);
 
         $activityupdates = $this->calculateActivities($activityupdates);
         $outputupdates = $this->calculateOutputs($outputupdates);
-        $project_update->index = $index;
 
         return view('projectupdate.show', [
             'project_update' => $project_update,
@@ -134,6 +136,7 @@ class ProjectUpdateController extends Controller
             'outputs' => Output::where('project_id', $project_update->project_id)->get(),
             'activity_updates' => $activityupdates,
             'output_updates' => $outputupdates,
+            'files' => $this->get_files($project_update),
             'review' => true
         ]);
     }

@@ -61,7 +61,7 @@
         </table>
     @endif
 
-    @if($files)
+    @if(!$files->isEmpty())
         <h5>Attachments:</h5>
         <div>
             @foreach($files as $file)

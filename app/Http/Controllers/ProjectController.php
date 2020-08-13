@@ -200,8 +200,11 @@ class ProjectController extends Controller
         }
 
         // Update file reference
-        $file_id = request('file_id') ?? null;
-        if ($file_id) {
+        $file_ids = request('file_id') ?? null;
+        if (!is_array($file_ids)) {
+            $file_ids = array($file_ids);
+        }
+        foreach ($file_ids as $file_id) {
             $file = File::findOrFail($file_id);
             $file->itemid = $projectupdate_id;
             $file->save();

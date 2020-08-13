@@ -57,11 +57,12 @@
 
         <h5>Attachments:</h5>
         <div class="alert" id="message" style="display: none"></div>
-        <div><span id="uploaded_file"></span></div>
-        <input type="file" name="file" placeholder="Choose File" id="file">
-        <input type="hidden" name="file_id" id="file_id" value=0>
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <button class="btn btn-primary" id="laravel-ajax-file-upload">Upload</button>
+        <div id="attachments">
+            <span id="attachments"></span>
+            <input type="file" id="files" name="attachments" placeholder="Choose file(s)" multiple>
+            <meta name="csrf-token" content="{{ csrf_token() }}">
+            <button class="btn btn-primary" id="laravel-ajax-file-upload">Upload</button>
+        </div>
 
         <div><textarea name="project_update_summary" placeholder="Update summary"></textarea></div>
 
@@ -79,10 +80,17 @@
                 });
                 let formData = new FormData();
                 formData.append("project_id", "{{$project->id}}");
-                formData.append('file', $('#file').prop('files')[0]);
+
+                $.each($('input[name="attachments"]').prop('files'), function (i, file) {
+                    console.log(file);
+                    formData.append('attachments[]', file);
+                });
+
                 for (let key of formData.entries()) {
-                    console.log(key[0] + ', ' + key[1]);
+                    // Debug output
+                    console.log(key[0] + ': ' + key[1]);
                 }
+
                 $.ajax({
                     type: 'POST',
                     url: "{{ url('store_file')}}",
@@ -95,9 +103,15 @@
                         $('#message').show();
                         $('#message').html(data.message);
                         $('#message').addClass(data.class_name);
-                        $('#uploaded_file').html(data.uploaded_file);
-                        $('#file_id').val(data.file_id);
-                        console.log(data.file_id);
+                        $('#attachments').html(data.attachments);
+                        //$('#file_id').val(data.file_id);
+                        if (data.file_ids) {
+                            let fileids = JSON.parse(data.file_ids);
+                            $.each(fileids, function (index, id) {
+                                $('#attachments').append('<input type="hidden" name="file_id[]" value="' + id + '">');
+                            });
+                        }
+                        console.log(data.file_ids);
                     },
                     error: function (data) {
                         alert('NOOO');

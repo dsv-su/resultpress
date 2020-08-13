@@ -11,30 +11,39 @@ class FileController extends Controller
     function store(Request $request)
     {
         $validation = \Validator::make($request->all(),
-            ['file' => 'required|mimes:jpg,png,doc,docx,pdf,txt|max:2048']);
+            ['attachments' => 'required']);
         if ($validation->passes()) {
-            $file = $request->file('file');
-            $file_name = $file->getClientOriginalName();
-            $path = 'public/attachments/' . $request->get('project_id');
+            $files = $request->attachments;
+            $html = '';
+            $ids = array();
+
+            $path = 'public/attachments/' . $request->project_id;
             Storage::makeDirectory($path);
-            Storage::putFileAs($path, $request->file('file'), $file_name);
-            $saved_file = new File();
-            $saved_file->name = $file_name;
-            $saved_file->filearea = 'project_update';
-            $saved_file->itemid = 0;
-            $saved_file->filepath = $path;
-            $saved_file->save();
-            $url = Storage::url($path . '/' . $file_name);
+
+            foreach ($files as $file) {
+                $file_name = $file->getClientOriginalName();
+
+                $saved_file = new File();
+                $saved_file->name = $file_name;
+                $saved_file->filearea = 'project_update';
+                $saved_file->itemid = 0;
+                $saved_file->filepath = Storage::putFile($path, $file);
+                $saved_file->save();
+
+                $url = Storage::url($path . '/' . $file_name);
+                $html .= '<a href="' . $url . '">' . $file_name . '</a><br/>';
+                $ids[] = $saved_file->id;
+            }
             return Response()->json([
-                'message' => 'File uploaded',
-                'uploaded_file' => '<a href="' . $url . '">' . $file_name . '</a>',
+                'message' => 'File(s) uploaded',
+                'attachments' => $html,
                 'class_name' => 'alert-success',
-                'file_id' => $saved_file->id
+                'file_ids' => json_encode($ids)
             ]);
         } else {
             return Response()->json([
                 "message" => $validation->errors()->all(),
-                "uploaded_file" => '',
+                "attachments" => '',
                 "class_name" => 'alert-danger'
             ]);
         }

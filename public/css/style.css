@@ -157,6 +157,10 @@ table list {
   box-shadow: 2px 2px 2px 2px #e5dfcc;
 }
 
+table td, table tr {
+  vertical-align: middle !important;
+}
+
 table tr th, table tr td {
   box-shadow: 2px 2px 1px #e5dfcc;
 }
@@ -208,6 +212,12 @@ td {
   /* Ghostwhite */
 }
 
+.table td.fit,
+.table th.fit {
+  white-space: nowrap;
+  width: 1%;
+}
+
 /*# sourceMappingURL=style.css.map */
 
 /* Fields */
@@ -226,6 +236,10 @@ td {
   -webkit-background-size: 8px 8px;
   -moz-background-size: 8px 8px;
   background-size: 8px 8px;
+}
+
+.status {
+  margin: auto;
 }
 
 .auto {
@@ -282,4 +296,23 @@ tr.update>td {
   border: none;
   box-shadow: none;
   padding: 0px 0px 0px 30px;
+}
+
+.form-group-header {
+  color: #002f5f;
+  text-decoration-color: #002f5f;
+  font-weight: 500;
+  font-size: 140%;
+  line-height: 1.2;
+}
+
+.mw-400 {
+  max-width: 400px;
+}
+
+.spacer {
+  min-height: 5px;
+  line-height: 5px;
+  border-collapse:separate;
+  border-spacing: 0 1em;
 }

@@ -1,9 +1,8 @@
+@charset "utf-8";
 /*
  * Base styles
  * -----------
  */
-
-@charset "utf-8";
 
 * {
     box-sizing: border-box;
@@ -65,15 +64,6 @@ a:hover {
     color: #000;
 }
 
-input, textarea, button, select {
-    border: 1px solid lightgray;
-    margin: 1px;
-    font-family: inherit;
-    font-size: 100%;
-    background-color: white;
-    color: black;
-}
-
 input, button, select {
     vertical-align: middle;
 }
@@ -88,7 +78,7 @@ input:not([type="submit"]):focus, textarea:focus, select:focus {
 
 button, input[type="submit"] {
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    background-image: 'images/button-background-repeater.gif';
+    background-color: orange;
     background-position: left;
     background-repeat: repeat-x;
     color: white;
@@ -190,7 +180,7 @@ button, input[type="submit"] {
 
 #header-dsv > img {
     width: 100%;
-    max-wifth: 399px;
+    max-width: 399px;
 }
 
 #header-su {
@@ -201,10 +191,7 @@ button, input[type="submit"] {
 
 #contents {
     font-family: Georgia, "Times New Roman", Times, serif;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 100px;
-    margin-top: 12px;
+    margin: 12px auto 100px;
     padding-left: 4%;
     padding-right: 4%;
 }
@@ -255,6 +242,7 @@ button, input[type="submit"] {
     #footer-name > div {
         display: inline;
     }
+
     #footer-su::before {
         content: "| "
     }
@@ -264,17 +252,20 @@ button, input[type="submit"] {
     #header {
         padding-left: 20px;
     }
+
     #top-links, #contents {
         padding-left: 20px;
         padding-right: 20px;
     }
+
     .right {
         margin-top: 0;
         float: right;
     }
+
     .left {
         margin-top: 0;
-        float:left;
+        float: left;
     }
 }
 
@@ -282,6 +273,7 @@ button, input[type="submit"] {
     #header-su {
         display: none;
     }
+
     #header-su-responsive {
         display: inline-block;
     }
@@ -291,9 +283,11 @@ button, input[type="submit"] {
     #header-su {
         display: inline-block;
     }
+
     #header-su-responsive {
         display: none;
     }
+
     #header-dsv {
         padding-top: 75px;
     }
@@ -307,6 +301,7 @@ button, input[type="submit"] {
         padding-left: 4px;
         padding-right: 4px;
     }
+
     #footer {
         width: calc(100% - 8px);
     }

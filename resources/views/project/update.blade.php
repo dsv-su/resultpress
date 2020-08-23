@@ -4,69 +4,91 @@
     <form action="{{ route('project_save_update', $project) }}" method="POST">
         @method('PUT')
         @csrf
-        <h4>Write a project update</h4>
+
+        <div class="row d-flex justify-content-between">
+            <div class="col"><h4>{{ $project->name }}: write an update</h4></div>
+            <div class="col-sm-auto field auto d-flex align-items-center">
+                <span>{{Carbon\Carbon::now()->format('d-m-Y')}}</span>
+            </div>
+        </div>
+
         <p><a href="{{ route('project_show', $project->id) }}">Back to project page</a></p>
-        <h5 class="field auto">Date: {{Carbon\Carbon::now()->format('d-m-Y')}}</h5>
-        <h5>Project name: {{ $project->name }}</h5>
 
-        <h5>Covered activities:</h5>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="addActivities" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                Add an activity
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                @foreach ($project->activity as $activity)
-                    <a class="dropdown-item add-activity" href="#" id="{{$activity->id}}">{{$activity->title}}</a>
-                @endforeach
+        <div class="form-group">
+            <h4>Covered activities:</h4>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="addActivities"
+                        data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    Add an activity
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    @foreach ($project->activity as $activity)
+                        <a class="dropdown-item add-activity" href="#" id="{{$activity->id}}">{{$activity->title}}</a>
+                    @endforeach
+                </div>
+            </div>
+            <table class="table table-sm table-striped table-bordered" style="width:100%; display: none;"
+                   id="activities_table">
+                <thead>
+                <th>Activity</th>
+                <th>Status</th>
+                <th>Summary</th>
+                <th>Money spent</th>
+                <th>Date(s)</th>
+                <th></th>
+                </thead>
+            </table>
+        </div>
+
+        <div class="form-group">
+            <h4>Affected outputs:</h4>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="addOutputs" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    Add an output
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    @foreach ($project->output as $output)
+                        <a class="dropdown-item add-output" href="#" id="{{$output->id}}">{{$output->indicator}}</a>
+                    @endforeach
+                </div>
+            </div>
+
+            <table class="table table-sm table-striped table-bordered" style="width:100%; display: none;"
+                   id="outputs_table">
+                <thead>
+                <th>Output</th>
+                <th>Value</th>
+                <th></th>
+                </thead>
+            </table>
+        </div>
+
+        <div class="form-group">
+            <h5>Attachments:</h5>
+            <div class="alert" id="message" style="display: none"></div>
+            <div id="attachments">
+                <span id="attachments"></span>
+                <input type="file" id="files" name="attachments" placeholder="Choose file(s)" multiple>
+                <meta name="csrf-token" content="{{ csrf_token() }}">
+                <button class="btn btn-secondary" id="laravel-ajax-file-upload">Upload</button>
             </div>
         </div>
-        <table class="table table-sm table-striped table-bordered" style="width:100%; display: none;"
-               id="activities_table">
-            <thead>
-            <th>Activity</th>
-            <th>Status</th>
-            <th>Summary</th>
-            <th>Money spent</th>
-            <th>Date(s)</th>
-            <th></th>
-            </thead>
 
-        </table>
-        <h5>Affected outputs:</h5>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="addOutputs" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                Add an output
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                @foreach ($project->output as $output)
-                    <a class="dropdown-item add-output" href="#" id="{{$output->id}}">{{$output->indicator}}</a>
-                @endforeach
-            </div>
+        <div class="form-group">
+            <h5>Summary</h5>
+            <textarea rows="4"
+                      class="form-control form-control-sm @error('project_update_summary') is-danger @enderror"
+                      name="project_update_summary" id="project_update_summary"
+            >{{ old('project_description', empty($project_update) ? '' : $project_update->summary) }}</textarea>
+            @error('project_description')
+            <div class="text-danger">
+                {{ $errors->first('project_update_summary') }}
+            </div>@enderror
         </div>
 
-        <table class="table table-sm table-striped table-bordered" style="width:100%; display: none;"
-               id="outputs_table">
-            <thead>
-            <th>Output</th>
-            <th>Value</th>
-            <th></th>
-            </thead>
-        </table>
-
-        <h5>Attachments:</h5>
-        <div class="alert" id="message" style="display: none"></div>
-        <div id="attachments">
-            <span id="attachments"></span>
-            <input type="file" id="files" name="attachments" placeholder="Choose file(s)" multiple>
-            <meta name="csrf-token" content="{{ csrf_token() }}">
-            <button class="btn btn-primary" id="laravel-ajax-file-upload">Upload</button>
-        </div>
-
-        <div><textarea name="project_update_summary" placeholder="Update summary"></textarea></div>
-
-        <input class="btn btn-primary btn-lg" value="UPDATE" type="submit">
+        <input class="btn btn-lg" value="UPDATE" type="submit">
     </form>
 
     <script>

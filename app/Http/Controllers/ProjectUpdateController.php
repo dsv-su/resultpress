@@ -67,7 +67,7 @@ class ProjectUpdateController extends Controller
 
         return view('projectupdate.show', [
             'project_update' => $project_update,
-            'project' => Project::where('id', $project_update->project_id),
+            'project' => Project::findorfail($project_update->project_id),
             'activities' => Activity::where('project_id', $project_update->project_id)->get(),
             'outputs' => Output::where('project_id', $project_update->project_id)->get(),
             'activity_updates' => ActivityUpdate::where('project_update_id', $project_update->id)
@@ -83,6 +83,10 @@ class ProjectUpdateController extends Controller
         ]);
     }
 
+    /**
+     * @param ProjectUpdate $project_update
+     * @return int|string
+     */
     public function get_update_index(ProjectUpdate $project_update)
     {
         $pus = ProjectUpdate::where('project_id', $project_update->project_id)->get();
@@ -95,6 +99,10 @@ class ProjectUpdateController extends Controller
         return $index;
     }
 
+    /**
+     * @param ProjectUpdate $project_update
+     * @return File|null
+     */
     public function get_files(ProjectUpdate $project_update)
     {
         // Grab files
@@ -131,7 +139,7 @@ class ProjectUpdateController extends Controller
 
         return view('projectupdate.show', [
             'project_update' => $project_update,
-            'project' => Project::where('id', $project_update->project_id),
+            'project' => Project::findorfail($project_update->project_id),
             'activities' => Activity::where('project_id', $project_update->project_id)->get(),
             'outputs' => Output::where('project_id', $project_update->project_id)->get(),
             'activity_updates' => $activityupdates,

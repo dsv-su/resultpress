@@ -16,8 +16,17 @@
 
         <div class="form-group">
             <h4>Covered activities:</h4>
+            <table class="table table-sm" style="width:100%; display: none;" id="activities_table">
+                <thead>
+                <th>Activity</th>
+                <th>Status</th>
+                <th>Money spent</th>
+                <th>Date(s)</th>
+                <th></th>
+                </thead>
+            </table>
             <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="addActivities"
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addActivities"
                         data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                     Add an activity
@@ -28,23 +37,21 @@
                     @endforeach
                 </div>
             </div>
-            <table class="table table-sm table-striped table-bordered" style="width:100%; display: none;"
-                   id="activities_table">
-                <thead>
-                <th>Activity</th>
-                <th>Status</th>
-                <th>Summary</th>
-                <th>Money spent</th>
-                <th>Date(s)</th>
-                <th></th>
-                </thead>
-            </table>
         </div>
 
         <div class="form-group">
             <h4>Affected outputs:</h4>
+            <table class="table table-sm mw-400" style="display: none;"
+                   id="outputs_table">
+                <thead>
+                <th>Output</th>
+                <th>Value</th>
+                <th></th>
+                </thead>
+            </table>
             <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="addOutputs" data-toggle="dropdown"
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutputs"
+                        data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                     Add an output
                 </button>
@@ -54,15 +61,6 @@
                     @endforeach
                 </div>
             </div>
-
-            <table class="table table-sm table-striped table-bordered" style="width:100%; display: none;"
-                   id="outputs_table">
-                <thead>
-                <th>Output</th>
-                <th>Value</th>
-                <th></th>
-                </thead>
-            </table>
         </div>
 
         <div class="form-group">
@@ -150,11 +148,13 @@
                 html += '<input type="hidden" name="activity_update_id[]" value=0>';
                 html += '<td class="auto"><input type="hidden" id="activity" name="activity_id[]" value="' + id + '">' + activity + '</td>';
                 html += '<td class="editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
-                html += '<td><input type="text" name="activity_comment[]" class="form-control form-control-sm" placeholder="Comment" required></td>';
+                // html += '<td><input type="text" name="activity_comment[]" class="form-control form-control-sm" placeholder="Comment" required></td>';
                 html += '<td><input type="number" name="activity_money[]"  class="form-control form-control-sm" placeholder="Money" size="3" required></td></td>';
                 html += '<td><input type="date" name="activity_date[]" class="form-control form-control-sm" placeholder="Date" size="1"></td>';
-                html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-user-times"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
+                html += '<td class="fit"><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
+                html += '<tr class="update"><td colspan=5><table class="table mb-2 "><tr><td><textarea name="activity_comment[]" ' +
+                    'class="form-control form-control-sm" required>Comment</textarea></td></tr></table></td></tr>';
                 $('#' + id + '.add-activity').hide();
                 $('#activities_table').append(html);
             });
@@ -164,9 +164,9 @@
                 let output = $(this).text();
                 let html = '<tr>';
                 html += '<input type="hidden" name="output_update_id[]" value=0>';
-                html += '<td class="auto"><input type="hidden" id="output" name="output_id[]" value="' + id + '">' + output + '</td>';
-                html += '<td><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="Value" size="3" required></td></td>';
-                html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-user-times"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
+                html += '<td class="w-75"><input type="hidden" id="output" name="output_id[]" value="' + id + '">' + output + '</td>';
+                html += '<td class="w-25"><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="Value" size="3" required></td></td>';
+                html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
                 $('#' + id + '.add-output').hide();
                 $('#outputs_table').append(html);
@@ -182,6 +182,7 @@
             $(document).on('click', '#activities_table .remove', function () {
                 let id = $(this).attr('id');
                 $('#' + id + '.add-activity').show();
+                $(this).closest('tr').next().remove();
                 $(this).closest('tr').remove();
                 if ($('tr', $('#activities_table')).length < 2) {
                     $('#activities_table').hide();

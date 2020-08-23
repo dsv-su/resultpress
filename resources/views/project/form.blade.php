@@ -85,7 +85,7 @@
                                             <td>
                                                 <button type="button" name="remove"
                                                         class="btn btn-outline-danger btn-sm remove"><i
-                                                            class="fas fa-user-times"></i><span
+                                                            class="fas fa-minus"></i><span
                                                             class="glyphicon glyphicon-minus"></span></button>
                                             </td>
                                         </tr>
@@ -93,7 +93,7 @@
                                 </table>
                                 <button type="button" name="add_activities"
                                         class="btn btn-outline-secondary btn-sm add-activities">Add
-                                    Activities <i class="fas fa-user-times"></i></button>
+                                    Activities <i class="fas fa-plus"></i></button>
                             </div>
                         </div>
                         <div class="form-group">
@@ -123,7 +123,7 @@
                                             <td>
                                                 <button type="button" name="remove"
                                                         class="btn btn-outline-danger btn-sm remove"><i
-                                                            class="fas fa-user-times"></i><span
+                                                            class="fas fa-minus"></i><span
                                                             class="glyphicon glyphicon-minus"></span></button>
                                             </td>
                                         </tr>
@@ -131,7 +131,7 @@
                                 </table>
                                 <button type="button" name="add_outputs"
                                         class="btn btn-outline-secondary btn-sm add-outputs">Add
-                                    Outputs <i class="fas fa-user-times"></i></button>
+                                    Outputs <i class="fas fa-plus"></i></button>
                             </div>
                         </div>
                         <div class="form-group">
@@ -155,7 +155,7 @@
                             html += '<td><input type="date" name="activity_start[]" class="form-control form-control-sm" placeholder="Startdate" size="1" required></td>';
                             html += '<td><input type="date" name="activity_end[]"  class="form-control form-control-sm" placeholder="Enddate" size="1" required></td></td>';
                             html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="Budget" size="3" required></td></td>';
-                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-user-times"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
+                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
                             $('#activities_table').append(html);
                         });
                         $(document).on('click', '.add-outputs', function () {
@@ -165,7 +165,7 @@
                             html += '<input type="hidden" name="output_id[]" value=0>';
                             html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Indicator" required></td>';
                             html += '<td class="w-25"><input type="text" name="output_target[]"  class="form-control form-control-sm" placeholder="Target" size="3" required></td></td>';
-                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-user-times"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
+                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
                             $('#outputs_table').append(html);
                         });
                         $(document).on('click', '.remove', function () {

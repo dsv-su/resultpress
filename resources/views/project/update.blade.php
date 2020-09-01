@@ -59,6 +59,7 @@
                     @foreach ($project->output as $output)
                         <a class="dropdown-item add-output" href="#" id="{{$output->id}}">{{$output->indicator}}</a>
                     @endforeach
+                    <a class="dropdown-item add-output" href="#" id="0">Add a new ouput</a>
                 </div>
             </div>
         </div>
@@ -124,7 +125,6 @@
                         $('#message').html(data.message);
                         $('#message').addClass(data.class_name);
                         $('#attachments').html(data.attachments);
-                        //$('#file_id').val(data.file_id);
                         if (data.file_ids) {
                             let fileids = JSON.parse(data.file_ids);
                             $.each(fileids, function (index, id) {
@@ -164,11 +164,17 @@
                 let output = $(this).text();
                 let html = '<tr>';
                 html += '<input type="hidden" name="output_update_id[]" value=0>';
-                html += '<td class="w-75"><input type="hidden" id="output" name="output_id[]" value="' + id + '">' + output + '</td>';
+                if (id > 0) {
+                    html += '<td class="w-75"><input type="hidden" id="output" name="output_id[]" value="' + id + '">' + output + '</td>';
+                } else {
+                    html += '<td class="w-75"><input type="text" id="output" name="output_id[]" placeholder="Enter output name"></td>';
+                }
                 html += '<td class="w-25"><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="Value" size="3" required></td></td>';
                 html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
-                $('#' + id + '.add-output').hide();
+                if (id > 0) {
+                    $('#' + id + '.add-output').hide();
+                }
                 $('#outputs_table').append(html);
             });
             $(document).on('click', '#outputs_table .remove', function () {

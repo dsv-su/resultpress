@@ -164,39 +164,41 @@ class ProjectController extends Controller
         $projectupdate_id = $projectupdate->id;
 
         // Process activity updates
-        $activity_update_array['id'] = request('activity_update_id') ?? null;
         $activity_update_array['activity_id'] = request('activity_id');
         $activity_update_array['comment'] = request('activity_comment');
         $activity_update_array['status'] = request('activity_status');
         $activity_update_array['money'] = request('activity_money');
         $activity_update_array['date'] = request('activity_date') ?? null;
 
-        if (!empty($activity_update_array['id'])) {
-            foreach ($activity_update_array['id'] as $key => $id) {
-                $activityupdate = new ActivityUpdate;
-                $activityupdate->activity_id = Activity::findOrFail($activity_update_array['activity_id'][$key])->id;
-                $activityupdate->comment = $activity_update_array['comment'][$key];
-                $activityupdate->status = $activity_update_array['status'][$key];
-                $activityupdate->money = $activity_update_array['money'][$key];
-                $activityupdate->date = $activity_update_array['date'][$key];
-                $activityupdate->project_update_id = $projectupdate_id;
-                $activityupdate->save();
-            }
+        foreach ($activity_update_array['activity_id'] as $key => $id) {
+            $activityupdate = new ActivityUpdate;
+            $activityupdate->activity_id = Activity::findOrFail($id)->id;
+            $activityupdate->comment = $activity_update_array['comment'][$key];
+            $activityupdate->status = $activity_update_array['status'][$key];
+            $activityupdate->money = $activity_update_array['money'][$key];
+            $activityupdate->date = $activity_update_array['date'][$key];
+            $activityupdate->project_update_id = $projectupdate_id;
+            $activityupdate->save();
         }
 
         // Process output updates
-        $output_update_array['id'] = request('output_update_id') ?? null;
         $output_update_array['output_id'] = request('output_id');
         $output_update_array['value'] = request('output_value');
 
-        if (!empty($output_update_array['id'])) {
-            foreach ($output_update_array['id'] as $key => $id) {
-                $outputupdate = new OutputUpdate();
-                $outputupdate->output_id = Output::findOrFail($output_update_array['output_id'][$key])->id;
-                $outputupdate->value = $output_update_array['value'][$key];
-                $outputupdate->project_update_id = $projectupdate_id;
-                $outputupdate->save();
+        foreach ($output_update_array['output_id'] as $key => $id) {
+            if (!is_numeric($output_update_array['output_id'][$key])) {
+                //Create new output since it's an unexpected one
+                $data = array();
+                $data['indicator'] = $output_update_array['output_id'][$key];
+                $data['target'] = 0;
+                $data['project_id'] = $project->id;
+                $id = Output::create($data)->id;
             }
+            $outputupdate = new OutputUpdate();
+            $outputupdate->output_id = Output::findOrFail($id)->id;
+            $outputupdate->value = $output_update_array['value'][$key];
+            $outputupdate->project_update_id = $projectupdate_id;
+            $outputupdate->save();
         }
 
         // Update file reference
@@ -217,7 +219,7 @@ class ProjectController extends Controller
 
     public function summary(Project $project)
     {
-        $project_updates = ProjectUpdate::where('project_id', $project->id)->get();
+        $project_updates = ProjectUpdate::where('project_id', $project->id)->where('project_updates.approved', 1)->get();
         $activities = Activity::where('project_id', $project->id)->get();
         $outputs = Output::where('project_id', $project->id)->get();
         $moneyspent = 0;

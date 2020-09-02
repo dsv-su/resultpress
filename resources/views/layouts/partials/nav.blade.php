@@ -22,17 +22,19 @@
                     Program Areas
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{{ route('home') }}">Ghana</a>
-                    <a class="dropdown-item" href="{{ route('home') }}">Kenya</a>
-                    <a class="dropdown-item" href="{{ route('home') }}">Nigeria</a>
-                    <a class="dropdown-item" href="{{ route('home') }}">Senegal</a>
-                    <a class="dropdown-item" href="{{ route('home') }}">Uganda</a>
+                    <a class="dropdown-item" href="{{ route('home') }}">Program 1</a>
+                    <a class="dropdown-item" href="{{ route('home') }}">Program 2</a>
+                    <a class="dropdown-item" href="{{ route('home') }}">Program 3</a>
+                    <a class="dropdown-item" href="{{ route('home') }}">Program 4</a>
+                    <a class="dropdown-item" href="{{ route('home') }}">Program 5</a>
                 </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('home') }}">Statistics</a>
             </li>
-
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('logs') }}">Logs</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Username</a>
             </li>

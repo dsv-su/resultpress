@@ -44,7 +44,7 @@
                         <div class="form-group col-md-3 px-0">
                             <label for="project_end">Project end</label>
                             <input type="date" name="project_end"
-                                   value="{{ old('project_end', empty($project->start) ? '' : $project->end->toDateString())}}"
+                                   value="{{ old('project_end', empty($project->end) ? '' : $project->end->toDateString())}}"
                                    class="form-control form-control-sm">
                         </div>
 
@@ -155,8 +155,8 @@
                             html += '<td><input type="text" name="activity_name[]" class="form-control form-control-sm" placeholder="Activity Name" required></td>';
                             html += '<td><input type="text" name="activity_description[]" class="form-control form-control-sm" placeholder="Activity description" required></td>';
                             html += '<td><input type="date" name="activity_start[]" class="form-control form-control-sm" placeholder="Startdate" size="1" required></td>';
-                            html += '<td><input type="date" name="activity_end[]"  class="form-control form-control-sm" placeholder="Enddate" size="1" required></td></td>';
-                            html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="Budget" size="3" required></td></td>';
+                            html += '<td><input type="date" name="activity_end[]"  class="form-control form-control-sm" placeholder="Enddate" size="1" required></td>';
+                            html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="Budget" size="3" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
                             $('#activities_table').append(html);
                         });
@@ -166,7 +166,7 @@
                             html += '<tr>';
                             html += '<input type="hidden" name="output_id[]" value=0>';
                             html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Indicator" required></td>';
-                            html += '<td class="w-25"><input type="text" name="output_target[]"  class="form-control form-control-sm" placeholder="Target" size="3" required></td></td>';
+                            html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="Target" size="3" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
                             $('#outputs_table').append(html);
                         });

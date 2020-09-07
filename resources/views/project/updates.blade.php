@@ -8,7 +8,7 @@
             <thead>
             <th>#</th>
             <th>Summary</th>
-            <th>Created at</th>
+            <th>Submitted at</th>
             <th>Actions</th>
             </thead>
 
@@ -17,9 +17,9 @@
                     <td class="fit">{{$index+1}}</td>
                     <td class="w-75">@if($pu->summary){{$pu->summary}} @else No summary provided @endif</td>
                     <td class="fit">{{$pu->created_at->format('d/m/Y')}}</td>
-                    <td class="text-nowrap" ><a href="/project/update/{{$pu->id}}" class="btn btn-outline-secondary btn-sm"><i
+                    <td class="text-nowrap" ><a href="/project/update/{{$pu->id}}" class="btn btn-outline-secondary btn-sm">Show <i
                                     class="fas fa-info-circle"></i></a>
-                        <a href="/project/update/{{$pu->id}}/review" class="btn btn-outline-secondary btn-sm"><i
+                        <a href="/project/update/{{$pu->id}}/review" class="btn btn-outline-secondary btn-sm">Review <i
                                     class="fas fa-highlighter"></i></a>
                     </td>
                 </tr>

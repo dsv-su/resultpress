@@ -43,11 +43,25 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        $project->dates = $this->project_dates($project);
         return view('project.show', [
             'project' => $project,
             'activities' => Activity::where('project_id', $project->id)->get(),
             'outputs' => Output::where('project_id', $project->id)->get()
         ]);
+    }
+
+    public function project_dates(Project $project) {
+        if ($project->start) {
+            if ($project->end) {
+                $dates = $project->start->format('d/m/Y') . " — " . $project->end->format('d/m/Y');
+            } else {
+                $dates = $project->start->format('d/m/Y') . " — not set";
+            }
+        } else {
+            $dates = 'Not set';
+        }
+        return $dates;
     }
 
     /**
@@ -82,7 +96,8 @@ class ProjectController extends Controller
 
         $project->name = request('project_name');
         $project->description = request('project_description');
-        $project->status = request('project_status');
+        $project->start = request('project_start') ?? null;
+        $project->end = request('project_end') ?? null;
         $project->activities = is_array(request('activity_id')) ? 1 : 0;
         $project->save();
 
@@ -282,6 +297,7 @@ class ProjectController extends Controller
             }
         }
 
+        $project->dates = $this->project_dates($project);
         $project->projectstart = Activity::where('project_id', $project->id)->orderBy('start', 'asc')->first()->start->format('d/m/Y');
         $project->projectend = Activity::where('project_id', $project->id)->orderBy('end', 'desc')->first()->end->format('d/m/Y');
         $project->updatesnumber = count($project_updates);

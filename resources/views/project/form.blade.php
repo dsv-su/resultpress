@@ -25,25 +25,27 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <div class="form-group">
-                                <label for="project_description">Description</label>
-                                <textarea rows="4"
-                                          class="form-control form-control-sm @error('project_description') is-danger @enderror"
-                                          name="project_description" id="project_description"
-                                >{{ old('project_description', empty($project) ? '' : $project->description) }}</textarea>
-                                @error('project_description')
-                                <div class="text-danger">
-                                    {{ $errors->first('project_description') }}
-                                </div>@enderror
-                            </div>
+                            <label for="project_description">Description</label>
+                            <textarea rows="4"
+                                      class="form-control form-control-sm @error('project_description') is-danger @enderror"
+                                      name="project_description" id="project_description"
+                            >{{ old('project_description', empty($project) ? '' : $project->description) }}</textarea>
+                            @error('project_description')
+                            <div class="text-danger">
+                                {{ $errors->first('project_description') }}
+                            </div>@enderror
                         </div>
                         <div class="form-group col-md-3 px-0">
-                            <label for="status">Project status:</label>
-                            <select class="custom-select" id="status" name="project_status">
-                                <option value="1">In progress</option>
-                                <option value="2">Delayed</option>
-                                <option value="3">Done</option>
-                            </select>
+                            <label for="project_start">Project start</label>
+                            <input type="date" name="project_start"
+                                   value="{{ old('project_start', empty($project->start) ? '' : $project->start->toDateString())}}"
+                                   class="form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-md-3 px-0">
+                            <label for="project_end">Project end</label>
+                            <input type="date" name="project_end"
+                                   value="{{ old('project_end', empty($project->start) ? '' : $project->end->toDateString())}}"
+                                   class="form-control form-control-sm">
                         </div>
 
                         <div class="form-group">
@@ -111,15 +113,15 @@
                                     @foreach ($outputs as $output)
                                         <tr>
                                             <td class="w-75"><input type="hidden" name="output_id[]"
-                                                                        value="{{$output->id}}">
+                                                                    value="{{$output->id}}">
                                                 <input type="text"
                                                        name="output_indicator[]"
                                                        value="{{$output->indicator}}"
                                                        class="form-control form-control-sm">
                                             </td>
                                             <td class="w-25"><input type="text" name="output_target[]"
-                                                                        class="form-control form-control-sm"
-                                                                        value="{{$output->target}}"></td>
+                                                                    class="form-control form-control-sm"
+                                                                    value="{{$output->target}}"></td>
                                             <td>
                                                 <button type="button" name="remove"
                                                         class="btn btn-outline-danger btn-sm remove"><i

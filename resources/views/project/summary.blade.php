@@ -9,6 +9,10 @@
     <table>
         <tr>
             <td>Project period:</td>
+            <td class="auto">{{$project->dates}}</td>
+        </tr>
+        <tr>
+            <td>Project activities range:</td>
             <td class="auto">{{$project->projectstart}} — {{$project->projectend}}</td>
         </tr>
         <tr>

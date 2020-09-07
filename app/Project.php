@@ -8,8 +8,10 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class Project extends Model
 {
     use LogsActivity;
-    protected $fillable = ['name', 'description', 'activities', 'status', 'outputs', 'aggregated_outputs'];
-    protected static $logAttributes = ['name', 'description', 'activities', 'status', 'outputs', 'aggregated_outputs'];
+
+    protected $fillable = ['name', 'description', 'start', 'end', 'activities', 'status', 'outputs', 'aggregated_outputs'];
+    protected $dates = ['start', 'end'];
+    protected static $logAttributes = ['name', 'description', 'start', 'end', 'activities', 'status', 'outputs', 'aggregated_outputs'];
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 
@@ -22,6 +24,7 @@ class Project extends Model
     {
         return $this->hasMany(Output::class);
     }
+
     public function projectupdate()
     {
         return $this->hasMany(ProjectUpdate::class);

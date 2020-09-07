@@ -2,18 +2,8 @@
 
 @section('content')
     <div class="row">
-        <div class="col-8"><h4>Project details</h4></div>
-        <div class="col-4 text-right"><a href="/project/{{$project->id}}/edit" class="btn btn-outline-secondary btn-sm"><i
-                        class="far fa-edit"></i></a>
-            <a href="/project/{{$project->id}}/summary" class="btn btn-outline-secondary btn-sm"><i
-                        class="fas fa-calculator"></i></a>
-            <a href="/project/{{$project->id}}/update" class="btn btn-outline-secondary btn-sm"><i
-                        class="fas fa-folder-plus"></i></a>
-            <a href="/project/{{$project->id}}/updates" class="btn btn-outline-secondary btn-sm"><i
-                        class="far fa-list-alt"></i></a>
-            <a href="/project/{{$project->id}}/delete" class="btn btn-outline-danger btn-sm"
-               onclick="return confirm('Are you sure you want to delete this item?');"><i
-                        class="far fa-trash-alt"></i></a></div>
+        <div class="col"><h4>Project details</h4></div>
+        <div class="col text-right">@include('project.action_links')</div>
     </div>
 
     <table class="table my-4">
@@ -24,6 +14,10 @@
         <tr>
             <td>Description</td>
             <td>{{ $project->description }}</td>
+        </tr>
+        <tr>
+            <td>Dates</td>
+            <td>{{$project->dates}}</td>
         </tr>
         <tr>
             <td>Status</td>

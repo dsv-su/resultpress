@@ -24,6 +24,8 @@
                     @endif
                 </td>
                 <td class="text-center mw-400">
+                    <!--<a href="/project/{{$project->id}}" class="btn btn-outline-secondary btn-sm">Summary <i
+                                class="fas fa-calculator"></i></a>-->
                     @include('project.action_links')
                 </td>
             </tr>

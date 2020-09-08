@@ -1,103 +1,105 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="row">
-        <div class="col"><h4>Project details</h4></div>
-        <div class="col text-right">@include('project.action_links')</div>
-    </div>
+    <h4>{{$project->name}} — project summary</h4>
 
-    <table class="table my-4">
+    <p><a href="{{ url()->previous() }}">Return back</a></p>
+
+    <p>{{$project->description}}</p>
+    <table>
         <tr>
-            <td>Name</td>
-            <td>{{ $project->name}}</td>
+            <td>Project period:</td>
+            <td class="auto">{{$project->dates}}</td>
         </tr>
         <tr>
-            <td>Description</td>
-            <td>{{ $project->description }}</td>
+            <td>Project activities range:</td>
+            <td class="auto">{{$project->projectstart}} — {{$project->projectend}}</td>
         </tr>
         <tr>
-            <td>Dates</td>
-            <td>{{$project->dates}}</td>
+            <td>Number of approved updates:</td>
+            <td class="derived">{{$project->updatesnumber}}</td>
         </tr>
         <tr>
-            <td>Status</td>
-            <td>@if($project->status == 1)
-                    <span class="badge inprogress">In progress</span>
-                @elseif($project->status == 2)
-                    <span class="badge delayed">Delayed</span>
-                @elseif($project->status == 3)
-                    <span class="badge done">Done</span>
-                @endif</td>
+            <td>Most recent approved update:</td>
+            <td class="auto">{{$project->recentupdate}}</td>
         </tr>
     </table>
 
-    @if(!$activities->isEmpty())
-        <h4>Activities</h4>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Activity name</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Budget</th>
+    <h5 class="my-4">Activities</h5>
+    <table class="table">
+        @foreach ($activities as $index => $a)
+            <tr id="activity-{{$a->id}}">
+                <td class="collapsed link">@if($a->comments)<i class="fas fa-caret-square-right mr-2"></i><i
+                            class="fas fa-caret-square-down d-none"></i>@endif{{$a->title}}</td>
+                @if($a->status == 1)
+                    <td class="status inprogress">In progress {{$a->statusdate}}</td>
+                @elseif($a->status == 2)
+                    <td class="status delayed">Delayed {{$a->statusdate}}</td>
+                @elseif($a->status == 3)
+                    <td class="status done">Done {{$a->statusdate}}</td>
+                @elseif($a->status == 0)
+                    <td class="status">Not started</td>
+                @endif
             </tr>
-            </thead>
-            @foreach ($activities as $activity)
-                <tr id="activity-{{$activity->id}}">
-                    <td class="collapsed link">@if($activity->description)<i class="fas fa-caret-square-right"></i><i
-                                class="fas fa-caret-square-down d-none"></i>@endif{{$activity->title}}</td>
-                    <td>{{$activity->start->format('d/m/Y')}}</td>
-                    <td>{{$activity->end->format('d/m/Y')}}</td>
-                    <td>{{$activity->budget}}</td>
-                </tr>
-                @if ($activity->description)
-                    <tr id="activity-{{$activity->id}}" class="d-none update">
-                        <td colspan="4">
-                            <table class="table">
+            @if ($a->comments)
+                <tr id="activity-{{$a->id}}" class="d-none update">
+                    <td colspan="2">
+                        <table class="table">
+                            @foreach ($a->comments as $puindex => $comment)
                                 <tr>
-                                    <td><b>{{$activity->description}}</td>
+                                    <td><b>Update {{$puindex}}</b>: {{$comment}}</td>
                                 </tr>
-                            </table>
-                        </td>
-                    </tr>
-                @endif
-            @endforeach
-            @endif
-        </table>
-
-        @if(!$outputs->isEmpty())
-            <h4>Outputs</h4>
-            <table class="table mw-400">
-                <thead>
-                <tr>
-                    <th>Indicator</th>
-                    <th>Target</th>
+                            @endforeach
+                        </table>
+                    </td>
                 </tr>
-                </thead>
-                <!-- Here comes a foreach to show the outputs -->
-                @foreach ($outputs as $output)
-                    <tr>
-                        <td class="w-75">{{$output->indicator}}</td>
-                        <td class="w-25">{{$output->target}}</td>
-                    </tr>
-                @endforeach
-                @endif
-            </table>
+            @endif
+        @endforeach
+    </table>
 
-            <script>
-                $(document).on('click', '.collapsed', function () {
-                    name = $(this).parent().attr('id');
-                    $('tr#' + name).removeClass('d-none');
-                    console.log('tr#' + name);
-                    $(this).children('.fas').toggleClass('fa-caret-square-right fa-caret-square-down');
-                    $(this).toggleClass('collapsed expanded');
-                });
-                $(document).on('click', '.expanded', function () {
-                    name = $(this).parent().attr('id');
-                    $('tr#' + name + '.update').addClass('d-none');
-                    $(this).children('.fas').toggleClass('fa-caret-square-right fa-caret-square-down');
-                    $(this).toggleClass('expanded collapsed');
-                });
-            </script>
+    <h5 class="my-4">Outputs</h5>
+    <table class="table table-bordered">
+        @foreach ($outputs as $index => $o)
+            <tr>
+                @if($o->valuestatus == 1)
+                    <td class="status inprogress">{{$o->valuesum}}</td>
+                @elseif($o->valuestatus == 2)
+                    <td class="status delayed">{{$o->valuesum}}</td>
+                @elseif($o->valuestatus == 3)
+                    <td class="status done">{{$o->valuesum}}</td>
+                @endif
+                <td>{{$o->indicator}}</td>
+            </tr>
+        @endforeach
+    </table>
+
+    <h5 class="my-4">Budget</h5>
+    <table class="table table-bordered">
+        <thead>
+        <th>Used</th>
+        <th>Total</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="derived">{{$project->moneyspent}}</td>
+            <td class="derived">{{$project->budget}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <script>
+        $(document).on('click', '.collapsed', function () {
+            name = $(this).parent().attr('id');
+            $('tr#' + name).removeClass('d-none');
+            $(this).children('.fas').toggleClass('fa-caret-square-right fa-caret-square-down');
+            $(this).toggleClass('collapsed expanded');
+        });
+        $(document).on('click', '.expanded', function () {
+            name = $(this).parent().attr('id');
+            $('tr#' + name + '.update').addClass('d-none');
+            $(this).children('.fas').toggleClass('fa-caret-square-right fa-caret-square-down');
+            $(this).toggleClass('expanded collapsed');
+        });
+    </script>
 
 @endsection

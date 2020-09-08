@@ -1,7 +1,5 @@
 <a href="/project/{{$project->id}}/edit" class="btn btn-outline-secondary btn-sm">Edit <i
             class="far fa-edit"></i></a>
-<a href="/project/{{$project->id}}/summary" class="btn btn-outline-secondary btn-sm">Summary <i
-            class="fas fa-calculator"></i></a>
 <a href="/project/{{$project->id}}/update" class="btn btn-outline-secondary btn-sm">Write an update <i
             class="fas fa-folder-plus"></i></a>
 <a href="/project/{{$project->id}}/updates" class="btn btn-outline-secondary btn-sm">All updates <i

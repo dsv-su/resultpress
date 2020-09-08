@@ -43,12 +43,78 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        $project_updates = ProjectUpdate::where('project_id', $project->id)->where('project_updates.approved', 1)->get();
+        $activities = Activity::where('project_id', $project->id)->get();
+        $outputs = Output::where('project_id', $project->id)->get();
+        $moneyspent = 0;
+        $budget = 0;
+        foreach ($activities as $a) {
+            $activityupdates = ActivityUpdate::where('activity_id', $a->id)
+                ->join('project_updates', 'project_update_id', '=', 'project_updates.id')
+                ->where('project_updates.approved', 1)
+                ->orderBy('date', 'asc')
+                ->get();
+
+            $comments = array();
+            foreach ($activityupdates as $au) {
+                $moneyspent += $au->money;
+                $puindex = 0;
+                foreach ($project_updates as $index => $pu) {
+                    if ($pu->id == $au->project_update_id) {
+                        $puindex = $index + 1;
+                    }
+                }
+                $comments[$puindex] = $au->comment;
+            }
+
+            ksort($comments);
+            $a->comments = $comments;
+            $budget += $a->budget;
+
+            $latestupdate = $activityupdates->last();
+            if ($latestupdate) {
+                $a->status = $latestupdate->status;
+                switch ($a->status) {
+                    case 3:
+                        $a->statusdate = 'on ' . $latestupdate->date->format('d/m/Y');
+                        break;
+                    case 0:
+                        $a->statusdate = '';
+                        break;
+                    default:
+                        $a->statusdate = $latestupdate->date ? 'since ' . $latestupdate->date->format('d/m/Y') : '';
+                        break;
+                }
+            }
+        }
+        foreach ($outputs as $o) {
+            $outputupdates = OutputUpdate::where('output_id', $o->id)
+                ->join('project_updates', 'project_update_id', '=', 'project_updates.id')
+                ->where('project_updates.approved', 1)
+                ->get();
+            $valuesum = 0;
+            foreach ($outputupdates as $ou) {
+                $valuesum += $ou->value;
+            }
+            $o->valuesum = $valuesum;
+            if ($valuesum == 0) {
+                $o->valuestatus = 2;
+            } elseif ($valuesum >= $o->target) {
+                $o->valuestatus = 3;
+            } else {
+                $o->valuestatus = 1;
+            }
+        }
+
         $project->dates = $this->project_dates($project);
-        return view('project.show', [
-            'project' => $project,
-            'activities' => Activity::where('project_id', $project->id)->get(),
-            'outputs' => Output::where('project_id', $project->id)->get()
-        ]);
+        $project->projectstart = Activity::where('project_id', $project->id)->orderBy('start', 'asc')->first()->start->format('d/m/Y');
+        $project->projectend = Activity::where('project_id', $project->id)->orderBy('end', 'desc')->first()->end->format('d/m/Y');
+        $project->updatesnumber = count($project_updates);
+        $project->recentupdate = $project_updates->sortBy('created_at')->values()->last()->created_at->format('d/m/Y');
+        $project->moneyspent = $moneyspent;
+        $project->budget = $budget;
+
+        return view('project.show', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs]);
     }
 
     public function project_dates(Project $project) {
@@ -230,82 +296,6 @@ class ProjectController extends Controller
         }
 
         return redirect()->route('projectupdate_show', $projectupdate_id);
-    }
-
-    public function summary(Project $project)
-    {
-        $project_updates = ProjectUpdate::where('project_id', $project->id)->where('project_updates.approved', 1)->get();
-        $activities = Activity::where('project_id', $project->id)->get();
-        $outputs = Output::where('project_id', $project->id)->get();
-        $moneyspent = 0;
-        $budget = 0;
-        foreach ($activities as $a) {
-            $activityupdates = ActivityUpdate::where('activity_id', $a->id)
-                ->join('project_updates', 'project_update_id', '=', 'project_updates.id')
-                ->where('project_updates.approved', 1)
-                ->orderBy('date', 'asc')
-                ->get();
-
-            $comments = array();
-            foreach ($activityupdates as $au) {
-                $moneyspent += $au->money;
-                $puindex = 0;
-                foreach ($project_updates as $index => $pu) {
-                    if ($pu->id == $au->project_update_id) {
-                        $puindex = $index + 1;
-                    }
-                }
-                $comments[$puindex] = $au->comment;
-            }
-
-            ksort($comments);
-            $a->comments = $comments;
-            $budget += $a->budget;
-
-            $latestupdate = $activityupdates->last();
-            if ($latestupdate) {
-                $a->status = $latestupdate->status;
-                switch ($a->status) {
-                    case 3:
-                        $a->statusdate = 'on ' . $latestupdate->date->format('d/m/Y');
-                        break;
-                    case 0:
-                        $a->statusdate = '';
-                        break;
-                    default:
-                        $a->statusdate = $latestupdate->date ? 'since ' . $latestupdate->date->format('d/m/Y') : '';
-                        break;
-                }
-            }
-        }
-        foreach ($outputs as $o) {
-            $outputupdates = OutputUpdate::where('output_id', $o->id)
-                ->join('project_updates', 'project_update_id', '=', 'project_updates.id')
-                ->where('project_updates.approved', 1)
-                ->get();
-            $valuesum = 0;
-            foreach ($outputupdates as $ou) {
-                $valuesum += $ou->value;
-            }
-            $o->valuesum = $valuesum;
-            if ($valuesum == 0) {
-                $o->valuestatus = 2;
-            } elseif ($valuesum >= $o->target) {
-                $o->valuestatus = 3;
-            } else {
-                $o->valuestatus = 1;
-            }
-        }
-
-        $project->dates = $this->project_dates($project);
-        $project->projectstart = Activity::where('project_id', $project->id)->orderBy('start', 'asc')->first()->start->format('d/m/Y');
-        $project->projectend = Activity::where('project_id', $project->id)->orderBy('end', 'desc')->first()->end->format('d/m/Y');
-        $project->updatesnumber = count($project_updates);
-        $project->recentupdate = Activity::where('project_id', $project->id)->latest()->first()->created_at->format('d/m/Y');
-        $project->moneyspent = $moneyspent;
-        $project->budget = $budget;
-
-        return view('project.summary', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs]);
     }
 
     /**

@@ -36,7 +36,7 @@
                 <a class="nav-link" href="{{ route('logs') }}">Logs</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Username</a>
+                <a class="nav-link" href="#">{{ Auth::user()->name ?? 'UserName' }} </a>
             </li>
 
         </ul>

@@ -50,7 +50,6 @@ class CheckEntitlement
 
         }
 
-
         return $next($request);
     }
 }

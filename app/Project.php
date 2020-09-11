@@ -11,7 +11,7 @@ class Project extends Model
 
     protected $fillable = ['name', 'description', 'start', 'end', 'activities', 'status', 'outputs', 'aggregated_outputs'];
     protected $dates = ['start', 'end'];
-    protected static $logAttributes = ['name', 'description', 'start', 'end', 'activities', 'status', 'outputs', 'aggregated_outputs'];
+    protected static $logAttributes = ['name', 'description', 'start', 'end', 'activities', 'status', 'outputs', 'aggregated_outputs', 'user.name'];
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 
@@ -28,6 +28,11 @@ class Project extends Model
     public function projectupdate()
     {
         return $this->hasMany(ProjectUpdate::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
 

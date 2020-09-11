@@ -5,11 +5,12 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class User extends Authenticatable
 {
-    use Notifiable, LogsActivity;
+    use Notifiable, LogsActivity, CausesActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -42,4 +43,9 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
     protected static $logOnlyDirty = true;
+
+    public function projects()
+    {
+        return $this->hasMany('App\Models\Project');
+    }
 }

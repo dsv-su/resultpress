@@ -20,7 +20,7 @@
                 <td>{{ $activity->id }}</td>
                 <td>{{ $activity->log_name }}</td>
                 <td>{{ $activity->description }}</td>
-                <td>{{ $activity->causer_is }}</td>
+                <td>{{ $activity->causer_id }}</td>
                 <td>{{ $activity->causer_type }}</td>
                 <td>{{ $activity->properties }}</td>
                 <td>{{ $activity->created_at }}</td>

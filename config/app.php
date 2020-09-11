@@ -173,7 +173,10 @@ return [
         /*
          * Package Service Providers...
          */
-
+        //This provider should only be used while developing
+        //-> To be removed
+        StudentAffairsUwm\Shibboleth\ShibalikeServiceProvider::class,
+        //->
         /*
          * Application Service Providers...
          */

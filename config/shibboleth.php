@@ -73,7 +73,7 @@ return [
     |
      */
 
-    'entitlement' => $system_config['global']['authorization'],
+    'entitlement' => $system_config['global']['authorization_parameter'],
 
     'user' => [
         'name' => 'displayName',

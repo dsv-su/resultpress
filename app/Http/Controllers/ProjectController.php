@@ -105,12 +105,11 @@ class ProjectController extends Controller
                 $o->valuestatus = 1;
             }
         }
-
         $project->dates = $this->project_dates($project);
-        $project->projectstart = Activity::where('project_id', $project->id)->orderBy('start', 'asc')->first()->start->format('d/m/Y');
-        $project->projectend = Activity::where('project_id', $project->id)->orderBy('end', 'desc')->first()->end->format('d/m/Y');
+        $project->projectstart = !$activities->isEmpty() ? Activity::where('project_id', $project->id)->orderBy('start', 'asc')->first()->start->format('d/m/Y') : null;
+        $project->projectend = !$activities->isEmpty() ? Activity::where('project_id', $project->id)->orderBy('end', 'desc')->first()->end->format('d/m/Y') : null;
         $project->updatesnumber = count($project_updates);
-        $project->recentupdate = $project_updates->sortBy('created_at')->values()->last()->created_at->format('d/m/Y');
+        $project->recentupdate = !$project_updates->isEmpty() ? $project_updates->sortBy('created_at')->values()->last()->created_at->format('d/m/Y') : null;
         $project->moneyspent = $moneyspent;
         $project->budget = $budget;
 
@@ -163,6 +162,7 @@ class ProjectController extends Controller
         $project->name = request('project_name');
         $project->description = request('project_description');
         $project->start = request('project_start') ?? null;
+        $project->status = 0; // temp value
         $project->end = request('project_end') ?? null;
         $project->activities = is_array(request('activity_id')) ? 1 : 0;
         $project->save();

@@ -68,3 +68,22 @@ Currently used version is 7.10.3
 
 * Create the database with `php artisan migrate` (this should create database tables needed)
 
+## 4. Migrating
+
+To run all outstanding migrations, execute:
+
+`php artisan migrate`
+
+To make a database backup:
+
+`php artisan database:backup`
+
+To restore a backup (made on the same day)
+
+`php artisan database:restore`
+
+To rollback and migrate (after making a backup):
+
+``php artisan migrate:fresh``
+
+

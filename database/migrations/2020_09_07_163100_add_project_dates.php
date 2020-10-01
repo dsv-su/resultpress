@@ -24,6 +24,7 @@ class AddProjectDates extends Migration
      *
      * @return void
      */
+    /*
     public function down()
     {
         Schema::table('projects', function (Blueprint $table) {
@@ -31,4 +32,5 @@ class AddProjectDates extends Migration
             $table->dropColumn('end');
         });
     }
+    */
 }

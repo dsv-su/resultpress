@@ -13,16 +13,16 @@ class CreateProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('projects', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->mediumText('description')->nullable();
-            $table->integer('status');
-            $table->boolean('activities');
-            $table->boolean('outputs');
-            $table->boolean('aggregated_outputs');
-            $table->timestamps();
-        });
+            Schema::create('projects', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->mediumText('description')->nullable();
+                $table->integer('status');
+                $table->boolean('activities');
+                $table->boolean('outputs');
+                $table->boolean('aggregated_outputs');
+                $table->timestamps();
+            });
     }
 
     /**
@@ -30,8 +30,10 @@ class CreateProjectsTable extends Migration
      *
      * @return void
      */
+    /*
     public function down()
     {
         Schema::dropIfExists('projects');
     }
+    */
 }

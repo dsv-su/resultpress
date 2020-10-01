@@ -27,8 +27,10 @@ class CreateOutputUpdatesTable extends Migration
      *
      * @return void
      */
+    /*
     public function down()
     {
         Schema::dropIfExists('output_updates');
     }
+    */
 }

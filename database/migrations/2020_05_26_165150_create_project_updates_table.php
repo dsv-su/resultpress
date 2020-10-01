@@ -27,8 +27,10 @@ class CreateProjectUpdatesTable extends Migration
      *
      * @return void
      */
+    /*
     public function down()
     {
         Schema::dropIfExists('project_updates');
     }
+    */
 }

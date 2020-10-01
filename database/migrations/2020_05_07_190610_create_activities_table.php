@@ -13,16 +13,16 @@ class CreateActivitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('activities', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->date('start');
-            $table->date('end');
-            $table->decimal('budget');
-            $table->foreignId('project_id')->constrained();
-            $table->timestamps();
-        });
+            Schema::create('activities', function (Blueprint $table) {
+                $table->id();
+                $table->string('title');
+                $table->text('description')->nullable();
+                $table->date('start');
+                $table->date('end');
+                $table->decimal('budget');
+                $table->foreignId('project_id')->constrained();
+                $table->timestamps();
+            });
     }
 
     /**
@@ -30,8 +30,10 @@ class CreateActivitiesTable extends Migration
      *
      * @return void
      */
+    /*
     public function down()
     {
         Schema::dropIfExists('activities');
     }
+    */
 }

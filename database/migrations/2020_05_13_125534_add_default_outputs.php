@@ -24,10 +24,12 @@ class AddDefaultOutputs extends Migration
      *
      * @return void
      */
+    /*
     public function down()
     {
         Schema::table('projects', function (Blueprint $table) {
             //
         });
     }
+    */
 }

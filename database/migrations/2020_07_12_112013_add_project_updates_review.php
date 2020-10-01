@@ -25,6 +25,7 @@ class AddProjectUpdatesReview extends Migration
      *
      * @return void
      */
+    /*
     public function down()
     {
         Schema::table('project_updates', function (Blueprint $table) {
@@ -33,4 +34,5 @@ class AddProjectUpdatesReview extends Migration
             $table->dropColumn('nominated');
         });
     }
+    */
 }

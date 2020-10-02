@@ -4,6 +4,7 @@
     <h4>{{$project->name}} — project summary</h4>
 
     <p><a href="{{ url()->previous() }}">Return back</a></p>
+    <p>@include('project.action_links')</p>
 
     <p>{{$project->description}}</p>
     <table>
@@ -47,7 +48,7 @@
                         <table class="table">
                             @foreach ($a->comments as $puindex => $comment)
                                 <tr>
-                                    <td><b>Update {{$puindex}}</b>: {{$comment}}</td>
+                                    <td><b>Update {{$puindex}}</b>: {!! $comment !!}</td>
                                 </tr>
                             @endforeach
                         </table>

@@ -6,6 +6,7 @@
             <h4>@empty($project->id) Add a new project @else Update {{$project->name}} @endempty</h4>
         </div>
     </div>
+    <div class="mediumEditor"></div>
     @empty($project->id)
         <form action="{{ route('update', $project) }}" method="POST">
             @else
@@ -55,7 +56,6 @@
                                        @if($activities->isEmpty()) style="display:none;" @endif>
                                     <thead>
                                     <th scope="row">Activity Name</th>
-                                    <th scope="row">Description</th>
                                     <th scope="row">Start</th>
                                     <th scope="row">End</th>
                                     <th scope="row">Budget</th>
@@ -70,9 +70,6 @@
                                                        value="{{$activity->title}}"
                                                        class="form-control form-control-sm">
                                             </td>
-                                            <td><input type="text" name="activity_description[]"
-                                                       class="form-control form-control-sm"
-                                                       value="{{$activity->description}}"></td>
                                             <td><input type="date" name="activity_start[]"
                                                        value="{{$activity->start->toDateString()}}"
                                                        class="form-control form-control-sm">
@@ -89,6 +86,19 @@
                                                         class="btn btn-outline-danger btn-sm remove"><i
                                                             class="fas fa-minus"></i><span
                                                             class="glyphicon glyphicon-minus"></span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="update">
+                                            <td colspan=5>
+                                                <table class="table mb-2">
+                                                    <tr>
+                                                        <td><textarea name="activity_description[]"
+                                                                      placeholder="Activity description template"
+                                                                      class="form-control form-control-sm mediumEditor h-100"
+                                                                      required>{{$activity->description}}</textarea>
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -146,6 +156,7 @@
                 </form>
 
                 <script>
+                    let editor = new MediumEditor('.mediumEditor');
                     $(document).ready(function () {
                         $(document).on('click', '.add-activities', function () {
                             $('#activities_table').show();
@@ -153,12 +164,15 @@
                             html += '<tr>';
                             html += '<input type="hidden" name="activity_id[]" value=0>';
                             html += '<td><input type="text" name="activity_name[]" class="form-control form-control-sm" placeholder="Activity Name" required></td>';
-                            html += '<td><input type="text" name="activity_description[]" class="form-control form-control-sm" placeholder="Activity description" required></td>';
                             html += '<td><input type="date" name="activity_start[]" class="form-control form-control-sm" placeholder="Startdate" size="1" required></td>';
                             html += '<td><input type="date" name="activity_end[]"  class="form-control form-control-sm" placeholder="Enddate" size="1" required></td>';
                             html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="Budget" size="3" required></td>';
-                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
+                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
+                            html += '</tr>';
+                            html += '<tr class="update"><td colspan=5><table class="table mb-2 "><tr><td><textarea placeholder="Activity template" name="activity_description[]" ' +
+                                'class="form-control form-control-sm mediumEditor h-100" required></textarea></td></tr></table></td></tr>';
                             $('#activities_table').append(html);
+                            let editor = new MediumEditor('.mediumEditor');
                         });
                         $(document).on('click', '.add-outputs', function () {
                             $('#outputs_table').show();
@@ -169,8 +183,10 @@
                             html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="Target" size="3" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
                             $('#outputs_table').append(html);
+                            let editor = new MediumEditor('.mediumEditor');
                         });
                         $(document).on('click', '.remove', function () {
+                            $(this).closest('tr').next().remove();
                             $(this).closest('tr').remove();
                             if ($('tr', $('#activities_table')).length < 2) {
                                 $('#activities_table').hide();

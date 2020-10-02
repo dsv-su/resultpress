@@ -116,7 +116,8 @@ class ProjectController extends Controller
         return view('project.show', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs]);
     }
 
-    public function project_dates(Project $project) {
+    public function project_dates(Project $project)
+    {
         if ($project->start) {
             if ($project->end) {
                 $dates = $project->start->format('d/m/Y') . " — " . $project->end->format('d/m/Y');
@@ -251,35 +252,39 @@ class ProjectController extends Controller
         $activity_update_array['money'] = request('activity_money');
         $activity_update_array['date'] = request('activity_date') ?? null;
 
-        foreach ($activity_update_array['activity_id'] as $key => $id) {
-            $activityupdate = new ActivityUpdate;
-            $activityupdate->activity_id = Activity::findOrFail($id)->id;
-            $activityupdate->comment = $activity_update_array['comment'][$key];
-            $activityupdate->status = $activity_update_array['status'][$key];
-            $activityupdate->money = $activity_update_array['money'][$key];
-            $activityupdate->date = $activity_update_array['date'][$key];
-            $activityupdate->project_update_id = $projectupdate_id;
-            $activityupdate->save();
+        if ($activity_update_array['activity_id']) {
+            foreach ($activity_update_array['activity_id'] as $key => $id) {
+                $activityupdate = new ActivityUpdate;
+                $activityupdate->activity_id = Activity::findOrFail($id)->id;
+                $activityupdate->comment = $activity_update_array['comment'][$key];
+                $activityupdate->status = $activity_update_array['status'][$key];
+                $activityupdate->money = $activity_update_array['money'][$key];
+                $activityupdate->date = $activity_update_array['date'][$key];
+                $activityupdate->project_update_id = $projectupdate_id;
+                $activityupdate->save();
+            }
         }
 
         // Process output updates
         $output_update_array['output_id'] = request('output_id');
         $output_update_array['value'] = request('output_value');
 
-        foreach ($output_update_array['output_id'] as $key => $id) {
-            if (!is_numeric($output_update_array['output_id'][$key])) {
-                //Create new output since it's an unexpected one
-                $data = array();
-                $data['indicator'] = $output_update_array['output_id'][$key];
-                $data['target'] = 0;
-                $data['project_id'] = $project->id;
-                $id = Output::create($data)->id;
+        if ($output_update_array['output_id']) {
+            foreach ($output_update_array['output_id'] as $key => $id) {
+                if (!is_numeric($output_update_array['output_id'][$key])) {
+                    //Create new output since it's an unexpected one
+                    $data = array();
+                    $data['indicator'] = $output_update_array['output_id'][$key];
+                    $data['target'] = 0;
+                    $data['project_id'] = $project->id;
+                    $id = Output::create($data)->id;
+                }
+                $outputupdate = new OutputUpdate();
+                $outputupdate->output_id = Output::findOrFail($id)->id;
+                $outputupdate->value = $output_update_array['value'][$key];
+                $outputupdate->project_update_id = $projectupdate_id;
+                $outputupdate->save();
             }
-            $outputupdate = new OutputUpdate();
-            $outputupdate->output_id = Output::findOrFail($id)->id;
-            $outputupdate->value = $output_update_array['value'][$key];
-            $outputupdate->project_update_id = $projectupdate_id;
-            $outputupdate->save();
         }
 
         // Update file reference

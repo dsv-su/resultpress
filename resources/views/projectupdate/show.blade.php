@@ -35,7 +35,7 @@
                     <td colspan=4>
                         <table class="table @if(!$review) mb-2 @else mb-0 @endif">
                             <tr>
-                                <td>{{$au->comment}}</td>
+                                <td>{!!$au->comment!!}</td>
                             </tr>
                         </table>
                     </td>

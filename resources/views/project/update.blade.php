@@ -154,9 +154,10 @@
                 html += '<td class="fit"><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
                 html += '<tr class="update"><td colspan=5><table class="table mb-2 "><tr><td><textarea name="activity_comment[]" ' +
-                    'class="form-control form-control-sm" required>Comment</textarea></td></tr></table></td></tr>';
+                    'class="form-control form-control-sm mediumEditor h-100" required>Comment</textarea></td></tr></table></td></tr>';
                 $('#' + id + '.add-activity').hide();
                 $('#activities_table').append(html);
+                let editor = new MediumEditor('.mediumEditor');
             });
             $(document).on('click', '.add-output', function () {
                 $('#outputs_table').show();

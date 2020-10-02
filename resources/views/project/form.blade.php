@@ -6,7 +6,7 @@
             <h4>@empty($project->id) Add a new project @else Update {{$project->name}} @endempty</h4>
         </div>
     </div>
-    <div class="mediumEditor"></div>
+
     @empty($project->id)
         <form action="{{ route('update', $project) }}" method="POST">
             @else
@@ -28,9 +28,9 @@
                         <div class="form-group">
                             <label for="project_description">Description</label>
                             <textarea rows="4"
-                                      class="form-control form-control-sm @error('project_description') is-danger @enderror"
+                                      class="form-control form-control-sm mediumEditor h-100 @error('project_description') is-danger @enderror"
                                       name="project_description" id="project_description"
-                            >{{ old('project_description', empty($project) ? '' : $project->description) }}</textarea>
+                            >{!! old('project_description', empty($project) ? '' : $project->description) !!}</textarea>
                             @error('project_description')
                             <div class="text-danger">
                                 {{ $errors->first('project_description') }}

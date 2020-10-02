@@ -6,7 +6,7 @@
     <p><a href="{{ url()->previous() }}">Return back</a></p>
     <p>@include('project.action_links')</p>
 
-    <p>{{$project->description}}</p>
+    <p>{!!$project->description!!}</p>
     <table>
         <tr>
             <td>Project period:</td>

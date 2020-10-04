@@ -22,7 +22,7 @@
 
         <div class="form-group">
             <h4>Covered activities:</h4>
-            <table class="table table-sm w-100" @if ($aus->isEmpty()) style="display: none;"
+            <table class="table table-sm w-100" @if (empty($aus)) style="display: none;"
                    @endif id="activities_table">
                 <thead>
                 <th>Activity</th>
@@ -31,40 +31,42 @@
                 <th>Date(s)</th>
                 <th></th>
                 </thead>
-                @foreach($aus as $au)
-                    <tr>
-                        <input type="hidden" name="activity_update_id[]" value="{{$au->id}}">
-                        <td class="auto"><input type="hidden" id="activity" name="activity_id[]"
-                                                value="{{$au->activity_id}}">{{$au->title}}</td>
-                        <td class="editable">
-                            <select id="status" name="activity_status[]">
-                                <option value="1" @if ($au->status == 1) selected @endif >In progress</option>
-                                <option value="2" @if ($au->status == 2) selected @endif>Delayed</option>
-                                <option value="3" @if ($au->status == 3) selected @endif>Done</option>
-                            </select>
-                        </td>
-                        <td><input type="number" name="activity_money[]" class="form-control form-control-sm"
-                                   placeholder="Money" size="3" required value="{{$au->money}}"></td>
-                        <td><input type="date" name="activity_date[]" class="form-control form-control-sm"
-                                   placeholder="Date" size="1" value="{{$au->date->toDateString()}}"></td>
-                        <td class="fit">
-                            <button type="button" name="remove" id="{{$au->activity_id}}"
-                                    class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span
-                                        class="glyphicon glyphicon-minus"></span></button>
-                        </td>
-                    </tr>
-                    <tr class="update">
-                        <td colspan=5>
-                            <table class="table mb-2 ">
-                                <tr>
-                                    <td><textarea name="activity_comment[]"
-                                                  class="form-control form-control-sm mediumEditor"
-                                                  required>{!! $au->comment !!}</textarea></td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                @endforeach
+                @if (!empty($aus))
+                    @foreach($aus as $au)
+                        <tr>
+                            <input type="hidden" name="activity_update_id[]" value="{{$au->id}}">
+                            <td class="auto"><input type="hidden" id="activity" name="activity_id[]"
+                                                    value="{{$au->activity_id}}">{{$au->title}}</td>
+                            <td class="editable">
+                                <select id="status" name="activity_status[]">
+                                    <option value="1" @if ($au->status == 1) selected @endif >In progress</option>
+                                    <option value="2" @if ($au->status == 2) selected @endif>Delayed</option>
+                                    <option value="3" @if ($au->status == 3) selected @endif>Done</option>
+                                </select>
+                            </td>
+                            <td><input type="number" name="activity_money[]" class="form-control form-control-sm"
+                                       placeholder="Money" size="3" required value="{{$au->money}}"></td>
+                            <td><input type="date" name="activity_date[]" class="form-control form-control-sm"
+                                       placeholder="Date" size="1" value="{{$au->date->toDateString()}}"></td>
+                            <td class="fit">
+                                <button type="button" name="remove" id="{{$au->activity_id}}"
+                                        class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span
+                                            class="glyphicon glyphicon-minus"></span></button>
+                            </td>
+                        </tr>
+                        <tr class="update">
+                            <td colspan=5>
+                                <table class="table mb-2 ">
+                                    <tr>
+                                        <td><textarea name="activity_comment[]"
+                                                      class="form-control form-control-sm mediumEditor"
+                                                      required>{!! $au->comment !!}</textarea></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </table>
             <div class="dropdown">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addActivities"
@@ -76,7 +78,7 @@
                     @foreach ($project->activity as $activity)
                         <a class="dropdown-item add-activity" href="#"
                            id="{{$activity->id}}"
-                           @if (!$aus->isEmpty() && $aus->keyBy('activity_id')->get($activity->id)) style="display: none;" @endif>{{$activity->title}}</a>
+                           @if (!empty($aus) && $aus->keyBy('activity_id')->get($activity->id)) style="display: none;" @endif>{{$activity->title}}</a>
                     @endforeach
                 </div>
             </div>
@@ -84,27 +86,30 @@
 
         <div class="form-group">
             <h4>Affected outputs:</h4>
-            <table class="table table-sm mw-400" @if ($ous->isEmpty()) style="display: none;" @endif
+            <table class="table table-sm mw-400" @if (empty($ous)) style="display: none;" @endif
             id="outputs_table">
                 <thead>
                 <th>Output</th>
                 <th>Value</th>
                 <th></th>
                 </thead>
-                @foreach($ous as $ou)
-                    <tr>
-                        <input type="hidden" name="output_update_id[]" value="{{$ou->id}}">
-                        <td class="w-75"><input type="hidden" id="output" name="output_id[]"
-                                                value="{{$ou->output_id}}">{{$ou->indicator}}</td>
-                        <td class="w-25"><input type="number" name="output_value[]" class="form-control form-control-sm"
-                                                size="3" required value="{{$ou->value}}"></td>
-                        <td>
-                            <button type="button" name="remove" id="{{$ou->output_id}}"
-                                    class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span
-                                        class="glyphicon glyphicon-minus"></span></button>
-                        </td>
-                    </tr>
-                @endforeach
+                @if (!empty($ous))
+                    @foreach($ous as $ou)
+                        <tr>
+                            <input type="hidden" name="output_update_id[]" value="{{$ou->id}}">
+                            <td class="w-75"><input type="hidden" id="output" name="output_id[]"
+                                                    value="{{$ou->output_id}}">{{$ou->indicator}}</td>
+                            <td class="w-25"><input type="number" name="output_value[]"
+                                                    class="form-control form-control-sm"
+                                                    size="3" required value="{{$ou->value}}"></td>
+                            <td>
+                                <button type="button" name="remove" id="{{$ou->output_id}}"
+                                        class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span
+                                            class="glyphicon glyphicon-minus"></span></button>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </table>
             <div class="dropdown">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutputs"
@@ -115,7 +120,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     @foreach ($project->output as $output)
                         <a class="dropdown-item add-output" href="#" id="{{$output->id}}"
-                           @if (!$ous->isEmpty() && $ous->keyBy('output_id')->get($output->id)) style="display: none;" @endif>{{$output->indicator}}</a>
+                           @if (!empty($ous) && $ous->keyBy('output_id')->get($output->id)) style="display: none;" @endif>{{$output->indicator}}</a>
                     @endforeach
                     <a class="dropdown-item add-output" href="#" id="0">Add a new ouput</a>
                 </div>
@@ -127,15 +132,17 @@
             <div class="alert" id="message" style="display: none"></div>
             <div>
                 <div id="attachments">
-                    @foreach($files as $file)
-                        <span id="uploaded_file" class="d-block">
+                    @if (!empty($files))
+                        @foreach($files as $file)
+                            <span id="uploaded_file" class="d-block">
                             <input type="hidden" name="file_id[]" value="{{$file->id}}">
                             <a href="{{$file->path}}" target="_blank">{{$file->name}}</a>
                             <button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i
                                         class="far fa-trash-alt"></i></button>
                             <br/>
                         </span>
-                    @endforeach
+                        @endforeach
+                    @endif
                 </div>
                 <input type="file" id="files" name="attachments" placeholder="Choose file(s)" multiple>
                 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -228,10 +235,10 @@
                 html += '<td class="fit"><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
                 html += '<tr class="update"><td colspan=5><table class="table mb-2 "><tr><td><textarea name="activity_comment[]" ' +
-                    'class="form-control form-control-sm mediumEditor" required>Comment</textarea></td></tr></table></td></tr>';
+                    'class="form-control form-control-sm mediumEditor" required></textarea></td></tr></table></td></tr>';
                 $('#' + id + '.add-activity').hide();
                 $('#activities_table').append(html);
-                let editor = new MediumEditor('.mediumEditor');
+                let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
             });
             $(document).on('click', '.add-output', function () {
                 $('#outputs_table').show();

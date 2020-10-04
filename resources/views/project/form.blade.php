@@ -156,7 +156,7 @@
                 </form>
 
                 <script>
-                    let editor = new MediumEditor('.mediumEditor');
+                    let editor = new MediumEditor('.mediumEditor', {placeholder: false});
                     $(document).ready(function () {
                         $(document).on('click', '.add-activities', function () {
                             $('#activities_table').show();
@@ -172,7 +172,7 @@
                             html += '<tr class="update"><td colspan=5><table class="table mb-2 "><tr><td><textarea placeholder="Activity template" name="activity_description[]" ' +
                                 'class="form-control form-control-sm mediumEditor" required></textarea></td></tr></table></td></tr>';
                             $('#activities_table').append(html);
-                            let editor = new MediumEditor('.mediumEditor');
+                            let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Template", hideOnClick: true}});
                         });
                         $(document).on('click', '.add-outputs', function () {
                             $('#outputs_table').show();
@@ -183,7 +183,6 @@
                             html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="Target" size="3" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
                             $('#outputs_table').append(html);
-                            let editor = new MediumEditor('.mediumEditor');
                         });
                         $(document).on('click', '.remove', function () {
                             $(this).closest('tr').next().remove();

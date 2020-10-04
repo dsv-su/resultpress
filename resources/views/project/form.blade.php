@@ -28,7 +28,7 @@
                         <div class="form-group">
                             <label for="project_description">Description</label>
                             <textarea rows="4"
-                                      class="form-control form-control-sm mediumEditor h-100 @error('project_description') is-danger @enderror"
+                                      class="form-control form-control-sm mediumEditor @error('project_description') is-danger @enderror"
                                       name="project_description" id="project_description"
                             >{!! old('project_description', empty($project) ? '' : $project->description) !!}</textarea>
                             @error('project_description')
@@ -94,7 +94,7 @@
                                                     <tr>
                                                         <td><textarea name="activity_description[]"
                                                                       placeholder="Activity description template"
-                                                                      class="form-control form-control-sm mediumEditor h-100"
+                                                                      class="form-control form-control-sm mediumEditor"
                                                                       required>{{$activity->description}}</textarea>
                                                         </td>
                                                     </tr>
@@ -170,7 +170,7 @@
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                             html += '</tr>';
                             html += '<tr class="update"><td colspan=5><table class="table mb-2 "><tr><td><textarea placeholder="Activity template" name="activity_description[]" ' +
-                                'class="form-control form-control-sm mediumEditor h-100" required></textarea></td></tr></table></td></tr>';
+                                'class="form-control form-control-sm mediumEditor" required></textarea></td></tr></table></td></tr>';
                             $('#activities_table').append(html);
                             let editor = new MediumEditor('.mediumEditor');
                         });

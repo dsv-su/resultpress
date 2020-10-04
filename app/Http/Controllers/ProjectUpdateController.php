@@ -237,12 +237,28 @@ class ProjectUpdateController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
-     * @return void
+     * @param ProjectUpdate $project_update
+     * @return Application|Factory|View|void
      */
-    public function edit($id)
+    public function edit(ProjectUpdate $project_update)
     {
-        //
+        $project = Project::find($project_update->project_id);
+        $activityupdates = ActivityUpdate::where('project_update_id', $project_update->id)
+            ->join('activities', 'activity_id', '=', 'activities.id')
+            ->select('activity_updates.*', 'activities.title')
+            ->get();
+        $outputupdates = OutputUpdate::where('project_update_id', $project_update->id)
+            ->join('outputs', 'output_id', '=', 'outputs.id')
+            ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
+            ->get();
+        $project_update->index = $this->get_update_index($project_update);
+        return view('project.update', [
+            'project' => $project,
+            'project_update' => $project_update,
+            'aus' => $activityupdates,
+            'ous' => $outputupdates,
+            'files' => $this->get_files($project_update)
+        ]);
     }
 
     /**
@@ -255,7 +271,9 @@ class ProjectUpdateController extends Controller
     {
         $project_update->internal_comment = request('internal_comment');
         $project_update->partner_comment = request('partner_comment');
-        $project_update->approved = request('approved');
+        if (request('approved')) {
+            $project_update->status = 'approved';
+        }
         $project_update->save();
         return redirect()->route('projectupdate_index', $project_update->project_id);
     }

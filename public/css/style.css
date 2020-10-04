@@ -316,3 +316,7 @@ tr.update>td {
   border-collapse:separate;
   border-spacing: 0 1em;
 }
+
+.mediumEditor {
+  height: 100% !important;
+}

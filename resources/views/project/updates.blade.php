@@ -15,9 +15,20 @@
             @foreach ($project->projectupdate as $index => $pu)
                 <tr>
                     <td class="fit">{{$index+1}}</td>
-                    <td class="w-75">@if($pu->summary){{$pu->summary}} @else No summary provided @endif</td>
+                    <td class="w-75">
+                        @if($pu->status == 'draft') <span class="badge badge-danger">Draft</span>
+                        @elseif($pu->status == 'submitted') <span
+                                class="badge badge-warning">Submitted</span>
+                        @elseif($pu->status == 'approved') <span class="badge badge-success">Approved</span>
+                        @endif
+                        @if($pu->summary){{$pu->summary}} @else No summary provided @endif</td>
                     <td class="fit">{{$pu->created_at->format('d/m/Y')}}</td>
-                    <td class="text-nowrap" ><a href="/project/update/{{$pu->id}}" class="btn btn-outline-secondary btn-sm">Show <i
+                    <td class="text-nowrap">
+                        @if ($pu->status == 'draft')
+                            <a href="/project/update/{{$pu->id}}/edit" class="btn btn-outline-secondary btn-sm">Edit <i
+                                        class="fas fa-info-circle"></i></a>
+                        @endif
+                        <a href="/project/update/{{$pu->id}}" class="btn btn-outline-secondary btn-sm">Show <i
                                     class="fas fa-info-circle"></i></a>
                         <a href="/project/update/{{$pu->id}}/review" class="btn btn-outline-secondary btn-sm">Review <i
                                     class="fas fa-highlighter"></i></a>

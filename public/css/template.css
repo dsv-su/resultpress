@@ -76,12 +76,13 @@ input:not([type="submit"]):focus, textarea:focus, select:focus {
     border: 1px solid black;
 }
 
-button, input[type="submit"] {
+button, input[type="submit"], .btn-submit {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     background-color: orange;
     background-position: left;
     background-repeat: repeat-x;
     color: white;
+    border: none;
 }
 
 /*

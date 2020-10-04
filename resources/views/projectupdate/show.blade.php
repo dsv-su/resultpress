@@ -7,11 +7,17 @@
             <span>{{$project_update->created_at->format('d/m/Y')}}</span>
         </div>
     </div>
+    <div>
+        @if($project_update->status == 'draft') <span class="badge badge-danger">Draft</span>
+        @elseif($project_update->status == 'submitted') <span class="badge badge-warning">Submitted</span>
+        @elseif($project_update->status == 'approved') <span class="badge badge-success">Approved</span>
+        @endif
+    </div>
     <p><a href="{{ route('projectupdate_index', $project_update->project_id) }}">Back to project updates list</a></p>
 
     @if(!$activity_updates->isEmpty())
         <h4>Covered activities</h4>
-        <table class="table" style="width:100%" id="activities_table">
+        <table class="table w-100" id="activities_table">
             <thead class="text-nowrap">
             <th>Activity</th>
             <th>Status</th>
@@ -84,24 +90,28 @@
 
     @if(!$files->isEmpty())
         <div class="my-1">
-        <h5>Attachments:</h5>
-        <div>
-            @foreach($files as $file)
-                <span id="uploaded_file" class="d-block"><a href="{{$file->path}}">{{$file->name}}</a></span>
-            @endforeach
-        </div>
+            <h5>Attachments:</h5>
+            <div>
+                @foreach($files as $file)
+                    <span id="uploaded_file" class="d-block"><a href="{{$file->path}}" target="_blank">{{$file->name}}</a></span>
+                @endforeach
+            </div>
         </div>
     @endif
 
     @if ($project_update->summary)
         <div class="my-1">
-        <h5>Summary</h5>
-        <table class="table table-striped table-bordered">
-            <tr>
-                <td>{{$project_update->summary}}</td>
-            </tr>
-        </table>
+            <h5>Summary</h5>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <td>{{$project_update->summary}}</td>
+                </tr>
+            </table>
         </div>
+    @endif
+
+    @if ($project_update->status == 'draft')
+        <a href="/project/update/{{$project_update->id}}/edit" class="btn-lg btn-submit">Edit</a>
     @endif
 
     @if($review)
@@ -115,12 +125,13 @@
                     </div>
                     <div class="col text-right">
                         <button type="button" class="btn approve editable" name="approved" data-toggle="button"
-                                @if ($project_update->approved) aria-pressed="true" @else aria-pressed="false" @endif
-                                autocomplete="off">
-                            Approve
+                                @if ($project_update->status == 'approved') aria-pressed="true"
+                                @else aria-pressed="false" @endif
+                                autocomplete="off">@if ($project_update->status == 'approved')Approved @else
+                                Approve @endif
                         </button>
-                        <input type="hidden" name="approved" @empty($project_update->approved) value=0 @else
-                        value={{$project_update->approved}} @endempty>
+                        <input type="hidden" name="approved" @empty($project_update->status == 'approved') value=0 @else
+                        value={{$project_update->status}} @endempty>
                     </div>
                 </div>
                 <div class="form-row my-2">
@@ -139,7 +150,7 @@
                     <div class="text-danger">{{ $errors->first('internal_comment') }}</div>
                     @enderror
                 </div>
-                <input class="btn btn-lg" value="SAVE" type="submit">
+                <input class="btn btn-lg" value="Save" type="submit">
             </div>
         </form>
     @else
@@ -167,8 +178,10 @@
         $(document).on('click', '.approve', function () {
             if ($(this).attr('aria-pressed') === 'true') {
                 $('input[name="approved"]').val(1);
+                $('button[name="approved"]').html('Approved');
             } else {
                 $('input[name="approved"]').val(0);
+                $('button[name="approved"]').html('Approve');
             }
         });
     </script>

@@ -11,6 +11,7 @@ use App\Project;
 use App\ProjectUpdate;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -43,7 +44,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project_updates = ProjectUpdate::where('project_id', $project->id)->where('project_updates.approved', 1)->get();
+        $project_updates = ProjectUpdate::where('project_id', $project->id)->where('project_updates.status', 'approved')->get();
         $activities = Activity::where('project_id', $project->id)->get();
         $outputs = Output::where('project_id', $project->id)->get();
         $moneyspent = 0;
@@ -51,9 +52,9 @@ class ProjectController extends Controller
         foreach ($activities as $a) {
             $activityupdates = ActivityUpdate::where('activity_id', $a->id)
                 ->join('project_updates', 'project_update_id', '=', 'project_updates.id')
-                ->where('project_updates.approved', 1)
+                ->where('project_updates.status', 'approved')
                 ->orderBy('date', 'asc')
-                ->get();
+                ->get(['activity_updates.*']);
 
             $comments = array();
             foreach ($activityupdates as $au) {
@@ -90,8 +91,8 @@ class ProjectController extends Controller
         foreach ($outputs as $o) {
             $outputupdates = OutputUpdate::where('output_id', $o->id)
                 ->join('project_updates', 'project_update_id', '=', 'project_updates.id')
-                ->where('project_updates.approved', 1)
-                ->get();
+                ->where('project_updates.status', 'approved')
+                ->get(['output_updates.*']);
             $valuesum = 0;
             foreach ($outputupdates as $ou) {
                 $valuesum += $ou->value;
@@ -233,28 +234,45 @@ class ProjectController extends Controller
         return redirect()->route('project_show', $project);
     }
 
-
     public function write_update(Project $project)
     {
         return view('project.update', ['project' => $project]);
     }
 
-    public function save_update(Project $project)
+    public function save_update(Project $project, Request $request)
     {
-        $projectupdate = new ProjectUpdate(array('project_id' => $project->id, 'summary' => request('project_update_summary') ?? null));
+        $status = '';
+        if ($request->input('draft')) {
+            $status = 'draft';
+        } else if ($request->input('submit')) {
+            $status = 'submitted';
+        }
+
+        $projectupdate = ProjectUpdate::firstOrNew(['id' => request('project_update_id') ?? 0]);
+        $projectupdate->project_id = $project->id;
+        $projectupdate->summary = request('project_update_summary') ?? null;
+        $projectupdate->status = $status;
         $projectupdate->save();
         $projectupdate_id = $projectupdate->id;
 
         // Process activity updates
         $activity_update_array['activity_id'] = request('activity_id');
+        $activity_update_array['activity_update_id'] = request('activity_update_id');
         $activity_update_array['comment'] = request('activity_comment');
         $activity_update_array['status'] = request('activity_status');
         $activity_update_array['money'] = request('activity_money');
         $activity_update_array['date'] = request('activity_date') ?? null;
 
+        // Remove deleted activity updates
+        foreach ($projectupdate->activity_updates()->get() as $au) {
+            if (!$activity_update_array['activity_update_id'] || !in_array($au->id, $activity_update_array['activity_update_id'])) {
+                ActivityUpdate::findOrFail($au->id)->delete();
+            }
+        }
+
         if ($activity_update_array['activity_id']) {
             foreach ($activity_update_array['activity_id'] as $key => $id) {
-                $activityupdate = new ActivityUpdate;
+                $activityupdate = ActivityUpdate::firstOrNew(['id' => $activity_update_array['activity_update_id'][$key]]);
                 $activityupdate->activity_id = Activity::findOrFail($id)->id;
                 $activityupdate->comment = $activity_update_array['comment'][$key];
                 $activityupdate->status = $activity_update_array['status'][$key];
@@ -267,7 +285,15 @@ class ProjectController extends Controller
 
         // Process output updates
         $output_update_array['output_id'] = request('output_id');
+        $output_update_array['output_update_id'] = request('output_update_id');
         $output_update_array['value'] = request('output_value');
+
+        // Remove deleted output updates
+        foreach ($projectupdate->output_updates()->get() as $ou) {
+            if (!$output_update_array['output_update_id'] || !in_array($ou->id, $output_update_array['output_update_id'])) {
+                OutputUpdate::findOrFail($ou->id)->delete();
+            }
+        }
 
         if ($output_update_array['output_id']) {
             foreach ($output_update_array['output_id'] as $key => $id) {
@@ -279,7 +305,7 @@ class ProjectController extends Controller
                     $data['project_id'] = $project->id;
                     $id = Output::create($data)->id;
                 }
-                $outputupdate = new OutputUpdate();
+                $outputupdate = OutputUpdate::firstOrNew(['id' => $output_update_array['output_update_id'][$key]]);
                 $outputupdate->output_id = Output::findOrFail($id)->id;
                 $outputupdate->value = $output_update_array['value'][$key];
                 $outputupdate->project_update_id = $projectupdate_id;
@@ -292,6 +318,12 @@ class ProjectController extends Controller
         if ($file_ids) {
             if (!is_array($file_ids)) {
                 $file_ids = array($file_ids);
+            }
+            // Remove deleted attachments
+            foreach ($projectupdate->files()->get() as $file) {
+                if (!in_array($file->id, $file_ids)) {
+                    File::findOrFail($file->id)->delete();
+                }
             }
             foreach ($file_ids as $file_id) {
                 $file = File::findOrFail($file_id);

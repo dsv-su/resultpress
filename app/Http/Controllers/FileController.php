@@ -31,7 +31,8 @@ class FileController extends Controller
                 $saved_file->save();
 
                 $url = Storage::url($path . '/' . $file_name);
-                $html .= '<a href="' . $url . '">' . $file_name . '</a><br/>';
+                $html .= '<a href="' . $url . '">' . $file_name . ' </a><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i
+                                        class="far fa-trash-alt"></i></button><br/>';
                 $ids[] = $saved_file->id;
             }
             return Response()->json([

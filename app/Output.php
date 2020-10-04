@@ -18,4 +18,9 @@ class Output extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function output_update()
+    {
+        return $this->hasMany(OutputUpdate::class);
+    }
 }

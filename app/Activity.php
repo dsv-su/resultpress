@@ -20,4 +20,9 @@ class Activity extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function activity_update()
+    {
+        return $this->hasMany(ActivityUpdate::class);
+    }
 }

@@ -16,9 +16,11 @@ class CreateProjectUpdatesTable extends Migration
         Schema::create('project_updates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained();
-            $table->mediumText('summary');
-            $table->integer('approved')->nullable();
+            $table->mediumText('summary')->nullable();
             $table->string('status');
+            $table->longText('internal_comment')->nullable();
+            $table->longText('partner_comment')->nullable();
+            $table->integer('nominated')->nullable();
             $table->timestamps();
         });
     }

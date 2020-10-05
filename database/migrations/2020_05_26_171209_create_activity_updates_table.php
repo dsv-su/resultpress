@@ -20,7 +20,7 @@ class CreateActivityUpdatesTable extends Migration
             $table->integer('status');
             $table->decimal('money');
             $table->mediumText('comment');
-            $table->date('date');
+            $table->date('date')->nullable();
             $table->timestamps();
         });
     }

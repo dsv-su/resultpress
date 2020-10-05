@@ -251,6 +251,10 @@ class ProjectController extends Controller
         }
 
         $projectupdate = ProjectUpdate::firstOrNew(['id' => request('project_update_id') ?? 0]);
+
+        //Disable logging for draft updates ProjectUpdate model
+        if($status == 'draft') $projectupdate->disableLogging();
+
         $projectupdate->project_id = $project->id;
         $projectupdate->summary = request('project_update_summary') ?? null;
         $projectupdate->status = $status;
@@ -275,6 +279,10 @@ class ProjectController extends Controller
         if ($activity_update_array['activity_id']) {
             foreach ($activity_update_array['activity_id'] as $key => $id) {
                 $activityupdate = ActivityUpdate::firstOrNew(['id' => $activity_update_array['activity_update_id'][$key]]);
+
+                //Disable logging for draft updates ActivityUpdate model
+                if($status == 'draft') $activityupdate->disableLogging();
+
                 $activityupdate->activity_id = Activity::findOrFail($id)->id;
                 $activityupdate->comment = $activity_update_array['comment'][$key];
                 $activityupdate->status = $activity_update_array['status'][$key];
@@ -308,6 +316,10 @@ class ProjectController extends Controller
                     $id = Output::create($data)->id;
                 }
                 $outputupdate = OutputUpdate::firstOrNew(['id' => $output_update_array['output_update_id'][$key]]);
+
+                //Disable logging for draft updates OutputUpdate model
+                if($status == 'draft') $outputupdate->disableLogging();
+
                 $outputupdate->output_id = Output::findOrFail($id)->id;
                 $outputupdate->value = $output_update_array['value'][$key];
                 $outputupdate->project_update_id = $projectupdate_id;

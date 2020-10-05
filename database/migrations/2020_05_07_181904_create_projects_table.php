@@ -18,9 +18,11 @@ class CreateProjectsTable extends Migration
                 $table->string('name');
                 $table->mediumText('description')->nullable();
                 $table->integer('status');
+                $table->date('start')->nullable();
+                $table->date('end')->nullable();
                 $table->boolean('activities');
-                $table->boolean('outputs');
-                $table->boolean('aggregated_outputs');
+                $table->boolean('outputs')->default(0);
+                $table->boolean('aggregated_outputs')->default(0);
                 $table->timestamps();
             });
     }

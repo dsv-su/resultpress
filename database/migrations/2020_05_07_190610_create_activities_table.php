@@ -16,12 +16,14 @@ class CreateActivitiesTable extends Migration
             Schema::create('activities', function (Blueprint $table) {
                 $table->id();
                 $table->string('title');
+                $table->mediumText('template')->nullable();
                 $table->text('description')->nullable();
                 $table->date('start');
                 $table->date('end');
                 $table->decimal('budget');
                 $table->foreignId('project_id')->constrained();
                 $table->timestamps();
+                $table->softDeletes();
             });
     }
 

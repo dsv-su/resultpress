@@ -14,7 +14,7 @@ class ProjectUpdatesSeeder extends Seeder
         DB::table('project_updates')->insert([
             'project_id' => 1,
             'summary' => '',
-            'status' => 0,
+            'status' => 'draft',
             'internal_comment' => 'Test Internal comment',
             'partner_comment' => 'Test Partner comment',
             'nominated' => 0,

@@ -17,6 +17,7 @@ class ChangeProjectUpdatesApprovedColumn extends Migration
             $table->string('approved')->change();
             $table->renameColumn('approved', 'status');
         });
+
     }
 
     /**

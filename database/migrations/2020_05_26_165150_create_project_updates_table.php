@@ -18,6 +18,7 @@ class CreateProjectUpdatesTable extends Migration
             $table->foreignId('project_id')->constrained();
             $table->mediumText('summary');
             $table->integer('approved')->nullable();
+            $table->string('status');
             $table->timestamps();
         });
     }

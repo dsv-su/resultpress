@@ -19,7 +19,7 @@ class Output extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function output_update()
+    public function output_updates()
     {
         return $this->hasMany(OutputUpdate::class);
     }

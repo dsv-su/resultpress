@@ -22,7 +22,7 @@
 
         <div class="form-group">
             <h4>Covered activities:</h4>
-            <table class="table table-sm w-100" @if (empty($aus)) style="display: none;"
+            <table class="table table-sm w-100" @if (empty($aus) || $aus->isEmpty()) style="display: none;"
                    @endif id="activities_table">
                 <thead>
                 <th>Activity</th>
@@ -47,7 +47,7 @@
                             <td><input type="number" name="activity_money[]" class="form-control form-control-sm"
                                        placeholder="Money" size="3" required value="{{$au->money}}"></td>
                             <td><input type="date" name="activity_date[]" class="form-control form-control-sm"
-                                       placeholder="Date" size="1" value="{{$au->date->toDateString()}}"></td>
+                                       placeholder="Date" size="1" value="{{$au->date->toDateString()}}" required></td>
                             <td class="fit">
                                 <button type="button" name="remove" id="{{$au->activity_id}}"
                                         class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span
@@ -76,6 +76,7 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     @foreach ($project->activity as $activity)
+                        <p class="d-none">{{$activity->activity_updates->last()->comment ?? $activity->template}}</p>
                         <a class="dropdown-item add-activity" href="#"
                            id="{{$activity->id}}"
                            @if (!empty($aus) && $aus->keyBy('activity_id')->get($activity->id)) style="display: none;" @endif>{{$activity->title}}</a>
@@ -86,7 +87,7 @@
 
         <div class="form-group">
             <h4>Affected outputs:</h4>
-            <table class="table table-sm mw-400" @if (empty($ous)) style="display: none;" @endif
+            <table class="table table-sm mw-400" @if (empty($ous) || $ous->isEmpty()) style="display: none;" @endif
             id="outputs_table">
                 <thead>
                 <th>Output</th>
@@ -225,17 +226,18 @@
                 $('#activities_table').show();
                 let id = $(this).attr('id');
                 let activity = $(this).text();
+                let template = $(this).prev('p').text();
                 let html = '<tr>';
                 html += '<input type="hidden" name="activity_update_id[]" value=0>';
                 html += '<td class="auto"><input type="hidden" id="activity" name="activity_id[]" value="' + id + '">' + activity + '</td>';
                 html += '<td class="editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
                 // html += '<td><input type="text" name="activity_comment[]" class="form-control form-control-sm" placeholder="Comment" required></td>';
                 html += '<td><input type="number" name="activity_money[]"  class="form-control form-control-sm" placeholder="Money" size="3" required></td>';
-                html += '<td><input type="date" name="activity_date[]" class="form-control form-control-sm" placeholder="Date" size="1"></td>';
+                html += '<td><input type="date" name="activity_date[]" class="form-control form-control-sm" placeholder="Date" size="1" required></td>';
                 html += '<td class="fit"><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
                 html += '<tr class="update"><td colspan=5><table class="table mb-2 "><tr><td><textarea name="activity_comment[]" ' +
-                    'class="form-control form-control-sm mediumEditor" required></textarea></td></tr></table></td></tr>';
+                    'class="form-control form-control-sm mediumEditor" required>' + template + '</textarea></td></tr></table></td></tr>';
                 $('#' + id + '.add-activity').hide();
                 $('#activities_table').append(html);
                 let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});

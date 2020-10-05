@@ -56,6 +56,7 @@
                                        @if($activities->isEmpty()) style="display:none;" @endif>
                                     <thead>
                                     <th scope="row">Activity Name</th>
+                                    <th scope="row">Description</th>
                                     <th scope="row">Start</th>
                                     <th scope="row">End</th>
                                     <th scope="row">Budget</th>
@@ -68,6 +69,10 @@
                                             <td><input type="hidden" name="activity_id[]" value="{{$activity->id}}">
                                                 <input type="text" name="activity_name[]"
                                                        value="{{$activity->title}}"
+                                                       class="form-control form-control-sm">
+                                            </td>
+                                            <td><input type="text" name="activity_description[]"
+                                                       value="{{$activity->description}}"
                                                        class="form-control form-control-sm">
                                             </td>
                                             <td><input type="date" name="activity_start[]"
@@ -89,13 +94,13 @@
                                             </td>
                                         </tr>
                                         <tr class="update">
-                                            <td colspan=5>
+                                            <td colspan=6>
                                                 <table class="table mb-2">
                                                     <tr>
-                                                        <td><textarea name="activity_description[]"
+                                                        <td><textarea name="activity_template[]"
                                                                       placeholder="Activity description template"
-                                                                      class="form-control form-control-sm mediumEditor"
-                                                                      required>{{$activity->description}}</textarea>
+                                                                      class="form-control form-control-sm mediumEditor">
+                                                                {{$activity->template}}</textarea>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -164,15 +169,21 @@
                             html += '<tr>';
                             html += '<input type="hidden" name="activity_id[]" value=0>';
                             html += '<td><input type="text" name="activity_name[]" class="form-control form-control-sm" placeholder="Activity Name" required></td>';
+                            html += '<td><input type="text" name="activity_description[]" class="form-control form-control-sm" placeholder="Description"></td>';
                             html += '<td><input type="date" name="activity_start[]" class="form-control form-control-sm" placeholder="Startdate" size="1" required></td>';
                             html += '<td><input type="date" name="activity_end[]"  class="form-control form-control-sm" placeholder="Enddate" size="1" required></td>';
                             html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="Budget" size="3" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                             html += '</tr>';
-                            html += '<tr class="update"><td colspan=5><table class="table mb-2 "><tr><td><textarea placeholder="Activity template" name="activity_description[]" ' +
-                                'class="form-control form-control-sm mediumEditor" required></textarea></td></tr></table></td></tr>';
+                            html += '<tr class="update"><td colspan=6><table class="table mb-2 "><tr><td><textarea placeholder="Activity template" name="activity_template[]" ' +
+                                'class="form-control form-control-sm mediumEditor"></textarea></td></tr></table></td></tr>';
                             $('#activities_table').append(html);
-                            let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Template", hideOnClick: true}});
+                            let editor = new MediumEditor('.mediumEditor', {
+                                placeholder: {
+                                    text: "Template",
+                                    hideOnClick: true
+                                }
+                            });
                         });
                         $(document).on('click', '.add-outputs', function () {
                             $('#outputs_table').show();

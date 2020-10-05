@@ -174,6 +174,7 @@ class ProjectController extends Controller
         $activity_array['id'] = request('activity_id') ?? null;
         $activity_array['name'] = request('activity_name');
         $activity_array['description'] = request('activity_description') ?? null;
+        $activity_array['template'] = request('activity_template') ?? null;
         $activity_array['start'] = request('activity_start');
         $activity_array['end'] = request('activity_end');
         $activity_array['name'] = request('activity_name');
@@ -196,6 +197,7 @@ class ProjectController extends Controller
                 $data = array();
                 $data['title'] = $activity_array['name'][$key];
                 $data['description'] = $activity_array['description'][$key];
+                $data['template'] = $activity_array['template'][$key];
                 $data['start'] = $activity_array['start'][$key];
                 $data['end'] = $activity_array['end'][$key];
                 $data['budget'] = $activity_array['budget'][$key];

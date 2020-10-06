@@ -13,6 +13,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class ProjectController extends Controller
@@ -23,7 +24,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::latest()->get();
+        $projects = Project::with('user')->latest()->get();
         return view('project.index', ['projects' => $projects]);
     }
 
@@ -167,6 +168,8 @@ class ProjectController extends Controller
         $project->status = 0; // temp value
         $project->end = request('project_end') ?? null;
         $project->activities = is_array(request('activity_id')) ? 1 : 0;
+        //Adds the logged in user as project owner
+        $project->user_id = Auth::id() ?? 1;
         $project->save();
 
         //Activities
@@ -250,6 +253,7 @@ class ProjectController extends Controller
             $status = 'submitted';
         }
 
+
         $projectupdate = ProjectUpdate::firstOrNew(['id' => request('project_update_id') ?? 0]);
 
         //Disable logging for draft updates ProjectUpdate model
@@ -258,6 +262,10 @@ class ProjectController extends Controller
         $projectupdate->project_id = $project->id;
         $projectupdate->summary = request('project_update_summary') ?? null;
         $projectupdate->status = $status;
+
+        //Adds the logged in user as projectupdate author
+        $projectupdate->user_id = Auth::id() ?? 1;
+
         $projectupdate->save();
         $projectupdate_id = $projectupdate->id;
 

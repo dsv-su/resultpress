@@ -9,6 +9,7 @@
             <th>Id</th>
             <th>Project Name</th>
             <th>Status</th>
+            <th>Owner</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -23,6 +24,7 @@
                     @elseif($project->status == 3) <span class="badge badge-success">Done</span>
                     @endif
                 </td>
+                <td>{{ $project->user->name }}</td>
                 <td class="text-center mw-400">
                     @include('project.action_links')
                 </td>

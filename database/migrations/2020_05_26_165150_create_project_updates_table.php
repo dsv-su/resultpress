@@ -21,6 +21,7 @@ class CreateProjectUpdatesTable extends Migration
             $table->longText('internal_comment')->nullable();
             $table->longText('partner_comment')->nullable();
             $table->integer('nominated')->nullable();
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

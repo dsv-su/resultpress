@@ -17,6 +17,7 @@
     "laravel/framework": "^7.0",
     "laravel/tinker": "^2.0",
     "spatie/laravel-activitylog": "^3.14",
+    "spatie/laravel-permission": "^3.17",
     "uabookstores/laravel-shibboleth": "^3.3"
   },
   "require-dev": {

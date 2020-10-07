@@ -21,7 +21,7 @@ class CreateProjectUpdatesTable extends Migration
             $table->longText('internal_comment')->nullable();
             $table->longText('partner_comment')->nullable();
             $table->integer('nominated')->nullable();
-            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignID('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
@@ -31,10 +31,10 @@ class CreateProjectUpdatesTable extends Migration
      *
      * @return void
      */
-    /*
+/*
     public function down()
     {
         Schema::dropIfExists('project_updates');
     }
-    */
+*/
 }

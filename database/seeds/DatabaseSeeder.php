@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ActivitySeeder::class);
         $this->call(ProjectUpdatesSeeder::class);
         $this->call(ActivityUpdatesSeeder::class);
+        $this->call(PermissionTableSeeder::class);
     }
 }

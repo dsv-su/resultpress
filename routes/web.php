@@ -20,7 +20,6 @@ if (class_exists(AuthHandler::class))
 //Endpoint
 Route::get($login, 'SystemController@login')->name('login');
 
-
 Route::middleware('entitlements')->group(function () {
     Route::get('/', 'ProjectController@index')->name('home');
     Route::get('/project/create', 'ProjectController@edit')->name('project_create');
@@ -38,8 +37,15 @@ Route::middleware('entitlements')->group(function () {
     Route::put('/project/{project}', 'ProjectController@update')->name('project_update');
     Route::get('/project/{project}/delete', 'ProjectController@destroy')->name('project_delete');
     Route::post('/store_file', 'FileController@store')->name('store_file');
-//Logging
+
+    //Logging
     Route::get('/logs', 'LogsController@index')->name('logs');
+    //Admin User/Role management
+    Route::get('/admin', 'AdminController@index')->name('admin');
+});
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles','RoleController');
+    Route::resource('users','UserController');
 });
 //Test routes
 Route::get('/server', 'TestController@server');

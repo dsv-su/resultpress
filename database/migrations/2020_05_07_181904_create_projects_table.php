@@ -26,6 +26,7 @@ class CreateProjectsTable extends Migration
                 $table->boolean('aggregated_outputs')->default(0);
                 $table->timestamps();
             });
+
     }
 
     /**
@@ -33,10 +34,10 @@ class CreateProjectsTable extends Migration
      *
      * @return void
      */
-    /*
+/*
     public function down()
     {
         Schema::dropIfExists('projects');
     }
-    */
+*/
 }

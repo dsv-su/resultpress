@@ -44,6 +44,7 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/admin', 'AdminController@index')->name('admin');
 });
 Route::group(['middleware' => ['auth']], function() {
+    Route::resource('projectadmin','ProjectAdminController');
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');
 });

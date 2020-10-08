@@ -14,7 +14,7 @@ class DefaultUserSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Undefined',
             'email' => 'spideradmin@dsv.su.se',
-            'password' => '1234',
+            'password' => bcrypt('1234'),
             'created_at' => '2020-09-22 13:35:17',
             'updated_at' => '2020-09-24 12:11:37',
         ]);

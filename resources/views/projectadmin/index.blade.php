@@ -1,0 +1,41 @@
+@extends('layouts.master')
+
+@section('content')
+    <div class="row">
+        <div class="col-lg-12 margin-tb">
+            <div class="pull-left">
+                <h2>Assign Project</h2>
+            </div>
+            <br>
+            <div class="pull-right">
+                <a class="btn btn-outline-primary" href="{{ route('admin') }}"> Back</a>
+            </div>
+            <br>
+        </div>
+    </div>
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+    <table class="table table-bordered">
+        <tr>
+            <th>Id</th>
+            <th>Project</th>
+            <th>Start</th>
+            <th>End</th>
+            <th width="200px">Assign to:</th>
+            <th>Action</th>
+        </tr>
+        @foreach ($data as $key => $project)
+            <tr>
+                <td>{{ ++$i }}</td>
+                <td>{{ $project->name }}</td>
+                <td>{{ $project->start }}</td>
+                <td>{{ $project->end }}</td>
+                <td>{{ $project->user->name }}</td>
+                <td><a class="btn btn-outline-primary" href="{{ route('projectadmin.edit',$project->id) }}">Edit</a></td>
+            </tr>
+        @endforeach
+    </table>
+@endsection

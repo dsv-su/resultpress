@@ -13,7 +13,8 @@ class OutputUpdate extends Model
         return $this->belongsTo(Output::class);
     }
 
-    public function project_update() {
+    public function project_update()
+    {
         return $this->belongsTo(ProjectUpdate::class);
     }
 }

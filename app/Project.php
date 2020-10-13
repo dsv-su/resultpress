@@ -15,14 +15,19 @@ class Project extends Model
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 
-    public function activity()
+    public function activities()
     {
         return $this->hasMany(Activity::class);
     }
 
-    public function output()
+    public function outputs()
     {
         return $this->hasMany(Output::class);
+    }
+
+    public function submitted_outputs()
+    {
+        return $this->outputs()->where('status', '<>', 'draft')->orWhereNull('status')->get();
     }
 
     public function projectupdate()

@@ -11,8 +11,8 @@ use App\Project;
 use App\ProjectUpdate;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -46,8 +46,8 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         $project_updates = ProjectUpdate::where('project_id', $project->id)->where('project_updates.status', 'approved')->get();
-        $activities = Activity::where('project_id', $project->id)->get();
-        $outputs = Output::where('project_id', $project->id)->get();
+        $activities = $project->activities()->get();
+        $outputs = $project->submitted_outputs();
         $moneyspent = 0;
         $budget = 0;
         foreach ($activities as $a) {
@@ -143,8 +143,8 @@ class ProjectController extends Controller
     {
         return view('project.form', [
             'project' => $project,
-            'activities' => Activity::where('project_id', $project->id)->get(),
-            'outputs' => Output::where('project_id', $project->id)->get()
+            'activities' => $project->activities()->get(),
+            'outputs' => $project->submitted_outputs()
         ]);
     }
 
@@ -225,14 +225,11 @@ class ProjectController extends Controller
                         ->performedOn(Activity::find($newactivity->id))
                         ->log('NewActivity');
                 }
-
-
-
             }
         }
 
         // Remove deleted outputs
-        foreach (Output::where('project_id', $project->id)->get() as $o) {
+        foreach ($project->submitted_outputs() as $o) {
             if (!$output_array['id'] || !in_array($o->id, $output_array['id'])) {
                 Output::findOrFail($o->id)->delete();
             }
@@ -252,6 +249,7 @@ class ProjectController extends Controller
                         ->performedOn(Output::find($id))
                         ->log('OutputUpdate');
                 } else {
+                    $data['status'] = 'default';
                     $newoutput = Output::create($data);
                     //Log new output
                     activity()
@@ -291,8 +289,7 @@ class ProjectController extends Controller
 
         $projectupdate->save();
         //Log update for submitted update
-        if($status == 'submitted')
-        {
+        if ($status == 'submitted') {
             activity()
                 ->causedBy($projectupdate->user_id)
                 ->performedOn($projectupdate)
@@ -327,8 +324,7 @@ class ProjectController extends Controller
                 $activityupdate->project_update_id = $projectupdate_id;
                 $activityupdate->save();
                 //Log update for submitted ActivityUpdate
-                if($status == 'submitted')
-                {
+                if ($status == 'submitted') {
                     activity()
                         ->causedBy($projectupdate->user_id)
                         ->performedOn($activityupdate)
@@ -352,26 +348,31 @@ class ProjectController extends Controller
         if ($output_update_array['output_id']) {
             foreach ($output_update_array['output_id'] as $key => $id) {
                 if (!is_numeric($output_update_array['output_id'][$key])) {
-                    //Create new output since it's an unexpected one
+                    // Create new output since it's an unexpected one
                     $data = array();
                     $data['indicator'] = $output_update_array['output_id'][$key];
                     $data['target'] = 0;
+                    $data['status'] = ($status == 'draft') ? 'draft' : null;
                     $data['project_id'] = $project->id;
                     $id = Output::create($data)->id;
                 }
                 $outputupdate = OutputUpdate::firstOrNew(['id' => $output_update_array['output_update_id'][$key]]);
-                $outputupdate->output_id = Output::findOrFail($id)->id;
+                $output = Output::findOrFail($id);
+                $outputupdate->output_id = $output->id;
                 $outputupdate->value = $output_update_array['value'][$key];
                 $outputupdate->project_update_id = $projectupdate_id;
-                $outputupdate->save();
-                //Log update for submitted OutputUpdate --> Added outputs should be i draft (TODO)
-                if($status == 'submitted')
-                {
+                // Log update for submitted OutputUpdate --> Added outputs should be i draft (TODO)
+                if ($status == 'submitted') {
+                    if ($output->status == 'draft') {
+                        $output->status = 'custom';
+                        $output->save();
+                    }
                     activity()
                         ->causedBy($projectupdate->user_id)
                         ->performedOn($outputupdate)
                         ->log('OutputUpdate');
                 }
+                $outputupdate->save();
             }
         }
 

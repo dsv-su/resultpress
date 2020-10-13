@@ -13,7 +13,6 @@ class AddReminder extends Migration
      */
     public function up()
     {
-
         Schema::table('activities', function (Blueprint $table) {
             $table->boolean('reminder')->default(true);
             $table->integer('reminder_due_days')->default(7);

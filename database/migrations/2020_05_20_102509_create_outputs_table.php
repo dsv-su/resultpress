@@ -16,6 +16,7 @@ class CreateOutputsTable extends Migration
         Schema::create('outputs', function (Blueprint $table) {
             $table->id();
             $table->string('indicator');
+            $table->string('status')->nullable();;
             $table->text('target');
             $table->foreignId('project_id')->constrained();
             $table->timestamps();

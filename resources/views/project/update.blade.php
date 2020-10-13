@@ -75,7 +75,7 @@
                     Add an activity
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @foreach ($project->activity as $activity)
+                    @foreach ($project->activities()->get() as $activity)
                         <p class="d-none">{{$activity->activity_updates->last()->comment ?? $activity->template}}</p>
                         <a class="dropdown-item add-activity" href="#"
                            id="{{$activity->id}}"
@@ -119,9 +119,9 @@
                     Add an output
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @foreach ($project->output as $output)
+                    @foreach ($project->outputs()->get() as $output)
                         <a class="dropdown-item add-output" href="#" id="{{$output->id}}"
-                           @if (!empty($ous) && $ous->keyBy('output_id')->get($output->id)) style="display: none;" @endif>{{$output->indicator}}</a>
+                           @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status != 'draft') style="display: none;" @endif>{{$output->indicator}}</a>
                     @endforeach
                     <a class="dropdown-item add-output" href="#" id="0">Add a new ouput</a>
                 </div>

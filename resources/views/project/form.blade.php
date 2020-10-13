@@ -85,13 +85,15 @@
                                                        value="{{$activity->end->toDateString()}}"
                                                        class="form-control form-control-sm">
                                             </td>
-                                            <td><input type="checkbox" name="activity_reminder[]"
-                                                       value="{{$activity->reminder}}"
-
-                                                       @if($activity->reminder == true)
-                                                           checked
-                                                       @endif
-                                                       class="form-control form-control-sm">
+                                            <td><select name="activity_reminder[]">
+                                                    @if($activity->reminder == true)
+                                                        <option value="1" selected="selected">Yes</option>
+                                                        <option value="0">No</option>
+                                                    @else
+                                                        <option value="1" >Yes</option>
+                                                        <option value="0" selected="selected">No</option>
+                                                    @endif
+                                                </select>
                                             </td>
                                             <td><input type="number" name="activity_reminder_due_days[]"
                                                        value="{{$activity->reminder_due_days}}"
@@ -187,7 +189,7 @@
                             html += '<td><input type="text" name="activity_description[]" class="form-control form-control-sm" placeholder="Description"></td>';
                             html += '<td><input type="date" name="activity_start[]" class="form-control form-control-sm" placeholder="Startdate" size="1" required></td>';
                             html += '<td><input type="date" name="activity_end[]"  class="form-control form-control-sm" placeholder="Enddate" size="1" required></td>';
-                            html += '<td><input type="checkbox" name="activity_reminder[]"  value="1" checked class="form-control form-control-sm"  required></td>';
+                            html += '<td><select name="activity_reminder[]"  class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select></td>';
                             html += '<td><input type="number" name="activity_reminder_due_days[]" class="form-control form-control-sm"  value="7" size="1" required></td>';
                             html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="Budget" size="3" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'

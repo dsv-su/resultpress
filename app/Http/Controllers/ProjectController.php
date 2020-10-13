@@ -182,6 +182,9 @@ class ProjectController extends Controller
         $activity_array['end'] = request('activity_end');
         $activity_array['name'] = request('activity_name');
         $activity_array['budget'] = request('activity_budget');
+        //Email reminder
+        $activity_array['reminder'] = request('activity_reminder');
+        $activity_array['reminder_due_days'] = request('activity_reminder_due_days');
 
         // Outputs
         $output_array['id'] = request('output_id') ?? null;
@@ -204,6 +207,8 @@ class ProjectController extends Controller
                 $data['start'] = $activity_array['start'][$key];
                 $data['end'] = $activity_array['end'][$key];
                 $data['budget'] = $activity_array['budget'][$key];
+                $data['reminder'] = $activity_array['reminder'][$key];
+                $data['reminder_due_days'] = $activity_array['reminder_due_days'][$key];
                 $data['project_id'] = $project->id;
                 if ($id) {
                     Activity::where('id', $id)->update($data);

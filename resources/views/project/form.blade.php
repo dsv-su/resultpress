@@ -19,7 +19,8 @@
                         <div class="form-group">
                             <label for="project_name">Name</label>
                             <input class="form-control form-control-sm @error('project_name') is-danger @enderror"
-                                   type="text" name="project_name" id="project_name"
+                                   type="text" name="project_name" id="project_name" placeholder="Project title"
+                                   required
                                    value="{{ old('project_name', empty($project) ? '' : $project->name) }}">
                             @error('project_name')
                             <div class="text-danger">{{ $errors->first('project_name') }}</div>
@@ -38,13 +39,13 @@
                         </div>
                         <div class="form-group col-md-3 px-0">
                             <label for="project_start">Project start</label>
-                            <input type="date" name="project_start"
+                            <input type="date" name="project_start" id="project_start"
                                    value="{{ old('project_start', empty($project->start) ? '' : $project->start->toDateString())}}"
-                                   class="form-control form-control-sm">
+                                   class="form-control form-control-sm" required>
                         </div>
                         <div class="form-group col-md-3 px-0">
                             <label for="project_end">Project end</label>
-                            <input type="date" name="project_end"
+                            <input type="date" name="project_end" id="project_end"
                                    value="{{ old('project_end', empty($project->end) ? '' : $project->end->toDateString())}}"
                                    class="form-control form-control-sm">
                         </div>
@@ -68,22 +69,23 @@
                                         <tr>
                                             <td><input type="hidden" name="activity_id[]" value="{{$activity->id}}">
                                                 <input type="text" name="activity_name[]"
-                                                       value="{{$activity->title}}"
+                                                       value="{{$activity->title}}" required
                                                        class="form-control form-control-sm">
                                             </td>
                                             <td><input type="text" name="activity_description[]"
-                                                       value="{{$activity->description}}"
+                                                       value="{{$activity->description}}" required
                                                        class="form-control form-control-sm">
                                             </td>
                                             <td><input type="date" name="activity_start[]"
-                                                       value="{{$activity->start->toDateString()}}"
-                                                       class="form-control form-control-sm">
+                                                       value="{{$activity->start->toDateString()}}" required
+                                                       class="form-control form-control-sm"
+                                                       data-date-format="mm/dd/yyyy">
                                             </td>
                                             <td><input type="date" name="activity_end[]"
-                                                       value="{{$activity->end->toDateString()}}"
+                                                       value="{{$activity->end->toDateString()}}" required
                                                        class="form-control form-control-sm"></td>
                                             <td><input type="number" name="activity_budget[]"
-                                                       value="{{$activity->budget}}"
+                                                       value="{{$activity->budget}}" required
                                                        class="form-control form-control-sm">
                                             </td>
                                             <td>
@@ -93,11 +95,11 @@
                                                             class="glyphicon glyphicon-minus"></span></button>
                                             </td>
                                         </tr>
-                                        <tr class="update">
+                                        <tr class="update activity_template">
                                             <td colspan=6>
                                                 <table class="table mb-2">
                                                     <tr>
-                                                        <td><textarea name="activity_template[]"
+                                                        <td><textarea name="activity_template[]" id="activity_template"
                                                                       placeholder="Activity description template"
                                                                       class="form-control form-control-sm mediumEditor">
                                                                 {{$activity->template}}</textarea>
@@ -132,11 +134,13 @@
                                                 <input type="text"
                                                        name="output_indicator[]"
                                                        value="{{$output->indicator}}"
+                                                       placeholder="Output name" required
                                                        class="form-control form-control-sm">
                                             </td>
                                             <td class="w-25"><input type="text" name="output_target[]"
                                                                     class="form-control form-control-sm"
-                                                                    value="{{$output->target}}"></td>
+                                                                    placeholder="0"
+                                                                    value="{{$output->target}}" required></td>
                                             <td>
                                                 <button type="button" name="remove"
                                                         class="btn btn-outline-danger btn-sm remove"><i
@@ -161,28 +165,26 @@
                 </form>
 
                 <script>
-                    let editor = new MediumEditor('.mediumEditor', {placeholder: false});
+                    let editor = new MediumEditor('.mediumEditor[name=project_description]', {placeholder: {text: "Description"}});
+                    let editor2 = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Template"}});
                     $(document).ready(function () {
                         $(document).on('click', '.add-activities', function () {
                             $('#activities_table').show();
                             let html = '';
                             html += '<tr>';
                             html += '<input type="hidden" name="activity_id[]" value=0>';
-                            html += '<td><input type="text" name="activity_name[]" class="form-control form-control-sm" placeholder="Activity Name" required></td>';
-                            html += '<td><input type="text" name="activity_description[]" class="form-control form-control-sm" placeholder="Description"></td>';
+                            html += '<td><input type="text" name="activity_name[]" class="form-control form-control-sm" placeholder="Activity name" required></td>';
+                            html += '<td><input type="text" name="activity_description[]" class="form-control form-control-sm" placeholder="Description" required></td>';
                             html += '<td><input type="date" name="activity_start[]" class="form-control form-control-sm" placeholder="Startdate" size="1" required></td>';
                             html += '<td><input type="date" name="activity_end[]"  class="form-control form-control-sm" placeholder="Enddate" size="1" required></td>';
-                            html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="Budget" size="3" required></td>';
+                            html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="0" size="3" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                             html += '</tr>';
-                            html += '<tr class="update"><td colspan=6><table class="table mb-2 "><tr><td><textarea placeholder="Activity template" name="activity_template[]" ' +
+                            html += '<tr class="update activity_template"><td colspan=6><table class="table mb-2 "><tr><td><textarea placeholder="Activity template" name="activity_template[]" ' +
                                 'class="form-control form-control-sm mediumEditor"></textarea></td></tr></table></td></tr>';
                             $('#activities_table').append(html);
-                            let editor = new MediumEditor('.mediumEditor', {
-                                placeholder: {
-                                    text: "Template",
-                                    hideOnClick: true
-                                }
+                            let editor = new MediumEditor('#activities_table .mediumEditor', {
+                                placeholder: {text: "Template"}
                             });
                         });
                         $(document).on('click', '.add-outputs', function () {
@@ -190,8 +192,8 @@
                             let html = '';
                             html += '<tr>';
                             html += '<input type="hidden" name="output_id[]" value=0>';
-                            html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Indicator" required></td>';
-                            html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="Target" size="3" required></td>';
+                            html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Output name" required></td>';
+                            html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="0" size="3" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
                             $('#outputs_table').append(html);
                         });
@@ -203,6 +205,31 @@
                             }
                             if ($('tr', $('#outputs_table')).length < 2) {
                                 $('#outputs_table').hide();
+                            }
+                        });
+                        $("form").submit(function () {
+                            // Add extra confirmation on empty fields
+                            let confirmation = '';
+                            if (!$('.medium-editor-element[name=project_description]').text().trim()) {
+                                confirmation += '\nDescription field is empty';
+                            }
+                            if (!$("#project_end").val()) {
+                                confirmation += '\nProject end date field is empty';
+                            }
+                            $('#activities_table .medium-editor-element').each(function (index) {
+                                if (!$(this).text().trim()) {
+                                    let activity_name = $(this).closest('.activity_template').prev().children('td').first().children('input[type=text]').val();
+                                    confirmation += '\nActivity template for ' + activity_name + ' is empty';
+                                }
+                            });
+                            if (!confirmation) {
+                                return true;
+                            } else {
+                                if (confirm('Please confirm the following empty fields:' + confirmation)) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
                             }
                         });
                     });

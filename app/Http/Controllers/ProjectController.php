@@ -182,6 +182,9 @@ class ProjectController extends Controller
         $activity_array['end'] = request('activity_end');
         $activity_array['name'] = request('activity_name');
         $activity_array['budget'] = request('activity_budget');
+        //Email reminder
+        $activity_array['reminder'] = request('activity_reminder');
+        $activity_array['reminder_due_days'] = request('activity_reminder_due_days');
 
         // Outputs
         $output_array['id'] = request('output_id') ?? null;
@@ -204,12 +207,27 @@ class ProjectController extends Controller
                 $data['start'] = $activity_array['start'][$key];
                 $data['end'] = $activity_array['end'][$key];
                 $data['budget'] = $activity_array['budget'][$key];
+                $data['reminder'] = $activity_array['reminder'][$key];
+                $data['reminder_due_days'] = $activity_array['reminder_due_days'][$key];
                 $data['project_id'] = $project->id;
                 if ($id) {
                     Activity::where('id', $id)->update($data);
+                    //Log activity update
+                    activity()
+                        ->causedBy($project->user_id)
+                        ->performedOn(Activity::find($id))
+                        ->log('ActivityUpdate');
                 } else {
-                    Activity::create($data);
+                    $newactivity = Activity::create($data);
+                    //Log new activity
+                    activity()
+                        ->causedBy($project->user_id)
+                        ->performedOn(Activity::find($newactivity->id))
+                        ->log('NewActivity');
                 }
+
+
+
             }
         }
 
@@ -228,8 +246,18 @@ class ProjectController extends Controller
                 $data['project_id'] = $project->id;
                 if ($id) {
                     Output::where('id', $id)->update($data);
+                    //Log output update
+                    activity()
+                        ->causedBy($project->user_id)
+                        ->performedOn(Output::find($id))
+                        ->log('OutputUpdate');
                 } else {
-                    Output::create($data);
+                    $newoutput = Output::create($data);
+                    //Log new output
+                    activity()
+                        ->causedBy($project->user_id)
+                        ->performedOn(Output::find($newoutput->id))
+                        ->log('NewOutput');
                 }
             }
         }
@@ -253,12 +281,7 @@ class ProjectController extends Controller
             $status = 'submitted';
         }
 
-
         $projectupdate = ProjectUpdate::firstOrNew(['id' => request('project_update_id') ?? 0]);
-
-        //Disable logging for draft updates ProjectUpdate model
-        if($status == 'draft') $projectupdate->disableLogging();
-
         $projectupdate->project_id = $project->id;
         $projectupdate->summary = request('project_update_summary') ?? null;
         $projectupdate->status = $status;
@@ -267,6 +290,15 @@ class ProjectController extends Controller
         $projectupdate->user_id = Auth::id() ?? 1;
 
         $projectupdate->save();
+        //Log update for submitted update
+        if($status == 'submitted')
+        {
+            activity()
+                ->causedBy($projectupdate->user_id)
+                ->performedOn($projectupdate)
+                ->log('ProjectUpdate');
+        }
+
         $projectupdate_id = $projectupdate->id;
 
         // Process activity updates
@@ -287,10 +319,6 @@ class ProjectController extends Controller
         if ($activity_update_array['activity_id']) {
             foreach ($activity_update_array['activity_id'] as $key => $id) {
                 $activityupdate = ActivityUpdate::firstOrNew(['id' => $activity_update_array['activity_update_id'][$key]]);
-
-                //Disable logging for draft updates ActivityUpdate model
-                if($status == 'draft') $activityupdate->disableLogging();
-
                 $activityupdate->activity_id = Activity::findOrFail($id)->id;
                 $activityupdate->comment = $activity_update_array['comment'][$key];
                 $activityupdate->status = $activity_update_array['status'][$key];
@@ -298,6 +326,14 @@ class ProjectController extends Controller
                 $activityupdate->date = $activity_update_array['date'][$key];
                 $activityupdate->project_update_id = $projectupdate_id;
                 $activityupdate->save();
+                //Log update for submitted ActivityUpdate
+                if($status == 'submitted')
+                {
+                    activity()
+                        ->causedBy($projectupdate->user_id)
+                        ->performedOn($activityupdate)
+                        ->log('ActivityUpdate');
+                }
             }
         }
 
@@ -324,14 +360,18 @@ class ProjectController extends Controller
                     $id = Output::create($data)->id;
                 }
                 $outputupdate = OutputUpdate::firstOrNew(['id' => $output_update_array['output_update_id'][$key]]);
-
-                //Disable logging for draft updates OutputUpdate model
-                if($status == 'draft') $outputupdate->disableLogging();
-
                 $outputupdate->output_id = Output::findOrFail($id)->id;
                 $outputupdate->value = $output_update_array['value'][$key];
                 $outputupdate->project_update_id = $projectupdate_id;
                 $outputupdate->save();
+                //Log update for submitted OutputUpdate --> Added outputs should be i draft (TODO)
+                if($status == 'submitted')
+                {
+                    activity()
+                        ->causedBy($projectupdate->user_id)
+                        ->performedOn($outputupdate)
+                        ->log('OutputUpdate');
+                }
             }
         }
 

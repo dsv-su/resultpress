@@ -60,6 +60,8 @@
                                     <th scope="row">Description</th>
                                     <th scope="row">Start</th>
                                     <th scope="row">End</th>
+                                    <th scope="row">Email reminder</th>
+                                    <th scope="row">Due days before</th>
                                     <th scope="row">Budget</th>
                                     <th></th>
                                     </thead>
@@ -82,8 +84,23 @@
                                                        data-date-format="mm/dd/yyyy">
                                             </td>
                                             <td><input type="date" name="activity_end[]"
+
                                                        value="{{$activity->end->toDateString()}}" required
-                                                       class="form-control form-control-sm"></td>
+                                                       class="form-control form-control-sm">
+                                            </td>
+                                            <td><input type="checkbox" name="activity_reminder[]"
+                                                       value="{{$activity->reminder}}"
+
+                                                       @if($activity->reminder == true)
+                                                           checked
+                                                       @endif
+                                                       class="form-control form-control-sm">
+                                            </td>
+                                            <td><input type="number" name="activity_reminder_due_days[]"
+                                                       value="{{$activity->reminder_due_days}}"
+                                                       class="form-control form-control-sm">
+                                            </td>
+
                                             <td><input type="number" name="activity_budget[]"
                                                        value="{{$activity->budget}}" required
                                                        class="form-control form-control-sm">
@@ -96,7 +113,7 @@
                                             </td>
                                         </tr>
                                         <tr class="update activity_template">
-                                            <td colspan=6>
+                                            <td colspan=8>
                                                 <table class="table mb-2">
                                                     <tr>
                                                         <td><textarea name="activity_template[]" id="activity_template"
@@ -177,10 +194,12 @@
                             html += '<td><input type="text" name="activity_description[]" class="form-control form-control-sm" placeholder="Description" required></td>';
                             html += '<td><input type="date" name="activity_start[]" class="form-control form-control-sm" placeholder="Startdate" size="1" required></td>';
                             html += '<td><input type="date" name="activity_end[]"  class="form-control form-control-sm" placeholder="Enddate" size="1" required></td>';
+                            html += '<td><input type="checkbox" name="activity_reminder[]"  value="1" checked class="form-control form-control-sm"  required></td>';
+                            html += '<td><input type="number" name="activity_reminder_due_days[]" class="form-control form-control-sm"  value="7" size="1" required></td>';
                             html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="0" size="3" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                             html += '</tr>';
-                            html += '<tr class="update activity_template"><td colspan=6><table class="table mb-2 "><tr><td><textarea placeholder="Activity template" name="activity_template[]" ' +
+                            html += '<tr class="update activity_template"><td colspan=8><table class="table mb-2"><tr><td><textarea placeholder="Activity template" name="activity_template[]" ' +
                                 'class="form-control form-control-sm mediumEditor"></textarea></td></tr></table></td></tr>';
                             $('#activities_table').append(html);
                             let editor = new MediumEditor('#activities_table .mediumEditor', {

@@ -9,7 +9,7 @@
             <th>Id</th>
             <th>Project Name</th>
             <th>Status</th>
-            <th>Owner</th>
+            <th>Leader</th>
             <th>Action</th>
         </tr>
         </thead>

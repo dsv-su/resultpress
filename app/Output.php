@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Output extends Model
 {
-    protected $fillable = ['indicator', 'target', 'project_id'];
+    protected $fillable = ['indicator', 'status', 'target', 'project_id'];
 
     public function project()
     {

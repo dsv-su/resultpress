@@ -75,7 +75,7 @@
                     Add an activity
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @foreach ($project->activity as $activity)
+                    @foreach ($project->activities()->get() as $activity)
                         <p class="d-none">{{$activity->activity_updates->last()->comment ?? $activity->template}}</p>
                         <a class="dropdown-item add-activity" href="#"
                            id="{{$activity->id}}"
@@ -119,9 +119,9 @@
                     Add an output
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @foreach ($project->output as $output)
+                    @foreach ($project->outputs()->get() as $output)
                         <a class="dropdown-item add-output" href="#" id="{{$output->id}}"
-                           @if (!empty($ous) && $ous->keyBy('output_id')->get($output->id)) style="display: none;" @endif>{{$output->indicator}}</a>
+                           @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status != 'draft') style="display: none;" @endif>{{$output->indicator}}</a>
                     @endforeach
                     <a class="dropdown-item add-output" href="#" id="0">Add a new ouput</a>
                 </div>
@@ -147,7 +147,7 @@
                 </div>
                 <input type="file" id="files" name="attachments" placeholder="Choose file(s)" multiple>
                 <meta name="csrf-token" content="{{ csrf_token() }}">
-                <button class="btn btn-secondary" id="laravel-ajax-file-upload">Upload</button>
+                <button class="btn btn-secondary" id="laravel-ajax-file-upload" disabled>Upload</button>
             </div>
         </div>
 
@@ -169,7 +169,7 @@
 
     <script>
         $(document).ready(function () {
-            let editor = new MediumEditor('.mediumEditor');
+            let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}});
             $(document).on('click', '#laravel-ajax-file-upload', function (e) {
                 e.preventDefault();
                 $.ajaxSetup({
@@ -222,6 +222,14 @@
                 $(this).closest('span').remove();
             });
 
+            $('input[type=file]').change(function () {
+                if ($('input[type=file]').val() == '') {
+                    $('#laravel-ajax-file-upload').attr('disabled', true)
+                } else {
+                    $('#laravel-ajax-file-upload').attr('disabled', false);
+                }
+            })
+
             $(document).on('click', '.add-activity', function () {
                 $('#activities_table').show();
                 let id = $(this).attr('id');
@@ -232,7 +240,7 @@
                 html += '<td class="auto"><input type="hidden" id="activity" name="activity_id[]" value="' + id + '">' + activity + '</td>';
                 html += '<td class="editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
                 // html += '<td><input type="text" name="activity_comment[]" class="form-control form-control-sm" placeholder="Comment" required></td>';
-                html += '<td><input type="number" name="activity_money[]"  class="form-control form-control-sm" placeholder="Money" size="3" required></td>';
+                html += '<td><input type="number" name="activity_money[]"  class="form-control form-control-sm" placeholder="0" size="3" required></td>';
                 html += '<td><input type="date" name="activity_date[]" class="form-control form-control-sm" placeholder="Date" size="1" required></td>';
                 html += '<td class="fit"><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
@@ -251,9 +259,9 @@
                 if (id > 0) {
                     html += '<td class="w-75"><input type="hidden" id="output" name="output_id[]" value="' + id + '">' + output + '</td>';
                 } else {
-                    html += '<td class="w-75"><input type="text" id="output" name="output_id[]" placeholder="Enter output name"></td>';
+                    html += '<td class="w-75"><input type="text" id="output" name="output_id[]" placeholder="Enter output name" required></td>';
                 }
-                html += '<td class="w-25"><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="Value" size="3" required></td>';
+                html += '<td class="w-25"><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="0" size="3" required></td>';
                 html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
                 if (id > 0) {
@@ -294,6 +302,25 @@
                 }
                 this.closest('td').classList.remove('inprogress', 'delayed', 'done');
                 this.closest('td').classList.add('status', status);
+            });
+            $("form").submit(function (event) {
+                // Add extra confirmation on empty activity & output
+                let confirmation = '';
+                if (!$('#project_update_summary').val()) {
+                    confirmation += '\nSummary is empty';
+                }
+                if ($('#activities_table tr').length < 2 && $('#outputs_table tr').length < 2) {
+                    confirmation += '\nThe update does not cover neither activities nor outputs';
+                }
+                if (!confirmation) {
+                    return true;
+                } else {
+                    if (confirm('Please confirm the following:' + confirmation)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
             });
         });
     </script>

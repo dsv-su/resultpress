@@ -62,6 +62,7 @@
     <table class="table table-bordered">
         @foreach ($outputs as $index => $o)
             <tr>
+                <td>{{$o->indicator}}</td>
                 @if($o->valuestatus == 1)
                     <td class="status inprogress">{{$o->valuesum}}</td>
                 @elseif($o->valuestatus == 2)
@@ -69,7 +70,7 @@
                 @elseif($o->valuestatus == 3)
                     <td class="status done">{{$o->valuesum}}</td>
                 @endif
-                <td>{{$o->indicator}}</td>
+                @if ($o->status != 'draft') <td>({{$o->status}})</td> @endif
             </tr>
         @endforeach
     </table>

@@ -167,6 +167,7 @@ class ProjectController extends Controller
         $project->start = request('project_start') ?? null;
         $project->status = 0; // temp value
         $project->end = request('project_end') ?? null;
+        $project->currency = request('project_currency') ?? null;
         $project->activities = is_array(request('activity_id')) ? 1 : 0;
         //Adds the logged in user as project owner
         $project->user_id = Auth::id() ?? 1;

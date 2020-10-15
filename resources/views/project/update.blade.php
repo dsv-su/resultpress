@@ -46,8 +46,8 @@
                             </td>
                             <td><input type="number" name="activity_money[]" class="form-control form-control-sm"
                                        placeholder="Money" size="3" required value="{{$au->money}}"></td>
-                            <td><input type="date" name="activity_date[]" class="form-control form-control-sm"
-                                       placeholder="Date" size="1" value="{{$au->date->toDateString()}}" required></td>
+                            <td><input type="text" name="activity_date[]" class="form-control form-control-sm datepicker"
+                                       placeholder="Date" size="1"  value="{{$au->date->toDateString()}}" required></td>
                             <td class="fit">
                                 <button type="button" name="remove" id="{{$au->activity_id}}"
                                         class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span
@@ -241,7 +241,7 @@
                 html += '<td class="editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
                 // html += '<td><input type="text" name="activity_comment[]" class="form-control form-control-sm" placeholder="Comment" required></td>';
                 html += '<td><input type="number" name="activity_money[]"  class="form-control form-control-sm" placeholder="0" size="3" required></td>';
-                html += '<td><input type="date" name="activity_date[]" class="form-control form-control-sm" placeholder="Date" size="1" required></td>';
+                html += '<td><input type="text" name="activity_date[]" class="form-control form-control-sm datepicker" placeholder="Date" size="1" required></td>';
                 html += '<td class="fit"><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
                 html += '<tr class="update"><td colspan=5><table class="table mb-2 "><tr><td><textarea name="activity_comment[]" ' +
@@ -249,6 +249,9 @@
                 $('#' + id + '.add-activity').hide();
                 $('#activities_table').append(html);
                 let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
+                $('input.datepicker').datepicker({
+                    format: 'dd-mm-yyyy'
+                });
             });
             $(document).on('click', '.add-output', function () {
                 $('#outputs_table').show();

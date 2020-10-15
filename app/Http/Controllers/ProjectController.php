@@ -9,6 +9,7 @@ use App\Output;
 use App\OutputUpdate;
 use App\Project;
 use App\ProjectUpdate;
+use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -164,9 +165,9 @@ class ProjectController extends Controller
 
         $project->name = request('project_name');
         $project->description = request('project_description');
-        $project->start = request('project_start') ?? null;
+        $project->start = Carbon::createFromFormat('d-m-Y', request('project_start') ?? null)->format('Y-m-d');
         $project->status = 0; // temp value
-        $project->end = request('project_end') ?? null;
+        $project->end = Carbon::createFromFormat('d-m-Y', request('project_end') ?? null)->format('Y-m-d');
         $project->activities = is_array(request('activity_id')) ? 1 : 0;
         //Adds the logged in user as project owner
         $project->user_id = Auth::id() ?? 1;
@@ -178,7 +179,7 @@ class ProjectController extends Controller
         $activity_array['name'] = request('activity_name');
         $activity_array['description'] = request('activity_description') ?? null;
         $activity_array['template'] = request('activity_template') ?? null;
-        $activity_array['start'] = request('activity_start');
+        $activity_array['start'] =  request('activity_start');
         $activity_array['end'] = request('activity_end');
         $activity_array['name'] = request('activity_name');
         $activity_array['budget'] = request('activity_budget');
@@ -204,8 +205,10 @@ class ProjectController extends Controller
                 $data['title'] = $activity_array['name'][$key];
                 $data['description'] = $activity_array['description'][$key];
                 $data['template'] = $activity_array['template'][$key];
-                $data['start'] = $activity_array['start'][$key];
-                $data['end'] = $activity_array['end'][$key];
+                //Transform dates from datepicker into the right format before saving to database
+                $data['start'] = Carbon::createFromFormat('d-m-Y', $activity_array['start'][$key])->format('Y-m-d');
+                $data['end'] = Carbon::createFromFormat('d-m-Y', $activity_array['end'][$key])->format('Y-m-d');
+
                 $data['budget'] = $activity_array['budget'][$key];
                 $data['reminder'] = $activity_array['reminder'][$key];
                 $data['reminder_due_days'] = $activity_array['reminder_due_days'][$key];

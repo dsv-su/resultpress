@@ -13,3 +13,10 @@
     <div class="clear">
     </div>
 </div>
+<script>
+    $(function(){
+        $('input.datepicker').datepicker({
+            format: 'dd-mm-yyyy'
+        });
+    });
+</script>

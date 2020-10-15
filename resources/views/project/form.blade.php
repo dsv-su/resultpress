@@ -39,15 +39,15 @@
                         </div>
                         <div class="form-group col-md-3 px-0">
                             <label for="project_start">Project start</label>
-                            <input type="date" name="project_start" id="project_start"
-                                   value="{{ old('project_start', empty($project->start) ? '' : $project->start->toDateString())}}"
-                                   class="form-control form-control-sm" required>
+                            <input type="text" name="project_start" id="project_start" placeholder="Start date"
+                                   value="{{ old('project_start', empty($project->start) ? '' : $project->start->format('d-m-Y'))}}"
+                                   class="form-control form-control-sm datepicker" required>
                         </div>
                         <div class="form-group col-md-3 px-0">
                             <label for="project_end">Project end</label>
-                            <input type="date" name="project_end" id="project_end"
-                                   value="{{ old('project_end', empty($project->end) ? '' : $project->end->toDateString())}}"
-                                   class="form-control form-control-sm">
+                            <input type="text" name="project_end" id="project_end" placeholder="End date"
+                                   value="{{ old('project_end', empty($project->end) ? '' : $project->end->format('d-m-Y'))}}"
+                                   class="form-control form-control-sm datepicker">
                         </div>
 
                         <div class="form-group">
@@ -78,15 +78,13 @@
                                                        value="{{$activity->description}}" required
                                                        class="form-control form-control-sm">
                                             </td>
-                                            <td><input type="date" name="activity_start[]"
-                                                       value="{{$activity->start->toDateString()}}" required
-                                                       class="form-control form-control-sm"
-                                                       data-date-format="mm/dd/yyyy">
+                                            <td><input type="text" name="activity_start[]"
+                                                       value="{{$activity->start->format('d-m-Y')}}" required
+                                                       class="form-control form-control-sm datepicker">
                                             </td>
-                                            <td><input type="date" name="activity_end[]"
-
-                                                       value="{{$activity->end->toDateString()}}" required
-                                                       class="form-control form-control-sm">
+                                            <td><input type="text" name="activity_end[]"
+                                                       value="{{$activity->end->format('d-m-Y')}}" required
+                                                       class="form-control form-control-sm datepicker">
                                             </td>
                                             <td><select name="activity_reminder[]">
                                                     @if($activity->reminder == true)
@@ -194,8 +192,8 @@
                             html += '<input type="hidden" name="activity_id[]" value=0>';
                             html += '<td><input type="text" name="activity_name[]" class="form-control form-control-sm" placeholder="Activity name" required></td>';
                             html += '<td><input type="text" name="activity_description[]" class="form-control form-control-sm" placeholder="Description" required></td>';
-                            html += '<td><input type="date" name="activity_start[]" class="form-control form-control-sm" placeholder="Startdate" size="1" required></td>';
-                            html += '<td><input type="date" name="activity_end[]"  class="form-control form-control-sm" placeholder="Enddate" size="1" required></td>';
+                            html += '<td><input type="text" name="activity_start[]" class="form-control form-control-sm datepicker" placeholder="Startdate" size="1" required></td>';
+                            html += '<td><input type="text" name="activity_end[]"  class="form-control form-control-sm datepicker" placeholder="Enddate" size="1" required></td>';
                             html += '<td><select name="activity_reminder[]"  class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select></td>';
                             html += '<td><input type="number" name="activity_reminder_due_days[]" class="form-control form-control-sm"  value="7" size="1" required></td>';
                             html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="0" size="3" required></td>';
@@ -206,6 +204,9 @@
                             $('#activities_table').append(html);
                             let editor = new MediumEditor('#activities_table .mediumEditor', {
                                 placeholder: {text: "Template"}
+                            });
+                            $('input.datepicker').datepicker({
+                                format: 'dd-mm-yyyy'
                             });
                         });
                         $(document).on('click', '.add-outputs', function () {

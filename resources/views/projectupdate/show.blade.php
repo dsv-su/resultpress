@@ -34,7 +34,7 @@
                     @elseif($au->status == 3)
                         <td class="status done text-nowrap">Done</td>
                     @endif
-                    <td class="text-nowrap">{{$au->money}}</td>
+                    <td class="text-nowrap">{{$au->money}} {{$au->activity->project->currency}}</td>
                     <td class="text-nowrap">@if ($au->date) {{$au->date->format('d/m/Y')}} @endif</td>
                 </tr>
                 <tr class="update">

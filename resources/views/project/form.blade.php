@@ -49,6 +49,17 @@
                                    value="{{ old('project_end', empty($project->end) ? '' : $project->end->format('d-m-Y'))}}"
                                    class="form-control form-control-sm datepicker">
                         </div>
+                        <div class="form-group col-md-3 px-0">
+                            <label for="project_currency">Project currency</label>
+                            <select name="project_currency" id="project_currency" class="form-control">
+                                <option value="SEK"
+                                        @if ($project->currency == 'SEK' || !$project->currency) selected @endif>kr
+                                </option>
+                                <option value="EUR" @if ($project->currency == 'EUR') selected @endif>€</option>
+                                <option value="USD" @if ($project->currency == 'USD') selected @endif>$</option>
+                                <option value="GBP" @if ($project->currency == 'GBP') selected @endif>£</option>
+                            </select>
+                        </div>
 
                         <div class="form-group">
                             <label for="activities_table" class="form-group-header">Activities</label>
@@ -91,7 +102,7 @@
                                                         <option value="1" selected="selected">Yes</option>
                                                         <option value="0">No</option>
                                                     @else
-                                                        <option value="1" >Yes</option>
+                                                        <option value="1">Yes</option>
                                                         <option value="0" selected="selected">No</option>
                                                     @endif
                                                 </select>
@@ -100,10 +111,13 @@
                                                        value="{{$activity->reminder_due_days}}"
                                                        class="form-control form-control-sm">
                                             </td>
-
-                                            <td><input type="number" name="activity_budget[]"
+                                            <td class="input-group">
+                                                <input type="number" name="activity_budget[]" placeholder="0"
                                                        value="{{$activity->budget}}" required
                                                        class="form-control form-control-sm">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text currency"></span>
+                                                </div>
                                             </td>
                                             <td>
                                                 <button type="button" name="remove"
@@ -185,8 +199,12 @@
                     let editor = new MediumEditor('.mediumEditor[name=project_description]', {placeholder: {text: "Description"}});
                     let editor2 = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Template"}});
                     $(document).ready(function () {
+                        $('.currency').each(function () {
+                            $(this).text($('#project_currency option:selected').text());
+                        });
                         $(document).on('click', '.add-activities', function () {
                             $('#activities_table').show();
+                            let currency = $('#project_currency option:selected').text();
                             let html = '';
                             html += '<tr>';
                             html += '<input type="hidden" name="activity_id[]" value=0>';
@@ -196,7 +214,7 @@
                             html += '<td><input type="text" name="activity_end[]"  class="form-control form-control-sm datepicker" placeholder="Enddate" size="1" required></td>';
                             html += '<td><select name="activity_reminder[]"  class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select></td>';
                             html += '<td><input type="number" name="activity_reminder_due_days[]" class="form-control form-control-sm"  value="7" size="1" required></td>';
-                            html += '<td><input type="number" name="activity_budget[]"  class="form-control form-control-sm" placeholder="0" size="3" required></td>';
+                            html += '<td class="input-group"><input type="number" name="activity_budget[]" class="form-control form-control-sm" placeholder="0" size="3" required><div class="input-group-append"><span class="input-group-text currency">' + currency + '</span></div></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                             html += '</tr>';
                             html += '<tr class="update activity_template"><td colspan=8><table class="table mb-2"><tr><td><textarea placeholder="Activity template" name="activity_template[]" ' +
@@ -228,6 +246,11 @@
                             if ($('tr', $('#outputs_table')).length < 2) {
                                 $('#outputs_table').hide();
                             }
+                        });
+                        $('#project_currency').on('change', function () {
+                            $('.currency').each(function () {
+                                $(this).text($('#project_currency option:selected').text());
+                            });
                         });
                         $("form").submit(function () {
                             // Add extra confirmation on empty fields

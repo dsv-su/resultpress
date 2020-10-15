@@ -9,9 +9,9 @@ class Project extends Model
 {
     use LogsActivity;
 
-    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'activities', 'status', 'outputs', 'aggregated_outputs'];
+    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'activities', 'status', 'outputs', 'aggregated_outputs'];
     protected $dates = ['start', 'end'];
-    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'activities', 'status', 'outputs', 'aggregated_outputs', 'user.name'];
+    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'activities', 'status', 'outputs', 'aggregated_outputs', 'user.name'];
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 

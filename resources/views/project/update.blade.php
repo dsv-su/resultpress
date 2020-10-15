@@ -20,6 +20,8 @@
             <input type="hidden" value="{{$project_update->id}}" id="project_update_id" name="project_update_id">
         @endif
 
+        <span class="d-none" id="project_currency">{{$project->currency}}</span>
+
         <div class="form-group">
             <h4>Covered activities:</h4>
             <table class="table table-sm w-100" @if (empty($aus) || $aus->isEmpty()) style="display: none;"
@@ -235,12 +237,13 @@
                 let id = $(this).attr('id');
                 let activity = $(this).text();
                 let template = $(this).prev('p').text();
+                let currency = $('#project_currency').text();
                 let html = '<tr>';
                 html += '<input type="hidden" name="activity_update_id[]" value=0>';
                 html += '<td class="auto"><input type="hidden" id="activity" name="activity_id[]" value="' + id + '">' + activity + '</td>';
                 html += '<td class="editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
                 // html += '<td><input type="text" name="activity_comment[]" class="form-control form-control-sm" placeholder="Comment" required></td>';
-                html += '<td><input type="number" name="activity_money[]"  class="form-control form-control-sm" placeholder="0" size="3" required></td>';
+                html += '<td class="input-group"><input type="number" name="activity_money[]" class="form-control form-control-sm" placeholder="0" size="3" required><div class="input-group-append"><span class="input-group-text">' + currency + '</span></div></td>';
                 html += '<td><input type="text" name="activity_date[]" class="form-control form-control-sm datepicker" placeholder="Date" size="1" required></td>';
                 html += '<td class="fit"><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';

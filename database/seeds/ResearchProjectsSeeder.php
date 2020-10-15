@@ -12,9 +12,10 @@ class ResearchProjectsSeeder extends Seeder
     public function run()
     {
         DB::table('projects')->insert([
-            'name' => 'REsearch project',
+            'name' => 'Research project',
             'description' => 'A generic research project',
             'status' => 1,
+            'currency' => 'SEK',
             'activities' => 2,
             'outputs' => 0,
             'aggregated_outputs' => 0,

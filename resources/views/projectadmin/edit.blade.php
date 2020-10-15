@@ -33,18 +33,20 @@
         <tr>
             <td>{{$project->id}}</td>
             <td>{{ old('name', empty($project) ? '' : $project->name) }}</td>
-            <td>
-                <form action="{{ route('projectadmin.update', $project->id) }}" method="POST">
+            <form action="{{ route('projectadmin.update', $project->id) }}" method="POST">
+                <td>
                     @method('PATCH')
                     @csrf
-                <select name="user_id" class="form-control">
-                    <option value="{{$project->user_id}}" selected>{{$project->user->name}}</option>
-                    @foreach($users as $user)
-                        <option value="{{$user->id}}">{{$user->name}}</option>
-                    @endforeach
-                </select>
-            </td>
-            <td><button type="submit" class="btn btn-primary">Submit</button></td>
+                    <select name="user_id" class="form-control">
+                        <option value="{{$project->user_id}}" selected>{{$project->user->name}}</option>
+                        @foreach($users as $user)
+                            <option value="{{$user->id}}">{{$user->name}}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </td>
             </form>
         </tr>
 

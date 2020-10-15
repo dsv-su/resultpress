@@ -9,9 +9,9 @@ class Project extends Model
 {
     use LogsActivity;
 
-    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'activities', 'status', 'outputs', 'aggregated_outputs'];
+    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative',  'status'];
     protected $dates = ['start', 'end'];
-    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'activities', 'status', 'outputs', 'aggregated_outputs', 'user.name'];
+    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'user.name'];
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 
@@ -30,7 +30,12 @@ class Project extends Model
         return $this->outputs()->where('status', '<>', 'draft')->orWhereNull('status')->get();
     }
 
-    public function projectupdate()
+    public function hasDraft()
+    {
+        return ($this->project_updates()->where('status', 'draft')->count() > 0);
+    }
+
+    public function project_updates()
     {
         return $this->hasMany(ProjectUpdate::class);
     }

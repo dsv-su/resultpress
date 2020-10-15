@@ -35,6 +35,20 @@ class Project extends Model
         return $this->hasMany(ProjectUpdate::class);
     }
 
+    public function getCurrencySymbol()
+    {
+        switch ($this->currency) {
+            case "USD":
+                return '$';
+            case "EUR":
+                return '€';
+            case "GBP";
+                return '£';
+            default:
+                return 'kr';
+        }
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

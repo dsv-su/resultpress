@@ -83,8 +83,8 @@
         </thead>
         <tbody>
         <tr>
-            <td class="derived">{{$project->moneyspent}} {{$project->currency}}</td>
-            <td class="derived">{{$project->budget}} {{$project->currency}}</td>
+            <td class="derived">{{$project->moneyspent}} {{$project->getCurrencySymbol()}}</td>
+            <td class="derived">{{$project->budget}} {{$project->getCurrencySymbol()}}</td>
         </tr>
         </tbody>
     </table>

@@ -20,7 +20,7 @@
             <input type="hidden" value="{{$project_update->id}}" id="project_update_id" name="project_update_id">
         @endif
 
-        <span class="d-none" id="project_currency">{{$project->currency}}</span>
+        <span class="d-none" id="project_currency">{{$project->getCurrencySymbol()}}</span>
 
         <div class="form-group">
             <h4>Covered activities:</h4>

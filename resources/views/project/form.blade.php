@@ -9,6 +9,7 @@
 
     @empty($project->id)
         <form action="{{ route('update', $project) }}" method="POST">
+            <input name="new_project" value="1" hidden>
             @else
                 <form action="{{ route('project_update', $project) }}" method="POST">
                     @method('PUT')

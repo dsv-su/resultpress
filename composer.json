@@ -16,6 +16,7 @@
     "guzzlehttp/guzzle": "^6.3",
     "laravel/framework": "^7.0",
     "laravel/tinker": "^2.0",
+    "laravel/ui": "^2.4",
     "spatie/laravel-activitylog": "^3.14",
     "spatie/laravel-permission": "^3.17",
     "uabookstores/laravel-shibboleth": "^3.3"

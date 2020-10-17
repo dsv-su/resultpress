@@ -21,7 +21,8 @@ if (class_exists(AuthHandler::class))
 Route::get($login, 'SystemController@login')->name('login');
 
 Route::middleware('entitlements')->group(function () {
-    Route::get('/', 'ProjectController@index')->name('home');
+    Route::get('/', 'ProjectController@index')->name('project_home');
+    Route::get('/shibboleth', 'ProjectController@shibboleth')->name('shibboleth');
     Route::get('/project/create', 'ProjectController@edit')->name('project_create');
     Route::post('/project', 'ProjectController@update')->name('update');
     Route::get('/project/update/{project_update}', 'ProjectUpdateController@show')->name('projectupdate_show');
@@ -47,6 +48,20 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('projectadmin','ProjectAdminController');
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');
+    Route::post('/user/invite', 'UserController@process_invites')->name('process_invite');
+    Route::get('/user/invite/{project}', 'UserController@invite_view')->name('invite_view');
 });
+Route::get('/registration/{token}', 'UserController@registration_view')->name('registration');
+Route::POST('register', 'Auth\RegisterController@register')->name('accept');
+
 //Test routes
 Route::get('/server', 'TestController@server');
+
+//Auth::routes();
+Route::get('partner-login', 'Auth\LoginController@showLoginForm')->name('partner-login');
+Route::post('partner-login', 'Auth\LoginController@login');
+Route::post('partner-logout', 'Auth\LoginController@logout')->name('partner-logout');
+//Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+//Route::post('register', 'Auth\RegisterController@register');
+
+Route::get('/home', 'HomeController@index')->name('home');

@@ -29,12 +29,15 @@
         </tr>
         @foreach ($data as $key => $project)
             <tr>
-                <td>{{ ++$i }}</td>
+                <td>{{ $project->id }}</td>
                 <td>{{ $project->name }}</td>
                 <td>{{ $project->start }}</td>
                 <td>{{ $project->end }}</td>
                 <td>{{ $project->user->name }}</td>
-                <td><a class="btn btn-outline-primary" href="{{ route('projectadmin.edit',$project->id) }}">Edit</a></td>
+                <td>
+                    <a class="btn btn-outline-primary" href="{{ route('projectadmin.edit',$project->id) }}">Edit</a>
+                    <a class="btn btn-outline-success float-right" href="{{route('invite_view', $project)}}">Invite</a>
+                </td>
             </tr>
         @endforeach
     </table>

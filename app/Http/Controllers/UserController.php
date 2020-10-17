@@ -2,14 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Invite;
+use App\Notifications\InviteNotification;
 use Illuminate\Http\Request;
 use App\User;
+use App\Project;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except('registration_view');
+    }
 
     /**
      * Display a listing of the resource.
@@ -117,10 +128,52 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        /*
         User::find($id)->delete();
         return redirect()->route('users.index')
             ->with('success','User deleted successfully');
-        */
+    }
+
+    public function invite_view(Project $project)
+    {
+        return view('projectadmin.invite', compact('project'));
+    }
+
+    public function process_invites(Request $request)
+    {
+        //dd($request->input('project_id'));
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:users,email'
+        ]);
+        $validator->after(function ($validator) use ($request) {
+            if (Invite::where('email', $request->input('email'))->exists()) {
+                $validator->errors()->add('email', 'There exists an invite with this email!');
+            }
+        });
+        if ($validator->fails()) {
+            return redirect(route('invite_view'))
+                ->withErrors($validator)
+                ->withInput();    }
+        do {
+            $token = Str::random(20);
+        } while (Invite::where('token', $token)->first());
+        Invite::create([
+        'token' => $token,
+        'email' => $request->input('email'),
+        'project_id' => $request->input('project_id')
+        ]);
+
+        $url = URL::temporarySignedRoute(
+
+            'registration', now()->addMinutes(480), ['token' => $token]
+        );
+        Notification::route('mail', $request->input('email'))->notify(new InviteNotification($url));
+        return redirect('/users')->with('success', 'The Invite has been sent successfully');
+    }
+
+    public function registration_view($token)
+    {
+        if($invite = Invite::where('token', $token)->first())
+        return view('auth.register',['invite' => $invite]);
+        else abort(401);
     }
 }

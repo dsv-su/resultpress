@@ -39,14 +39,21 @@
                     @endif
                 </td>
                 <td>
-                    <a class="btn btn-outline-info" href="{{ route('users.show',$user->id) }}">Show</a>
-                    <a class="btn btn-outline-primary" href="{{ route('users.edit',$user->id) }}">Edit</a>
-                    <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline">
-                    @method('DELETE')
-                    @csrf
-                    <!--<input class="btn btn-outline-danger"  value="Delete" type="submit">-->
-                    </form>
-
+                    @can('admin-list')
+                        <a class="btn btn-outline-info" href="{{ route('users.show',$user->id) }}">Show</a>
+                    @endcan
+                    @can('admin-update')
+                        <a class="btn btn-outline-primary" href="{{ route('users.edit',$user->id) }}">Edit</a>
+                    @endcan
+                    @can('admin-delete')
+                        @if($user->password !== 'shibboleth')
+                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline">
+                            @method('DELETE')
+                            @csrf
+                            <input class="btn btn-outline-danger"  value="Delete" type="submit">
+                            </form>
+                        @endif
+                    @endcan
                 </td>
             </tr>
         @endforeach

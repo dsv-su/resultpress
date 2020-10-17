@@ -123,6 +123,7 @@
                     <div class="col">
                         <h5>Reviewer comment</h5>
                     </div>
+                    @can('project-create')
                     <div class="col text-right">
                         <button type="button" class="btn approve editable" name="approved" data-toggle="button"
                                 @if ($project_update->status == 'approved') aria-pressed="true"
@@ -133,6 +134,7 @@
                         <input type="hidden" name="approved" @empty($project_update->status == 'approved') value=0 @else
                         value={{$project_update->status}} @endempty>
                     </div>
+                    @endcan
                 </div>
                 <div class="form-row my-2">
                     <label for="partner_comment">Partner</label>
@@ -142,6 +144,7 @@
                     <div class="text-danger">{{ $errors->first('partner_comment') }}</div>
                     @enderror
                 </div>
+                @can('project-create')
                 <div class="form-row my-2">
                     <label for="internal_comment">Spider's internal</label>
                     <textarea rows=4 class="form-control form-control-sm @error('internal_comment') is-danger @enderror"
@@ -150,6 +153,7 @@
                     <div class="text-danger">{{ $errors->first('internal_comment') }}</div>
                     @enderror
                 </div>
+                @endcan
                 <input class="btn btn-lg" value="Save" type="submit">
             </div>
         </form>

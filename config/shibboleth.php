@@ -21,7 +21,7 @@ return [
 
     'idp_login' => $system_config['global']['login_route'],
     //'idp_logout' => '/Shibboleth.sso/Logout',
-    'authenticated' => '/',
+    'authenticated' => '/shibboleth',
 
 
     /*
@@ -49,7 +49,7 @@ return [
             'Shib-emplId' => 'admin',
         ],
         'staff' => [
-            'Shib-cn' => 'Staff User',
+            'Shib-cn' => 'Ryan Dias',
             'Shib-mail' => 'staff@dsv.su.se',
             'Shib-givenName' => 'Staff',
             'Shib-sn' => 'User',

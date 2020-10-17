@@ -29,7 +29,7 @@ class CheckEntitlement
             if($system->global->app_debug == true) {
                 return $next($request);
             } else {
-                return redirect('login');
+                return redirect('partner-login');
             }
         }
         else

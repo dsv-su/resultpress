@@ -8,7 +8,7 @@
             </div>
             <div class="pull-right">
                     <a class="btn btn-outline-primary" href="{{ route('admin') }}"> Back</a>
-                @can('role-create')
+                @can('admin-create')
                     <a class="btn btn-outline-primary" href="{{ route('roles.create') }}"> Create New Role</a>
                 @endcan
             </div>
@@ -32,10 +32,10 @@
                 <td>{{ $role->name }}</td>
                 <td>
                     <a class="btn btn-outline-info" href="{{ route('roles.show',$role->id) }}">Show</a>
-                    @can('role-edit')
+                    @can('admin-edit')
                         <a class="btn btn-outline-primary" href="{{ route('roles.edit',$role->id) }}">Edit</a>
                     @endcan
-                    @can('role-delete')
+                    @can('admin-delete')
                         <form action="{{ route('roles.destroy', $role->id) }}" method="POST" style="display:inline">
                             @method('DELETE')
                             @csrf

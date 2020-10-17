@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Project;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class ProjectAdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:project-list|project-create|project-edit|project-delete', ['only' => ['index']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +21,15 @@ class ProjectAdminController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Project::with('user')->orderBy('id','DESC')->paginate(5);
+        if(Auth::user()->hasRole('Administrator'))
+        {
+            $data = Project::with('user')->orderBy('id','DESC')->paginate(5);
+        }
+        else
+            {
+                $project = Project::where('user_id', Auth::user()->id)->first();
+                $data = Project::with('user')->where('id', $project->id)->orderBy('id','DESC')->paginate(5);
+            }
         return view('projectadmin.index',compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
@@ -62,7 +76,7 @@ class ProjectAdminController extends Controller
     {
         $users = User::all();
         $project = Project::with('user')->find($id);
-        //dd($project);
+
         return view('projectadmin.edit',compact('project', 'users'));
     }
 
@@ -91,4 +105,5 @@ class ProjectAdminController extends Controller
     {
         //
     }
+
 }

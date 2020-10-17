@@ -490,6 +490,6 @@ class ProjectController extends Controller
 
         // Delete project
         $project->delete();
-        return redirect()->route('home');
+        return redirect()->route('project_home');
     }
 }

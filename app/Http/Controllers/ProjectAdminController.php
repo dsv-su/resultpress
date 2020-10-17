@@ -27,8 +27,12 @@ class ProjectAdminController extends Controller
         }
         else
             {
-                $project = Project::where('user_id', Auth::user()->id)->first();
-                $data = Project::with('user')->where('id', $project->id)->orderBy('id','DESC')->paginate(5);
+                if($project = Project::where('user_id', Auth::user()->id)->first())
+                {
+                  $data = Project::with('user')->where('id', $project->id)->orderBy('id','DESC')->paginate(5);
+                }
+                else return redirect()->route('admin')->with('status','There are no projects to assign');
+
             }
         return view('projectadmin.index',compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 5);

@@ -6,6 +6,11 @@
             <div class="pull-left">
                 <h2>Management</h2>
             </div>
+            @if (session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
+                </div>
+            @endif
             <br>
         </div>
     </div>

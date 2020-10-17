@@ -87,15 +87,20 @@ class ProjectController extends Controller
                 ->get(['activity_updates.*']);
 
             $comments = array();
-            foreach ($activityupdates as $au) {
-                $moneyspent += $au->money;
-                $puindex = 0;
-                foreach ($project_updates as $index => $pu) {
-                    if ($pu->id == $au->project_update_id) {
-                        $puindex = $index + 1;
+            // For cumulative displaying just the recent update comment.
+            if (!$project->cumulative) {
+                foreach ($activityupdates as $au) {
+                    $moneyspent += $au->money;
+                    $puindex = 0;
+                    foreach ($project_updates as $index => $pu) {
+                        if ($pu->id == $au->project_update_id) {
+                            $puindex = $index + 1;
+                        }
                     }
+                    $comments[$puindex] = $au->comment;
                 }
-                $comments[$puindex] = $au->comment;
+            } else {
+                $comments[] = $activityupdates->last()->comment;
             }
 
             ksort($comments);
@@ -188,7 +193,6 @@ class ProjectController extends Controller
     {
         request()->validate([
             'project_name' => 'required',
-            'project_description' => 'required',
         ]);
 
         $project->name = request('project_name');
@@ -197,7 +201,7 @@ class ProjectController extends Controller
         $project->status = 0; // temp value
         $project->end = Carbon::createFromFormat('d-m-Y', request('project_end') ?? null)->format('Y-m-d');
         $project->currency = request('project_currency') ?? null;
-        $project->activities = is_array(request('activity_id')) ? 1 : 0;
+        $project->cumulative = request('project_cumulative');
         //Adds the logged in user as project owner
         $project->user_id = Auth::id() ?? 1;
         $project->save();
@@ -247,7 +251,6 @@ class ProjectController extends Controller
         //Email reminder
         $activity_array['reminder'] = request('activity_reminder');
         $activity_array['reminder_due_days'] = request('activity_reminder_due_days');
-
         // Outputs
         $output_array['id'] = request('output_id') ?? null;
         $output_array['indicator'] = request('output_indicator');
@@ -269,7 +272,6 @@ class ProjectController extends Controller
                 //Transform dates from datepicker into the right format before saving to database
                 $data['start'] = Carbon::createFromFormat('d-m-Y', $activity_array['start'][$key])->format('Y-m-d');
                 $data['end'] = Carbon::createFromFormat('d-m-Y', $activity_array['end'][$key])->format('Y-m-d');
-
                 $data['budget'] = $activity_array['budget'][$key];
                 $data['reminder'] = $activity_array['reminder'][$key];
                 $data['reminder_due_days'] = $activity_array['reminder_due_days'][$key];
@@ -331,6 +333,9 @@ class ProjectController extends Controller
 
     public function write_update(Project $project)
     {
+        if ($project->hasDraft()) {
+            return abort(404);
+        }
         return view('project.update', ['project' => $project]);
     }
 

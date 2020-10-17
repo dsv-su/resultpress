@@ -3,7 +3,7 @@
 @section('content')
     <h4>{{ $project->name }}: project updates</h4>
     <p><a href="{{ route('project_show', $project->id) }}">Back to project page</a></p>
-    @if($project->projectupdate)
+    @if($project->project_updates()->count())
         <table>
             <thead>
             <th>#</th>
@@ -12,7 +12,7 @@
             <th>Actions</th>
             </thead>
 
-            @foreach ($project->projectupdate as $index => $pu)
+            @foreach ($project->project_updates()->get() as $index => $pu)
                 <tr>
                     <td class="fit">{{$index+1}}</td>
                     <td class="w-75">

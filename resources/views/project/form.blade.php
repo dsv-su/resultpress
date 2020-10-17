@@ -52,13 +52,20 @@
                         </div>
                         <div class="form-group col-md-3 px-0">
                             <label for="project_currency">Project currency</label>
-                            <select name="project_currency" id="project_currency" class="form-control">
+                            <select name="project_currency" id="project_currency" class="">
                                 <option value="SEK"
                                         @if ($project->currency == 'SEK' || !$project->currency) selected @endif>kr
                                 </option>
                                 <option value="EUR" @if ($project->currency == 'EUR') selected @endif>€</option>
                                 <option value="USD" @if ($project->currency == 'USD') selected @endif>$</option>
                                 <option value="GBP" @if ($project->currency == 'GBP') selected @endif>£</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3 px-0">
+                            <label for="project_cumulative">Cumulative updates</label>
+                            <select name="project_cumulative">
+                                <option value="1" @if($project->cumulative) selected="selected" @endif>Yes</option>
+                                <option value="0" @if(!$project->cumulative) selected="selected" @endif>No</option>
                             </select>
                         </div>
 
@@ -99,13 +106,12 @@
                                                        class="form-control form-control-sm datepicker">
                                             </td>
                                             <td><select name="activity_reminder[]">
-                                                    @if($activity->reminder == true)
-                                                        <option value="1" selected="selected">Yes</option>
-                                                        <option value="0">No</option>
-                                                    @else
-                                                        <option value="1">Yes</option>
-                                                        <option value="0" selected="selected">No</option>
-                                                    @endif
+                                                    <option value="1"
+                                                            @if($activity->reminder) selected="selected" @endif>Yes
+                                                    </option>
+                                                    <option value="0"
+                                                            @if(!$activity->reminder) selected="selected" @endif>No
+                                                    </option>
                                                 </select>
                                             </td>
                                             <td><input type="number" name="activity_reminder_due_days[]"

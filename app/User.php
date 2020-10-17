@@ -41,7 +41,7 @@ class User extends Authenticatable
     ];
 
     protected static $logAttributes = [
-        'name', 'email', 'password',
+        'name', 'email',
     ];
     protected static $logOnlyDirty = true;
 

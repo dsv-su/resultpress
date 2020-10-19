@@ -86,6 +86,7 @@ class ProjectAdminController extends Controller
     public function edit($id)
     {
         $users = User::all();
+
         $project = Project::with('project_owner.user')->find($id);
 
         return view('projectadmin.edit',compact('project', 'users'));

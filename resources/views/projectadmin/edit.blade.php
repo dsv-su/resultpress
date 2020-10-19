@@ -28,8 +28,8 @@
         <tr>
             <th>Id</th>
             <th>Project Name</th>
-            @foreach($project->project_owner->all() as $owner)
-            <th>Assigned to:</th>
+            @foreach($project->project_owner->all() as $key => $owner)
+                <th>{{$key+1}}). Assigned to:</th>
             @endforeach
             <th>Change:</th>
         </tr>
@@ -38,38 +38,39 @@
             <td>{{ old('name', empty($project) ? '' : $project->name) }}</td>
             <form action="{{ route('projectadmin.update', $project->id) }}" method="POST">
 
-                    @method('PATCH')
-                    @csrf
-                    @if(count($project->project_owner) > 1)
-                        @foreach($project->project_owner->all() as $owner)
-                            <td>
-                                <input type="text" name="old_user_id[]" value="{{$owner->user->id}}" hidden>
+                @method('PATCH')
+                @csrf
+                @if(count($project->project_owner) > 1)
+                    @foreach($project->project_owner->all() as $owner)
+                        <td>
+                            <input type="text" name="old_user_id[]" value="{{$owner->user->id}}" hidden>
                             <select name="user_id[]" class="form-control">
-                            <option value="{{$owner->user->id}}" selected>{{$owner->user->name}}</option>
+                                <option value="{{$owner->user->id}}" selected>{{$owner->user->name}}</option>
 
-                            @foreach($users as $user)
-                                <option value="{{$user->id}}">{{$user->name}}</option>
+                                @foreach($users as $user)
+                                    <option value="{{$user->id}}">{{$user->name}}</option>
                             @endforeach
-                            </td>
+                        </td>
                         @endforeach
                         </select>
-                    @else
-                        <td>
-                        <input type="text" name="old_user_id" value="{{$project->project_owner->first()->user->id}}" hidden>
-                        <select name="user_id" class="form-control">
-                            <option value="{{$project->project_owner->first()->user->id}}" selected>{{$project->project_owner->first()->user->name}}</option>
-                            @foreach($users as $user)
-                                <option value="{{$user->id}}">{{$user->name}}</option>
-                            @endforeach
-                        </select>
-                        </td>
-                    @endif
+                        @else
+                            <td>
+                                <input type="text" name="old_user_id" value="{{$project->project_owner->first()->user->id}}" hidden>
+                                <select name="user_id" class="form-control">
+                                    <option value="{{$project->project_owner->first()->user->id}}" selected>{{$project->project_owner->first()->user->name}}</option>
+                                    @foreach($users as $user)
+                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                        @endif
 
-                <td>
-                    <button type="submit" class="btn btn-outline-primary">Submit</button>
-                    <button type="button" name="add-user" class="btn btn-outline-primary add-user">Add</button>
-                </td>
+                        <td>
+                            <button type="submit" class="btn btn-outline-primary">Submit</button>
+                            <button type="button" name="add-user" class="btn btn-outline-primary add-user">Add</button>
+                        </td>
             </form>
+        </tr>
         </tr>
     </table>
     <table class="table table-sm" id="users_table" style="display:none;">
@@ -94,6 +95,13 @@
         </td>
         </tbody>
         </form>
+        <div class="card">
+            <h5 class="alert alert-primary card-header">Notification</h5>
+            <div class="card-body">
+                <h5 class="card-title">Under development</h5>
+                <p class="card-text">This form is under development</p>
+            </div>
+        </div>
     </table>
         <script>
             $(document).ready(function () {

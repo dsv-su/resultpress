@@ -38,26 +38,27 @@
                 <input class="form-control"  name="email" type="text" placeholder="Email" value="{{ old('email', empty($user) ? '' : $user->email) }}">
             </div>
         </div>
-
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Role:</strong>
+                <strong>Existing Roles:</strong>
+                    @foreach($userRoles as $userRole)
+                    <label class="badge badge-success">{{$userRole}}</label>
+                    @endforeach
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong>Change to Roles:</strong>
 
                 <select name="roles[]" class="form-control" multiple="multiple">
                     @foreach($roles as $role)
-                        @if(in_array($role, $userRoles))
-                            @foreach($userRoles as $userRole)
-                            <option value="{{$userRole}}">{{$userRole}}</option>
-                            @endforeach
-                        @else
                         <option value="{{$role}}">{{$role}}</option>
-                        @endif
                     @endforeach
                 </select>
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button submit" class="btn btn-outline-primary">Submit</button>
         </div>
     </div>
     </form>

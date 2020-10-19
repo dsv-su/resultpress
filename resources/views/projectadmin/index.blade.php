@@ -33,7 +33,11 @@
                 <td>{{ $project->name }}</td>
                 <td>{{ $project->start }}</td>
                 <td>{{ $project->end }}</td>
-                <td>{{ $project->user->name }}</td>
+                <td>
+                    @foreach($project->project_owner->all() as $owner)
+                    {{ $owner->user->name }}
+                    @endforeach
+                </td>
                 <td>
                     <a class="btn btn-outline-primary" href="{{ route('projectadmin.edit',$project->id) }}">Edit</a>
                     <a class="btn btn-outline-success float-right" href="{{route('invite_view', $project)}}">Invite</a>

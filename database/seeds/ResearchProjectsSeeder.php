@@ -18,7 +18,6 @@ class ResearchProjectsSeeder extends Seeder
             'currency' => 'SEK',
             'start' => '2020-09-30',
             'end' => '2021-04-30',
-            'user_id' => 1,
             'created_at' => '2020-09-22 13:35:17',
             'updated_at' => '2020-09-24 12:11:37',
         ]);

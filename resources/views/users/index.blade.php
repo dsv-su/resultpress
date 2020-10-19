@@ -9,6 +9,9 @@
             <br>
             <div class="pull-right">
                 <a class="btn btn-outline-primary" href="{{ route('admin') }}"> Back</a>
+                @can('admin-create')
+                <a class="btn btn-outline-success" href="{{ route('users.create') }}"> Create New User</a>
+                @endcan
             </div>
             <br>
         </div>

@@ -10,6 +10,7 @@
                 <a class="btn btn-outline-primary" href="{{ route('projectadmin.index') }}"> Back</a>
             </div>
             <br>
+            <p>This transfers all <strong>Roles and Permissions</strong> from one user to another.</p>
         </div>
     </div>
     @if (count($errors) > 0)
@@ -27,29 +28,80 @@
         <tr>
             <th>Id</th>
             <th>Project Name</th>
+            @foreach($project->project_owner->all() as $owner)
             <th>Assigned to:</th>
+            @endforeach
             <th>Change:</th>
         </tr>
         <tr>
             <td>{{$project->id}}</td>
             <td>{{ old('name', empty($project) ? '' : $project->name) }}</td>
             <form action="{{ route('projectadmin.update', $project->id) }}" method="POST">
-                <td>
+
                     @method('PATCH')
                     @csrf
-                    <select name="user_id" class="form-control">
-                        <option value="{{$project->user_id}}" selected>{{$project->user->name}}</option>
-                        @foreach($users as $user)
-                            <option value="{{$user->id}}">{{$user->name}}</option>
+                    @if(count($project->project_owner) > 1)
+                        @foreach($project->project_owner->all() as $owner)
+                            <td>
+                                <input type="text" name="old_user_id[]" value="{{$owner->user->id}}" hidden>
+                            <select name="user_id[]" class="form-control">
+                            <option value="{{$owner->user->id}}" selected>{{$owner->user->name}}</option>
+
+                            @foreach($users as $user)
+                                <option value="{{$user->id}}">{{$user->name}}</option>
+                            @endforeach
+                            </td>
                         @endforeach
-                    </select>
-                </td>
+                        </select>
+                    @else
+                        <td>
+                        <input type="text" name="old_user_id" value="{{$project->project_owner->first()->user->id}}" hidden>
+                        <select name="user_id" class="form-control">
+                            <option value="{{$project->project_owner->first()->user->id}}" selected>{{$project->project_owner->first()->user->name}}</option>
+                            @foreach($users as $user)
+                                <option value="{{$user->id}}">{{$user->name}}</option>
+                            @endforeach
+                        </select>
+                        </td>
+                    @endif
+
                 <td>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-outline-primary">Submit</button>
+                    <button type="button" name="add-user" class="btn btn-outline-primary add-user">Add</button>
                 </td>
             </form>
         </tr>
+    </table>
+    <table class="table table-sm" id="users_table" style="display:none;">
+        <form action="{{ route('projectadmin.store', $project->id) }}" method="POST">
+            @csrf
+        <thead>
+        <th scope="row">Add user:</th>
+        <th scope="row">Confirm:</th>
+        </thead>
+        <tbody>
+        <td>
+            <input type="text" name="project_id" value="{{$project->id}}" hidden>
+        <select name="add_user_id" class="form-control">
+        @foreach($users as $user)
+                <option value="{{$user->id}}">[{{$user->id}}]  {{$user->name}} ({{$user->email}})</option>
+        @endforeach
+        </select>
+        </td>
+        <td>
+            <button type="submit" class="btn btn-outline-primary">Add this user</button>
 
+        </td>
+        </tbody>
+        </form>
+    </table>
+        <script>
+            $(document).ready(function () {
+                $(document).on('click', '.add-user', function () {
+                    $('#users_table').show();
+                });
+            });
+        </script>
 
 
 @endsection

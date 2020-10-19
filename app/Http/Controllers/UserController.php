@@ -64,6 +64,44 @@ class UserController extends Controller
         $input['password'] = Hash::make($input['password']);
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
+
+        if($user->hasRole('Administrator'))
+        {
+            $user->givePermissionTo('admin-list');
+            $user->givePermissionTo('admin-update');
+            $user->givePermissionTo('admin-create');
+            $user->givePermissionTo('admin-edit');
+            $user->givePermissionTo('admin-delete');
+            $user->givePermissionTo('project-list');
+            $user->givePermissionTo('project-update');
+            $user->givePermissionTo('project-create');
+            $user->givePermissionTo('project-edit');
+            $user->givePermissionTo('project-delete');
+            //For logging out
+            $user->givePermissionTo('partner');
+        }
+        elseif ($user->hasRole('Program administrator'))
+        {
+            $user->givePermissionTo('project-list');
+            $user->givePermissionTo('project-update');
+            $user->givePermissionTo('project-create');
+            $user->givePermissionTo('project-edit');
+            $user->givePermissionTo('project-delete');
+            //For logging out
+            $user->givePermissionTo('partner');
+        }
+        elseif ($user->hasRole('Spider'))
+        {
+            $user->givePermissionTo('project-list');
+            $user->givePermissionTo('project-create');
+            //For logging out
+            $user->givePermissionTo('partner');
+        }
+        elseif ($user->hasRole('Partner'))
+        {
+            $user->givePermissionTo('partner');
+        }
+
         return redirect()->route('users.index')
             ->with('success','User created successfully');
     }
@@ -77,6 +115,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
+
         return view('users.show',compact('user'));
     }
 

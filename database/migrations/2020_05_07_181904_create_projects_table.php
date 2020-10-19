@@ -22,7 +22,7 @@ class CreateProjectsTable extends Migration
                 $table->date('end')->nullable();
                 $table->char('currency')->nullable();
                 $table->boolean('cumulative')->default(0);
-                $table->foreignId('user_id')->references('id')->on('users');
+                //$table->foreignId('user_id')->references('id')->on('users');
                 $table->timestamps();
             });
 

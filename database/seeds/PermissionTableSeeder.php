@@ -16,6 +16,7 @@ class PermissionTableSeeder extends Seeder
             'admin-list',
             'admin-update',
             'admin-create',
+            'admin-edit',
             'admin-delete',
             'project-list',
             'project-update',

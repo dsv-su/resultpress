@@ -35,5 +35,17 @@
                 @endif
             </div>
         </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong>Permissions:</strong>
+                @if(!empty($user->getAllPermissions()))
+                    @foreach($user->getAllPermissions() as $v)
+                        <br>
+                        {{ $v->name }}
+
+                    @endforeach
+                @endif
+            </div>
+        </div>
     </div>
 @endsection

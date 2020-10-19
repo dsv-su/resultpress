@@ -8,6 +8,7 @@ use App\File;
 use App\Output;
 use App\OutputUpdate;
 use App\Project;
+use App\Project_owner;
 use App\Project_partner;
 use App\ProjectUpdate;
 use Carbon\Carbon;
@@ -24,9 +25,14 @@ class ProjectController extends Controller
 {
     public function shibboleth()
     {
+        //Users entering via the Shibboleth login
         $user = Auth::user();
+        //All users get the role 'Spider'
         $user->assignRole('Spider');
+        //All users can create projects
+        $user->givePermissionTo('project-list');
         $user->givePermissionTo('project-create');
+        //Give these users role Admin
         if($user->name == 'Ryan Dias') $user->assignRole('Administrator');
         if($user->name == 'Pavel Sokolov') $user->assignRole('Administrator');
         if($user->name == 'Erik Thuning') $user->assignRole('Administrator');
@@ -40,16 +46,16 @@ class ProjectController extends Controller
     {
         if($user = Auth::user())
         {
-            if($user->hasRole(['Administrator', 'Spider']))
+            if($user->hasRole(['Administrator', 'Program administrator', 'Spider']))
             {
-                $projects = Project::with('user')->latest()->get();
+                $projects = Project::with('project_owner.user')->latest()->get();
                 return view('project.index', ['projects' => $projects, 'user' => $user]);
             }
             elseif ($user->hasRole(['Partner']))
             {
                 $project = Project_partner::where('partner_id', $user->id)->first();
                 $id = $project->project_id;
-                $projects = Project::with('user')->where('id', $id)->latest()->get();
+                $projects = Project::with('project_owner.user')->where('id', $id)->latest()->get();
                 return view('project.index', ['projects' => $projects, 'user' => $user]);
             }
         }
@@ -202,12 +208,17 @@ class ProjectController extends Controller
         $project->end = Carbon::createFromFormat('d-m-Y', request('project_end') ?? null)->format('Y-m-d');
         $project->currency = request('project_currency') ?? null;
         $project->cumulative = request('project_cumulative');
-        //Adds the logged in user as project owner
-        $project->user_id = Auth::id() ?? 1;
         $project->save();
+
         //Create permissions for a new project
         if(request('new_project') == 1)
         {
+            //Adds the logged in user as project owner
+            $owner = new Project_owner();
+            $owner->project_id = $project->id;
+            $owner->user_id = Auth::id() ?? 1;
+            $owner->save();
+
             //Administrator: can do anything on any project
             $admin = Role::where('name', 'Administrator')->get();
             //Program administrator: can do anything on any project linked to that program (once program areas get implemented)
@@ -216,7 +227,7 @@ class ProjectController extends Controller
             $spider = Role::where('name', 'Spider')->get();
             //Logged in user can Read, Edit and Delete project
             $user = Auth::user();
-
+            // -> This should be refactored
             //Read
             $permission = Permission::create(['name' => 'project-'.$project->id.'-list']);
             $permission->assignRole($admin); //Administrator
@@ -237,6 +248,7 @@ class ProjectController extends Controller
             $permission->assignRole($admin); //Administrator
             $permission->assignRole($program_admin); //Program administrator
             $user->givePermissionTo($permission); //Logged in user
+            // <- to be refacored
         }
         //Activities
         //Request from form --> this should later be refactored
@@ -280,14 +292,14 @@ class ProjectController extends Controller
                     Activity::where('id', $id)->update($data);
                     //Log activity update
                     activity()
-                        ->causedBy($project->user_id)
+                        ->causedBy(Auth::user())
                         ->performedOn(Activity::find($id))
                         ->log('ActivityUpdate');
                 } else {
                     $newactivity = Activity::create($data);
                     //Log new activity
                     activity()
-                        ->causedBy($project->user_id)
+                        ->causedBy(Auth::user())
                         ->performedOn(Activity::find($newactivity->id))
                         ->log('NewActivity');
                 }
@@ -311,7 +323,7 @@ class ProjectController extends Controller
                     Output::where('id', $id)->update($data);
                     //Log output update
                     activity()
-                        ->causedBy($project->user_id)
+                        ->causedBy(Auth::user())
                         ->performedOn(Output::find($id))
                         ->log('OutputUpdate');
                 } else {
@@ -319,7 +331,7 @@ class ProjectController extends Controller
                     $newoutput = Output::create($data);
                     //Log new output
                     activity()
-                        ->causedBy($project->user_id)
+                        ->causedBy(Auth::user())
                         ->performedOn(Output::find($newoutput->id))
                         ->log('NewOutput');
                 }

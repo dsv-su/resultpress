@@ -45,8 +45,12 @@ class User extends Authenticatable
     ];
     protected static $logOnlyDirty = true;
 
-    public function project()
+    /*public function project()
     {
         return $this->hasMany(User::class);
+    }*/
+    public function project_owner()
+    {
+        return $this->hasMany(Project_owner::class);
     }
 }

@@ -11,7 +11,7 @@ class Project extends Model
 
     protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative',  'status'];
     protected $dates = ['start', 'end'];
-    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'user.name'];
+    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status'];
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 
@@ -54,9 +54,13 @@ class Project extends Model
         }
     }
 
-    public function user()
+    /*public function user()
     {
         return $this->belongsTo(User::class);
+    }*/
+    public function project_owner()
+    {
+        return $this->hasMany(Project_owner::class);
     }
 }
 

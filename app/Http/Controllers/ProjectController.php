@@ -105,7 +105,7 @@ class ProjectController extends Controller
                     }
                     $comments[$puindex] = $au->comment;
                 }
-            } else {
+            } elseif (!$activityupdates->isEmpty()) {
                 $comments[] = $activityupdates->last()->comment;
             }
 
@@ -200,7 +200,6 @@ class ProjectController extends Controller
         request()->validate([
             'project_name' => 'required',
         ]);
-
         $project->name = request('project_name');
         $project->description = request('project_description');
         $project->start = Carbon::createFromFormat('d-m-Y', request('project_start') ?? null)->format('Y-m-d');

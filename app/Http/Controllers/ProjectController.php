@@ -344,7 +344,7 @@ class ProjectController extends Controller
 
     public function write_update(Project $project)
     {
-        if ($project->hasDraft()) {
+        if ($project->hasDraft() && $project->cumulative) {
             return abort(404);
         }
         return view('project.update', ['project' => $project]);

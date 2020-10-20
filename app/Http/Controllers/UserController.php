@@ -189,9 +189,10 @@ class UserController extends Controller
             }
         });
         if ($validator->fails()) {
-            return redirect(route('invite_view'))
+            return redirect(route('invite_view', $request->input('project_id')))
                 ->withErrors($validator)
-                ->withInput();    }
+                ->withInput();
+        }
         do {
             $token = Str::random(20);
         } while (Invite::where('token', $token)->first());

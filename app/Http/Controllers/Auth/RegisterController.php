@@ -68,23 +68,33 @@ class RegisterController extends Controller
     {
         //Retrieve invite
         $invite = Invite::where('token', $data['token'])->first();
-        //Create user
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-        //Set user permissions
-        $user->givePermissionTo('project-'.$invite->project_id.'-list'); //List project
-        $user->givePermissionTo('project-'.$invite->project_id.'-update'); //Create project updates
-        //Associate project with partner
-        $project_partner = new Project_partner();
-        $project_partner->project_id = $invite->project_id;
-        $project_partner->partner_id = $user->id;
-        $project_partner->save();
-        $invite->delete();
-        $user->assignRole('Partner');
-        return $user->givePermissionTo('partner');
+        //Check if user exist
+        $findUser = User::where('email', $data['email'])->first();
+         if($findUser)
+         {
+            return redirect()->route('partner-login')->with('alert','User already exists. Please inform your Project Leader');;
+         }
+         else
+         {
+             //Create user
+             $user = User::create([
+                 'name' => $data['name'],
+                 'email' => $data['email'],
+                 'password' => Hash::make($data['password']),
+             ]);
+             //Set user permissions
+             $user->givePermissionTo('project-'.$invite->project_id.'-list'); //List project
+             $user->givePermissionTo('project-'.$invite->project_id.'-update'); //Create project updates
+             //Associate project with partner
+             $project_partner = new Project_partner();
+             $project_partner->project_id = $invite->project_id;
+             $project_partner->partner_id = $user->id;
+             $project_partner->save();
+             $invite->delete();
+             $user->assignRole('Partner');
+             return $user->givePermissionTo('partner');
+         }
+
 
 
     }

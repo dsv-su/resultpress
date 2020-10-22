@@ -59,7 +59,8 @@ class ProjectController extends Controller
                 return view('project.index', ['projects' => $projects, 'user' => $user]);
             }
         }
-        else abort(401);
+        elseif (Auth::check()) abort(403);
+        else return redirect()->route('partner-login');
     }
 
     /**

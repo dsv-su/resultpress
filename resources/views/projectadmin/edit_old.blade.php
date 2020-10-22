@@ -24,31 +24,6 @@
             </ul>
         </div>
     @endif
-
-    <form action="{{ route('projectadmin.update', $project->id) }}" method="POST">
-        @method('PATCH')
-        @csrf
-        @if(count($project->project_owner) > 1)
-        <!-- Multiple project owners -->
-        <div class="card">
-            <div class="card-header">
-               Project:  {{$project->id}} {{ old('name', empty($project) ? '' : $project->name) }}
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
-        @endif
-
-
-
-
-
-
-
-
     <table class="table table-bordered">
         <tr>
             <th>Id</th>
@@ -101,24 +76,24 @@
     <table class="table table-sm" id="users_table" style="display:none;">
         <form action="{{ route('projectadmin.store', $project->id) }}" method="POST">
             @csrf
-            <thead>
-            <th scope="row">Add user:</th>
-            <th scope="row">Confirm:</th>
-            </thead>
-            <tbody>
-            <td>
-                <input type="text" name="project_id" value="{{$project->id}}" hidden>
-                <select name="add_user_id" class="form-control">
-                    @foreach($users as $user)
-                        <option value="{{$user->id}}">[{{$user->id}}]  {{$user->name}} ({{$user->email}})</option>
-                    @endforeach
-                </select>
-            </td>
-            <td>
-                <button type="submit" class="btn btn-outline-primary">Add this user</button>
+        <thead>
+        <th scope="row">Add user:</th>
+        <th scope="row">Confirm:</th>
+        </thead>
+        <tbody>
+        <td>
+            <input type="text" name="project_id" value="{{$project->id}}" hidden>
+        <select name="add_user_id" class="form-control">
+        @foreach($users as $user)
+                <option value="{{$user->id}}">[{{$user->id}}]  {{$user->name}} ({{$user->email}})</option>
+        @endforeach
+        </select>
+        </td>
+        <td>
+            <button type="submit" class="btn btn-outline-primary">Add this user</button>
 
-            </td>
-            </tbody>
+        </td>
+        </tbody>
         </form>
         <div class="card">
             <h5 class="alert alert-primary card-header">Notification</h5>
@@ -128,13 +103,13 @@
             </div>
         </div>
     </table>
-    <script>
-        $(document).ready(function () {
-            $(document).on('click', '.add-user', function () {
-                $('#users_table').show();
+        <script>
+            $(document).ready(function () {
+                $(document).on('click', '.add-user', function () {
+                    $('#users_table').show();
+                });
             });
-        });
-    </script>
+        </script>
 
 
 @endsection

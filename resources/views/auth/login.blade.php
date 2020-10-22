@@ -3,6 +3,11 @@
 @section('content')
     <div class="row">
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            @if ($message = Session::get('success'))
+                <div class="alert alert-danger">
+                    <p>{{ $message }}</p>
+                </div>
+            @endif
             <div class="card card-signin my-5">
                 <div class="card-body">
                     <form method="POST" action="{{ route('partner-login') }}">
@@ -43,10 +48,19 @@
                         @endif
                         <hr class="my-4">
                         <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-lg btn-block text-uppercase" type="submit"> TODO</button>
+                        <a href="/partner-login/github" role="button" class="btn btn-outline-primary btn-lg btn-block text-uppercase"><i class="fab fa-github"></i> GitHub</a>
                         </div>
+                        <br>
                         <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-lg btn-block text-uppercase" type="submit"> TODO</button>
+                            <a href="/partner-login/facebook" role="button" class="btn btn-outline-primary btn-lg btn-block text-uppercase"><i class="fab fa-facebook"></i> Facebook</a>
+                        </div>
+                        <br>
+                        <div class="d-flex justify-content-center">
+                            <a href="/partner-login/linkedin" role="button" class="btn btn-outline-primary btn-lg btn-block text-uppercase"><i class="fab fa-linkedin"></i> Linkedin</a>
+                        </div>
+                        <br>
+                        <div class="d-flex justify-content-center">
+                            <a href="/partner-login/google" role="button" class="btn btn-outline-primary btn-lg btn-block text-uppercase"><i class="fab fa-google"></i> Google</a>
                         </div>
                     </form>
                         <hr class="my-4">

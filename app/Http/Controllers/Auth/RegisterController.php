@@ -7,6 +7,7 @@ use App\Invite;
 use App\Project_partner;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -72,7 +73,7 @@ class RegisterController extends Controller
         $findUser = User::where('email', $data['email'])->first();
          if($findUser)
          {
-            return redirect()->route('partner-login')->with('alert','User already exists. Please inform your Project Leader');;
+            return redirect()->route('partner-login')->with('success','User already exists. Please inform your Project Leader');
          }
          else
          {
@@ -93,9 +94,9 @@ class RegisterController extends Controller
              $invite->delete();
              $user->assignRole('Partner');
              return $user->givePermissionTo('partner');
+
          }
-
-
-
     }
+
+
 }

@@ -44,6 +44,8 @@ Route::middleware('entitlements')->group(function () {
     //Admin User/Role management
     Route::get('/admin', 'AdminController@index')->name('admin');
 });
+
+//Administrator routes
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('projectadmin','ProjectAdminController');
     Route::resource('roles','RoleController');
@@ -51,17 +53,20 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/user/invite', 'UserController@process_invites')->name('process_invite');
     Route::get('/user/invite/{project}', 'UserController@invite_view')->name('invite_view');
 });
+
+// Local registration route
 Route::get('/registration/{token}', 'UserController@registration_view')->name('registration');
 Route::POST('register', 'Auth\RegisterController@register')->name('accept');
 
-//Test routes
-Route::get('/server', 'TestController@server');
-
-//Auth::routes();
+//Local login/logout route
 Route::get('partner-login', 'Auth\LoginController@showLoginForm')->name('partner-login');
 Route::post('partner-login', 'Auth\LoginController@login');
 Route::post('partner-logout', 'Auth\LoginController@logout')->name('partner-logout');
-//Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-//Route::post('register', 'Auth\RegisterController@register');
 
+//External register and login routes for oauthlogin
+Route::get('partner-login/{provider}', 'Auth\ExternalRegisterController@redirectToProvider');
+Route::get('/partner-login/{provider}/callback', 'Auth\ExternalRegisterController@handleProviderCallback');
+
+//Testroute(to be removed)
+Route::get('/server', 'TestController@server');
 Route::get('/home', 'HomeController@index')->name('home');

@@ -59,7 +59,6 @@ class ProjectController extends Controller
                 return view('project.index', ['projects' => $projects, 'user' => $user]);
             }
         }
-
         else abort(401);
     }
 

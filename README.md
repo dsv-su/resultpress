@@ -55,6 +55,23 @@ Currently used version is 7.10.3
         db_username=                            ; DB user
         db_password=                            ; secret
         
+        [oauth2]                                ; Here you add the registered providers client id, client secrets and callback URI:s
+        github_client_id=                       
+        github_client_secret=
+        github_callback=https://resultpress.dev/partner-login/github/callback
+        
+        facebook_client_id=                     
+        facebook_client_secret=
+        facebook_callback=https://resultpress.dev/partner-login/facebook/callback
+        
+        linkedin_client_id=
+        linkedin_client_secret=
+        linkedin_callback=https://resultpress.dev/partner-login/linkedin/callback
+        
+        google_client_id=
+        google_client_secret=
+        google_callback=https://resultpress.dev/partner-login/google/callback
+
         
 * Once the global settings are entered you can install the dependencies. `composer install`
 
@@ -66,24 +83,7 @@ Currently used version is 7.10.3
 
 * If you need to change the email configuration. Open the .env file and set the needed values
 
-* Create the database with `php artisan migrate` (this should create database tables needed)
+* Create the database and seed the default permissions and roles with `php artisan migrate --seed` (this should create database tables needed and populate necessary user permissions)
 
-## 4. Migrating
-
-To run all outstanding migrations, execute:
-
-`php artisan migrate`
-
-To make a database backup:
-
-`php artisan database:backup`
-
-To restore a backup (made on the same day)
-
-`php artisan database:restore`
-
-To rollback and migrate (after making a backup):
-
-``php artisan migrate:fresh``
 
 

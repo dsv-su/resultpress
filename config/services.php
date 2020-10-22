@@ -1,4 +1,9 @@
 <?php
+$file = base_path().'/systemconfig/resultpress.ini';
+if (!file_exists($file)) {
+    $file = base_path().'/systemconfig/resultpress.ini.example';
+}
+$system_config = parse_ini_file($file, true);
 
 return [
 
@@ -28,6 +33,30 @@ return [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+    ],
+
+    'github' => [
+        'client_id' => $system_config['oauth2']['github_client_id'],
+        'client_secret' => $system_config['oauth2']['github_client_secret'],
+        'redirect' => $system_config['oauth2']['github_callback'],
+    ],
+
+    'facebook' => [
+        'client_id' => $system_config['oauth2']['facebook_client_id'],
+        'client_secret' => $system_config['oauth2']['facebook_client_secret'],
+        'redirect' => $system_config['oauth2']['facebook_callback'],
+    ],
+
+    'linkedin' => [
+        'client_id' => $system_config['oauth2']['linkedin_client_id'],
+        'client_secret' => $system_config['oauth2']['linkedin_client_secret'],
+        'redirect' => $system_config['oauth2']['linkedin_callback'],
+    ],
+
+    'google' => [
+        'client_id' => $system_config['oauth2']['google_client_id'],
+        'client_secret' => $system_config['oauth2']['google_client_secret'],
+        'redirect' => $system_config['oauth2']['google_callback'],
     ],
 
 ];

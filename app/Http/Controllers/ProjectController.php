@@ -11,6 +11,7 @@ use App\Project;
 use App\ProjectOwner;
 use App\ProjectPartner;
 use App\ProjectUpdate;
+use App\Services\ACLHandler;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -27,9 +28,9 @@ class ProjectController extends Controller
     {
         //Users entering via the Shibboleth login
         $user = Auth::user();
-        //All users get the role 'Spider'
+        //All spider-users get the role 'Spider'
         $user->assignRole('Spider');
-        //All users can create projects
+        //All spider-users can create projects
         $user->givePermissionTo('project-list');
         $user->givePermissionTo('project-create');
         //Give these users role Admin
@@ -50,9 +51,8 @@ class ProjectController extends Controller
                 $projects = Project::with('project_owner.user')->latest()->get();
                 return view('project.index', ['projects' => $projects, 'user' => $user]);
             } elseif ($user->hasRole(['Partner'])) {
-                $project = ProjectPartner::where('partner_id', $user->id)->first();
-                $id = $project->project_id;
-                $projects = Project::with('project_owner.user')->where('id', $id)->latest()->get();
+                $id = ProjectPartner::where('partner_id', $user->id)->pluck('project_id');
+                $projects = Project::with('project_owner.user')->whereIn('id', $id)->latest()->get();
                 return view('project.index', ['projects' => $projects, 'user' => $user]);
             }
         }
@@ -216,36 +216,11 @@ class ProjectController extends Controller
             $owner->user_id = Auth::id() ?? 1;
             $owner->save();
 
-            //Administrator: can do anything on any project
-            $admin = Role::where('name', 'Administrator')->get();
-            //Program administrator: can do anything on any project linked to that program (once program areas get implemented)
-            $program_admin = Role::where('name', 'Program administrator')->get();
-            //Spider: can read anything and full write access to specified projects
-            $spider = Role::where('name', 'Spider')->get();
             //Logged in user can Read, Edit and Delete project
             $user = Auth::user();
-            // -> This should be refactored
-            //Read
-            $permission = Permission::create(['name' => 'project-' . $project->id . '-list']);
-            $permission->assignRole($admin); //Administrator
-            $permission->assignRole($program_admin); //Program administrator
-            $permission->assignRole($spider); //Spider
-            //Edit
-            $permission = Permission::create(['name' => 'project-' . $project->id . '-edit']);
-            $permission->assignRole($admin); //Administrator
-            $permission->assignRole($program_admin); //Program administrator
-            $user->givePermissionTo($permission); //Logged in user
-            //Update
-            $permission = Permission::create(['name' => 'project-' . $project->id . '-update']);
-            $permission->assignRole($admin); //Administrator
-            $permission->assignRole($program_admin); //Program administrator
-            $user->givePermissionTo($permission); //Logged in user
-            //Delete
-            $permission = Permission::create(['name' => 'project-' . $project->id . '-delete']);
-            $permission->assignRole($admin); //Administrator
-            $permission->assignRole($program_admin); //Program administrator
-            $user->givePermissionTo($permission); //Logged in user
-            // <- to be refacored
+            $acl = new ACLHandler($project, $user);
+            $acl->setNewProjectPermissions();
+
         }
         //Activities
         //Request from form --> this should later be refactored

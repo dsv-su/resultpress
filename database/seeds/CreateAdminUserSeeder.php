@@ -17,10 +17,15 @@ class CreateAdminUserSeeder extends Seeder
         $role = Role::create(['name' => 'Administrator']);
         $permissions = Permission::pluck('id','id')->all();
         $role->syncPermissions($permissions);
+        $role = Role::create(['name' => 'Program administrator']);
+        $permissions = Permission::whereNotIn('id', [1, 2, 3, 4, 5])->pluck('id','id');
+        $role->syncPermissions($permissions);
+        $role = Role::create(['name' => 'Spider']);
+        $permissions = Permission::whereNotIn('id', [1, 2, 3, 4, 5, 7, 9, 10, 11, 12, 13, 14])->pluck('id','id');
+        $role->syncPermissions($permissions);
         Permission::create(['name' => 'partner']);
-        Role::create(['name' => 'Spider']);
         Role::create(['name' => 'Partner']);
-        Role::create(['name' => 'Program administrator']);
+
     }
 
 }

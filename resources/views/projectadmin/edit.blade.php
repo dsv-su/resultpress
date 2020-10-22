@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Change Project Leader</h2>
+                <h2>Edit Project Managers and Partners</h2>
             </div>
             <div class="pull-right">
                 <a class="btn btn-outline-primary" href="{{ route('projectadmin.index') }}"> Back</a>
@@ -24,117 +24,59 @@
             </ul>
         </div>
     @endif
-
-    <form action="{{ route('projectadmin.update', $project->id) }}" method="POST">
-        @method('PATCH')
-        @csrf
-        @if(count($project->project_owner) > 1)
         <!-- Multiple project owners -->
-        <div class="card">
-            <div class="card-header">
-               Project:  {{$project->id}} {{ old('name', empty($project) ? '' : $project->name) }}
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
+    <div class="form-row">
+        <div class="col">
+            <h4>{{$project->id}} {{ old('name', empty($project) ? '' : $project->name) }}</h4>
         </div>
-        @endif
+    </div>
+    <div class="form-row">
+       <div class="form-group border border p-5">
+           <form action="{{ route('projectadmin.update', $project->id) }}" method="POST">
+           @method('PATCH')
+           @csrf
+          <div class="form-row">
+              <div class="col">
+                  <label class="text-primary">Managers:</label>
+                  <div class="col-md-4 py-2">
+                  <select name="user_id[]" class="custom-select" id="managers" multiple="multiple">
+                  @foreach($users as $user)
+                     <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
+                  @endforeach
+                  </select>
+                  </div>
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="col">
+                  <label class="text-primary">Partners:</label>
+                  <div class="col-md-4 py-2">
+                   <select name="partner_id[]" class="custom-select" id="partners" multiple="multiple">
+                   @foreach($users as $user)
+                      <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>
+                   @endforeach
+                   </select>
+                  </div>
+              </div>
+          </div>
 
+              <div class="col-2 fa-pull-right">
+                  <button type="button submit" class="btn btn-outline-primary">Submit</button>
+              </div>
 
-
-
-
-
-
-
-    <table class="table table-bordered">
-        <tr>
-            <th>Id</th>
-            <th>Project Name</th>
-            @foreach($project->project_owner->all() as $key => $owner)
-                <th>{{$key+1}}). Assigned to:</th>
-            @endforeach
-            <th>Change:</th>
-        </tr>
-        <tr>
-            <td>{{$project->id}}</td>
-            <td>{{ old('name', empty($project) ? '' : $project->name) }}</td>
-            <form action="{{ route('projectadmin.update', $project->id) }}" method="POST">
-
-                @method('PATCH')
-                @csrf
-                @if(count($project->project_owner) > 1)
-                    @foreach($project->project_owner->all() as $owner)
-                        <td>
-                            <input type="text" name="old_user_id[]" value="{{$owner->user->id}}" hidden>
-                            <select name="user_id[]" class="form-control">
-                                <option value="{{$owner->user->id}}" selected>{{$owner->user->name}}</option>
-
-                                @foreach($users as $user)
-                                    <option value="{{$user->id}}">{{$user->name}}</option>
-                            @endforeach
-                        </td>
-                        @endforeach
-                        </select>
-                        @else
-                            <td>
-                                <input type="text" name="old_user_id" value="{{$project->project_owner->first()->user->id}}" hidden>
-                                <select name="user_id" class="form-control">
-                                    <option value="{{$project->project_owner->first()->user->id}}" selected>{{$project->project_owner->first()->user->name}}</option>
-                                    @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                        @endif
-
-                        <td>
-                            <button type="submit" class="btn btn-outline-primary">Submit</button>
-                            <button type="button" name="add-user" class="btn btn-outline-primary add-user">Add</button>
-                        </td>
-            </form>
-        </tr>
-        </tr>
-    </table>
-    <table class="table table-sm" id="users_table" style="display:none;">
-        <form action="{{ route('projectadmin.store', $project->id) }}" method="POST">
-            @csrf
-            <thead>
-            <th scope="row">Add user:</th>
-            <th scope="row">Confirm:</th>
-            </thead>
-            <tbody>
-            <td>
-                <input type="text" name="project_id" value="{{$project->id}}" hidden>
-                <select name="add_user_id" class="form-control">
-                    @foreach($users as $user)
-                        <option value="{{$user->id}}">[{{$user->id}}]  {{$user->name}} ({{$user->email}})</option>
-                    @endforeach
-                </select>
-            </td>
-            <td>
-                <button type="submit" class="btn btn-outline-primary">Add this user</button>
-
-            </td>
-            </tbody>
-        </form>
-        <div class="card">
-            <h5 class="alert alert-primary card-header">Notification</h5>
-            <div class="card-body">
-                <h5 class="card-title">Under development</h5>
-                <p class="card-text">This form is under development</p>
-            </div>
-        </div>
-    </table>
-    <script>
-        $(document).ready(function () {
-            $(document).on('click', '.add-user', function () {
-                $('#users_table').show();
-            });
-        });
-    </script>
-
-
+           </form>
+       </div>
+    </div>
+<script>
+    $('#managers').multiselect({
+        templates: {
+            li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
+        }
+    });
+    $('#partners').multiselect({
+        templates: {
+            li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
+        }
+    });
+</script>
 @endsection

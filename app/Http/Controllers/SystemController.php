@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Services\ConfigurationHandler;
-use Illuminate\Http\Request;
 
 class SystemController extends Controller
 {

@@ -15,15 +15,18 @@ class ProjectUpdate extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function activity_updates() {
+    public function activity_updates()
+    {
         return $this->hasMany(ActivityUpdate::class);
     }
 
-    public function output_updates() {
+    public function output_updates()
+    {
         return $this->hasMany(OutputUpdate::class);
     }
 
-    public function files() {
+    public function files()
+    {
         return File::where(['filearea' => 'project_update', 'itemid' => $this->id]);
     }
 }

@@ -48,8 +48,9 @@
                             </td>
                             <td><input type="number" name="activity_money[]" class="form-control form-control-sm"
                                        placeholder="Money" size="3" required value="{{$au->money}}"></td>
-                            <td><input type="text" name="activity_date[]" class="form-control form-control-sm datepicker"
-                                       placeholder="Date" size="1"  value="{{$au->date->toDateString()}}" required></td>
+                            <td><input type="text" name="activity_date[]"
+                                       class="form-control form-control-sm datepicker"
+                                       placeholder="Date" size="1" value="{{$au->date->toDateString()}}" required></td>
                             <td class="fit">
                                 <button type="button" name="remove" id="{{$au->activity_id}}"
                                         class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span
@@ -165,8 +166,11 @@
             </div>@enderror
         </div>
 
-        <input class="btn btn-lg" name="draft" value="Save as draft" type="submit">
-        <input class="btn btn-lg" name="submit" value="Submit" type="submit">
+        @if (empty($project_update) || $project_update->status == 'draft')
+            <input class="btn btn-lg btn-secondary" name="draft" value="Save as draft" type="submit">
+            <input class="btn btn-lg bg-danger" name="delete" value="Delete this draft" type="submit">
+        @endif
+        <input class="btn btn-lg btn-success" name="submit" value="Submit" type="submit">
     </form>
 
     <script>
@@ -242,13 +246,12 @@
                 html += '<input type="hidden" name="activity_update_id[]" value=0>';
                 html += '<td class="auto"><input type="hidden" id="activity" name="activity_id[]" value="' + id + '">' + activity + '</td>';
                 html += '<td class="editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
-                // html += '<td><input type="text" name="activity_comment[]" class="form-control form-control-sm" placeholder="Comment" required></td>';
                 html += '<td class="input-group"><input type="number" name="activity_money[]" class="form-control form-control-sm" placeholder="0" size="3" required><div class="input-group-append"><span class="input-group-text">' + currency + '</span></div></td>';
                 html += '<td><input type="text" name="activity_date[]" class="form-control form-control-sm datepicker" placeholder="Date" size="1" required></td>';
                 html += '<td class="fit"><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
                 html += '<tr class="update"><td colspan=5><table class="table mb-2 "><tr><td><textarea name="activity_comment[]" ' +
-                    'class="form-control form-control-sm mediumEditor" required>' + template + '</textarea></td></tr></table></td></tr>';
+                    'class="form-control form-control-sm mediumEditor">' + template + '</textarea></td></tr></table></td></tr>';
                 $('#' + id + '.add-activity').hide();
                 $('#activities_table').append(html);
                 let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
@@ -309,7 +312,7 @@
                 this.closest('td').classList.remove('inprogress', 'delayed', 'done');
                 this.closest('td').classList.add('status', status);
             });
-            $("form").submit(function (event) {
+            $("form").submit(function () {
                 // Add extra confirmation on empty activity & output
                 let confirmation = '';
                 if (!$('#project_update_summary').val()) {

@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Project_partner extends Model
+class ProjectPartner extends Model
 {
     use LogsActivity;
 

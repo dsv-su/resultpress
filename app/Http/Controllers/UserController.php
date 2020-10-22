@@ -4,16 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Invite;
 use App\Notifications\InviteNotification;
-use Illuminate\Http\Request;
-use App\User;
 use App\Project;
+use App\User;
+use DB;
+use Hash;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
-use DB;
-use Hash;
 
 class UserController extends Controller
 {
@@ -25,32 +31,34 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Application|Factory|Response|View
      */
 
     public function index(Request $request)
     {
-        $data = User::orderBy('id','DESC')->paginate(5);
-        return view('users.index',compact('data'))
+        $data = User::orderBy('id', 'DESC')->paginate(5);
+        return view('users.index', compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|Response|View
      */
     public function create()
     {
-        $roles = Role::pluck('name','name')->all();
-        return view('users.create',compact('roles'));
+        $roles = Role::pluck('name', 'name')->all();
+        return view('users.create', compact('roles'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
@@ -65,8 +73,7 @@ class UserController extends Controller
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
 
-        if($user->hasRole('Administrator'))
-        {
+        if ($user->hasRole('Administrator')) {
             $user->givePermissionTo('admin-list');
             $user->givePermissionTo('admin-update');
             $user->givePermissionTo('admin-create');
@@ -79,9 +86,7 @@ class UserController extends Controller
             $user->givePermissionTo('project-delete');
             //For logging out
             $user->givePermissionTo('partner');
-        }
-        elseif ($user->hasRole('Program administrator'))
-        {
+        } elseif ($user->hasRole('Program administrator')) {
             $user->givePermissionTo('project-list');
             $user->givePermissionTo('project-update');
             $user->givePermissionTo('project-create');
@@ -89,87 +94,84 @@ class UserController extends Controller
             $user->givePermissionTo('project-delete');
             //For logging out
             $user->givePermissionTo('partner');
-        }
-        elseif ($user->hasRole('Spider'))
-        {
+        } elseif ($user->hasRole('Spider')) {
             $user->givePermissionTo('project-list');
             $user->givePermissionTo('project-create');
             //For logging out
             $user->givePermissionTo('partner');
-        }
-        elseif ($user->hasRole('Partner'))
-        {
+        } elseif ($user->hasRole('Partner')) {
             $user->givePermissionTo('partner');
         }
 
         return redirect()->route('users.index')
-            ->with('success','User created successfully');
+            ->with('success', 'User created successfully');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Application|Factory|Response|View
      */
-    public function show($id)
+    public function show(int $id)
     {
         $user = User::find($id);
 
-        return view('users.show',compact('user'));
+        return view('users.show', compact('user'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Application|Factory|Response|View
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         $user = User::find($id);
-        $roles = Role::pluck('name','name')->all();
-        $userRoles = $user->roles->pluck('name','name')->all();
+        $roles = Role::pluck('name', 'name')->all();
+        $userRoles = $user->roles->pluck('name', 'name')->all();
 
-        return view('users.edit',compact('user','roles','userRoles'));
+        return view('users.edit', compact('user', 'roles', 'userRoles'));
 
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return RedirectResponse
+     * @throws ValidationException
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
             'roles' => 'required'
         ]);
         $input = $request->all();
 
         $user = User::find($id);
         $user->update($input);
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
+        DB::table('model_has_roles')->where('model_id', $id)->delete();
         $user->assignRole($request->input('roles'));
         return redirect()->route('users.index')
-            ->with('success','User updated successfully');
+            ->with('success', 'User updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         User::find($id)->delete();
         return redirect()->route('users.index')
-            ->with('success','User deleted successfully');
+            ->with('success', 'User deleted successfully');
     }
 
     public function invite_view(Project $project)
@@ -197,9 +199,9 @@ class UserController extends Controller
             $token = Str::random(20);
         } while (Invite::where('token', $token)->first());
         Invite::create([
-        'token' => $token,
-        'email' => $request->input('email'),
-        'project_id' => $request->input('project_id')
+            'token' => $token,
+            'email' => $request->input('email'),
+            'project_id' => $request->input('project_id')
         ]);
 
         $url = URL::temporarySignedRoute(
@@ -212,8 +214,8 @@ class UserController extends Controller
 
     public function registration_view($token)
     {
-        if($invite = Invite::where('token', $token)->first())
-        return view('auth.register',['invite' => $invite]);
+        if ($invite = Invite::where('token', $token)->first())
+            return view('auth.register', ['invite' => $invite]);
         else abort(401);
     }
 }

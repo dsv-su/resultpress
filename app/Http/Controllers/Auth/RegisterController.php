@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Invite;
-use App\Project_partner;
+use App\ProjectPartner;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use GuzzleHttp\Psr7\Request;
@@ -87,7 +87,7 @@ class RegisterController extends Controller
              $user->givePermissionTo('project-'.$invite->project_id.'-list'); //List project
              $user->givePermissionTo('project-'.$invite->project_id.'-update'); //Create project updates
              //Associate project with partner
-             $project_partner = new Project_partner();
+             $project_partner = new ProjectPartner();
              $project_partner->project_id = $invite->project_id;
              $project_partner->partner_id = $user->id;
              $project_partner->save();

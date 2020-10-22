@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Traits\CausesActivity;
@@ -51,6 +50,6 @@ class User extends Authenticatable
     }*/
     public function project_owner()
     {
-        return $this->hasMany(Project_owner::class);
+        return $this->hasMany(ProjectOwner::class);
     }
 }

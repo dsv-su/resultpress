@@ -111,7 +111,7 @@
     @endif
 
     @if ($project_update->status == 'draft')
-        <a href="/project/update/{{$project_update->id}}/edit" class="btn-lg btn-submit">Edit</a>
+        <a href="/project/update/{{$project_update->id}}/edit" role="button" class="btn btn-warning">Edit</a>
     @endif
 
     @if($review)

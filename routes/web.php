@@ -27,6 +27,7 @@ Route::middleware('entitlements')->group(function () {
     Route::post('/project', 'ProjectController@update')->name('update');
     Route::get('/project/update/{project_update}', 'ProjectUpdateController@show')->name('projectupdate_show');
     Route::get('/project/update/{project_update}/edit', 'ProjectUpdateController@edit')->name('projectupdate_edit');
+    Route::get('/project/update/{project_update}/delete', 'ProjectUpdateController@destroy')->name('projectupdate_delete');
     Route::get('/project/update/{project_update}/review', 'ProjectUpdateController@review')->name('projectupdate_review');
     Route::put('/project/update/{project_update}/review', 'ProjectUpdateController@update')->name('projectupdate_update');
     Route::get('/project/{project}', 'ProjectController@show')->name('project_show');

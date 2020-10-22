@@ -27,6 +27,9 @@
                         @if ($pu->status == 'draft')
                             <a href="/project/update/{{$pu->id}}/edit" class="btn btn-outline-secondary btn-sm">Edit <i
                                         class="fas fa-info-circle"></i></a>
+                            <a href="/project/update/{{$pu->id}}/delete" class="btn btn-outline-secondary btn-sm"
+                               onclick="return confirm('Are you sure you want to delete this update?');">Delete <i
+                                        class="fas fa-trash-alt"></i></a>
                         @endif
                         <a href="/project/update/{{$pu->id}}" class="btn btn-outline-secondary btn-sm">Show <i
                                     class="fas fa-info-circle"></i></a>

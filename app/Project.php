@@ -9,7 +9,7 @@ class Project extends Model
 {
     use LogsActivity;
 
-    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative',  'status'];
+    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status'];
     protected $dates = ['start', 'end'];
     protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status'];
     protected static $logName = 'Project';
@@ -60,7 +60,7 @@ class Project extends Model
     }*/
     public function project_owner()
     {
-        return $this->hasMany(Project_owner::class);
+        return $this->hasMany(ProjectOwner::class);
     }
 }
 

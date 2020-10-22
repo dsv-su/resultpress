@@ -78,7 +78,6 @@ input:not([type="submit"]):focus, textarea:focus, select:focus {
 
 button, input[type="submit"], .btn-submit {
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    background-color: orange;
     background-position: left;
     background-repeat: repeat-x;
     color: white;

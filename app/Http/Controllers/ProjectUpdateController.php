@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use App\Activity;
 use App\ActivityUpdate;
 use App\File;
@@ -13,7 +9,12 @@ use App\Output;
 use App\OutputUpdate;
 use App\Project;
 use App\ProjectUpdate;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -242,6 +243,10 @@ class ProjectUpdateController extends Controller
      */
     public function edit(ProjectUpdate $project_update)
     {
+        // We only let to edit draft updates, or we're super users
+        if ($project_update->status != 'draft' && !Auth::user()->hasRole('Administrator')) {
+            return abort(401);
+        }
         $project = Project::find($project_update->project_id);
         $activityupdates = ActivityUpdate::where('project_update_id', $project_update->id)
             ->join('activities', 'activity_id', '=', 'activities.id')
@@ -282,7 +287,7 @@ class ProjectUpdateController extends Controller
      * Remove the specified resource from storage.
      *
      * @param ProjectUpdate $project_update
-     * @return void
+     * @return RedirectResponse
      * @throws \Exception
      */
     public function destroy(ProjectUpdate $project_update)
@@ -291,5 +296,6 @@ class ProjectUpdateController extends Controller
         ActivityUpdate::where('project_update_id', $project_update->id)->delete();
         OutputUpdate::where('project_update_id', $project_update->id)->delete();
         $project_update->delete();
+        return redirect()->route('projectupdate_index', $project_update->project);
     }
 }

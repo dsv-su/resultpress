@@ -8,8 +8,8 @@ use App\File;
 use App\Output;
 use App\OutputUpdate;
 use App\Project;
-use App\Project_owner;
-use App\Project_partner;
+use App\ProjectOwner;
+use App\ProjectPartner;
 use App\ProjectUpdate;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
@@ -33,34 +33,33 @@ class ProjectController extends Controller
         $user->givePermissionTo('project-list');
         $user->givePermissionTo('project-create');
         //Give these users role Admin
-        if($user->name == 'Ryan Dias') $user->assignRole('Administrator');
-        if($user->name == 'Pavel Sokolov') $user->assignRole('Administrator');
-        if($user->name == 'Erik Thuning') $user->assignRole('Administrator');
+        if ($user->name == 'Ryan Dias') $user->assignRole('Administrator');
+        if ($user->name == 'Pavel Sokolov') $user->assignRole('Administrator');
+        if ($user->name == 'Erik Thuning') $user->assignRole('Administrator');
         return redirect()->action('ProjectController@index');
     }
+
     /**
      * Display a listing of the resource.
      *
      */
     public function index()
     {
-        if($user = Auth::user())
-        {
-            if($user->hasRole(['Administrator', 'Program administrator', 'Spider']))
-            {
+        if ($user = Auth::user()) {
+            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
                 $projects = Project::with('project_owner.user')->latest()->get();
                 return view('project.index', ['projects' => $projects, 'user' => $user]);
-            }
-            elseif ($user->hasRole(['Partner']))
-            {
-                $project = Project_partner::where('partner_id', $user->id)->first();
+            } elseif ($user->hasRole(['Partner'])) {
+                $project = ProjectPartner::where('partner_id', $user->id)->first();
                 $id = $project->project_id;
                 $projects = Project::with('project_owner.user')->where('id', $id)->latest()->get();
                 return view('project.index', ['projects' => $projects, 'user' => $user]);
             }
         }
-        elseif (Auth::check()) abort(403);
+
+        elseif (Auth::check()) return abort(403);
         else return redirect()->route('partner-login');
+
     }
 
     /**
@@ -210,10 +209,9 @@ class ProjectController extends Controller
         $project->save();
 
         //Create permissions for a new project
-        if(request('new_project') == 1)
-        {
+        if (request('new_project') == 1) {
             //Adds the logged in user as project owner
-            $owner = new Project_owner();
+            $owner = new ProjectOwner();
             $owner->project_id = $project->id;
             $owner->user_id = Auth::id() ?? 1;
             $owner->save();
@@ -228,22 +226,22 @@ class ProjectController extends Controller
             $user = Auth::user();
             // -> This should be refactored
             //Read
-            $permission = Permission::create(['name' => 'project-'.$project->id.'-list']);
+            $permission = Permission::create(['name' => 'project-' . $project->id . '-list']);
             $permission->assignRole($admin); //Administrator
             $permission->assignRole($program_admin); //Program administrator
             $permission->assignRole($spider); //Spider
             //Edit
-            $permission = Permission::create(['name' => 'project-'.$project->id.'-edit']);
+            $permission = Permission::create(['name' => 'project-' . $project->id . '-edit']);
             $permission->assignRole($admin); //Administrator
             $permission->assignRole($program_admin); //Program administrator
             $user->givePermissionTo($permission); //Logged in user
             //Update
-            $permission = Permission::create(['name' => 'project-'.$project->id.'-update']);
+            $permission = Permission::create(['name' => 'project-' . $project->id . '-update']);
             $permission->assignRole($admin); //Administrator
             $permission->assignRole($program_admin); //Program administrator
             $user->givePermissionTo($permission); //Logged in user
             //Delete
-            $permission = Permission::create(['name' => 'project-'.$project->id.'-delete']);
+            $permission = Permission::create(['name' => 'project-' . $project->id . '-delete']);
             $permission->assignRole($admin); //Administrator
             $permission->assignRole($program_admin); //Program administrator
             $user->givePermissionTo($permission); //Logged in user
@@ -255,7 +253,7 @@ class ProjectController extends Controller
         $activity_array['name'] = request('activity_name');
         $activity_array['description'] = request('activity_description') ?? null;
         $activity_array['template'] = request('activity_template') ?? null;
-        $activity_array['start'] =  request('activity_start');
+        $activity_array['start'] = request('activity_start');
         $activity_array['end'] = request('activity_end');
         $activity_array['name'] = request('activity_name');
         $activity_array['budget'] = request('activity_budget');
@@ -345,23 +343,26 @@ class ProjectController extends Controller
     public function write_update(Project $project)
     {
         if ($project->hasDraft() && $project->cumulative) {
-            return abort(404);
+            return abort(401);
         }
         return view('project.update', ['project' => $project]);
     }
 
     public function save_update(Project $project, Request $request)
     {
+        $projectupdate = ProjectUpdate::firstOrNew(['id' => request('project_update_id') ?? 0]);
+        $projectupdate->project_id = $project->id;
+        $projectupdate->summary = request('project_update_summary') ?? null;
+
         $status = '';
         if ($request->input('draft')) {
             $status = 'draft';
         } else if ($request->input('submit')) {
             $status = 'submitted';
+        } else if ($request->input('delete')) {
+            return redirect()->route('projectupdate_delete', $projectupdate);
         }
 
-        $projectupdate = ProjectUpdate::firstOrNew(['id' => request('project_update_id') ?? 0]);
-        $projectupdate->project_id = $project->id;
-        $projectupdate->summary = request('project_update_summary') ?? null;
         $projectupdate->status = $status;
 
         //Adds the logged in user as projectupdate author
@@ -492,12 +493,17 @@ class ProjectController extends Controller
         foreach ($project_updates as $pu) {
             ActivityUpdate::where('project_update_id', $pu->id)->delete();
             OutputUpdate::where('project_update_id', $pu->id)->delete();
-            ProjectUpdate::destroy($pu->id);
+            $pu->delete();
         }
 
         // Delete outputs and activities
         Activity::where('project_id', $project->id)->forcedelete();
         Output::where('project_id', $project->id)->forcedelete();
+
+        // Delete project owners
+        ProjectOwner::where('project_id', $project->id)->delete();
+        // Delete project partners
+        ProjectPartner::where('project_id', $project->id)->delete();
 
         // Delete project
         $project->delete();

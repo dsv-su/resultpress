@@ -1,221 +1,222 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito:400,700);
+
 div.wrapper {
-  background-image: url("../images/container-repeater.gif");
-  background-repeat: repeat-x;
+    background-image: url("../images/container-repeater.gif");
+    background-repeat: repeat-x;
 }
 
 div.welcome {
-  font-family: Nunito, sans-serif;
-  padding: 10px;
-  margin: 0 auto;
+    font-family: Nunito, sans-serif;
+    padding: 10px;
+    margin: 0 auto;
 }
 
 div.searchrequest {
-  font-family: Nunito, sans-serif;
-  border-radius: 25px;
-  border: 2px solid #002e5f;
-  padding: 20px;
-  margin: 0 auto;
+    font-family: Nunito, sans-serif;
+    border-radius: 25px;
+    border: 2px solid #002e5f;
+    padding: 20px;
+    margin: 0 auto;
 }
 
 form {
-  font-family: Nunito, sans-serif;
-  border-radius: 25px;
-  padding: 20px;
-  margin: 0 auto;
+    font-family: Nunito, sans-serif;
+    border-radius: 25px;
+    padding: 20px;
+    margin: 0 auto;
 }
 
-form>div.a {
-  display: inline-block;
-  width: 230px;
-  margin: 20px 0;
-  background: white;
-  border-bottom: 1px solid #ccc;
+form > div.a {
+    display: inline-block;
+    width: 230px;
+    margin: 20px 0;
+    background: white;
+    border-bottom: 1px solid #ccc;
 }
 
-form>div.a>label {
-  opacity: 0.3;
-  font-weight: bold;
-  position: absolute;
-  top: 12px;
-  left: 10px;
+form > div.a > label {
+    opacity: 0.3;
+    font-weight: bold;
+    position: absolute;
+    top: 12px;
+    left: 10px;
 }
 
-form>div.a>input[type="text"], form>div.a>input[type="email"], form>div.a>input[type="password"] {
-  width: 100%;
-  border: 0;
-  padding: 10px 10px 10px 40px;
-  background: #eee;
+form > div.a > input[type="text"], form > div.a > input[type="email"], form > div.a > input[type="password"] {
+    width: 100%;
+    border: 0;
+    padding: 10px 10px 10px 40px;
+    background: #eee;
 }
 
-form>div.a>input[type="text"]:focus, form>div.a>input[type="email"]:focus, form>div.a>input[type="password"]:focus {
-  outline: 0;
-  background: white;
+form > div.a > input[type="text"]:focus, form > div.a > input[type="email"]:focus, form > div.a > input[type="password"]:focus {
+    outline: 0;
+    background: white;
 }
 
-form>div.a>input[type="text"]:focus+label, form>div.a>input[type="email"]:focus+label, form>div.a>input[type="password"]:focus+label {
-  opacity: 0;
+form > div.a > input[type="text"]:focus + label, form > div.a > input[type="email"]:focus + label, form > div.a > input[type="password"]:focus + label {
+    opacity: 0;
 }
 
-form>div.a>input[type="text"]:valid, form>div.a>input[type="email"]:valid, form>div.a>input[type="password"]:valid {
-  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/check.svg);
-  background-size: 20px;
-  background-repeat: no-repeat;
-  background-position: 10px 10px;
+form > div.a > input[type="text"]:valid, form > div.a > input[type="email"]:valid, form > div.a > input[type="password"]:valid {
+    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/check.svg);
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: 10px 10px;
 }
 
-form>div.a>input[type="text"]:valid+label, form>div.a>input[type="email"]:valid+label, form>div.a>input[type="password"]:valid+label {
-  opacity: 0;
+form > div.a > input[type="text"]:valid + label, form > div.a > input[type="email"]:valid + label, form > div.a > input[type="password"]:valid + label {
+    opacity: 0;
 }
 
-form>div.a>input[type="text"]:invalid:not(:focus):not(:placeholder-shown), form>div.a>input[type="email"]:invalid:not(:focus):not(:placeholder-shown), form>div.a>input[type="password"]:invalid:not(:focus):not(:placeholder-shown) {
-  background: pink;
+form > div.a > input[type="text"]:invalid:not(:focus):not(:placeholder-shown), form > div.a > input[type="email"]:invalid:not(:focus):not(:placeholder-shown), form > div.a > input[type="password"]:invalid:not(:focus):not(:placeholder-shown) {
+    background: pink;
 }
 
-form>div.a>input[type="text"]:invalid:not(:focus):not(:placeholder-shown)+label, form>div.a>input[type="email"]:invalid:not(:focus):not(:placeholder-shown)+label, form>div.a>input[type="password"]:invalid:not(:focus):not(:placeholder-shown)+label {
-  opacity: 0;
+form > div.a > input[type="text"]:invalid:not(:focus):not(:placeholder-shown) + label, form > div.a > input[type="email"]:invalid:not(:focus):not(:placeholder-shown) + label, form > div.a > input[type="password"]:invalid:not(:focus):not(:placeholder-shown) + label {
+    opacity: 0;
 }
 
-form>div.a>input[type="text"]:invalid:focus:not(:placeholder-shown)~.requirements, form>div.a>input[type="email"]:invalid:focus:not(:placeholder-shown)~.requirements, form>div.a>input[type="password"]:invalid:focus:not(:placeholder-shown)~.requirements {
-  max-height: 200px;
-  padding: 0 20px 10px 50px;
+form > div.a > input[type="text"]:invalid:focus:not(:placeholder-shown) ~ .requirements, form > div.a > input[type="email"]:invalid:focus:not(:placeholder-shown) ~ .requirements, form > div.a > input[type="password"]:invalid:focus:not(:placeholder-shown) ~ .requirements {
+    max-height: 200px;
+    padding: 0 20px 10px 50px;
 }
 
-form>div.a .requirements {
-  padding: 0 20px 0 50px;
-  color: #999;
-  max-height: 0;
-  transition: 0.28s;
-  overflow: hidden;
-  color: red;
-  font-style: italic;
+form > div.a .requirements {
+    padding: 0 20px 0 50px;
+    color: #999;
+    max-height: 0;
+    transition: 0.28s;
+    overflow: hidden;
+    color: red;
+    font-style: italic;
 }
 
-form>div.b {
-  display: inline-block;
+form > div.b {
+    display: inline-block;
 }
 
-form>div.b .req {
-  padding: 0 20px 0 50px;
-  color: #999;
-  max-height: 0;
-  transition: 0.28s;
-  overflow: hidden;
-  color: red;
-  font-style: italic;
+form > div.b .req {
+    padding: 0 20px 0 50px;
+    color: #999;
+    max-height: 0;
+    transition: 0.28s;
+    overflow: hidden;
+    color: red;
+    font-style: italic;
 }
 
-form>div.c {
-  display: inline-block;
-  width: 200px;
-  margin: 10px 0;
+form > div.c {
+    display: inline-block;
+    width: 200px;
+    margin: 10px 0;
 }
 
 form button[type="submit"] {
-  display: inline-block;
-  margin: 0 40px 0;
-  background-image: url("../images/button-background-repeater.gif");
-  background-repeat: repeat-x;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  color: white;
-  border: 0;
-  padding: 10px;
-  font-size: 1.0rem;
+    display: inline-block;
+    margin: 0 40px 0;
+    background-image: url("../images/button-background-repeater.gif");
+    background-repeat: repeat-x;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    color: white;
+    border: 0;
+    padding: 10px;
+    font-size: 1.0rem;
 }
 
-form>div.d {
-  display: inline-block;
-  border: 2px solid #002e5f;
+form > div.d {
+    display: inline-block;
+    border: 2px solid #002e5f;
 }
 
 body {
-  background: #FFF;
-  font-family: Nunito, sans-serif;
-  padding: 10px;
+    background: #FFF;
+    font-family: Nunito, sans-serif;
+    padding: 10px;
 }
 
 /* --- The Table Structure --- */
 
 table {
-  font-family: Nunito, sans-serif;
-  border-collapse: separate;
+    font-family: Nunito, sans-serif;
+    border-collapse: separate;
 }
 
 table b {
-  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/check.svg);
-  font-size: 1rem;
-  background-size: 18px;
-  background-repeat: no-repeat;
-  opacity: 100%;
+    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/check.svg);
+    font-size: 1rem;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    opacity: 100%;
 }
 
 table list {
-  font-size: 1rem;
-  box-shadow: 2px 2px 2px 2px #e5dfcc;
+    font-size: 1rem;
+    box-shadow: 2px 2px 2px 2px #e5dfcc;
 }
 
 table td, table tr {
-  vertical-align: middle !important;
+    vertical-align: middle !important;
 }
 
 table tr th, table tr td {
-  box-shadow: 2px 2px 1px #e5dfcc;
+    box-shadow: 2px 2px 1px #e5dfcc;
 }
 
 /* top-left border-radius */
 
 table tr:first-child th:first-child {
-  border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
 }
 
 /* top-right border-radius */
 
 table tr:first-child th:last-child {
-  border-top-right-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 /* bottom-left border-radius */
 
 table tr:last-child td:first-child {
-  border-bottom-left-radius: 3px;
+    border-bottom-left-radius: 3px;
 }
 
 /* bottom-right border-radius */
 
 table tr:last-child td:last-child {
-  border-bottom-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 /* -- The Styles -- */
 
 body {
-  margin: 30px;
-  background: #F8F8FF;
-  font-family: 'Muli', serif;
+    margin: 30px;
+    background: #F8F8FF;
+    font-family: 'Muli', serif;
 }
 
 th, td {
-  padding: 8px 20px;
+    padding: 8px 20px;
 }
 
 th {
-  background: #002e5f;
-  color: #fff;
-  border: 0;
+    background: #002e5f;
+    color: #fff;
+    border: 0;
 }
 
 td {
-  background: #F8F8FF;
-  /* Ghostwhite */
+    background: #F8F8FF;
+    /* Ghostwhite */
 }
 
 .table td.fit,
 .table th.fit {
-  white-space: nowrap;
-  width: 1%;
+    white-space: nowrap;
+    width: 1%;
 }
 
 /*# sourceMappingURL=style.css.map */
@@ -230,93 +231,97 @@ td {
 }*/
 
 .editable {
-  background: -moz-radial-gradient(white 15%, transparent 16%), -moz-radial-gradient(white 15%, transparent 16%), black;
-  background: -webkit-radial-gradient(white 15%, transparent 16%), -webkit-radial-gradient(white 15%, transparent 16%), black;
-  background-position: 0 0, 8px 8px;
-  -webkit-background-size: 8px 8px;
-  -moz-background-size: 8px 8px;
-  background-size: 8px 8px;
+    background: -moz-radial-gradient(white 15%, transparent 16%), -moz-radial-gradient(white 15%, transparent 16%), black;
+    background: -webkit-radial-gradient(white 15%, transparent 16%), -webkit-radial-gradient(white 15%, transparent 16%), black;
+    background-position: 0 0, 8px 8px;
+    -webkit-background-size: 8px 8px;
+    -moz-background-size: 8px 8px;
+    background-size: 8px 8px;
 }
 
 .status {
-  margin: auto;
+    margin: auto;
 }
 
 .auto {
-  background-color: aquamarine;
+    background-color: aquamarine;
 }
 
 .derived {
-  background-color: darksalmon;
+    background-color: darksalmon;
 }
 
 .done {
-  background-color: green;
+    background-color: green;
 }
 
 .inprogress {
-  background-color: yellow;
+    background-color: yellow;
 }
 
 .delayed {
-  background-color: red;
+    background-color: red;
 }
 
 .btn {
-  border-radius: 0 !important;
+    border-radius: 0 !important;
 }
 
 .btn.active {
-  /*filter: brightness(85%);*/
+    /*filter: brightness(85%);*/
 }
 
 .btn.approve:not(.active):not(.focus):hover, .btn.approve.active {
-  background-color: lightgreen;
+    background-color: lightgreen;
 }
 
 .btn.approve.active:not(.focus):hover, .btn.approve:not(.active) {
-  background-color: red;
+    background-color: red;
 }
 
 .link {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .link .fas {
-  margin-right: 6px;
+    margin-right: 6px;
 }
 
 tr.update {
-  border: none;
-  box-shadow: none;
+    border: none;
+    box-shadow: none;
 }
 
-tr.update>td {
-  background: none;
-  border: none;
-  box-shadow: none;
-  padding: 0px 0px 0px 30px;
+tr.update > td {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0px 0px 0px 30px;
 }
 
 .form-group-header {
-  color: #002f5f;
-  text-decoration-color: #002f5f;
-  font-weight: 500;
-  font-size: 140%;
-  line-height: 1.2;
+    color: #002f5f;
+    text-decoration-color: #002f5f;
+    font-weight: 500;
+    font-size: 140%;
+    line-height: 1.2;
 }
 
 .mw-400 {
-  max-width: 400px;
+    max-width: 400px;
 }
 
 .spacer {
-  min-height: 5px;
-  line-height: 5px;
-  border-collapse:separate;
-  border-spacing: 0 1em;
+    min-height: 5px;
+    line-height: 5px;
+    border-collapse: separate;
+    border-spacing: 0 1em;
 }
 
 .mediumEditor {
-  height: 100% !important;
+    height: 100% !important;
+}
+
+.medium-editor-toolbar li button {
+    background-color: orange;
 }

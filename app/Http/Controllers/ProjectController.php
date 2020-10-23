@@ -12,6 +12,7 @@ use App\ProjectOwner;
 use App\ProjectPartner;
 use App\ProjectUpdate;
 use App\Services\ACLHandler;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -463,6 +464,32 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        //Find associated owners
+        $owners = ProjectOwner::where('project_id', $project->id)->pluck('user_id');
+        //Revoke owners permissions
+        foreach ($owners as $owner)
+        {
+            $user = User::find($owner);
+            $user->revokePermissionTo('project-'.$project->id.'-list');
+            $user->revokePermissionTo('project-'.$project->id.'-edit');
+            $user->revokePermissionTo('project-'.$project->id.'-update');
+            $user->revokePermissionTo('project-'.$project->id.'-delete');
+            $project_owner = ProjectOwner::where('user_id', $owner);
+            $project_owner->delete();
+        }
+
+        //Find associated partners
+        $partners = ProjectPartner::where('project_id', $project->id)->pluck('partner_id');
+        //Revoke partners permissions
+        foreach ($partners as $partner)
+        {
+            $user = User::find($partner);
+            $user->revokePermissionTo('project-'.$project->id.'-list');
+            $user->revokePermissionTo('project-'.$project->id.'-update');
+            $project_partner = ProjectPartner::where('partner_id', $partner);
+            $project_partner->delete();
+        }
+
         // Delete associated updates
         $project_updates = ProjectUpdate::where('project_id', $project->id)->get();
         foreach ($project_updates as $pu) {

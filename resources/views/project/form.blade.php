@@ -194,10 +194,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <input class="btn btn-lg" @empty($project->id) value="Save"
+                            <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
                                    @else value="Update"
                                    @endempty
-                                   type="submit">
+                                    type="submit">
                         </div>
                     </div>
                 </form>

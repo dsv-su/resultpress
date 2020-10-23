@@ -154,7 +154,7 @@
                     @enderror
                 </div>
                 @endcan
-                <input class="btn btn-lg" value="Save" type="submit">
+                <input class="btn btn-primary btn-lg" value="Save" type="submit">
             </div>
         </form>
     @else

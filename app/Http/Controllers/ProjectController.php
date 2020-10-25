@@ -20,8 +20,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class ProjectController extends Controller
 {

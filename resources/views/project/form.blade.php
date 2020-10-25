@@ -231,7 +231,8 @@
                                 placeholder: {text: "Template"}
                             });
                             $('input.datepicker').datepicker({
-                                format: 'dd-mm-yyyy'
+                                format: 'dd-mm-yyyy',
+                                weekStart: 1
                             });
                         });
                         $(document).on('click', '.add-outputs', function () {

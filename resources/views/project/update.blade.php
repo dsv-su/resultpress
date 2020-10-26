@@ -124,7 +124,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     @foreach ($project->outputs as $output)
                         <a class="dropdown-item add-output" href="#" id="{{$output->id}}"
-                           @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status != 'draft') style="display: none;" @endif>{{$output->indicator}}</a>
+                           @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status == 'draft') style="display: none;" @endif>{{$output->indicator}}</a>
                     @endforeach
                     <a class="dropdown-item add-output" href="#" id="0">Add a new ouput</a>
                 </div>

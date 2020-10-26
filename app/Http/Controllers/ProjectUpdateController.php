@@ -159,8 +159,8 @@ class ProjectUpdateController extends Controller
     public function calculateOutputs($outputupdates)
     {
         foreach ($outputupdates as $ou) {
-            $contributionstring = 'Contributes ';
-            $totalstring = 'Output is ';
+            $contributionstring = '';
+            $totalstring = '';
             $output = Output::where('id', $ou->output_id)->first();
             $alloutputupdates = OutputUpdate::where('output_id', $output->id)->get();
             $totalcontribution = 0;
@@ -168,14 +168,16 @@ class ProjectUpdateController extends Controller
                 $totalcontribution += $aou->value;
             }
 
-            $outputcontribution = number_format(($ou->value / $output->target) * 100) . '%';
-            $totalcontribution = number_format(($totalcontribution / $output->target) * 100) . '%';
-
-            $contributionstring .= $outputcontribution . ' of target.';
-            $totalstring .= $totalcontribution . ' done.';
+            if ($output->target) {
+                $outputcontribution = number_format(($ou->value / $output->target) * 100) . '%';
+                $totalcontribution = number_format(($totalcontribution / $output->target) * 100) . '%';
+                $contributionstring .= 'Contributes ' . $outputcontribution . ' of target.';
+                $totalstring .= 'Output is' . $totalcontribution . ' done.';
+            }
 
             $ou->contributionstring = $contributionstring;
             $ou->totalstring = $totalstring;
+
         }
 
         return $outputupdates;

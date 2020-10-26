@@ -73,12 +73,15 @@
                     <td class="w-75">{{$ou->indicator}}</td>
                     <td class="w-25">{{$ou->value}}</td>
                 </tr>
-                @if($review)
+                @if($review && ($ou->contributionstring || $ou->totalstring))
                     <tr class="update">
                         <td colspan=2>
                             <table class="table mb-2">
                                 <tr>
-                                    <td class="derived">{{$ou->contributionstring}}<br/>{{$ou->totalstring}}</td>
+                                    <td class="derived">
+                                        @if ($ou->contributionstring){{$ou->contributionstring}}<br/>@endif
+                                        @if ($ou->totalstring){{$ou->totalstring}}@endif
+                                    </td>
                                 </tr>
                             </table>
                         </td>
@@ -93,7 +96,8 @@
             <h5>Attachments:</h5>
             <div>
                 @foreach($files as $file)
-                    <span id="uploaded_file" class="d-block"><a href="{{$file->path}}" target="_blank">{{$file->name}}</a></span>
+                    <span id="uploaded_file" class="d-block"><a href="{{$file->path}}"
+                                                                target="_blank">{{$file->name}}</a></span>
                 @endforeach
             </div>
         </div>
@@ -124,16 +128,17 @@
                         <h5>Reviewer comment</h5>
                     </div>
                     @can('project-create')
-                    <div class="col text-right">
-                        <button type="button" class="btn approve editable" name="approved" data-toggle="button"
-                                @if ($project_update->status == 'approved') aria-pressed="true"
-                                @else aria-pressed="false" @endif
-                                autocomplete="off">@if ($project_update->status == 'approved')Approved @else
-                                Approve @endif
-                        </button>
-                        <input type="hidden" name="approved" @empty($project_update->status == 'approved') value=0 @else
-                        value={{$project_update->status}} @endempty>
-                    </div>
+                        <div class="col text-right">
+                            <button type="button" class="btn approve editable" name="approved" data-toggle="button"
+                                    @if ($project_update->status == 'approved') aria-pressed="true"
+                                    @else aria-pressed="false" @endif
+                                    autocomplete="off">@if ($project_update->status == 'approved')Approved @else
+                                    Approve @endif
+                            </button>
+                            <input type="hidden" name="approved" @empty($project_update->status == 'approved') value=0
+                                   @else
+                                   value={{$project_update->status}} @endempty>
+                        </div>
                     @endcan
                 </div>
                 <div class="form-row my-2">
@@ -145,14 +150,15 @@
                     @enderror
                 </div>
                 @can('project-create')
-                <div class="form-row my-2">
-                    <label for="internal_comment">Spider's internal</label>
-                    <textarea rows=4 class="form-control form-control-sm @error('internal_comment') is-danger @enderror"
-                              name="internal_comment">{{ old('internal_comment', empty($project_update) ? '' : $project_update->internal_comment) }}</textarea>
-                    @error('internal_comment')
-                    <div class="text-danger">{{ $errors->first('internal_comment') }}</div>
-                    @enderror
-                </div>
+                    <div class="form-row my-2">
+                        <label for="internal_comment">Spider's internal</label>
+                        <textarea rows=4
+                                  class="form-control form-control-sm @error('internal_comment') is-danger @enderror"
+                                  name="internal_comment">{{ old('internal_comment', empty($project_update) ? '' : $project_update->internal_comment) }}</textarea>
+                        @error('internal_comment')
+                        <div class="text-danger">{{ $errors->first('internal_comment') }}</div>
+                        @enderror
+                    </div>
                 @endcan
                 <input class="btn btn-primary btn-lg" value="Save" type="submit">
             </div>

@@ -27,7 +27,9 @@ class Project extends Model
 
     public function submitted_outputs()
     {
-        return $this->outputs()->where('status', '<>', 'draft')->orWhereNull('status')->get();
+        return $this->outputs()->get()->filter(function ($value, $key) {
+            return $value->status <> 'draft' || $value->status = Null;
+        });;
     }
 
     public function hasDraft()

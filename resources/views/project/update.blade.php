@@ -256,7 +256,8 @@
                 $('#activities_table').append(html);
                 let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
                 $('input.datepicker').datepicker({
-                    format: 'dd-mm-yyyy'
+                    format: 'dd-mm-yyyy',
+                    weekStart: 1
                 });
             });
             $(document).on('click', '.add-output', function () {

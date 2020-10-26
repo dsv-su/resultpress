@@ -31,10 +31,10 @@ class ProjectAdminController extends Controller
     public function index(Request $request)
     {
         if (Auth::user()->hasRole('Administrator')) {
-            $data = Project::with('project_owner.user')->orderBy('id', 'DESC')->paginate(5);
+            $data = Project::with('project_owner.user')->orderBy('id', 'DESC')->get();
         } else {
-            if ($owner = ProjectOwner::where('user_id', Auth::user()->id)->first()) {
-                $data = Project::with('project_owner.user')->where('id', $owner->project_id)->orderBy('id', 'DESC')->paginate(5);
+            if ($owner_id = ProjectOwner::where('user_id', Auth::user()->id)->pluck('project_id')) {
+                $data = Project::with('project_owner.user')->whereIn('id', $owner_id)->orderBy('id', 'DESC')->get();
             } else return redirect()->route('admin')->with('status', 'There are no projects to manage');
 
         }

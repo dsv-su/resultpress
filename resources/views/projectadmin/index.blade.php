@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Assign Project</h2>
+                <h2>Manage Project</h2>
             </div>
             <br>
             <div class="pull-right">
@@ -18,24 +18,27 @@
             <p>{{ $message }}</p>
         </div>
     @endif
-    <table class="table table-bordered">
+    <table id="projectsTable" class="table table-bordered" data-order='[[ 0, "desc" ]]' data-page-length='10'>
+        <thead>
         <tr>
             <th>Id</th>
             <th>Project</th>
             <th>Start</th>
             <th>End</th>
-            <th width="200px">Assign to:</th>
+            <th>Assign to:</th>
             <th>Action</th>
         </tr>
+        </thead>
+        <tbody>
         @foreach ($data as $key => $project)
             <tr>
                 <td>{{ $project->id }}</td>
                 <td>{{ $project->name }}</td>
-                <td>{{ $project->start }}</td>
-                <td>{{ $project->end }}</td>
+                <td>{{ $project->start->format('d-m-Y') }}</td>
+                <td>{{ $project->end->format('d-m-Y') }}</td>
                 <td>
                     @foreach($project->project_owner->all() as $owner)
-                    {{ $owner->user->name }}
+                        {{ $owner->user->name }}
                     @endforeach
                 </td>
                 <td>
@@ -44,5 +47,13 @@
                 </td>
             </tr>
         @endforeach
+        </tbody>
+
     </table>
+    <script>
+        $(document).ready( function () {
+            $('#projectsTable').DataTable();
+        } );
+    </script>
+    </script>
 @endsection

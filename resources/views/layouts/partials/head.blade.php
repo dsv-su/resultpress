@@ -5,10 +5,15 @@
 <link rel="stylesheet" type="text/css" href="{{asset('css/template.css')}}"/>
 <link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}"/>
 <link rel="stylesheet" type="text/css" href="{{asset('bootstrap/4.5.3/css/bootstrap.min.css')}}"/>
+<link rel="stylesheet" type="text/css" href="{{asset('datatables/dataTables.min.css')}}">
 <script src="{{asset('js/jquery-3.5.1.slim.min.js')}}"></script>
 <script src="{{asset('js/popper.min.js')}}"></script>
 <script src="{{asset('bootstrap/4.5.3/js/bootstrap.bundle.min.js')}}"></script>
+<!-- Include FontAwesome -->
 <script defer src="{{asset('/fontawesome/js/all.js')}}"></script>
+<!-- Include Datatables -->
+<script type="text/javascript" src="{{asset('datatables/dataTables.min.js')}}"></script>
+<!-- Include medium editor -->
 <script src="{{asset('medium-editor/5.23.3/medium-editor.min.js')}}"></script>
 <link rel="stylesheet" type="text/css" href="{{asset('medium-editor/5.23.3/medium-editor.min.css')}}">
 <!-- Include Bootstrap Datepicker -->

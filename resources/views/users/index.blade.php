@@ -21,7 +21,9 @@
             <p>{{ $message }}</p>
         </div>
     @endif
-    <table class="table table-bordered">
+    <table id="usersTable" class="table table-bordered" data-order='[[ 0, "desc" ]]'
+           data-page-length='10'>
+        <thead>
         <tr>
             <th>Id</th>
             <th>Name</th>
@@ -29,9 +31,11 @@
             <th>Roles</th>
             <th width="280px">Action</th>
         </tr>
+        </thead>
+        <tbody>
         @foreach ($data as $key => $user)
             <tr>
-                <td>{{ ++$i }}</td>
+                <td>{{ $user->id}}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>
@@ -51,14 +55,21 @@
                     @can('admin-delete')
                         @if($user->password !== 'shibboleth')
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline">
-                            @method('DELETE')
-                            @csrf
-                            <input class="btn btn-outline-danger"  value="Delete" type="submit">
+                                @method('DELETE')
+                                @csrf
+                                <input class="btn btn-outline-danger"  value="Delete" type="submit">
                             </form>
                         @endif
                     @endcan
                 </td>
             </tr>
         @endforeach
+        </tbody>
     </table>
+
+    <script>
+        $(document).ready( function () {
+        $('#usersTable').DataTable();
+        } );
+    </script>
 @endsection

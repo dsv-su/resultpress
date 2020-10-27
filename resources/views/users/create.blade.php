@@ -49,7 +49,7 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Assign a Role (Please Note! This user will not be able to log in via SU SSO):</strong>
+                <strong>Assign a Role:</strong>
                 <select name="roles[]" class="form-control" multiple="multiple">
                     @foreach($roles as $role)
                         <option value="{{$role}}">{{$role}}</option>

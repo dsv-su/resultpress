@@ -65,11 +65,15 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|same:confirm-password',
+            //'password' => 'required|same:confirm-password',
             'roles' => 'required'
         ]);
         $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
+        if(empty($input['password']))
+        {
+            $salt = Str::random(8);
+            $input['password'] = Hash::make($salt);
+        } else $input['password'] = Hash::make($input['password']);
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
 

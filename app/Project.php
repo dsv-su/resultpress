@@ -27,9 +27,9 @@ class Project extends Model
 
     public function submitted_outputs()
     {
-        return $this->outputs()->get()->filter(function ($value, $key) {
-            return $value->status <> 'draft' || $value->status = Null;
-        });;
+        return $this->outputs()->get()->filter(function ($output, $key) {
+            return $output->status == 'custom' || $output->status == 'default';
+        });
     }
 
     public function hasDraft()
@@ -40,6 +40,11 @@ class Project extends Model
     public function project_updates()
     {
         return $this->hasMany(ProjectUpdate::class);
+    }
+
+    public function pending_updates()
+    {
+        return $this->project_updates()->where('status', 'submitted')->get();
     }
 
     public function getCurrencySymbol()

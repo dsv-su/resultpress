@@ -280,6 +280,14 @@ class ProjectUpdateController extends Controller
         $project_update->partner_comment = request('partner_comment');
         if (request('approved')) {
             $project_update->status = 'approved';
+            // Approve draft outputs
+            foreach ($project_update->output_updates as $ou) {
+                $output = $ou->output;
+                if ($output->status != 'default') {
+                    $output->status = 'custom';
+                    $output->save();
+                }
+            }
         }
         $project_update->save();
         return redirect()->route('projectupdate_index', $project_update->project_id);

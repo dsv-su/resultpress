@@ -51,7 +51,8 @@
                             <table class="table">
                                 @foreach ($a->comments as $puindex => $comment)
                                     <tr>
-                                        <td>@if (!$project->cumulative)<b>Update {{$puindex}}</b>: @endif {!! $comment !!}</td>
+                                        <td>@if (!$project->cumulative)<b>Update {{$puindex}}</b>
+                                            : @endif {!! $comment !!}</td>
                                     </tr>
                                 @endforeach
                             </table>
@@ -65,18 +66,12 @@
     @if (!$outputs->isEmpty())
         <h5 class="my-4">Outputs</h5>
         <table class="table table-bordered">
-            @foreach ($outputs as $index => $o)
+            @foreach ($outputs as $o)
                 <tr>
                     <td>{{$o->indicator}}</td>
-                    @if($o->valuestatus == 1)
-                        <td class="status inprogress">{{$o->valuesum}}</td>
-                    @elseif($o->valuestatus == 2)
-                        <td class="status delayed">{{$o->valuesum}}</td>
-                    @elseif($o->valuestatus == 3)
-                        <td class="status done">{{$o->valuesum}}</td>
-                    @endif
-                    @if ($o->status != 'draft')
-                        <td>({{$o->status}})</td> @endif
+                    <td class="status @if($o->valuestatus == 1) inprogress @elseif($o->valuestatus == 2) delayed @elseif($o->valuestatus == 3) done @endif">
+                        {{$o->valuesum}} @if ($o->status == 'custom') (unplanned) @else / {{$o->target}} @endif
+                    </td>
                 </tr>
             @endforeach
         </table>

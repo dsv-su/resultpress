@@ -23,6 +23,10 @@
                     @elseif($project->status == 2) <span class="badge badge-danger">Delayed</span>
                     @elseif($project->status == 3) <span class="badge badge-success">Done</span>
                     @endif
+                    @if($project->pending_updates()->count())
+                        <a href="/project/{{$project->id}}/updates"><span class=" badge badge-info">Update
+                        pending</span></a>
+                    @endif
                 </td>
                 <td>
                     @foreach($project->project_owner->all() as $project_owner)

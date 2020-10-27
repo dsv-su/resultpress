@@ -54,9 +54,7 @@ class ProjectController extends Controller
                 $projects = Project::with('project_owner.user')->whereIn('id', $id)->latest()->get();
                 return view('project.index', ['projects' => $projects, 'user' => $user]);
             }
-        }
-
-        elseif (Auth::check()) return abort(403);
+        } elseif (Auth::check()) return abort(403);
         else return redirect()->route('partner-login');
 
     }
@@ -137,10 +135,12 @@ class ProjectController extends Controller
                 $valuesum += $ou->value;
             }
             $o->valuesum = $valuesum;
-            if ($valuesum == 0) {
-                $o->valuestatus = 2;
+            if ($o->status == 'custom') {
+                $o->valuestatus = 0;
             } elseif ($valuesum >= $o->target) {
                 $o->valuestatus = 3;
+            } elseif ($valuesum == 0) {
+                $o->valuestatus = 2;
             } else {
                 $o->valuestatus = 1;
             }
@@ -407,7 +407,6 @@ class ProjectController extends Controller
                     $data = array();
                     $data['indicator'] = $output_update_array['output_id'][$key];
                     $data['target'] = 0;
-                    $data['status'] = ($status == 'draft') ? 'draft' : null;
                     $data['project_id'] = $project->id;
                     $id = Output::create($data)->id;
                 }
@@ -418,10 +417,6 @@ class ProjectController extends Controller
                 $outputupdate->project_update_id = $projectupdate_id;
                 // Log update for submitted OutputUpdate --> Added outputs should be i draft (TODO)
                 if ($status == 'submitted') {
-                    if ($output->status == 'draft') {
-                        $output->status = 'custom';
-                        $output->save();
-                    }
                     activity()
                         ->causedBy($projectupdate->user_id)
                         ->performedOn($outputupdate)
@@ -465,13 +460,12 @@ class ProjectController extends Controller
         //Find associated owners
         $owners = ProjectOwner::where('project_id', $project->id)->pluck('user_id');
         //Revoke owners permissions
-        foreach ($owners as $owner)
-        {
+        foreach ($owners as $owner) {
             $user = User::find($owner);
-            $user->revokePermissionTo('project-'.$project->id.'-list');
-            $user->revokePermissionTo('project-'.$project->id.'-edit');
-            $user->revokePermissionTo('project-'.$project->id.'-update');
-            $user->revokePermissionTo('project-'.$project->id.'-delete');
+            $user->revokePermissionTo('project-' . $project->id . '-list');
+            $user->revokePermissionTo('project-' . $project->id . '-edit');
+            $user->revokePermissionTo('project-' . $project->id . '-update');
+            $user->revokePermissionTo('project-' . $project->id . '-delete');
             $project_owner = ProjectOwner::where('user_id', $owner);
             $project_owner->delete();
         }
@@ -479,11 +473,10 @@ class ProjectController extends Controller
         //Find associated partners
         $partners = ProjectPartner::where('project_id', $project->id)->pluck('partner_id');
         //Revoke partners permissions
-        foreach ($partners as $partner)
-        {
+        foreach ($partners as $partner) {
             $user = User::find($partner);
-            $user->revokePermissionTo('project-'.$project->id.'-list');
-            $user->revokePermissionTo('project-'.$project->id.'-update');
+            $user->revokePermissionTo('project-' . $project->id . '-list');
+            $user->revokePermissionTo('project-' . $project->id . '-update');
             $project_partner = ProjectPartner::where('partner_id', $partner);
             $project_partner->delete();
         }

@@ -75,7 +75,7 @@
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addActivities"
                         data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                    Add an activity
+                    Add Activity
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     @foreach ($project->activities as $activity)
@@ -119,7 +119,7 @@
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutputs"
                         data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                    Add an output
+                    Add Output
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     @foreach ($project->outputs as $output)
@@ -168,6 +168,8 @@
 
         @if (empty($project_update) || $project_update->status == 'draft')
             <input class="btn btn-lg btn-secondary" name="draft" value="Save as draft" type="submit">
+        @endif
+        @if (!empty($project_update) && $project_update->status == 'draft')
             <input class="btn btn-lg bg-danger" name="delete" value="Delete this draft" type="submit">
         @endif
         <input class="btn btn-lg btn-success" name="submit" value="Submit" type="submit">

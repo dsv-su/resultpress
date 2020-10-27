@@ -150,7 +150,7 @@
                                 </table>
                                 <button type="button" name="add_activities"
                                         class="btn btn-outline-secondary btn-sm add-activities">Add
-                                    Activities <i class="fas fa-plus"></i></button>
+                                    Activity <i class="fas fa-plus"></i></button>
                             </div>
                         </div>
                         <div class="form-group">
@@ -178,7 +178,7 @@
                                             <td class="w-25"><input type="text" name="output_target[]"
                                                                     class="form-control form-control-sm"
                                                                     placeholder="0"
-                                                                    value="{{$output->target}}" required></td>
+                                                                    value="{{$output->target}}" required>0</td>
                                             <td>
                                                 <button type="button" name="remove"
                                                         class="btn btn-outline-danger btn-sm remove"><i
@@ -190,14 +190,14 @@
                                 </table>
                                 <button type="button" name="add_outputs"
                                         class="btn btn-outline-secondary btn-sm add-outputs">Add
-                                    Outputs <i class="fas fa-plus"></i></button>
+                                    Output <i class="fas fa-plus"></i></button>
                             </div>
                         </div>
                         <div class="form-group">
                             <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
                                    @else value="Update"
                                    @endempty
-                                    type="submit">
+                                   type="submit">
                         </div>
                     </div>
                 </form>
@@ -221,7 +221,7 @@
                             html += '<td><input type="text" name="activity_end[]"  class="form-control form-control-sm datepicker" placeholder="Enddate" size="1" required></td>';
                             html += '<td><select name="activity_reminder[]"  class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select></td>';
                             html += '<td><input type="number" name="activity_reminder_due_days[]" class="form-control form-control-sm"  value="7" size="1" required></td>';
-                            html += '<td class="input-group"><input type="number" name="activity_budget[]" class="form-control form-control-sm" placeholder="0" size="3" required><div class="input-group-append"><span class="input-group-text currency">' + currency + '</span></div></td>';
+                            html += '<td class="input-group"><input type="number" name="activity_budget[]" class="form-control form-control-sm" placeholder="0" size="3" required><div class="input-group-append"><span class="input-group-text currency">' + currency + '</span></div>0</td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                             html += '</tr>';
                             html += '<tr class="update activity_template"><td colspan=8><table class="table mb-2"><tr><td><textarea placeholder="Activity template" name="activity_template[]" ' +

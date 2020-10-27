@@ -18,7 +18,7 @@
                     <td class="w-75">
                         @if($pu->status == 'draft') <span class="badge badge-danger">Draft</span>
                         @elseif($pu->status == 'submitted') <span
-                                class="badge badge-warning">Submitted</span>
+                                class="badge badge-warning">Pending approval</span>
                         @elseif($pu->status == 'approved') <span class="badge badge-success">Approved</span>
                         @endif
                         @if($pu->summary){{$pu->summary}} @else No summary provided @endif</td>
@@ -39,6 +39,9 @@
                 </tr>
             @endforeach
         </table>
+    @endif
+    @if (!$project->hasDraft())
+    <a class="btn btn-primary" href="/project/{{$project->id}}/update" role="button">Write a new update</a>
     @endif
 
 @endsection

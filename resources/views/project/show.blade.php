@@ -7,7 +7,7 @@
     <p>@include('project.action_links')</p>
 
     <p>{!!$project->description!!}</p>
-    <table>
+    <table class="my-3">
         <tr>
             <td>Project period:</td>
             <td class="auto">{{$project->dates}}</td>
@@ -27,6 +27,12 @@
             </tr>
         @endif
     </table>
+
+    @if ($project->pending_updates()->count())
+        <div class="alert alert-info" role="alert">
+            There are some pending updates. <a href="/project/{{$project->id}}/updates">Check it out.</a>
+        </div>
+    @endif
 
     @if (!$activities->isEmpty())
         <h5 class="my-4">Activities</h5>

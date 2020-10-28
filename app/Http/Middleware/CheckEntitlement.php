@@ -23,7 +23,9 @@ class CheckEntitlement
         $auth_param = $system->global->authorization_parameter;
         //$authstring = $system->global->authorization; //For multiple entitlements
         $entitlement = $system->global->authorization;
+
         //$auth = explode(";", $authstring); //For multiple entitlements
+
         $match = 0;
         if(!$request->server('REMOTE_USER'))
         {
@@ -50,8 +52,8 @@ class CheckEntitlement
 
         if ($match !== 1)
         {
+            Auth::logout();
             abort(401);
-
         }
 
         return $next($request);

@@ -27,16 +27,14 @@ class ProjectController extends Controller
     {
         //Users entering via the Shibboleth login
         $user = Auth::user();
+
         //All spider-users get the role 'Spider'
         $user->assignRole('Spider');
         //All spider-users can create projects
         $user->givePermissionTo('project-list');
         $user->givePermissionTo('project-create');
-        //Give these users role Admin
-        if ($user->name == 'Ryan Dias') $user->assignRole('Administrator');
-        if ($user->name == 'Pavel Sokolov') $user->assignRole('Administrator');
-        if ($user->name == 'Erik Thuning') $user->assignRole('Administrator');
-        return redirect()->action('ProjectController@index');
+
+        return redirect()->intended('/');
     }
 
     /**

@@ -20,7 +20,7 @@ if (class_exists(AuthHandler::class))
 //Endpoint
 Route::get($login, 'SystemController@login')->name('login');
 
-Route::middleware('entitlements')->group(function () {
+Route::middleware('auth', 'entitlements')->group(function () {
     Route::get('/', 'ProjectController@index')->name('project_home');
     Route::get('/shibboleth', 'ProjectController@shibboleth')->name('shibboleth');
     Route::get('/project/create', 'ProjectController@edit')->name('project_create');
@@ -44,10 +44,7 @@ Route::middleware('entitlements')->group(function () {
     Route::get('/logs', 'LogsController@index')->name('logs');
     //Admin User/Role management
     Route::get('/admin', 'AdminController@index')->name('admin');
-});
-
-//Administrator routes
-Route::group(['middleware' => ['auth']], function() {
+    //Administrator routes
     Route::resource('projectadmin','ProjectAdminController');
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');

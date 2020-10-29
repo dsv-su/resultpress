@@ -61,6 +61,12 @@ Route::get('partner-login', 'Auth\LoginController@showLoginForm')->name('partner
 Route::post('partner-login', 'Auth\LoginController@login');
 Route::post('partner-logout', 'Auth\LoginController@logout')->name('partner-logout');
 
+//Local password reset
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+
 //External register and login routes for oauthlogin
 Route::get('partner-login/{provider}', 'Auth\ExternalRegisterController@redirectToProvider');
 Route::get('/partner-login/{provider}/callback', 'Auth\ExternalRegisterController@handleProviderCallback');

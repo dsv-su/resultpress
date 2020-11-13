@@ -39,6 +39,18 @@
                             </div>@enderror
                         </div>
                         <div class="form-group col-md-3 px-0">
+                            <label for="project_area">Project area</label><br/>
+                            <select name="project_area" id="project_area" class="">
+                                @if (empty($project->project_area_id))
+                                    <option disabled selected value="0"> -- Choose a project area --</option>
+                                @endif
+                                @foreach($project_areas as $pa)
+                                    <option value="{{$pa->id}}"
+                                            @if ($project->project_area_id == $pa->id) selected @endif>{{$pa->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3 px-0">
                             <label for="project_start">Project start</label>
                             <input type="text" name="project_start" id="project_start" placeholder="Start date"
                                    value="{{ old('project_start', empty($project->start) ? '' : $project->start->format('d-m-Y'))}}"
@@ -159,7 +171,7 @@
                                 <table class="table table-sm mw-400" id="outputs_table"
                                        @if($outputs->isEmpty()) style="display: none;" @endif>
                                     <thead>
-                                    <th scope="row">Indicator</th>
+                                    <th scope="row">Output</th>
                                     <th scope="row">Target</th>
                                     <th></th>
                                     </thead>
@@ -178,7 +190,8 @@
                                             <td class="w-25"><input type="text" name="output_target[]"
                                                                     class="form-control form-control-sm"
                                                                     placeholder="0"
-                                                                    value="{{$output->target}}" required>0</td>
+                                                                    value="{{$output->target}}" required>0
+                                            </td>
                                             <td>
                                                 <button type="button" name="remove"
                                                         class="btn btn-outline-danger btn-sm remove"><i

@@ -8,6 +8,7 @@ use App\File;
 use App\Output;
 use App\OutputUpdate;
 use App\Project;
+use App\ProjectArea;
 use App\ProjectOwner;
 use App\ProjectPartner;
 use App\ProjectUpdate;
@@ -180,7 +181,8 @@ class ProjectController extends Controller
         return view('project.form', [
             'project' => $project,
             'activities' => $project->activities()->get(),
-            'outputs' => $project->submitted_outputs()
+            'outputs' => $project->submitted_outputs(),
+            'project_areas' => ProjectArea::all()
         ]);
     }
 
@@ -203,6 +205,7 @@ class ProjectController extends Controller
         $project->end = Carbon::createFromFormat('d-m-Y', request('project_end') ?? null)->format('Y-m-d');
         $project->currency = request('project_currency') ?? null;
         $project->cumulative = request('project_cumulative');
+        $project->project_area_id = request('project_area');
         $project->save();
 
         //Create permissions for a new project

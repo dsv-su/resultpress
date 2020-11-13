@@ -9,6 +9,10 @@
     <p>{!!$project->description!!}</p>
     <table class="my-3">
         <tr>
+            <td>Project area:</td>
+            <td class="auto">@if (!empty($project->project_area_id)){{$project->project_area->name}}@else Not set @endif</td>
+        </tr>
+        <tr>
             <td>Project period:</td>
             <td class="auto">{{$project->dates}}</td>
         </tr>

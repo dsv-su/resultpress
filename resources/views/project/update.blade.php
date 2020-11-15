@@ -22,6 +22,13 @@
 
         <span class="d-none" id="project_currency">{{$project->getCurrencySymbol()}}</span>
 
+        @if ($project->hasDraft() && $project->cumulative)
+            <div class="alert alert-warning" role="alert">
+                There are some drafts for this project. Please take this into account when covering activities (activity
+                templates are based on the most recent update, including drafts).
+            </div>
+        @endif
+
         <div class="form-group">
             <h4>Covered activities:</h4>
             <table class="table table-sm w-100" @if (empty($aus) || $aus->isEmpty()) style="display: none;"
@@ -126,7 +133,7 @@
                         <a class="dropdown-item add-output" href="#" id="{{$output->id}}"
                            @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status == 'draft') style="display: none;" @endif>{{$output->indicator}}</a>
                     @endforeach
-                    <a class="dropdown-item add-output" href="#" id="0">Add a new ouput</a>
+                    <a class="dropdown-item add-output" href="#" id="0">Add a new output</a>
                 </div>
             </div>
         </div>
@@ -143,7 +150,6 @@
                             <a href="{{$file->path}}" target="_blank">{{$file->name}}</a>
                             <button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i
                                         class="far fa-trash-alt"></i></button>
-                            <br/>
                         </span>
                         @endforeach
                     @endif
@@ -211,13 +217,14 @@
                         $('#message').html(data.message);
                         $('#message').addClass(data.class_name);
                         $('#attachments').append(data.attachments);
+                        /*
                         if (data.file_ids) {
                             let fileids = JSON.parse(data.file_ids);
                             $.each(fileids, function (index, id) {
                                 $('#attachments').append('<input type="hidden" name="file_id[]" value="' + id + '">');
                             });
-                        }
-                        console.log(data.file_ids);
+                        }*/
+                        //console.log(data.file_ids);
                     },
                     error: function (data) {
                         alert('There was an error in uploading the file.');
@@ -228,6 +235,7 @@
 
             $(document).on('click', '#attachments .remove', function () {
                 $(this).closest('span').remove();
+                $("#attachments input[value='" + value + "']").remove();
             });
 
             $('input[type=file]').change(function () {

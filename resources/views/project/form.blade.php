@@ -40,7 +40,7 @@
                         </div>
                         <div class="form-group col-md-3 px-0">
                             <label for="project_area">Project area</label><br/>
-                            <select name="project_area" id="project_area" class="">
+                            <select name="project_area" id="project_area" class="" required>
                                 @if (empty($project->project_area_id))
                                     <option disabled selected value="0"> -- Choose a project area --</option>
                                 @endif
@@ -274,6 +274,10 @@
                             });
                         });
                         $("form").submit(function () {
+                            if (!$('#project_area').val()){
+                                alert('Please select a project area');
+                                return false;
+                            }
                             // Add extra confirmation on empty fields
                             let confirmation = '';
                             if (!$('.medium-editor-element[name=project_description]').text().trim()) {

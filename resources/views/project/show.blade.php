@@ -10,7 +10,8 @@
     <table class="my-3">
         <tr>
             <td>Project area:</td>
-            <td class="auto">@if (!empty($project->project_area_id)){{$project->project_area->name}}@else Not set @endif</td>
+            <td class="auto">@if (!empty($project->project_area_id)){{$project->project_area->name}}@else Not
+                set @endif</td>
         </tr>
         <tr>
             <td>Project period:</td>
@@ -34,7 +35,10 @@
 
     @if ($project->pending_updates()->count())
         <div class="alert alert-info" role="alert">
-            There are some pending updates. <a href="/project/{{$project->id}}/updates">Check it out.</a>
+            @if ($project->pending_updates()->count() > 1)
+                There are {{$project->pending_updates()->count()}} pending updates.
+            @else There is 1 pending update @endif
+            <a href="/project/{{$project->id}}/updates">Check it out.</a>
         </div>
     @endif
 

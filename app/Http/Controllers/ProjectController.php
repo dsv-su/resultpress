@@ -196,7 +196,7 @@ class ProjectController extends Controller
     public function update(Project $project)
     {
         request()->validate([
-            'project_name' => 'required',
+            'project_name' => 'required'
         ]);
         $project->name = request('project_name');
         $project->description = request('project_description');
@@ -317,9 +317,6 @@ class ProjectController extends Controller
 
     public function write_update(Project $project)
     {
-        if ($project->hasDraft() && $project->cumulative) {
-            return abort(401);
-        }
         return view('project.update', ['project' => $project]);
     }
 
@@ -429,6 +426,7 @@ class ProjectController extends Controller
 
         // Update file reference
         $file_ids = request('file_id') ?? null;
+
         if ($file_ids) {
             if (!is_array($file_ids)) {
                 $file_ids = array($file_ids);

@@ -33,7 +33,6 @@ class ProjectController extends Controller
         //All spider-users can create projects
         $user->givePermissionTo('project-list');
         $user->givePermissionTo('project-create');
-
         return redirect()->intended('/');
     }
 

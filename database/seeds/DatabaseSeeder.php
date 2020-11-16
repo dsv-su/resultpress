@@ -13,12 +13,12 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UserSeeder::class);
         $this->call(DefaultUserSeeder::class);
-        //$this->call(ResearchProjectsSeeder::class);
-        //$this->call(ProjectOwnerSeeder::class);
-        //$this->call(ActivitySeeder::class);
-        //$this->call(ProjectUpdatesSeeder::class);
-        //$this->call(ActivityUpdatesSeeder::class);
+        $this->call(ResearchProjectsSeeder::class);
+        $this->call(ProjectOwnerSeeder::class);
+        $this->call(ActivitySeeder::class);
+        $this->call(ProjectUpdatesSeeder::class);
+        $this->call(ActivityUpdatesSeeder::class);
         $this->call(PermissionTableSeeder::class);
-        $this->call(CreateAdminUserSeeder::class);
+        $this->call(CreateRolesSeeder::class);
     }
 }

@@ -73,7 +73,7 @@ class RegisterController extends Controller
         $findUser = User::where('email', $data['email'])->first();
          if($findUser)
          {
-            return redirect()->route('partner-login')->with('success','User already exists. Please inform your Project Leader');
+            return redirect()->route('partner-login')->with('success','User already exists. Please inform your Project Manager');
          }
          else
          {

@@ -172,12 +172,11 @@ class ProjectUpdateController extends Controller
                 $outputcontribution = number_format(($ou->value / $output->target) * 100) . '%';
                 $totalcontribution = number_format(($totalcontribution / $output->target) * 100) . '%';
                 $contributionstring .= 'Contributes ' . $outputcontribution . ' of target.';
-                $totalstring .= 'Output is' . $totalcontribution . ' done.';
+                $totalstring .= 'Output is ' . $totalcontribution . ' done.';
             }
 
             $ou->contributionstring = $contributionstring;
             $ou->totalstring = $totalstring;
-
         }
 
         return $outputupdates;

@@ -8,6 +8,7 @@
         <tr>
             <th>Id</th>
             <th>Project Name</th>
+            <th>Project Area</th>
             <th>Status</th>
             <th>Manager</th>
             <th>Action</th>
@@ -18,6 +19,7 @@
             <tr>
                 <td>{{ $project->id }}</td>
                 <td><a href="/project/{{$project->id}}">{{ $project->name}}</a></td>
+                <td>@if($project->project_area){{$project->project_area->name}}@endif</td>
                 <td>
                     @if($project->status == 1) <span class="badge badge-warning">In progress</span>
                     @elseif($project->status == 2) <span class="badge badge-danger">Delayed</span>

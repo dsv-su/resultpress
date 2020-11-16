@@ -8,6 +8,7 @@ use App\File;
 use App\Output;
 use App\OutputUpdate;
 use App\Project;
+use App\ProjectArea;
 use App\ProjectOwner;
 use App\ProjectPartner;
 use App\ProjectUpdate;
@@ -179,7 +180,8 @@ class ProjectController extends Controller
         return view('project.form', [
             'project' => $project,
             'activities' => $project->activities()->get(),
-            'outputs' => $project->submitted_outputs()
+            'outputs' => $project->submitted_outputs(),
+            'project_areas' => ProjectArea::all()
         ]);
     }
 
@@ -193,7 +195,7 @@ class ProjectController extends Controller
     public function update(Project $project)
     {
         request()->validate([
-            'project_name' => 'required',
+            'project_name' => 'required'
         ]);
         $project->name = request('project_name');
         $project->description = request('project_description');
@@ -202,6 +204,7 @@ class ProjectController extends Controller
         $project->end = Carbon::createFromFormat('d-m-Y', request('project_end') ?? null)->format('Y-m-d');
         $project->currency = request('project_currency') ?? null;
         $project->cumulative = request('project_cumulative');
+        $project->project_area_id = request('project_area');
         $project->save();
 
         //Create permissions for a new project
@@ -313,9 +316,6 @@ class ProjectController extends Controller
 
     public function write_update(Project $project)
     {
-        if ($project->hasDraft() && $project->cumulative) {
-            return abort(401);
-        }
         return view('project.update', ['project' => $project]);
     }
 
@@ -425,6 +425,7 @@ class ProjectController extends Controller
 
         // Update file reference
         $file_ids = request('file_id') ?? null;
+
         if ($file_ids) {
             if (!is_array($file_ids)) {
                 $file_ids = array($file_ids);

@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}"/>
 <link rel="stylesheet" type="text/css" href="{{asset('bootstrap/4.5.3/css/bootstrap.min.css')}}"/>
 <link rel="stylesheet" type="text/css" href="{{asset('datatables/DataTables-1.10.22/css/datatables.bootstrap4.css')}}">
-<script src="{{asset('js/jquery-3.5.1.slim.min.js')}}"></script>
+<script src="{{asset('js/jquery-3.5.1.min.js')}}"></script>
 <script src="{{asset('js/popper.min.js')}}"></script>
 <script src="{{asset('bootstrap/4.5.3/js/bootstrap.bundle.min.js')}}"></script>
 <!-- Include FontAwesome -->

@@ -31,8 +31,8 @@ class FileController extends Controller
                 $saved_file->save();
 
                 $url = Storage::url($path . '/' . $file_name);
-                $html .= '<a href="' . $url . '">' . $file_name . ' </a><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i
-                                        class="far fa-trash-alt"></i></button><br/>';
+                $html .= '<span id="uploaded_file" class="d-block"><input type="hidden" name="file_id[]" value="' . $saved_file->id . '"><a href="' . $url . '">' . $file_name . ' </a><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i
+                                        class="far fa-trash-alt"></i></button></span>';
                 $ids[] = $saved_file->id;
             }
             return Response()->json([

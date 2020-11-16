@@ -41,7 +41,7 @@
         </table>
     @endif
     @if (!$project->hasDraft())
-    <a class="btn btn-primary" href="/project/{{$project->id}}/update" role="button">Write a new update</a>
+        <a class="btn btn-primary" href="/project/{{$project->id}}/update" role="button">Write a new update</a>
     @endif
 
 @endsection

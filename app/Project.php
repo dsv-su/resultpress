@@ -9,9 +9,9 @@ class Project extends Model
 {
     use LogsActivity;
 
-    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status'];
+    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id'];
     protected $dates = ['start', 'end'];
-    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status'];
+    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id'];
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 
@@ -45,6 +45,10 @@ class Project extends Model
     public function pending_updates()
     {
         return $this->project_updates()->where('status', 'submitted')->get();
+    }
+
+    public function project_area() {
+        return $this->belongsTo(ProjectArea::class);
     }
 
     public function getCurrencySymbol()

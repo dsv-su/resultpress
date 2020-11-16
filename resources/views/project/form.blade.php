@@ -117,7 +117,7 @@
                                                        value="{{$activity->end->format('d-m-Y')}}" required
                                                        class="form-control form-control-sm datepicker">
                                             </td>
-                                            <td><select name="activity_reminder[]">
+                                            <td><select name="activity_reminder[]" class="form-control form-control-sm">
                                                     <option value="1"
                                                             @if($activity->reminder) selected="selected" @endif>Yes
                                                     </option>
@@ -190,7 +190,7 @@
                                             <td class="w-25"><input type="text" name="output_target[]"
                                                                     class="form-control form-control-sm"
                                                                     placeholder="0"
-                                                                    value="{{$output->target}}" required>0
+                                                                    value="{{$output->target}}" required>
                                             </td>
                                             <td>
                                                 <button type="button" name="remove"
@@ -234,7 +234,7 @@
                             html += '<td><input type="text" name="activity_end[]"  class="form-control form-control-sm datepicker" placeholder="Enddate" size="1" required></td>';
                             html += '<td><select name="activity_reminder[]"  class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select></td>';
                             html += '<td><input type="number" name="activity_reminder_due_days[]" class="form-control form-control-sm"  value="7" size="1" required></td>';
-                            html += '<td class="input-group"><input type="number" name="activity_budget[]" class="form-control form-control-sm" placeholder="0" size="3" required><div class="input-group-append"><span class="input-group-text currency">' + currency + '</span></div>0</td>';
+                            html += '<td class="input-group"><input type="number" name="activity_budget[]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required><div class="input-group-append"><span class="input-group-text currency">' + currency + '</span></div></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                             html += '</tr>';
                             html += '<tr class="update activity_template"><td colspan=8><table class="table mb-2"><tr><td><textarea placeholder="Activity template" name="activity_template[]" ' +
@@ -243,9 +243,14 @@
                             let editor = new MediumEditor('#activities_table .mediumEditor', {
                                 placeholder: {text: "Template"}
                             });
-                            $('input.datepicker').datepicker({
+                            $('#activities_table input.datepicker:last-child').datepicker({
                                 format: 'dd-mm-yyyy',
                                 weekStart: 1
+                            });
+                            $('#activities_table input.datepicker').eq(-2).datepicker("setDate", new Date());
+                            $('input[name="activity_start[]"]').on('change', function () {
+                                $(this).closest('tr').find('input[name="activity_end[]"]').datepicker("setDate", $(this).val());
+                                $(this).closest('tr').find('input[name="activity_end[]"]').datepicker("setStartDate", $(this).val());
                             });
                         });
                         $(document).on('click', '.add-outputs', function () {
@@ -254,7 +259,7 @@
                             html += '<tr>';
                             html += '<input type="hidden" name="output_id[]" value=0>';
                             html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Output name" required></td>';
-                            html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="0" size="3" required></td>';
+                            html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
                             $('#outputs_table').append(html);
                         });
@@ -268,14 +273,30 @@
                                 $('#outputs_table').hide();
                             }
                         });
+                        $('input[name="activity_start[]"]').on('change', function () {
+                            $(this).closest('tr').find('input[name="activity_end[]"]').datepicker("setDate", $(this).val());
+                            $(this).closest('tr').find('input[name="activity_end[]"]').datepicker("setStartDate", $(this).val());
+                        });
                         $('#project_currency').on('change', function () {
                             $('.currency').each(function () {
                                 $(this).text($('#project_currency option:selected').text());
                             });
                         });
                         $("form").submit(function () {
-                            if (!$('#project_area').val()){
+                            if (!$('#project_area').val()) {
                                 alert('Please select a project area');
+                                return false;
+                            }
+                            let datealert = '';
+                            $('input[name="activity_start[]"]').each(function (index) {
+                                let startdate = $(this).val();
+                                let enddate = $(this).closest('tr').find('input[name="activity_end[]"]').val();
+                                if (enddate < startdate) {
+                                    datealert += 'End date is earlier that start date for Activity ' + $(this).closest('tr').find('input[name="activity_name[]"]').val();
+                                }
+                            });
+                            if (datealert) {
+                                alert(datealert);
                                 return false;
                             }
                             // Add extra confirmation on empty fields

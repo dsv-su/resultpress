@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectUpdate extends Model
 {
@@ -28,5 +29,14 @@ class ProjectUpdate extends Model
     public function files()
     {
         return File::where(['filearea' => 'project_update', 'itemid' => $this->id]);
+    }
+
+    public function editable()
+    {
+        if (Auth::user()->hasRole('Administrator') || ($this->status == 'draft' && Auth::user()->id == $this->user_id)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

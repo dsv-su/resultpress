@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectArea extends Model
 {
 
-    protected $fillable = ['name'];
-
-    public function projects()
+    public function project()
     {
-        return $this->hasMany(Project::class);
+        return $this->belongsTo(Project::class);
+    }
+
+    public function area()
+    {
+        return $this->belongsTo(Area::class);
     }
 
 }

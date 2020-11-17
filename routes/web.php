@@ -39,7 +39,11 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::put('/project/{project}', 'ProjectController@update')->name('project_update');
     Route::get('/project/{project}/delete', 'ProjectController@destroy')->name('project_delete');
     Route::post('/store_file', 'FileController@store')->name('store_file');
-
+    //Program Areas
+    Route::get('/programareas', 'ProgramAreaController@index')->name('programareas');
+    Route::get('/programareas/{id}', 'ProgramAreaController@show')->name('programarea_show');
+    Route::get('/programareas/{id}/edit', 'ProgramAreaController@edit')->name('programarea_edit');
+    Route::post('/programareas/{id}/update', 'ProgramAreaController@update')->name('programarea_update');
     //Logging
     Route::get('/logs', 'LogsController@index')->name('logs');
     //Admin User/Role management

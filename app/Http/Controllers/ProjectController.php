@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Activity;
 use App\ActivityUpdate;
+use App\Area;
 use App\File;
 use App\Output;
 use App\OutputUpdate;
@@ -43,18 +44,18 @@ class ProjectController extends Controller
      */
     public function index()
     {
+        $program_areas = Area::all();
         if ($user = Auth::user()) {
             if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
-                $projects = Project::with('project_owner.user')->latest()->get();
-                return view('project.index', ['projects' => $projects, 'user' => $user]);
+                $projects = Project::with('project_owner.user', 'project_area.area')->latest()->get();
+                return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas]);
             } elseif ($user->hasRole(['Partner'])) {
                 $id = ProjectPartner::where('partner_id', $user->id)->pluck('project_id');
-                $projects = Project::with('project_owner.user')->whereIn('id', $id)->latest()->get();
-                return view('project.index', ['projects' => $projects, 'user' => $user]);
+                $projects = Project::with('project_owner.user', 'project_area.area')->whereIn('id', $id)->latest()->get();
+                return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas]);
             }
         } elseif (Auth::check()) return abort(403);
         else return redirect()->route('partner-login');
-
     }
 
     /**
@@ -181,7 +182,9 @@ class ProjectController extends Controller
             'project' => $project,
             'activities' => $project->activities()->get(),
             'outputs' => $project->submitted_outputs(),
-            'project_areas' => ProjectArea::all()
+            'project_areas' => $project->project_area()->get(),
+            'areas' => Area::all(),
+            'old_pa' => $project->project_area->pluck('area_id')->toArray()
         ]);
     }
 
@@ -204,8 +207,25 @@ class ProjectController extends Controller
         $project->end = Carbon::createFromFormat('d-m-Y', request('project_end') ?? null)->format('Y-m-d');
         $project->currency = request('project_currency') ?? null;
         $project->cumulative = request('project_cumulative');
-        $project->project_area_id = request('project_area');
-        $project->save();
+        $id = $project->save();
+        if(request('project_area'))
+        {
+            foreach(ProjectArea::where('project_id', $project->id)->get() as $old_pa) {
+                ProjectArea::find($old_pa->id)->delete();
+            }
+            foreach(request('project_area') as $project_area)
+            {
+                $new_pa = new ProjectArea();
+                if($project->id) {
+                    $new_pa->project_id =  $project->id;
+                } else {
+                    $new_pa->project_id =  $id;
+                }
+                $new_pa->area_id = $project_area;
+                $new_pa->save();
+            }
+        }
+
 
         //Create permissions for a new project
         if (request('new_project') == 1) {

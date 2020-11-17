@@ -17,18 +17,8 @@
                 <a class="nav-link" href="{{ route('project_home') }}">Projects</a>
             </li>
 
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    Program Areas
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{{ route('project_home') }}">Program 1</a>
-                    <a class="dropdown-item" href="{{ route('project_home') }}">Program 2</a>
-                    <a class="dropdown-item" href="{{ route('project_home') }}">Program 3</a>
-                    <a class="dropdown-item" href="{{ route('project_home') }}">Program 4</a>
-                    <a class="dropdown-item" href="{{ route('project_home') }}">Program 5</a>
-                </div>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('programareas') }}">Program Area</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('logs') }}">Logs</a>

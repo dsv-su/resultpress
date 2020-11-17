@@ -17,8 +17,6 @@ class CreateAreasTable extends Migration
             $table->id();
             $table->string('name');
             $table->mediumText('description')->nullable();
-            $table->foreignId('output_id')->references('id')->on('area_outputs');
-            $table->foreignId('outcome_id')->references('id')->on('area_outcomes');
             $table->timestamps();
         });
     }

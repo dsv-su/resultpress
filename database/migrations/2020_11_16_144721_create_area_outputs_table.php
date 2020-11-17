@@ -15,6 +15,8 @@ class CreateAreaOutputsTable extends Migration
     {
         Schema::create('area_outputs', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->foreignId('area_id')->constrained();
             $table->timestamps();
         });
     }

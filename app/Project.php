@@ -9,9 +9,11 @@ class Project extends Model
 {
     use LogsActivity;
 
-    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id'];
+    //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
+    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status'];
     protected $dates = ['start', 'end'];
-    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id'];
+    //protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id'];  -->refactored<--
+    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status'];
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 
@@ -48,7 +50,7 @@ class Project extends Model
     }
 
     public function project_area() {
-        return $this->belongsTo(ProjectArea::class);
+        return $this->hasMany(ProjectArea::class);
     }
 
     public function getCurrencySymbol()

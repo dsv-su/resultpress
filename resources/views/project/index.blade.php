@@ -1,6 +1,21 @@
 @extends('layouts.master')
 
 @section('content')
+    @can('project-create')
+    <nav class="navbar navbar-light" style="background-color: #ccd5df;">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Filter
+            </button>
+            <div class="dropdown-menu">
+                @foreach($program_areas as $program_area)
+                <a class="dropdown-item" href="{{route('programarea_show', $program_area->id)}}">{{$program_area->name}}</a>
+                @endforeach
+            </div>
+        </div>
+    </nav>
+    <br>
+    @endcan
     <table id="example" class="table table-sm table-striped table-bordered" style="width:100%"
            data-order='[[ 0, "desc" ]]'
            data-page-length='25'>
@@ -19,7 +34,12 @@
             <tr>
                 <td>{{ $project->id }}</td>
                 <td><a href="/project/{{$project->id}}">{{ $project->name}}</a></td>
-                <td>@if($project->project_area){{$project->project_area->name}}@endif</td>
+                <td>@if($project->project_area)
+                        @foreach($project->project_area->all() as $project_area)
+                        {{$project_area->area->name}}
+                        @endforeach
+                    @endif
+                </td>
                 <td>
                     @if($project->status == 1) <span class="badge badge-warning">In progress</span>
                     @elseif($project->status == 2) <span class="badge badge-danger">Delayed</span>

@@ -39,16 +39,14 @@
                             </div>@enderror
                         </div>
                         <div class="form-group col-md-3 px-0">
-                            <label for="project_area">Project area</label><br/>
-                            <select name="project_area" id="project_area" class="" required>
-                                @if (empty($project->project_area_id))
-                                    <option disabled selected value="0"> -- Choose a project area --</option>
-                                @endif
-                                @foreach($project_areas as $pa)
-                                    <option value="{{$pa->id}}"
-                                            @if ($project->project_area_id == $pa->id) selected @endif>{{$pa->name}}</option>
+                            <label for="project_area">Project Area</label><br>
+                            <div class="col-md-4 py-2">
+                            <select name="project_area[]" id="project_area" class="custom-select" multiple="multiple" required>
+                                @foreach($areas as $pa)
+                                        <option value="{{$pa->id}}" {{ old('pa_id') == $pa->id || in_array($pa->id, $old_pa) ? 'selected':''}}>{{$pa->name}}</option>
                                 @endforeach
                             </select>
+                            </div>
                         </div>
                         <div class="form-group col-md-3 px-0">
                             <label for="project_start">Project start</label>
@@ -219,6 +217,11 @@
                     let editor = new MediumEditor('.mediumEditor[name=project_description]', {placeholder: {text: "Description"}});
                     let editor2 = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Template"}});
                     $(document).ready(function () {
+                        $('#project_area').multiselect({
+                            templates: {
+                                li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
+                            }
+                        });
                         $('.currency').each(function () {
                             $(this).text($('#project_currency option:selected').text());
                         });

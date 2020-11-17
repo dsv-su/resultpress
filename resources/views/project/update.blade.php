@@ -256,7 +256,7 @@
                 html += '<input type="hidden" name="activity_update_id[]" value=0>';
                 html += '<td class="auto"><input type="hidden" id="activity" name="activity_id[]" value="' + id + '">' + activity + '</td>';
                 html += '<td class="editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
-                html += '<td class="input-group"><input type="number" name="activity_money[]" class="form-control form-control-sm" placeholder="0" size="3" required><div class="input-group-append"><span class="input-group-text">' + currency + '</span></div></td>';
+                html += '<td class="input-group"><input type="number" name="activity_money[]" class="form-control form-control-sm" placeholder="0" size="3" required value="0"><div class="input-group-append"><span class="input-group-text">' + currency + '</span></div></td>';
                 html += '<td><input type="text" name="activity_date[]" class="form-control form-control-sm datepicker" placeholder="Date" size="1" required></td>';
                 html += '<td class="fit"><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
@@ -281,7 +281,7 @@
                 } else {
                     html += '<td class="w-75"><input type="text" id="output" name="output_id[]" placeholder="Enter output name" required></td>';
                 }
-                html += '<td class="w-25"><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="0" size="3" required></td>';
+                html += '<td class="w-25"><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="0" value="0" size="3" required></td>';
                 html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                 html += '</tr>';
                 if (id > 0) {

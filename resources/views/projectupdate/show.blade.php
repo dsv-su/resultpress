@@ -127,19 +127,6 @@
                     <div class="col">
                         <h5>Reviewer comment</h5>
                     </div>
-                    @can('project-create')
-                        <div class="col text-right">
-                            <button type="button" class="btn approve editable" name="approved" data-toggle="button"
-                                    @if ($project_update->status == 'approved') aria-pressed="true"
-                                    @else aria-pressed="false" @endif
-                                    autocomplete="off">@if ($project_update->status == 'approved')Approved @else
-                                    Approve @endif
-                            </button>
-                            <input type="hidden" name="approved" @empty($project_update->status == 'approved') value=0
-                                   @else
-                                   value={{$project_update->status}} @endempty>
-                        </div>
-                    @endcan
                 </div>
                 <div class="form-row my-2">
                     <label for="partner_comment">Partner</label>
@@ -160,7 +147,13 @@
                         @enderror
                     </div>
                 @endcan
-                <input class="btn btn-primary btn-lg" value="Save" type="submit">
+
+                @can('project-create')
+                    <input class="btn btn-danger btn-lg" name="reject" value="Reject" type="submit">
+                    <input class="btn btn-success btn-lg" name="approve" value="Approve" type="submit">
+                @else
+                    <input class="btn btn-success btn-lg" value="Save" value="save" type="submit">
+                @endcan
             </div>
         </form>
     @else
@@ -183,17 +176,4 @@
             @endif
         @endif
     @endif
-
-    <script>
-        $(document).on('click', '.approve', function () {
-            if ($(this).attr('aria-pressed') === 'true') {
-                $('input[name="approved"]').val(1);
-                $('button[name="approved"]').html('Approved');
-            } else {
-                $('input[name="approved"]').val(0);
-                $('button[name="approved"]').html('Approve');
-            }
-        });
-    </script>
-
 @endsection

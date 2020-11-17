@@ -33,15 +33,15 @@
                         @endif
                         <a href="/project/update/{{$pu->id}}" class="btn btn-outline-secondary btn-sm">Show <i
                                     class="fas fa-info-circle"></i></a>
-                        <a href="/project/update/{{$pu->id}}/review" class="btn btn-outline-secondary btn-sm">Review <i
-                                    class="fas fa-highlighter"></i></a>
+                        @if ($pu->status != 'draft')
+                            <a href="/project/update/{{$pu->id}}/review" class="btn btn-outline-secondary btn-sm">Review
+                                <i class="fas fa-highlighter"></i></a>
+                        @endif
                     </td>
                 </tr>
             @endforeach
         </table>
     @endif
-    @if (!$project->hasDraft())
-        <a class="btn btn-primary" href="/project/{{$project->id}}/update" role="button">Write a new update</a>
-    @endif
+    <a class="btn btn-primary" href="/project/{{$project->id}}/update" role="button">Write a new update</a>
 
 @endsection

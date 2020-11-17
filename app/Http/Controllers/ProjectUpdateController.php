@@ -29,12 +29,6 @@ class ProjectUpdateController extends Controller
     public function index(Project $project)
     {
         return view('project.updates', ['project' => $project]);
-        /*
-        return view('project.updates', [
-            'project' => $project,
-            'project_updates' => ProjectUpdate::where('project_id', $project->id)->latest()->get()
-        ]);
-        */
     }
 
     /**
@@ -172,12 +166,11 @@ class ProjectUpdateController extends Controller
                 $outputcontribution = number_format(($ou->value / $output->target) * 100) . '%';
                 $totalcontribution = number_format(($totalcontribution / $output->target) * 100) . '%';
                 $contributionstring .= 'Contributes ' . $outputcontribution . ' of target.';
-                $totalstring .= 'Output is' . $totalcontribution . ' done.';
+                $totalstring .= 'Output is ' . $totalcontribution . ' done.';
             }
 
             $ou->contributionstring = $contributionstring;
             $ou->totalstring = $totalstring;
-
         }
 
         return $outputupdates;
@@ -246,7 +239,7 @@ class ProjectUpdateController extends Controller
     public function edit(ProjectUpdate $project_update)
     {
         // We only let to edit draft updates, or we're super users
-        if ($project_update->status != 'draft' && !Auth::user()->hasRole('Administrator')) {
+        if (!$project_update->editable()) {
             return abort(401);
         }
         $project = Project::find($project_update->project_id);
@@ -272,14 +265,34 @@ class ProjectUpdateController extends Controller
      * Update the specified resource in storage.
      *
      * @param ProjectUpdate $project_update
+     * @param Request $request
      * @return RedirectResponse
      */
-    public function update(ProjectUpdate $project_update)
+    public function update(ProjectUpdate $project_update, Request $request)
     {
-        $project_update->internal_comment = request('internal_comment');
-        $project_update->partner_comment = request('partner_comment');
-        if (request('approved')) {
-            $project_update->status = 'approved';
+        $status = '';
+        if ($request->input('approve')) {
+            $status = 'approved';
+            activity()
+                ->causedBy(Auth::user()->id)
+                ->performedOn($project_update)
+                ->log('ProjectUpdateApproved');
+        } else if ($request->input('reject')) {
+            $status = 'draft';
+            activity()
+                ->causedBy(Auth::user()->id)
+                ->performedOn($project_update)
+                ->log('ProjectUpdateRejected');
+        }
+
+        $project_update->internal_comment = request('internal_comment') ?? null;
+        $project_update->partner_comment = request('partner_comment') ?? null;
+
+        if ($status) {
+            $project_update->status = $status;
+        }
+
+        if ($status == 'approved') {
             // Approve draft outputs
             foreach ($project_update->output_updates as $ou) {
                 $output = $ou->output;
@@ -289,6 +302,7 @@ class ProjectUpdateController extends Controller
                 }
             }
         }
+
         $project_update->save();
         return redirect()->route('projectupdate_index', $project_update->project_id);
     }

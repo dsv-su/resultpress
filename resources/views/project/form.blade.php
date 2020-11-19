@@ -41,11 +41,12 @@
                         <div class="form-group col-md-3 px-0">
                             <label for="project_area">Project Area</label><br>
                             <div class="col-md-4 py-2">
-                            <select name="project_area[]" id="project_area" class="custom-select" multiple="multiple" required>
-                                @foreach($areas as $pa)
+                                <select name="project_area[]" id="project_area" class="custom-select"
+                                        multiple="multiple" required>
+                                    @foreach($areas as $pa)
                                         <option value="{{$pa->id}}" {{ old('pa_id') == $pa->id || in_array($pa->id, $old_pa) ? 'selected':''}}>{{$pa->name}}</option>
-                                @endforeach
-                            </select>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group col-md-3 px-0">
@@ -62,7 +63,7 @@
                         </div>
                         <div class="form-group col-md-3 px-0">
                             <label for="project_currency">Project currency</label>
-                            <select name="project_currency" id="project_currency" class="">
+                            <select name="project_currency" id="project_currency" class="form-control form-control-sm">
                                 <option value="SEK"
                                         @if ($project->currency == 'SEK' || !$project->currency) selected @endif>kr
                                 </option>
@@ -73,12 +74,11 @@
                         </div>
                         <div class="form-group col-md-3 px-0">
                             <label for="project_cumulative">Cumulative updates</label>
-                            <select name="project_cumulative">
+                            <select name="project_cumulative" class="form-control form-control-sm">
                                 <option value="1" @if($project->cumulative) selected="selected" @endif>Yes</option>
                                 <option value="0" @if(!$project->cumulative) selected="selected" @endif>No</option>
                             </select>
                         </div>
-
                         <div class="form-group">
                             <label for="activities_table" class="form-group-header">Activities</label>
                             <div>
@@ -204,6 +204,43 @@
                                     Output <i class="fas fa-plus"></i></button>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="project" class="form-group-header">Outcomes</label>
+                            <div>
+                                <table class="table table-sm mw-400" id="outcomes_table"
+                                       @if($project->outcomes->isEmpty()) style="display: none;" @endif>
+                                    <thead>
+                                    <th scope="row">Outcome</th>
+                                    <th></th>
+                                    </thead>
+
+                                    <!-- Here comes a foreach to show the outcomes -->
+                                    @foreach ($project->outcomes as $outcome)
+                                        <tr>
+                                            <td class="w-75"><input type="hidden" name="outcome_id[]"
+                                                                    value="{{$outcome->id}}">
+                                                <input type="text"
+                                                       name="outcome_name[]"
+                                                       value="{{$outcome->name}}"
+                                                       placeholder="Outcome name" required
+                                                       class="form-control form-control-sm">
+                                            </td>
+                                            <td>
+                                                <button type="button" name="remove"
+                                                        class="btn btn-outline-danger btn-sm remove"><i
+                                                            class="fas fa-minus"></i><span
+                                                            class="glyphicon glyphicon-minus"></span></button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </table>
+                                <button type="button" name="add_outcomes"
+                                        class="btn btn-outline-secondary btn-sm add-outcomes">Add
+                                    Outcome <i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
                                    @else value="Update"
@@ -267,7 +304,6 @@
                             $('#outputs_table').append(html);
                         });
                         $(document).on('click', '.remove', function () {
-                            $(this).closest('tr').next().remove();
                             $(this).closest('tr').remove();
                             if ($('tr', $('#activities_table')).length < 2) {
                                 $('#activities_table').hide();
@@ -275,6 +311,18 @@
                             if ($('tr', $('#outputs_table')).length < 2) {
                                 $('#outputs_table').hide();
                             }
+                            if ($('tr', $('#outcomes_table')).length < 2) {
+                                $('#outcomes_table').hide();
+                            }
+                        });
+                        $(document).on('click', '.add-outcomes', function () {
+                            $('#outcomes_table').show();
+                            let html = '';
+                            html += '<tr>';
+                            html += '<input type="hidden" name="outcome_id[]" value=0>';
+                            html += '<td class="w-75"><input type="text" name="outcome_name[]" class="form-control form-control-sm" placeholder="Outcome name" required></td>';
+                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
+                            $('#outcomes_table').append(html);
                         });
                         $('input[name="activity_start[]"]').on('change', function () {
                             $(this).closest('tr').find('input[name="activity_end[]"]').datepicker("setDate", $(this).val());

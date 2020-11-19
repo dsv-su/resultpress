@@ -202,7 +202,6 @@ button, input[type="submit"], .btn-submit {
     padding-top: 11px;
     padding-bottom: 22px;
     width: 100%;
-    position: absolute;
     bottom: 0;
 }
 

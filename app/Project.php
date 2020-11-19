@@ -27,6 +27,11 @@ class Project extends Model
         return $this->hasMany(Output::class);
     }
 
+    public function outcomes()
+    {
+        return $this->hasMany(Outcome::class);
+    }
+
     public function submitted_outputs()
     {
         return $this->outputs()->get()->filter(function ($output, $key) {
@@ -49,7 +54,8 @@ class Project extends Model
         return $this->project_updates()->where('status', 'submitted')->get();
     }
 
-    public function project_area() {
+    public function project_area()
+    {
         return $this->hasMany(ProjectArea::class);
     }
 

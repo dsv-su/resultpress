@@ -38,6 +38,7 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::put('/project/{project}/update', 'ProjectController@save_update')->name('project_save_update');
     Route::put('/project/{project}', 'ProjectController@update')->name('project_update');
     Route::get('/project/{project}/delete', 'ProjectController@destroy')->name('project_delete');
+    Route::put('/outcome_update/{outcome}', 'OutcomeController@update')->name('outcome_update');
     Route::post('/store_file', 'FileController@store')->name('store_file');
     //Program Areas
     Route::get('/programareas', 'ProgramAreaController@index')->name('programareas');

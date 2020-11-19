@@ -85,5 +85,8 @@ Currently used version is 7.10.3
 
 * Create the database and seed the default permissions and roles with `php artisan migrate --seed` (this should create database tables needed and populate necessary user permissions)
 
+* First time installation: run Admin seeder for creating an Administrator account: `php artisan db:seed --class=CreateAdminUserSeeder` this will make the default user account an Administrator (this should be removed in production)
 
+###Database structure
+![Database](./public/images/database.png)
 

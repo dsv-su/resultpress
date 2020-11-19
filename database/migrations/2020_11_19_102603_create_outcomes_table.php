@@ -17,6 +17,7 @@ class CreateOutcomesTable extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('completed')->nullable();
+            $table->date('completed_on')->nullable();
             $table->mediumText('summary')->nullable();
             $table->string('outputs')->nullable();
             $table->foreignId('project_id')->constrained();

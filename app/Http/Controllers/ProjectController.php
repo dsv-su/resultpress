@@ -6,6 +6,7 @@ use App\Activity;
 use App\ActivityUpdate;
 use App\Area;
 use App\File;
+use App\Outcome;
 use App\Output;
 use App\OutputUpdate;
 use App\Project;
@@ -208,18 +209,16 @@ class ProjectController extends Controller
         $project->currency = request('project_currency') ?? null;
         $project->cumulative = request('project_cumulative');
         $id = $project->save();
-        if(request('project_area'))
-        {
-            foreach(ProjectArea::where('project_id', $project->id)->get() as $old_pa) {
+        if (request('project_area')) {
+            foreach (ProjectArea::where('project_id', $project->id)->get() as $old_pa) {
                 ProjectArea::find($old_pa->id)->delete();
             }
-            foreach(request('project_area') as $project_area)
-            {
+            foreach (request('project_area') as $project_area) {
                 $new_pa = new ProjectArea();
-                if($project->id) {
-                    $new_pa->project_id =  $project->id;
+                if ($project->id) {
+                    $new_pa->project_id = $project->id;
                 } else {
-                    $new_pa->project_id =  $id;
+                    $new_pa->project_id = $id;
                 }
                 $new_pa->area_id = $project_area;
                 $new_pa->save();
@@ -254,12 +253,15 @@ class ProjectController extends Controller
         //Email reminder
         $activity_array['reminder'] = request('activity_reminder');
         $activity_array['reminder_due_days'] = request('activity_reminder_due_days');
-        // Outputs
+        //Outputs
         $output_array['id'] = request('output_id') ?? null;
         $output_array['indicator'] = request('output_indicator');
         $output_array['target'] = request('output_target');
+        //Outcomes
+        $outcome_array['id'] = request('outcome_id') ?? null;
+        $outcome_array['name'] = request('outcome_name');
 
-        // Remove deleted activities
+        //Remove deleted activities
         foreach (Activity::where('project_id', $project->id)->get() as $a) {
             if (!$activity_array['id'] || !in_array($a->id, $activity_array['id'])) {
                 Activity::findOrFail($a->id)->delete();
@@ -329,7 +331,36 @@ class ProjectController extends Controller
             }
         }
 
-        // -->
+        // Remove deleted outcomes
+        foreach ($project->outcomes as $o) {
+            if (!$outcome_array['id'] || !in_array($o->id, $outcome_array['id'])) {
+                Outcome::findOrFail($o->id)->delete();
+            }
+        }
+
+        if (!empty($outcome_array['id'])) {
+            foreach ($outcome_array['id'] as $key => $id) {
+                $data = array();
+                $data['name'] = $outcome_array['name'][$key];
+                $data['project_id'] = $project->id;
+                $data['user_id'] = Auth::user()->id;
+                if ($id) {
+                    Outcome::where('id', $id)->update($data);
+                    //Log outcome update
+                    activity()
+                        ->causedBy(Auth::user())
+                        ->performedOn(Outcome::find($id))
+                        ->log('OutcomeUpdate');
+                } else {
+                    $newoutcome = Outcome::create($data);
+                    //Log new outcome
+                    activity()
+                        ->causedBy(Auth::user())
+                        ->performedOn(Outcome::find($newoutcome->id))
+                        ->log('NewOutcome');
+                }
+            }
+        }
 
         return redirect()->route('project_show', $project);
     }

@@ -19,6 +19,7 @@
     </div>
     @include('layouts.partials.footer-scripts_log')
 </div>
+
 </body>
 
 </html>

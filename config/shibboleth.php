@@ -82,9 +82,9 @@ return [
         'email' => 'mail',
         'emplid' => 'eppn',
     ],
-    /*
-    //'entitlement' => 'Shib-isMemberOf',
 
+    //'entitlement' => 'Shib-isMemberOf',
+    /*
     'user' => [
         // fillable user model attribute => server variable
         'name' => 'Shib-cn',

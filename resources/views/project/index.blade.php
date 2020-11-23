@@ -1,11 +1,12 @@
 @extends('layouts.master')
 
 @section('content')
+    <!-- Filter bar -->
     @can('project-create')
-    <nav class="navbar navbar-light" style="background-color: #ccd5df;">
+    <nav class="navbar navbar-light">
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Filter
+                Filter by
             </button>
             <div class="dropdown-menu">
                 @foreach($program_areas as $program_area)
@@ -16,6 +17,7 @@
     </nav>
     <br>
     @endcan
+    <!-- -->
     <table id="example" class="table table-sm table-striped table-bordered" style="width:100%"
            data-order='[[ 0, "desc" ]]'
            data-page-length='25'>

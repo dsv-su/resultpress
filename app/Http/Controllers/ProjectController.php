@@ -555,6 +555,9 @@ class ProjectController extends Controller
         // Delete project partners
         ProjectPartner::where('project_id', $project->id)->delete();
 
+        //Delete project belongs to project area
+        ProjectArea::where('project_id', $project->id)->delete();
+
         // Delete project
         $project->delete();
         return redirect()->route('project_home');

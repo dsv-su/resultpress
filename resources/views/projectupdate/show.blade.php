@@ -91,6 +91,13 @@
         </table>
     @endif
 
+    @if(!$project_update->project->outcomes->isEmpty())
+        @can('project-create')
+            <h4>Outcomes</h4>
+            @include('project.outcomes')
+        @endcan
+    @endif
+
     @if(!$files->isEmpty())
         <div class="my-1">
             <h5>Attachments:</h5>
@@ -105,7 +112,7 @@
 
     @if ($project_update->summary)
         <div class="my-1">
-            <h5>Summary</h5>
+            <h4>Summary</h4>
             <table class="table table-striped table-bordered">
                 <tr>
                     <td>{{$project_update->summary}}</td>
@@ -124,9 +131,7 @@
             @csrf
             <div class="form-group">
                 <div class="form-row my-2">
-                    <div class="col">
-                        <h5>Reviewer comment</h5>
-                    </div>
+                        <h4>Comments</h4>
                 </div>
                 <div class="form-row my-2">
                     <label for="partner_comment">Partner</label>

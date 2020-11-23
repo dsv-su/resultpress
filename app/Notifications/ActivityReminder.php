@@ -16,11 +16,11 @@ class ActivityReminder extends Notification
      *
      * @return void
      */
-    public function __construct($notification_url)
+    public function __construct($details)
     {
-        $this->notification_url = $notification_url;
-    }
+        $this->details = $details;
 
+    }
     /**
      * Get the notification's delivery channels.
      *
@@ -42,9 +42,9 @@ class ActivityReminder extends Notification
     {
         return (new MailMessage)
                     ->greeting('Dear Manager,')
-                    ->line('This is an automatic reminder from ResultPress to remind you that there is less than X days left on activity,
-                     Y,  please review your project, Z, and update as necessary.')
-                    ->action('Notification Action', $this->notification_url)
+                    ->line('This is an automatic reminder from ResultPress to remind you that there is less than '. $this->details['days'].' days left on activity,
+                     '.$this->details['title'].',  please review your project, '.$this->details['project'].', and update as necessary.')
+                    ->action('Project summary', $this->details['url'])
                     ->line('Thank you for using our application!');
     }
 

@@ -3,13 +3,13 @@
 namespace App\Console\Commands;
 
 use App\Activity;
-use App\ActivityUpdate;
-use App\Mail\ActivityReminder;
+use App\Notifications\ActivityReminder;
+use App\ProjectOwner;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\User;
 use App\Project;
-use Mail;
+use Illuminate\Support\Facades\Notification;
 
 class MailActivityReminder extends Command
 {
@@ -48,7 +48,6 @@ class MailActivityReminder extends Command
         //Get all activities
         $this->activities = Activity::all();
 
-
         foreach ($this->activities as $this->activity)
         {
             if ($this->activity->reminder == true)
@@ -56,25 +55,23 @@ class MailActivityReminder extends Command
                 $duedate = Carbon::now()->addDays($this->activity->reminder_due_days)->toDateString();
                 if($this->activity->end->toDateString() == $duedate)
                 {
-                    // Retrive all activity updates for the matching activity
-                    if($this->activity_update = ActivityUpdate::where('activity_id', $this->activity->id)->latest()->first())
+                    //Get Project
+                    $this->project = Project::find($this->activity->project_id);
+                    //Corresponing Managers
+                    $this->project_owners = ProjectOwner::where('project_id', $this->project->id)->get();
+                    foreach ($this->project_owners as $this->project_owner)
+                    {
+                        //Details for the email
+                        $this->details = [
+                            'title' => $this->activity->title,
+                            'project' => $this->project->name,
+                            'url' => url("/project/{$this->project->id}"),
+                            'days' => $this->activity->reminder_due_days,
+                        ];
 
-                        //Check if activity has been flagged done
-                        if ($this->activity_update->status == 1 || $this->activity_update->status == 2)
-                        {
-                            //Get Project
-                            $this->project = Project::find($this->activity->project_id);
-                            //Corresponing Manager
-                            $this->user = User::find($this->project->user_id);
-                            //Details for the email
-                            $this->details = [
-                                'title' => $this->activity->title,
-                                'project' => $this->project->name,
-                            ];
-                            Mail::to($this->user->email)->send(new ActivityReminder($this->details));
-                        }
-
-
+                        $this->user = User::find($this->project_owner->user_id);
+                        Notification::route('mail', $this->user->email)->notify(new ActivityReminder($this->details));
+                    }
                 }
             }
 

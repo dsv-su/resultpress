@@ -146,6 +146,12 @@ class ProjectController extends Controller
             }
         }
 
+        foreach ($project->outcomes as $outcome) {
+            if (!$outcome->outputs) {
+                $outcome->outputs = json_encode(array());
+            }
+        }
+
         $project->dates = $this->project_dates($project);
         $project->projectstart = !$activities->isEmpty() ? Activity::where('project_id', $project->id)->orderBy('start', 'asc')->first()->start->format('d/m/Y') : null;
         $project->projectend = !$activities->isEmpty() ? Activity::where('project_id', $project->id)->orderBy('end', 'desc')->first()->end->format('d/m/Y') : null;

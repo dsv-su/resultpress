@@ -42,7 +42,7 @@
             <div class="collapse" id="project_updates">
                 <div class="card card-body">
                     @foreach ($project->pending_updates()->all() as $index => $pu)
-                        <p>#{{$index+1}} created on {{$pu->created_at->format('d/m/Y')}} by {{ Auth::user()->name }}
+                        <p>#{{$index+1}} created on {{$pu->created_at->format('d/m/Y')}} by {{ $pu->user->name }}
                             @if($pu->status == 'draft') <span class="badge badge-danger">Draft</span>
                             @elseif($pu->status == 'submitted') <span
                                     class="badge badge-warning">Pending approval</span>

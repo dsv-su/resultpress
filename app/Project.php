@@ -58,6 +58,10 @@ class Project extends Model
     {
         return $this->hasMany(ProjectArea::class);
     }
+    public function areas()
+    {
+        return $this->belongsToMany(Area::class, 'project_areas');
+    }
 
     public function getCurrencySymbol()
     {

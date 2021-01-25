@@ -42,7 +42,7 @@
                             <label for="project_area">Project Area</label><br>
                             <div class="col-md-4 py-2">
                                 <select name="project_area[]" id="project_area" class="custom-select"
-                                        multiple="multiple" required>
+                                        multiple="multiple" >
                                     @foreach($areas as $pa)
                                         <option value="{{$pa->id}}" {{ old('pa_id') == $pa->id || in_array($pa->id, $old_pa) ? 'selected':''}}>{{$pa->name}}</option>
                                     @endforeach

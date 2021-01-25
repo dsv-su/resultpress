@@ -17,9 +17,10 @@ class InviteNotification extends Notification
      *
      * @return void
      */
-    public function __construct($notification_url)
+    public function __construct($notification_url, $details)
     {
         $this->notification_url = $notification_url;
+        $this->details = $details;
     }
 
     /**

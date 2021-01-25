@@ -212,7 +212,7 @@ class UserController extends Controller
 
             'registration', now()->addMinutes(480), ['token' => $token]
         );
-        Notification::route('mail', $request->input('email'))->notify(new InviteNotification($url));
+        Notification::route('mail', $request->input('email'))->notify(new InviteNotification($url, $request->email));
         return redirect('/users')->with('success', 'The Invite has been sent successfully');
     }
 

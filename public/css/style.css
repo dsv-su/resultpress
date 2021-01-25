@@ -325,3 +325,18 @@ tr.update > td {
 .medium-editor-toolbar li button {
     background-color: orange;
 }
+
+.medium-editor-element.expanded {
+    height: 100%;
+    overflow: visible;
+}
+
+.medium-editor-element.collapsed {
+    height: 29px !important;
+    overflow: hidden;
+}
+
+.collapseEditor {
+    margin-left: 6px;
+    cursor: pointer;
+}

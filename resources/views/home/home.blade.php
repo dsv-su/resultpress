@@ -83,9 +83,9 @@
                                                 @if(auth()->user()->id == $project_owner->user->id)
                                                     <input class="form-check-input me-1 owner" type="checkbox" value="" aria-label="select" checked disabled>
                                                 @elseif (in_array($project->id, json_decode(auth()->user()->follow_projects), true))
-                                                    <input class="form-check-input me-1" name="projects[]" type="checkbox" value="{{$project->id}}" aria-label="select" checked>
+                                                    <input class="form-check-input me-1" name="projects[]" type="checkbox" value="" aria-label="select" checked>
                                                 @else
-                                                    <input class="form-check-input me-1" name="projects[]" type="checkbox" value="{{$project->id}}" aria-label="select">
+                                                    <input class="form-check-input me-1" name="projects[]" type="checkbox" value="{{$project->id}}" aria-label="">
                                                 @endif
                                             @endforeach
                                             {{$project->name}}
@@ -102,9 +102,9 @@
                             @foreach($otherprojects as $otherproject)
                             <li class="list-group-item">
                                 @if (in_array($otherproject->id, json_decode(auth()->user()->follow_projects), true))
-                                    <input class="form-check-input me-1" name="projects[]" type="checkbox" value="{{$otherproject->id}}" aria-label="select" checked>
+                                    <input class="form-check-input me-1" name="projects[]" type="checkbox" value="" aria-label="select" checked>
                                 @else
-                                    <input class="form-check-input me-1" name="projects[]" type="checkbox" value="{{$otherproject->id}}" aria-label="select">
+                                    <input class="form-check-input me-1" name="projects[]" type="checkbox" value="{{$otherproject->id}}" aria-label="">
                                 @endif
                                 {{$otherproject->name}}
                             </li>

@@ -28,7 +28,8 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="project_description">Description <i class="fas fa-chevron-right collapseEditor"></i></label>
+                            <label for="project_description">Description <i
+                                        class="fas fa-chevron-right collapseEditor"></i></label>
                             <textarea rows="4"
                                       class="form-control form-control-sm mediumEditor collapsed @error('project_description') is-danger @enderror"
                                       name="project_description" id="project_description"
@@ -42,7 +43,7 @@
                             <label for="project_area">Project Area</label><br>
                             <div class="col-md-4 py-2">
                                 <select name="project_area[]" id="project_area" class="custom-select"
-                                        multiple="multiple" >
+                                        multiple="multiple">
                                     @foreach($areas as $pa)
                                         <option value="{{$pa->id}}" {{ old('pa_id') == $pa->id || in_array($pa->id, $old_pa) ? 'selected':''}}>{{$pa->name}}</option>
                                     @endforeach
@@ -83,14 +84,14 @@
                             <label for="activities_table" class="form-group-header">Activities</label>
                             <div class="d-flex flex-wrap">
                                 @foreach ($activities as $activity)
-                                    <div class="col my-2 px-2" style="min-width: 28rem;">
+                                    <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
                                         <div class="card bg-light m-auto">
                                             <div class="card-body">
                                                 <div class="form-group row">
                                                     <input type="hidden" name="activity_id[]" value="{{$activity->id}}">
                                                     <label for="activity_name[]"
-                                                           class="col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label>
-                                                    <div class="col-sm-9 px-1">
+                                                           class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label>
+                                                    <div class="col-8 col-sm-9 px-1">
                                                         <input type="text" name="activity_name[]"
                                                                value="{{$activity->title}}" required
                                                                class="form-control form-control-sm">
@@ -98,23 +99,25 @@
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="activity_name[]"
-                                                           class="col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description<i class="fas fa-chevron-right collapseEditor"></i></label>
-                                                    <div class="col-sm-9 px-1">
-                                                        <textarea type="text" name="activity_description[]" id="activity_description" required
+                                                           class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description<i
+                                                                class="fas fa-chevron-right collapseEditor"></i></label>
+                                                    <div class="col-8 col-sm-9 px-1">
+                                                        <textarea type="text" name="activity_description[]"
+                                                                  id="activity_description" required
                                                                   class="mediumEditor form-control form-control-sm collapsed">{{$activity->description}}</textarea>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="activity_start[]"
-                                                           class="col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label>
-                                                    <div class="col-sm-4 px-1">
+                                                           class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label>
+                                                    <div class="col-8 col-sm-4 px-1">
                                                         <input type="text" name="activity_start[]"
                                                                value="{{$activity->start->format('d-m-Y')}}" required
                                                                class="form-control form-control-sm datepicker">
                                                     </div>
                                                     <label for="activity_end[]"
-                                                           class="col-sm-1 pl-1 pr-1 col-form-label-sm text-right">End</label>
-                                                    <div class="col-sm-4 px-1">
+                                                           class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label>
+                                                    <div class="col-8 col-sm-4 px-1">
                                                         <input type="text" name="activity_end[]"
                                                                value="{{$activity->end->format('d-m-Y')}}" required
                                                                class="form-control form-control-sm datepicker">
@@ -122,9 +125,9 @@
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="activity_reminder[]"
-                                                           class="col-sm-5 pl-0 pr-1 col-form-label-sm text-right">Email
+                                                           class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Email
                                                         reminder</label>
-                                                    <div class="col-sm-2 px-1">
+                                                    <div class="col-8 col-sm-9 px-1 form-inline">
                                                         <select name="activity_reminder[]"
                                                                 class="form-control form-control-sm">
                                                             <option value="1"
@@ -136,38 +139,39 @@
                                                                 No
                                                             </option>
                                                         </select>
-                                                    </div>
-                                                    <div class="col-sm-2 pr-1 mr-auto">
+
                                                         <input type="number" name="activity_reminder_due_days[]"
                                                                value="{{$activity->reminder_due_days}}"
-                                                               class="form-control form-control-sm text-right pr-0 ml-auto"
+                                                               class="form-control form-control-sm text-right mx-1"
                                                                style="width:40px;">
+
+                                                        <label for="activity_reminder_due_days[]"
+                                                               class="pl-0 pr-1 col-form-label-sm text-left">days
+                                                            before end</label>
                                                     </div>
-                                                    <label for="activity_reminder_due_days[]"
-                                                           class="col-sm-3 pl-0 pr-1 col-form-label-sm text-left">days
-                                                        before end</label>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <label for="activity_budget[]"
-                                                           class="col-sm-3 pl-1 pr-1 col-form-label-sm text-right">Budget</label>
-                                                    <div class="col-sm-4 pl-1 pr-0">
+                                                           class="col col-sm-3 pl-1 pr-1 col-form-label-sm text-right">Budget</label>
+                                                    <div class="col col-sm-3 pl-1 pr-0">
                                                         <input type="number" name="activity_budget[]" placeholder="0"
                                                                value="{{$activity->budget}}" required
                                                                class="form-control form-control-sm text-right">
                                                     </div>
-                                                    <div class="input-group-append col-sm-2 p-0 form-control-sm">
+                                                    <div class="input-group-append col col-sm-2 p-0 form-control-sm">
                                                         <span class="input-group-text currency"></span>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
+                                                <div class="form-group row mb-0">
                                                     <label for="activity_template[]"
-                                                           class="col-sm-2 pl-0 pr-1 col-form-label-sm text-right">Template <i class="fas fa-chevron-right collapseEditor"></i></label>
-                                                    <div class="col-sm-10 px-1">
-                                                    <textarea name="activity_template[]" id="activity_template"
-                                                              placeholder="Activity description template"
-                                                              class="form-control form-control-sm mediumEditor collapsed">
-                                                                {{$activity->template}}</textarea>
+                                                           class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Template
+                                                        <i class="fas fa-chevron-right collapseEditor"></i></label>
+                                                    <div class="col-8 col-sm-9 px-1">
+                                                        <textarea name="activity_template[]" id="activity_template"
+                                                                  placeholder="Activity description template"
+                                                                  class="form-control form-control-sm mediumEditor collapsed">
+                                                                    {{$activity->template}}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -176,7 +180,7 @@
                                 @endforeach
                             </div>
 
-<!--
+                        <!--
                             <div>
                                 <table class="table table-sm" id="activities_table"
                                        @if($activities->isEmpty()) style="display:none;" @endif>
@@ -192,8 +196,8 @@
                                     </thead>
 
                                     @foreach ($activities as $activity)
-                                        <tr>
-                                            <td><input type="hidden" name="activity_id[]" value="{{$activity->id}}">
+                            <tr>
+                                <td><input type="hidden" name="activity_id[]" value="{{$activity->id}}">
                                                 <input type="text" name="activity_name[]"
                                                        value="{{$activity->title}}" required
                                                        class="form-control form-control-sm">
@@ -259,91 +263,91 @@
                             </div>
                         </div>
                         -->
-                        <div class="form-group">
-                            <label for="project" class="form-group-header">Outputs</label>
-                            <div>
-                                <table class="table table-sm mw-400" id="outputs_table"
-                                       @if($outputs->isEmpty()) style="display: none;" @endif>
-                                    <thead>
-                                    <th scope="row">Output</th>
-                                    <th scope="row">Target</th>
-                                    <th></th>
-                                    </thead>
-                                    <!-- Here comes a foreach to show the outputs -->
+                            <div class="form-group">
+                                <label for="project" class="form-group-header">Outputs</label>
+                                <div>
+                                    <table class="table table-sm mw-400" id="outputs_table"
+                                           @if($outputs->isEmpty()) style="display: none;" @endif>
+                                        <thead>
+                                        <th scope="row">Output</th>
+                                        <th scope="row">Target</th>
+                                        <th></th>
+                                        </thead>
+                                        <!-- Here comes a foreach to show the outputs -->
 
-                                    @foreach ($outputs as $output)
-                                        <tr>
-                                            <td class="w-75"><input type="hidden" name="output_id[]"
-                                                                    value="{{$output->id}}">
-                                                <input type="text"
-                                                       name="output_indicator[]"
-                                                       value="{{$output->indicator}}"
-                                                       placeholder="Output name" required
-                                                       class="form-control form-control-sm">
-                                            </td>
-                                            <td class="w-25"><input type="text" name="output_target[]"
-                                                                    class="form-control form-control-sm"
-                                                                    placeholder="0"
-                                                                    value="{{$output->target}}" required>
-                                            </td>
-                                            <td>
-                                                <button type="button" name="remove"
-                                                        class="btn btn-outline-danger btn-sm remove"><i
-                                                            class="fas fa-minus"></i><span
-                                                            class="glyphicon glyphicon-minus"></span></button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </table>
-                                <button type="button" name="add_outputs"
-                                        class="btn btn-outline-secondary btn-sm add-outputs">Add
-                                    Output <i class="fas fa-plus"></i></button>
+                                        @foreach ($outputs as $output)
+                                            <tr>
+                                                <td class="w-75"><input type="hidden" name="output_id[]"
+                                                                        value="{{$output->id}}">
+                                                    <input type="text"
+                                                           name="output_indicator[]"
+                                                           value="{{$output->indicator}}"
+                                                           placeholder="Output name" required
+                                                           class="form-control form-control-sm">
+                                                </td>
+                                                <td class="w-25"><input type="text" name="output_target[]"
+                                                                        class="form-control form-control-sm"
+                                                                        placeholder="0"
+                                                                        value="{{$output->target}}" required>
+                                                </td>
+                                                <td>
+                                                    <button type="button" name="remove"
+                                                            class="btn btn-outline-danger btn-sm remove"><i
+                                                                class="fas fa-minus"></i><span
+                                                                class="glyphicon glyphicon-minus"></span></button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                    <button type="button" name="add_outputs"
+                                            class="btn btn-outline-secondary btn-sm add-outputs">Add
+                                        Output <i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="project" class="form-group-header">Outcomes</label>
+                                <div>
+                                    <table class="table table-sm mw-400" id="outcomes_table"
+                                           @if($project->outcomes->isEmpty()) style="display: none;" @endif>
+                                        <thead>
+                                        <th scope="row">Outcome</th>
+                                        <th></th>
+                                        </thead>
+
+                                        <!-- Here comes a foreach to show the outcomes -->
+                                        @foreach ($project->outcomes as $outcome)
+                                            <tr>
+                                                <td class="w-75"><input type="hidden" name="outcome_id[]"
+                                                                        value="{{$outcome->id}}">
+                                                    <input type="text"
+                                                           name="outcome_name[]"
+                                                           value="{{$outcome->name}}"
+                                                           placeholder="Outcome name" required
+                                                           class="form-control form-control-sm">
+                                                </td>
+                                                <td>
+                                                    <button type="button" name="remove"
+                                                            class="btn btn-outline-danger btn-sm remove"><i
+                                                                class="fas fa-minus"></i><span
+                                                                class="glyphicon glyphicon-minus"></span></button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                    <button type="button" name="add_outcomes"
+                                            class="btn btn-outline-secondary btn-sm add-outcomes">Add
+                                        Outcome <i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
+                                       @else value="Update"
+                                       @endempty
+                                       type="submit">
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="project" class="form-group-header">Outcomes</label>
-                            <div>
-                                <table class="table table-sm mw-400" id="outcomes_table"
-                                       @if($project->outcomes->isEmpty()) style="display: none;" @endif>
-                                    <thead>
-                                    <th scope="row">Outcome</th>
-                                    <th></th>
-                                    </thead>
-
-                                    <!-- Here comes a foreach to show the outcomes -->
-                                    @foreach ($project->outcomes as $outcome)
-                                        <tr>
-                                            <td class="w-75"><input type="hidden" name="outcome_id[]"
-                                                                    value="{{$outcome->id}}">
-                                                <input type="text"
-                                                       name="outcome_name[]"
-                                                       value="{{$outcome->name}}"
-                                                       placeholder="Outcome name" required
-                                                       class="form-control form-control-sm">
-                                            </td>
-                                            <td>
-                                                <button type="button" name="remove"
-                                                        class="btn btn-outline-danger btn-sm remove"><i
-                                                            class="fas fa-minus"></i><span
-                                                            class="glyphicon glyphicon-minus"></span></button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </table>
-                                <button type="button" name="add_outcomes"
-                                        class="btn btn-outline-secondary btn-sm add-outcomes">Add
-                                    Outcome <i class="fas fa-plus"></i></button>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
-                                   @else value="Update"
-                                   @endempty
-                                   type="submit">
-                        </div>
-                    </div>
                 </form>
 
                 <script>
@@ -360,8 +364,8 @@
                             $(this).text($('#project_currency option:selected').text());
                         });
                         $(document).on('click', '.collapseEditor', function () {
-                           $(this).closest('.form-group').find('.medium-editor-element').toggleClass("collapsed expanded");
-                           $(this).toggleClass("fa-chevron-right fa-chevron-down");
+                            $(this).closest('.form-group').find('.medium-editor-element').toggleClass("collapsed expanded");
+                            $(this).toggleClass("fa-chevron-right fa-chevron-down");
                         });
                         $(document).on('click', '.add-activities', function () {
                             $('#activities_table').show();

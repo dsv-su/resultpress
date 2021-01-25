@@ -22,6 +22,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ProjectController extends Controller
@@ -36,6 +37,10 @@ class ProjectController extends Controller
         //All spider-users can create projects
         $user->givePermissionTo('project-list');
         $user->givePermissionTo('project-create');
+        //If user should be redirected to profile setting page
+        if($user->setting == true) {
+            return redirect()->intended('/home');
+        }
         return redirect()->intended('/');
     }
 
@@ -43,6 +48,38 @@ class ProjectController extends Controller
      * Display a listing of the resource.
      *
      */
+
+    public function home()
+    {
+        /****
+        *   This is the first page the user is routed to. It shows the three sections if the user is a spider or administrator.
+         *  If the user is a Partner it shows the projects the user is assigned (invited) to
+        ****/
+
+        $data['program_areas'] = Area::all();
+
+        if ($user = Auth::user()) {
+            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
+
+                $data['user'] = User::find(auth()->user()->id);
+                $data['areas'] = Area::with('project_area.project.project_owner.user')->get();
+                $data['otherprojects'] = Project::doesntHave('project_area')->get();
+
+                return view('home.index',  $data);
+
+            } elseif ($user->hasRole(['Partner'])) {
+
+                $id = ProjectPartner::where('partner_id', $user->id)->pluck('project_id');
+                $projects = Project::with('project_owner.user', 'project_area.area')->whereIn('id', $id)->latest()->get();
+
+                return view('home.partner', ['projects' => $projects, 'user' => $user], $data);
+            }
+
+        } elseif (Auth::check()) return abort(403);
+
+        return redirect()->route('partner-login');
+    }
+
     public function index()
     {
         $program_areas = Area::all();
@@ -58,6 +95,8 @@ class ProjectController extends Controller
         } elseif (Auth::check()) return abort(403);
         else return redirect()->route('partner-login');
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -217,10 +256,12 @@ class ProjectController extends Controller
         $project->currency = request('project_currency') ?? null;
         $project->cumulative = request('project_cumulative');
         $id = $project->save();
+
+        //Update Program Area
+        foreach (ProjectArea::where('project_id', $project->id)->get() as $old_pa) {
+            ProjectArea::find($old_pa->id)->delete();
+        }
         if (request('project_area')) {
-            foreach (ProjectArea::where('project_id', $project->id)->get() as $old_pa) {
-                ProjectArea::find($old_pa->id)->delete();
-            }
             foreach (request('project_area') as $project_area) {
                 $new_pa = new ProjectArea();
                 if ($project->id) {
@@ -232,6 +273,7 @@ class ProjectController extends Controller
                 $new_pa->save();
             }
         }
+
 
 
         //Create permissions for a new project

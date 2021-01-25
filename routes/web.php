@@ -21,7 +21,8 @@ if (class_exists(AuthHandler::class))
 Route::get($login, 'SystemController@login')->name('login');
 
 Route::middleware('auth', 'entitlements')->group(function () {
-    Route::get('/', 'ProjectController@index')->name('project_home');
+    Route::get('/', 'ProjectController@home')->name('home');
+    Route::get('/projects', 'ProjectController@index')->name('project_home');
     Route::get('/shibboleth', 'ProjectController@shibboleth')->name('shibboleth');
     Route::get('/project/create', 'ProjectController@edit')->name('project_create');
     Route::post('/project', 'ProjectController@update')->name('update');
@@ -55,6 +56,10 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::resource('users','UserController');
     Route::post('/user/invite', 'UserController@process_invites')->name('process_invite');
     Route::get('/user/invite/{project}', 'UserController@invite_view')->name('invite_view');
+
+    //Profile
+    Route::get('/home', 'HomeController@index')->name('profile');
+    Route::post('/profile/{id}', 'HomeController@store')->name('profile_store');
 });
 
 // Local registration route
@@ -78,4 +83,4 @@ Route::get('/partner-login/{provider}/callback', 'Auth\ExternalRegisterControlle
 
 //Testroute(to be removed)
 Route::get('/server', 'TestController@server');
-Route::get('/home', 'HomeController@index')->name('home');
+

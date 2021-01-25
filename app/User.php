@@ -57,4 +57,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(ProjectUpdate::class);
     }
+    /**
+     * Get all of the projects for the user.
+     */
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_owners');
+    }
+
 }

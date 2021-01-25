@@ -29,7 +29,7 @@ class CheckEntitlement
         $match = 0;
         if(!$request->server('REMOTE_USER'))
         {
-            if($system->global->app_debug == true or Auth::check()) {
+            if($system->global->app_env == 'local' or Auth::check()) {
                 return $next($request);
             } else {
                 return redirect('partner-login');

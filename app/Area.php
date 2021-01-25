@@ -12,4 +12,13 @@ class Area extends Model
     {
         return $this->hasMany(ProjectArea::class);
     }
+    /**
+     * The projects that belong to the area.
+     */
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_areas');
+    }
+
+
 }

@@ -10,8 +10,14 @@
     <table class="my-3">
         <tr>
             <td>Project area:</td>
-            <td class="auto">@if (!empty($project->project_area_id)){{$project->project_area->name}}@else Not
-                set @endif</td>
+            <td class="auto">
+                @if (!empty($project->areas))
+                    @foreach($project->areas as $area)
+                    {{$area->name}}
+                    @endforeach
+                @else Not set
+                @endif
+            </td>
         </tr>
         <tr>
             <td>Project period:</td>

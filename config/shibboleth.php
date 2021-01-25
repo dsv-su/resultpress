@@ -74,7 +74,7 @@ return [
      */
 
     'entitlement' => $system_config['global']['authorization'],
-/*
+
     'user' => [
         'name' => 'displayName',
         'first_name' => 'givenName',
@@ -82,9 +82,9 @@ return [
         'email' => 'mail',
         'emplid' => 'eppn',
     ],
-*/
-    //'entitlement' => 'Shib-isMemberOf',
 
+    //'entitlement' => 'Shib-isMemberOf',
+/*
     'user' => [
         // fillable user model attribute => server variable
         'name' => 'Shib-cn',
@@ -93,7 +93,7 @@ return [
         'email' => 'Shib-mail',
         'emplid' => 'Shib-emplId',
     ],
-
+*/
     //The user model field (from the user array above) that should be used for authentication
     'user_authentication_field' => 'email',
 

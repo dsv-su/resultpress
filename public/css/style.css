@@ -344,3 +344,11 @@ tr.update > td {
 select[name="activity_reminder[]"] {
     width: 60px;
 }
+
+.multiselect-container li, button.multiselect {
+    padding-top: calc(.25rem + 1px);
+    padding-bottom: calc(.25rem + 1px);
+    font-size: .875rem;
+    color: inherit;
+    line-height: 1.5;
+}

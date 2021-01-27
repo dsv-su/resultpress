@@ -39,7 +39,7 @@ return [
     |
      */
 
-    'emulate_idp' => env('EMULATE_IDP', false),
+    'emulate_idp' => env('EMULATE_IDP', true),
     'emulate_idp_users' => [
         'admin' => [
             'Shib-cn' => 'Admin User',
@@ -74,7 +74,7 @@ return [
      */
 
     'entitlement' => $system_config['global']['authorization'],
-/*
+
     'user' => [
         'name' => 'displayName',
         'first_name' => 'givenName',
@@ -82,7 +82,7 @@ return [
         'email' => 'mail',
         'emplid' => 'eppn',
     ],
-*/
+
     //'entitlement' => 'Shib-isMemberOf',
 
     'user' => [

@@ -1,113 +1,85 @@
 @foreach($project->outcomes as $outcome)
-    @if ($outcome->completed)
-        <li class="list-group-item">{{$outcome->name}} <a href="#" class="badge badge-success"
-                                                          data-toggle="modal"
-                                                          data-target="#outcome_completed"
-                                                          data-outcome="{{$outcome->name}}"
-                                                          data-id="{{ $outcome->id }}">Completed
-                on {{$outcome->completed_on}}</a></li>
-
-        <div class="modal fade" id="outcome_completed" tabindex="-1" role="dialog"
-             aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Outcome
-                            completion: {{$outcome->name}}</h5>
-                        <button type="button" class="close" data-dismiss="modal"
-                                aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <p>Completed on {{$outcome->completed_on}}</p>
-                        </div>
-                        <div class="form-group">
-                            <label for="summary" class="col-form-label">Completion
-                                description:</label>
-                            <p class="form-control" id="summary"
-                               name="summary">{{$outcome->summary}}</p>
-                        </div>
-                        <div class="form-group">
-                            <label for="summary" class="col-form-label">Outputs status:</label>
-                            @foreach(json_decode($outcome->outputs, true) as $output_id => $output)
-                                <p>Output: {{$output['indicator']}} Value: {{$output['value']}}</p>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            Close
-                        </button>
-                    </div>
+    <div class="card">
+        <div class="card-header bg-white" id="heading-outcome-{{$outcome->id}}">
+            <div class="row">
+                <div class="col-auto">
+                    <h5 class="mb-0">
+                        <a class="btn @if($outcome->completed) btn-light @else btn-primary @endif"
+                           type="button" data-toggle="collapse"
+                           data-target="#collapse-outcome-{{$outcome->id}}"
+                           aria-expanded="false"
+                           aria-controls="collapse-outcome-{{$outcome->id}}">
+                            {{$outcome->name}}
+                        </a>
+                    </h5>
+                </div>
+                <div class="col-auto d-flex py-2 align-items-center">
+                    @if($outcome->completed)
+                        <span class="badge badge-success font-100">Completed on {{$outcome->completed_on}}</span>
+                    @else
+                        <span class="badge badge-light font-100">Not completed</span>
+                    @endif
                 </div>
             </div>
         </div>
-    @else
-        <li class="list-group-item">{{$outcome->name}} <a href="#" class="badge badge-primary"
-                                                          data-toggle="modal"
-                                                          data-target="#outcome_completion"
-                                                          data-outcome="{{$outcome->name}}"
-                                                          data-id="{{ $outcome->id }}">Mark as
-                complete</a>
-        </li>
-        <div class="modal fade" id="outcome_completion" tabindex="-1" role="dialog"
-             aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <form action="{{ route('outcome_update', $outcome) }}" method="POST">
-                    @method('PUT')
-                    @csrf
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Outcome
-                                completion: {{$outcome->name}}</h5>
-                            <button type="button" class="close" data-dismiss="modal"
-                                    aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <!--
-                                <div class="form-group">
-                                    <label for="completion_date"
-                                           class="col-form-label">Completed on:</label>
-                                    <input type="date" class="form-control" id="completion-date">
+        <div id="collapse-outcome-{{$outcome->id}}" class="collapse"
+             aria-labelledby="heading-outcome-{{$outcome->id}}"
+             data-parent="#outcomes">
+            <div class="card-body">
+                @if ($outcome->completed)
+                    <div class="p-2">
+                        <label for="summary" class="col-form-label">Completion
+                            description:</label>
+                        {{$outcome->summary}}
+                        <br>
+                        <label for="summary" class="col-form-label">Outputs status:</label>
+                        @foreach(json_decode($outcome->outputs, true) as $output_id => $output)
+                            <div class="row my-1">
+                                <div class="col-auto">{{$output['indicator']}}</div>
+                                <div class="col-auto"><span
+                                            class="badge badge-light font-100">{{$output['value']}}</span>
                                 </div>
-                                -->
-                                <input name="project" value="{{$project->id}}" hidden>
-                                <div class="form-group col-md-3 px-0">
-                                    <label for="project_area">Outputs covered</label><br>
-                                    <div class="col-md-4 py-2">
-                                        <select name="outcome_outputs[]" id="outcome_outputs"
-                                                class="custom-select"
-                                                multiple="multiple" required>
-                                            @foreach($outputs as $output)
-                                                <option value="{{$output->id}}" {{ old('output_id') == $output->id || in_array($output->id, json_decode($outcome->outputs, true)) ? 'selected':''}}>{{$output->indicator}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <form action="{{ route('outcome_update', $outcome) }}" method="POST">
+                        @method('PUT')
+                        @csrf
+                        <div class="p-2">
+                            <div class="form-group row">
+                                <div class="col-auto col-sm-4 col-md-3">
+                                    <input name="project" value="{{$project->id}}" hidden>
+                                    <label for="project_area" class="col-form-labe">Outputs covered:</label>
                                 </div>
-                                <div class="form-group">
+                                <div class="col-sm">
+                                    <select name="outcome_outputs[]" id="outcome_outputs"
+                                            class="custom-select"
+                                            multiple="multiple" required>
+                                        @foreach($outputs as $output)
+                                            <option value="{{$output->id}}" {{ old('output_id') == $output->id || in_array($output->id, json_decode($outcome->outputs, true)) ? 'selected':''}}>{{$output->indicator}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-auto col-sm-4 col-md-3">
                                     <label for="summary" class="col-form-label">Completion
                                         description:</label>
-                                    <textarea class="form-control" id="summary" name="summary"
-                                              placeholder="Describe the outcome completion summary"></textarea>
                                 </div>
-                            </form>
+                                <div class="col-sm">
+                                <textarea class="form-control" id="summary" name="summary"
+                                          placeholder="Describe the outcome completion summary"></textarea>
+                                </div>
+                            </div>
+                            <input class="btn btn-primary" value="Mark as complete" type="submit">
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                Close
-                            </button>
-                            <input class="btn btn-primary" value="Save" type="submit">
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                @endif
             </div>
         </div>
-    @endif
+    </div>
 @endforeach
 
 <script>

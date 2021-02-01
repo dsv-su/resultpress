@@ -37,7 +37,7 @@
                                             class="fas fa-chevron-right collapseEditor"></i></label>
                                 <div class="col px-1">
                                 <textarea rows="1"
-                                          class="form-control form-control-sm mediumEditor collapsed @error('project_description') is-danger @enderror"
+                                          class="form-control form-control-sm @error('project_description') is-danger @enderror"
                                           name="project_description" id="project_description"
                                 >{!! old('project_description', empty($project) ? '' : $project->description) !!}</textarea>
                                     @error('project_description')
@@ -195,7 +195,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-0">
-                                                <a name="remove" class="btn btn-outline-danger btn-sm remove remove ml-auto"><i class="fas fa-minus"></i></a>
+                                                <a name="remove" class="btn btn-outline-danger btn-sm remove remove ml-auto mt-1"><i class="far fa-trash-alt"></i></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -264,7 +264,7 @@
                                             <td>
                                                 <button type="button" name="remove"
                                                         class="btn btn-outline-danger btn-sm remove"><i
-                                                            class="fas fa-minus"></i><span
+                                                            class="far fa-trash-alt"></i><span
                                                             class="glyphicon glyphicon-minus"></span></button>
                                             </td>
                                         </tr>
@@ -319,8 +319,7 @@
                                                 <td>
                                                     <button type="button" name="remove"
                                                             class="btn btn-outline-danger btn-sm remove"><i
-                                                                class="fas fa-minus"></i><span
-                                                                class="glyphicon glyphicon-minus"></span></button>
+                                                                class="far fa-trash-alt"></i></button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -355,8 +354,7 @@
                                                 <td>
                                                     <button type="button" name="remove"
                                                             class="btn btn-outline-danger btn-sm remove"><i
-                                                                class="fas fa-minus"></i><span
-                                                                class="glyphicon glyphicon-minus"></span></button>
+                                                                class="far fa-trash-alt"></i></button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -408,7 +406,7 @@
                             html += '<td><select name="activity_reminder[]" class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select></td>';
                             html += '<td><input type="number" name="activity_reminder_due_days[]" class="form-control form-control-sm" value="7" size="1" required></td>';
                             html += '<td class="input-group"><input type="number" name="activity_budget[]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required><div class="input-group-append"><span class="input-group-text currency">' + currency + '</span></div></td>';
-                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
+                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="far fa-trash-alt"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
                             html += '</tr>';
                             html += '<tr class="update activity_template"><td colspan=8><table class="table mb-2"><tr><td><textarea placeholder="Activity template" name="activity_template[]" ' +
                                 'class="form-control form-control-sm mediumEditor"></textarea></td></tr></table></td></tr>';
@@ -422,7 +420,7 @@
                             html += '<input type="number" placeholder="7" value="7" name="activity_reminder_due_days[]" class="form-control form-control-sm text-right mx-1" style="width:60px;"><label for="activity_reminder_due_days[]" class="pl-0 pr-1 col-form-label-sm text-left">days before end</label></div></div>';
                             html += '<div class="form-group row"><label for="activity_budget[]" class="col col-sm-3 pl-1 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-3 pl-1 pr-0"><input type="number" name="activity_budget[]" placeholder="0" value=0 required class="form-control form-control-sm text-right"></div><div class="input-group-append col col-sm-2 p-0 form-control-sm"><span class="input-group-text currency"></span></div></div>';
                             html += '<div class="form-group row mb-0"><label for="activity_template[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Template<i class="fas fa-chevron-right collapseEditor"></i></label><div class="col-8 col-sm-9 px-1"><textarea name="activity_template[]" id="activity_template" placeholder="Activity description template" class="form-control form-control-sm mediumEditor collapsed"></textarea></div></div>';
-                            html += '<div class="form-group row mt-2 mb-0"><a name="remove" class="btn btn-outline-danger btn-sm remove remove ml-auto"><i class="fas fa-minus"></i></a></div></div></div></div>';
+                            html += '<div class="form-group row mt-2 mb-0"><a name="remove" class="btn btn-outline-danger btn-sm remove remove ml-auto mt-1"><i class="far fa-trash-alt"></i></a></div></div></div></div>';
 
                             $('#activities_list').append(html);
 
@@ -446,7 +444,7 @@
                             html += '<input type="hidden" name="output_id[]" value=0>';
                             html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Output name" required></td>';
                             html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required></td>';
-                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
+                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outputs_table').append(html);
                         });
                         $(document).on('click', '#activities_list .remove', function () {
@@ -472,7 +470,7 @@
                             html += '<tr>';
                             html += '<input type="hidden" name="outcome_id[]" value=0>';
                             html += '<td class="w-75"><input type="text" name="outcome_name[]" class="form-control form-control-sm" placeholder="Outcome name" required></td>';
-                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
+                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outcomes_table').append(html);
                         });
                         $('input[name="activity_start[]"]').on('change', function () {
@@ -503,7 +501,7 @@
                             }
                             // Add extra confirmation on empty fields
                             let confirmation = '';
-                            if (!$('.medium-editor-element[name=project_description]').text().trim()) {
+                            if (!$('textarea[name=project_description]').text().trim()) {
                                 confirmation += '\nDescription field is empty';
                             }
                             if (!$("#project_end").val()) {

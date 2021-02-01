@@ -19,12 +19,6 @@ div.searchrequest {
     margin: 0 auto;
 }
 
-form {
-    font-family: Nunito, sans-serif;
-    border-radius: 25px;
-    padding: 20px;
-    margin: 0 auto;
-}
 
 form > div.a {
     display: inline-block;
@@ -351,4 +345,8 @@ select[name="activity_reminder[]"] {
     font-size: .875rem;
     color: inherit;
     line-height: 1.5;
+}
+
+.font-100 {
+    font-size: 100% !important;
 }

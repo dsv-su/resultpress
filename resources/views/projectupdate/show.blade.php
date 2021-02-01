@@ -91,12 +91,16 @@
         </table>
     @endif
 
-    @if(!$project_update->project->outcomes->isEmpty())
-        @can('project-create')
-            <h4>Outcomes</h4>
+    @can('project-create')
+    <h5 class="my-4">Outcomes</h5>
+    @if (!$project_update->project->outcomes->isEmpty())
+        <div class="accordion" id="outcomes">
             @include('project.outcomes')
-        @endcan
+        </div>
+    @else
+        The project has no outcomes.
     @endif
+    @endcan
 
     @if(!$files->isEmpty())
         <div class="my-1">
@@ -131,7 +135,7 @@
             @csrf
             <div class="form-group">
                 <div class="form-row my-2">
-                        <h4>Comments</h4>
+                    <h4>Comments</h4>
                 </div>
                 <div class="form-row my-2">
                     <label for="partner_comment">Partner</label>

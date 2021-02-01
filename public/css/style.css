@@ -19,12 +19,6 @@ div.searchrequest {
     margin: 0 auto;
 }
 
-form {
-    font-family: Nunito, sans-serif;
-    border-radius: 25px;
-    padding: 20px;
-    margin: 0 auto;
-}
 
 form > div.a {
     display: inline-block;
@@ -324,4 +318,35 @@ tr.update > td {
 
 .medium-editor-toolbar li button {
     background-color: orange;
+}
+
+.medium-editor-element.expanded {
+    height: 100%;
+    overflow: visible;
+}
+
+.medium-editor-element.collapsed {
+    height: 29px !important;
+    overflow: hidden;
+}
+
+.collapseEditor {
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+select[name="activity_reminder[]"] {
+    width: 60px;
+}
+
+.multiselect-container li, button.multiselect {
+    padding-top: calc(.25rem + 1px);
+    padding-bottom: calc(.25rem + 1px);
+    font-size: .875rem;
+    color: inherit;
+    line-height: 1.5;
+}
+
+.font-100 {
+    font-size: 100% !important;
 }

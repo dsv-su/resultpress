@@ -45,119 +45,25 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" id="updates-tab" data-toggle="tab" href="#updates" role="tab"
-                       aria-controls="updates">Updates @if ($project->pending_updates()->count()) <span
-                                class="badge badge-info">{{$project->pending_updates()->count()}}</span><span
-                                class="sr-only">pending updates</span> @endif</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" aria-controls="activities" href="#activities" role="tab"
-                       id="activities-tab">Activities</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" aria-controls="outcomes" href="#outcomes" role="tab"
-                       id="outcomes-tab">Outcomes</a>
-                </li>
-            </ul>
+    @if($project->pending_updates()->count())
+        <h5 class="my-4">Pending updates</h5>
+        <div class="alert alert-info" role="alert">
+            @foreach ($project->pending_updates()->all() as $index => $pu)
+                <div class="row">
+                    <div class="col-auto d-flex align-items-center">#{{$index+1}} created on {{$pu->created_at->format('d/m/Y')}}
+                        by {{ $pu->user->name }} <span class="badge badge-warning mx-2">Pending approval</span>
+                    </div>
+                    <div class="col-auto">
+                        <a href="/project/update/{{$pu->id}}" class="btn btn-outline-secondary btn-sm">Show
+                            <i class="fas fa-info-circle"></i></a>
+                        <a href="/project/update/{{$pu->id}}/review"
+                           class="btn btn-outline-secondary btn-sm">Review
+                            <i class="fas fa-highlighter"></i></a>
+                    </div>
+                </div>
+            @endforeach
         </div>
-
-        <div class="card-body">
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="updates" role="tabpanel" aria-labelledby="updates-tab">
-                    @if($project->pending_updates()->count())
-                        @foreach ($project->pending_updates()->all() as $index => $pu)
-                            <p>#{{$index+1}} created on {{$pu->created_at->format('d/m/Y')}} by {{ $pu->user->name }}
-                                @if($pu->status == 'draft') <span class="badge badge-danger">Draft</span>
-                                @elseif($pu->status == 'submitted') <span
-                                        class="badge badge-warning">Pending approval</span>
-                                @elseif($pu->status == 'approved') <span class="badge badge-success">Approved</span>
-                                @endif<br/>
-                                @if($pu->summary){{$pu->summary}} @else No summary provided @endif
-                                <br/>
-                                @if ($pu->status == 'draft')
-                                    <a href="/project/update/{{$pu->id}}/edit"
-                                       class="btn btn-outline-secondary btn-sm">Edit <i class="fas fa-info-circle"></i></a>
-                                    <a href="/project/update/{{$pu->id}}/delete"
-                                       class="btn btn-outline-secondary btn-sm"
-                                       onclick="return confirm('Are you sure you want to delete this update?');">Delete
-                                        <i class="fas fa-trash-alt"></i></a>
-                                @endif
-                                <a href="/project/update/{{$pu->id}}" class="btn btn-outline-secondary btn-sm">Show
-                                    <i class="fas fa-info-circle"></i></a>
-                                @if ($pu->status != 'draft')
-                                    <a href="/project/update/{{$pu->id}}/review"
-                                       class="btn btn-outline-secondary btn-sm">Review
-                                        <i class="fas fa-highlighter"></i></a>
-                            @endif
-                            <p/>
-                        @endforeach
-                    @else The project has no pending updates.
-                    @endif
-                </div>
-                <div class="tab-pane fade show" id="activities" role="tabpanel" aria-labelledby="activities-tab">
-                    @if (!$activities->isEmpty())
-                        <div class="accordion" id="accordionExample">
-                            @foreach ($activities as $index => $a)
-                                <div class="card">
-                                    <div class="card-header bg-white" id="heading-activity-{{$a->id}}">
-                                        <div class="row">
-                                            <div class="col-auto">
-                                                <h5 class="mb-0">
-                                                    <a class="btn btn-light @if(!$a->comments) disabled @endif"
-                                                       type="button" data-toggle="collapse"
-                                                       data-target="#collapse-activity-{{$a->id}}"
-                                                       aria-expanded="false"
-                                                       aria-controls="collapseactivity-{{$a->id}}">
-                                                        {{$a->title}} @if ($a->comments) <span
-                                                                class="badge badge-dark">{{count($a->comments)}}</span> @endif
-                                                    </a>
-                                                </h5>
-                                            </div>
-                                            <div class="col-auto d-flex py-2 align-items-center">
-                                                @if($a->status == 1)
-                                                    <span class="badge badge-info font-100">In progress {{$a->statusdate}}</span>
-                                                @elseif($a->status == 2)
-                                                    <span class="badge badge-warning">Delayed {{$a->statusdate}}</span>
-                                                @elseif($a->status == 3)
-                                                    <span class="badge badge-success">Done {{$a->statusdate}}</span>
-                                                @elseif($a->status == 0)
-                                                    <span class="badge badge-light font-100">Not started</span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    @if ($a->comments)
-                                        <div id="collapse-activity-{{$a->id}}" class="collapse"
-                                             aria-labelledby="headin-activity-{{$a->id}}"
-                                             data-parent="#accordionExample">
-                                            <div class="card-body">
-                                                @foreach ($a->comments as $puindex => $comment)
-                                                    @if (!$project->cumulative) <p>
-                                                        <b>Update {{$puindex}}</b>: @endif {!! $comment !!}</p>
-                                                    @endforeach
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
-                        </div>
-                    @else The project has no activities.
-                    @endif
-
-                </div>
-                <div class="tab-pane fade show" id="outcomes" role="tabpanel" aria-labelledby="outcomes-tab">
-                    <ul class="list-group">
-                        @include('project.outcomes')
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    @endif
 
     <h5 class="my-4">Activities</h5>
     @if (!$activities->isEmpty())
@@ -221,11 +127,11 @@
 
     <h5 class="my-4">Outputs</h5>
     @if (!$outputs->isEmpty())
-        <div class="col-md-6 p-2">
+        <div class="col p-2">
             @foreach ($outputs as $o)
                 <div class="row my-1">
-                    <div class="col-auto col-sm">{{$o->indicator}}</div>
-                    <div class="col-auto col-sm">
+                    <div class="col-auto">{{$o->indicator}}</div>
+                    <div class="col-auto">
                         <span
                                 class="badge font-100 @if($o->valuestatus == 1) badge-info @elseif($o->valuestatus == 2) badge-warning @elseif($o->valuestatus == 3) badge-success @else badge-light @endif">{{$o->valuesum}} @if ($o->status == 'custom')
                                 (unplanned) @else / {{$o->target}} @endif

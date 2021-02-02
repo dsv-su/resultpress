@@ -40,8 +40,8 @@
         @endif
         <div class="row my-1">
             <div class="col-sm font-weight-bold">Budget:</div>
-            <div class="col-sm">{{$project->moneyspent}} {{$project->getCurrencySymbol()}}
-                / {{$project->budget}} {{$project->getCurrencySymbol()}}</div>
+            <div class="col-sm"><span @if ($project->moneyspent > $project->budget) class="badge badge-danger font-100" @endif> {{$project->moneyspent}} {{$project->getCurrencySymbol()}}
+                    / {{$project->budget}} {{$project->getCurrencySymbol()}}</span></div>
         </div>
     </div>
 
@@ -50,7 +50,8 @@
         <div class="alert alert-info" role="alert">
             @foreach ($project->pending_updates()->all() as $index => $pu)
                 <div class="row">
-                    <div class="col-auto d-flex align-items-center">#{{$index+1}} created on {{$pu->created_at->format('d/m/Y')}}
+                    <div class="col-auto d-flex align-items-center">#{{$index+1}} created
+                        on {{$pu->created_at->format('d/m/Y')}}
                         by {{ $pu->user->name }} <span class="badge badge-warning mx-2">Pending approval</span>
                     </div>
                     <div class="col-auto">
@@ -85,10 +86,11 @@
                                 </h5>
                             </div>
                             <div class="col-auto d-flex py-2 align-items-center">
-                                @if ($a->moneyspent > $a->budget)
-                                    <span class="badge badge-danger font-100 mr-2">
-                                @else <span class="badge badge-info font-100 mr-2">
-                                @endif {{$a->moneyspent}} {{$project->getCurrencySymbol()}} / {{ceil($a->budget)}} {{$project->getCurrencySymbol()}}</span>
+                                <span class="badge font-100 @if ($a->moneyspent > $a->budget) badge-danger @else badge-info @endif">
+                                    {{$a->moneyspent}} {{$project->getCurrencySymbol()}} / {{ceil($a->budget)}} {{$project->getCurrencySymbol()}}
+                                </span>
+                            </div>
+                            <div class="col-auto d-flex py-2 align-items-center">
                                 @if($a->status == 1)
                                     <span class="badge badge-info font-100">In progress {{$a->statusdate}}</span>
                                 @elseif($a->status == 2)

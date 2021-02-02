@@ -67,7 +67,7 @@
 
     <h5 class="my-4">Activities</h5>
     @if (!$activities->isEmpty())
-        <div class="accordion">
+        <div class="accordion" id="activities">
             @foreach ($activities as $index => $a)
                 <div class="card">
                     <div class="card-header bg-white" id="heading-activity-{{$a->id}}">
@@ -85,6 +85,10 @@
                                 </h5>
                             </div>
                             <div class="col-auto d-flex py-2 align-items-center">
+                                @if ($a->moneyspent > $a->budget)
+                                    <span class="badge badge-danger font-100 mr-2">
+                                @else <span class="badge badge-info font-100 mr-2">
+                                @endif {{$a->moneyspent}} {{$project->getCurrencySymbol()}} / {{ceil($a->budget)}} {{$project->getCurrencySymbol()}}</span>
                                 @if($a->status == 1)
                                     <span class="badge badge-info font-100">In progress {{$a->statusdate}}</span>
                                 @elseif($a->status == 2)
@@ -101,7 +105,7 @@
                     @if ($a->comments)
                         <div id="collapse-activity-{{$a->id}}" class="collapse"
                              aria-labelledby="headin-activity-{{$a->id}}"
-                             data-parent="#accordionExample">
+                             data-parent="#activities">
                             <div class="card-body">
                                 @foreach ($a->comments as $puindex => $comment)
                                     @if (!$project->cumulative) <p>

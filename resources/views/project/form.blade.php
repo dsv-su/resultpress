@@ -19,8 +19,8 @@
                     <div class="form-group">
                         <label for="activities_list" class="form-group-header">Details</label>
                         <div class="col-lg-6 my-2 px-2" id="project_details" style="min-width: 16rem;">
-                            <div class="form-row row">
-                                <label for="project_name" class="col-3 col-form-label-sm">Name</label>
+                            <div class="form-row mb-1 row">
+                                <label for="project_name" class="col-4 col-sm-3 col-form-label-sm">Name</label>
                                 <div class="px-1 col">
                                     <input class="form-control form-control-sm @error('project_name') is-danger @enderror"
                                            type="text" name="project_name" id="project_name"
@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                             <div class="form-row row">
-                                <label for="project_description" class="col-3 col-form-label-sm">Description <i
+                                <label for="project_description" class="col-4 col-sm-3 col-form-label-sm">Description <i
                                             class="fas fa-chevron-right collapseEditor"></i></label>
                                 <div class="col px-1">
                                 <textarea rows="1"
@@ -47,7 +47,7 @@
                                 </div>
                             </div>
                             <div class="form-row row">
-                                <label for="project_area" class="col-3 col-form-label-sm">Area</label>
+                                <label for="project_area" class="col-4 col-sm-3 col-form-label-sm">Area</label>
                                 <div class="col px-1">
                                     <select name="project_area[]" id="project_area" class="custom-select-sm"
                                             multiple="multiple">
@@ -108,7 +108,7 @@
                                     <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
                                         <div class="card bg-light m-auto">
                                             <div class="card-body pb-1">
-                                                <div class="form-group row">
+                                                <div class="form-group mb-1 row">
                                                     <input type="hidden" name="activity_id[]" value="{{$activity->id}}">
                                                     <label for="activity_name[]"
                                                            class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label>
@@ -118,16 +118,17 @@
                                                                class="form-control form-control-sm">
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
+                                                <div class="form-group mb-1 row">
                                                     <label for="activity_name[]"
                                                            class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description</label>
                                                     <div class="col-8 col-sm-9 px-1">
                                                         <textarea type="text" name="activity_description[]"
                                                                   id="activity_description" required
-                                                                  class="form-control form-control-sm">{{$activity->description}}</textarea>
+                                                                  class="form-control form-control-sm"
+                                                                  placeholder="Description">{{$activity->description}}</textarea>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
+                                                <div class="form-group mb-1 row">
                                                     <label for="activity_start[]"
                                                            class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label>
                                                     <div class="col-8 col-sm-4 px-1">
@@ -143,7 +144,7 @@
                                                                class="form-control form-control-sm datepicker">
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
+                                                <div class="form-group mb-1 row">
                                                     <label for="activity_reminder[]"
                                                            class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email
                                                         reminder</label>
@@ -171,9 +172,9 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group row">
+                                                <div class="form-group mb-1 row">
                                                     <label for="activity_budget[]"
-                                                           class="col col-sm-3 pl-1 pr-1 col-form-label-sm text-right">Budget</label>
+                                                           class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label>
                                                     <div class="col col-sm-3 pl-1 pr-0">
                                                         <input type="number" name="activity_budget[]" placeholder="0"
                                                                value="{{$activity->budget}}" required
@@ -195,7 +196,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-0">
-                                                <a name="remove" class="btn btn-outline-danger btn-sm remove remove ml-auto mt-1"><i class="far fa-trash-alt"></i></a>
+                                                    <a name="remove"
+                                                       class="btn btn-outline-danger btn-sm remove remove ml-auto mt-1"><i
+                                                                class="far fa-trash-alt"></i></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -290,7 +293,7 @@
                         </div>
                         -->
                             <div class="form-group">
-                                <label for="project" class="form-group-header">Outputs</label>
+                                <label for="outputs_table" class="form-group-header">Outputs</label>
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
                                     <table class="table table-sm" id="outputs_table"
                                            @if($outputs->isEmpty()) style="display: none;" @endif>
@@ -331,7 +334,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="project" class="form-group-header">Outcomes</label>
+                                <label for="outcomes_table" class="form-group-header">Outcomes</label>
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
                                     <table class="table table-sm" id="outcomes_table"
                                            @if($project->outcomes->isEmpty()) style="display: none;" @endif>
@@ -412,13 +415,13 @@
                                 'class="form-control form-control-sm mediumEditor"></textarea></td></tr></table></td></tr>';
                             */
 
-                            html += '<div class="col-lg-6 my-2 px-2" style="min-width: 16rem;"><div class="card bg-light m-auto"><div class="card-body pb-1"><div class="form-group row"><input type="hidden" name="activity_id[]" value=0><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label><div class="col-8 col-sm-9 px-1"><input type="text" placeholder="Name" name="activity_name[]" required class="form-control form-control-sm"></div></div>';
-                            html += '<div class="form-group row"><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description</label><div class="col-8 col-sm-9 px-1"><textarea type="text" name="activity_description[]" id="activity_description" required class="form-control form-control-sm" rows="2"></textarea></div></div>';
-                            html += '<div class="form-group row"><label for="activity_start[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_start[]" placeholder="Start date" required class="form-control form-control-sm datepicker"></div>';
+                            html += '<div class="col-lg-6 my-2 px-2" style="min-width: 16rem;"><div class="card bg-light m-auto"><div class="card-body pb-1"><div class="form-group mb-1 row"><input type="hidden" name="activity_id[]" value=0><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label><div class="col-8 col-sm-9 px-1"><input type="text" placeholder="Name" name="activity_name[]" required class="form-control form-control-sm"></div></div>';
+                            html += '<div class="form-group mb-1 row"><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description</label><div class="col-8 col-sm-9 px-1"><textarea type="text" name="activity_description[]" id="activity_description" required class="form-control form-control-sm" rows="2" placeholder="Description"></textarea></div></div>';
+                            html += '<div class="form-group mb-1 row"><label for="activity_start[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_start[]" placeholder="Start date" required class="form-control form-control-sm datepicker"></div>';
                             html += '<label for="activity_end[]" class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_end[]" placeholder="End date" required class="form-control form-control-sm datepicker"></div></div>';
-                            html += '<div class="form-group row"><label for="activity_reminder[]" class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email reminder</label><div class="col-8 col-sm-9 px-1 form-inline"><select name="activity_reminder[]" class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select>';
+                            html += '<div class="form-group mb-1 row"><label for="activity_reminder[]" class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email reminder</label><div class="col-8 col-sm-9 px-1 form-inline"><select name="activity_reminder[]" class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select>';
                             html += '<input type="number" placeholder="7" value="7" name="activity_reminder_due_days[]" class="form-control form-control-sm text-right mx-1" style="width:60px;"><label for="activity_reminder_due_days[]" class="pl-0 pr-1 col-form-label-sm text-left">days before end</label></div></div>';
-                            html += '<div class="form-group row"><label for="activity_budget[]" class="col col-sm-3 pl-1 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-3 pl-1 pr-0"><input type="number" name="activity_budget[]" placeholder="0" value=0 required class="form-control form-control-sm text-right"></div><div class="input-group-append col col-sm-2 p-0 form-control-sm"><span class="input-group-text currency"></span></div></div>';
+                            html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-3 pl-1 pr-0"><input type="number" name="activity_budget[]" placeholder="0" value=0 required class="form-control form-control-sm text-right"></div><div class="input-group-append col col-sm-2 p-0 form-control-sm"><span class="input-group-text currency"></span></div></div>';
                             html += '<div class="form-group row mb-0"><label for="activity_template[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Template<i class="fas fa-chevron-right collapseEditor"></i></label><div class="col-8 col-sm-9 px-1"><textarea name="activity_template[]" id="activity_template" placeholder="Activity description template" class="form-control form-control-sm mediumEditor collapsed"></textarea></div></div>';
                             html += '<div class="form-group row mt-2 mb-0"><a name="remove" class="btn btn-outline-danger btn-sm remove remove ml-auto mt-1"><i class="far fa-trash-alt"></i></a></div></div></div></div>';
 
@@ -449,7 +452,6 @@
                         });
                         $(document).on('click', '#activities_list .remove', function () {
                             $(this).closest('.col-lg-6').remove();
-
                         });
                         $(document).on('click', '.remove', function () {
                             $(this).closest('tr').remove();

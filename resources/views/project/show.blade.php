@@ -10,11 +10,11 @@
 
     <div class="my-3 col-md-6 card bg-light p-2">
         <div class="row my-1">
-            <div class="col-sm font-weight-bold">Project area:</div>
+            <div class="col-sm font-weight-bold">Project area(s):</div>
             <div class="col-sm">
-                @if (!empty($project->areas))
-                    @foreach($project->areas as $area)
-                        {{$area->name}}
+                @if (!$project->areas->isEmpty())
+                    @foreach($project->areas as $k => $area)
+                        {{$area->name}}@if ($k+1<count($project->areas)),@endif
                     @endforeach
                 @else Not set
                 @endif
@@ -40,8 +40,9 @@
         @endif
         <div class="row my-1">
             <div class="col-sm font-weight-bold">Budget:</div>
-            <div class="col-sm"><span @if ($project->moneyspent > $project->budget) class="badge badge-danger font-100" @endif> {{$project->moneyspent}} {{$project->getCurrencySymbol()}}
-                    / {{$project->budget}} {{$project->getCurrencySymbol()}}</span></div>
+            <div class="col-sm"><span
+                        @if ($project->moneyspent > $project->budget) class="badge badge-danger font-100" @endif> {{$project->moneyspent ?? 0}} {{$project->getCurrencySymbol()}}
+                    / {{$project->budget ?? 0}} {{$project->getCurrencySymbol()}}</span></div>
         </div>
     </div>
 
@@ -66,7 +67,7 @@
         </div>
     @endif
 
-    <h5 class="my-4">Activities</h5>
+    <h5 class="mb-2 mt-4">Activities</h5>
     @if (!$activities->isEmpty())
         <div class="accordion" id="activities">
             @foreach ($activities as $index => $a)
@@ -87,7 +88,7 @@
                             </div>
                             <div class="col-auto d-flex py-2 align-items-center">
                                 <span class="badge font-100 @if ($a->moneyspent > $a->budget) badge-danger @else badge-info @endif">
-                                    {{$a->moneyspent}} {{$project->getCurrencySymbol()}} / {{ceil($a->budget)}} {{$project->getCurrencySymbol()}}
+                                    {{$a->moneyspent ?? 0}} {{$project->getCurrencySymbol()}} / {{ceil($a->budget) ?? 0}} {{$project->getCurrencySymbol()}}
                                 </span>
                             </div>
                             <div class="col-auto d-flex py-2 align-items-center">
@@ -121,7 +122,7 @@
     @else The project has no activities.
     @endif
 
-    <h5 class="my-4">Outcomes</h5>
+    <h5 class="mt-4">Outcomes</h5>
     @if (!$project->outcomes->isEmpty())
         <div class="accordion" id="outcomes">
             @include('project.outcomes')
@@ -131,17 +132,16 @@
     @endif
 
 
-    <h5 class="my-4">Outputs</h5>
+    <h5 class="mt-4">Outputs</h5>
     @if (!$outputs->isEmpty())
         <div class="col p-2">
             @foreach ($outputs as $o)
                 <div class="row my-1">
-                    <div class="col-auto">{{$o->indicator}}</div>
-                    <div class="col-auto">
-                        <span
-                                class="badge font-100 @if($o->valuestatus == 1) badge-info @elseif($o->valuestatus == 2) badge-warning @elseif($o->valuestatus == 3) badge-success @else badge-light @endif">{{$o->valuesum}} @if ($o->status == 'custom')
+                    <div class="col">
+                    <span>{{$o->indicator}}<span
+                                class="badge ml-2 font-100 @if($o->valuestatus == 1) badge-info @elseif($o->valuestatus == 2) badge-warning @elseif($o->valuestatus == 3) badge-success @else badge-light @endif">{{$o->valuesum}} @if ($o->status == 'custom')
                                 (unplanned) @else / {{$o->target}} @endif
-                        </span>
+                        </span></span>
                     </div>
                 </div>
             @endforeach

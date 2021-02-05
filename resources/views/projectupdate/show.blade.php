@@ -2,68 +2,33 @@
 
 @section('content')
     <div class="row justify-content-between">
-        <div class="col-6"><h4>{{ $project->name }}: Update #{{$project_update->index}}</h4></div>
-        <div class="col-sm-auto field auto d-flex align-items-center">
-            <span>{{$project_update->created_at->format('d/m/Y')}}</span>
+        <div class="col-6"><h4>{{ $project->name }}: Update #{{$project_update->index}} </h4></div>
+        <div class="col-sm-auto d-flex align-items-center">
+            @if($project_update->status == 'draft') <span class="badge badge-warning font-100">Draft</span>
+            @elseif($project_update->status == 'submitted') <span class="badge badge-info font-100">Submitted</span>
+            @elseif($project_update->status == 'approved') <span class="badge badge-success font-100">Approved</span>
+            @endif
+            <span class="badge badge-info ml-2 font-100">{{$project_update->created_at->format('d/m/Y')}}</span>
         </div>
-    </div>
-    <div>
-        @if($project_update->status == 'draft') <span class="badge badge-danger">Draft</span>
-        @elseif($project_update->status == 'submitted') <span class="badge badge-warning">Submitted</span>
-        @elseif($project_update->status == 'approved') <span class="badge badge-success">Approved</span>
-        @endif
     </div>
     <p><a href="{{ route('projectupdate_index', $project_update->project_id) }}">Back to project updates list</a></p>
 
+
     @if(!$activity_updates->isEmpty())
-        <h4>Covered activities</h4>
-        <table class="table w-100" id="activities_table">
-            <thead class="text-nowrap">
-            <th>Activity</th>
-            <th>Status</th>
-            <th>Money spent</th>
-            <th>Date(s)</th>
-            </thead>
-            @foreach($activity_updates as $au)
-                <tr>
-                    <td>{{$au->title}}</td>
-                    @if($au->status == 1)
-                        <td class="status inprogress text-nowrap">In progress</td>
-                    @elseif($au->status == 2)
-                        <td class="status delayed text-nowrap">Delayed</td>
-                    @elseif($au->status == 3)
-                        <td class="status done text-nowrap">Done</td>
-                    @endif
-                    <td class="text-nowrap">{{$au->money}} {{$au->activity->project->getCurrencySymbol()}}</td>
-                    <td class="text-nowrap">@if ($au->date) {{$au->date->format('d/m/Y')}} @endif</td>
-                </tr>
-                <tr class="update">
-                    <td colspan=4>
-                        <table class="table @if(!$review) mb-2 @else mb-0 @endif">
-                            <tr>
-                                <td>{!!$au->comment!!}</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                @if($review)
-                    <tr class="update">
-                        <td colspan=4>
-                            <table class="table mb-2">
-                                <tr>
-                                    <td class="derived">{{$au->budgetstring}}<br/>{{$au->deadlinestring}}</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                @endif
-            @endforeach
-        </table>
+        <label for="aus_list" class="form-group-header">Covered activities</label>
+        <div class="d-flex flex-wrap" id="aus_list">
+                @foreach($activity_updates as $au)
+                    <div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;">
+                        @include('project.activity_update', ['au' => $au, 'a' => $au->activity, 'show' => true, 'review' => $review])
+                    </div>
+                @endforeach
+
+        </div>
     @endif
 
     @if(!$output_updates->isEmpty())
-        <h4>Affected outputs</h4>
-        <table class="table mw-400" id="activities_table">
+        <label for="outputs_table" class="form-group-header mt-4">Affected outputs</label>
+        <table class="table mw-400" id="outputs_table">
             <thead>
             <th>Output</th>
             <th>Value</th>
@@ -92,7 +57,7 @@
     @endif
 
     @can('project-create')
-    <h5 class="my-4">Outcomes</h5>
+        <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
     @if (!$project_update->project->outcomes->isEmpty())
         <div class="accordion" id="outcomes">
             @include('project.outcomes')
@@ -104,8 +69,8 @@
 
     @if(!$files->isEmpty())
         <div class="my-1">
-            <h5>Attachments:</h5>
-            <div>
+            <label for="attachments" class="form-group-header mt-4">Attachments</label>
+            <div id="attachments">
                 @foreach($files as $file)
                     <span id="uploaded_file" class="d-block"><a href="{{$file->path}}"
                                                                 target="_blank">{{$file->name}}</a></span>
@@ -116,7 +81,7 @@
 
     @if ($project_update->summary)
         <div class="my-1">
-            <h4>Summary</h4>
+            <label for="outcomes" class="form-group-header mt-4">Summary</label>
             <table class="table table-striped table-bordered">
                 <tr>
                     <td>{{$project_update->summary}}</td>
@@ -126,7 +91,7 @@
     @endif
 
     @if ($project_update->status == 'draft')
-        <a href="/project/update/{{$project_update->id}}/edit" role="button" class="btn btn-warning">Edit</a>
+        <a href="/project/update/{{$project_update->id}}/edit" role="button" class="btn btn-primary">Edit</a>
     @endif
 
     @if($review)
@@ -135,11 +100,11 @@
             @csrf
             <div class="form-group">
                 <div class="form-row my-2">
-                    <h4>Comments</h4>
+                    <label for="outcomes" class="form-group-header mt-4">Comments</label>
                 </div>
                 <div class="form-row my-2">
                     <label for="partner_comment">Partner</label>
-                    <textarea rows=4 class="form-control form-control-sm @error('partner_comment') is-danger @enderror"
+                    <textarea rows=4 placeholder="Partner's comment" class="form-control form-control-sm @error('partner_comment') is-danger @enderror"
                               name="partner_comment">{{ old('partner_comment', empty($project_update) ? '' : $project_update->partner_comment) }}</textarea>
                     @error('partner_comment')
                     <div class="text-danger">{{ $errors->first('partner_comment') }}</div>
@@ -148,7 +113,7 @@
                 @can('project-create')
                     <div class="form-row my-2">
                         <label for="internal_comment">Spider's internal</label>
-                        <textarea rows=4
+                        <textarea rows=4 placeholder="Spider's internal comment"
                                   class="form-control form-control-sm @error('internal_comment') is-danger @enderror"
                                   name="internal_comment">{{ old('internal_comment', empty($project_update) ? '' : $project_update->internal_comment) }}</textarea>
                         @error('internal_comment')
@@ -185,4 +150,16 @@
             @endif
         @endif
     @endif
+
+    <script>
+        $(document).ready(function () {
+            let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}, toolbar: false});
+            $(document).on('click', '.collapseEditor', function () {
+                $(this).closest('.form-group').find('.medium-editor-element').toggleClass("collapsed expanded");
+                $(this).toggleClass("fa-chevron-right fa-chevron-down");
+            });
+        });
+
+    </script>
+
 @endsection

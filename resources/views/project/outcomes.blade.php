@@ -4,20 +4,22 @@
             <div class="row">
                 <div class="col-auto">
                     <h5 class="mb-0">
-                        <a class="btn @if($outcome->completed) btn-light @else btn-primary @endif"
-                           type="button" data-toggle="collapse"
-                           data-target="#collapse-outcome-{{$outcome->id}}"
-                           aria-expanded="false"
-                           aria-controls="collapse-outcome-{{$outcome->id}}">
+                        <span class="btn cursor-default">
                             {{$outcome->name}}
-                        </a>
+                        </span>
                     </h5>
                 </div>
                 <div class="col-auto d-flex py-2 align-items-center">
                     @if($outcome->completed)
-                        <span class="badge badge-success font-100">Completed on {{$outcome->completed_on}}</span>
+                        <a href="#" class="badge badge-success font-100" data-toggle="collapse"
+                           data-target="#collapse-outcome-{{$outcome->id}}"
+                           aria-expanded="false"
+                           aria-controls="collapse-outcome-{{$outcome->id}}">Completed on {{$outcome->completed_on}}</a>
                     @else
-                        <span class="badge badge-light font-100">Not completed</span>
+                        <a href="#" class="badge badge-primary font-100" data-toggle="collapse"
+                           data-target="#collapse-outcome-{{$outcome->id}}"
+                           aria-expanded="false"
+                           aria-controls="collapse-outcome-{{$outcome->id}}">Mark as complete</a>
                     @endif
                 </div>
             </div>
@@ -35,9 +37,9 @@
                         <label for="summary" class="col-form-label">Outputs status:</label>
                         @foreach(json_decode($outcome->outputs, true) as $output_id => $output)
                             <div class="row my-1">
-                                <div class="col-auto">{{$output['indicator']}}</div>
-                                <div class="col-auto"><span
-                                            class="badge badge-light font-100">{{$output['value']}}</span>
+                                <div class="col">
+                                <span>{{$output['indicator']}} <span
+                                            class="badge ml-2 badge-light font-100">{{$output['value']}}</span></span>
                                 </div>
                             </div>
                         @endforeach
@@ -73,7 +75,7 @@
                                           placeholder="Describe the outcome completion summary"></textarea>
                                 </div>
                             </div>
-                            <input class="btn btn-primary" value="Mark as complete" type="submit">
+                            <input class="btn btn-primary" value="Save" type="submit">
                         </div>
                     </form>
                 @endif

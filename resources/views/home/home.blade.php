@@ -255,7 +255,6 @@
                     $(this).prop( "checked", true );
                 }
             });
-
         });
     </script>
 @endsection

@@ -17,11 +17,11 @@
                 @if (isset($show) && $show)
                     <div class="form-control-sm px-0">
                         @if($au->status == 1)
-                            <span class="badge badge-info">Started</span>
+                            <span class="badge badge-info font-100">Started</span>
                         @elseif($au->status == 2)
-                            <span class="badge badge-warning">Delayed</span>
+                            <span class="badge badge-warning font-100">Delayed</span>
                         @elseif($au->status == 3)
-                            <span class="badge badge-success font-14">Done</span>
+                            <span class="badge badge-success font-100">Done</span>
                         @endif
                     </div>
                 @else

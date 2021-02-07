@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon">
 <link rel="stylesheet" type="text/css" href="{{asset('css/template.css')}}"/>
-<link rel="stylesheet" type="text/css" href="{{asset('css/bootstrap_style.css')}}"/>
+<!--<link rel="stylesheet" type="text/css" href="{{asset('css/bootstrap_style.css')}}"/>-->
 <link rel="stylesheet" type="text/css" href="{{asset('bootstrap/4.5.3/css/bootstrap.min.css')}}"/>
 <link rel="stylesheet" type="text/css" href="{{asset('datatables/DataTables-1.10.22/css/datatables.bootstrap4.css')}}">
 <script src="{{asset('js/jquery-3.5.1.min.js')}}"></script>

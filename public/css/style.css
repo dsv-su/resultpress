@@ -106,6 +106,7 @@ form > div.c {
     margin: 10px 0;
 }
 
+/*
 form button[type="submit"] {
     display: inline-block;
     margin: 0 40px 0;
@@ -119,7 +120,7 @@ form button[type="submit"] {
     border: 0;
     padding: 10px;
     font-size: 1.0rem;
-}
+}*/
 
 form > div.d {
     display: inline-block;

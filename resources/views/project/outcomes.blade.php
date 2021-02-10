@@ -2,14 +2,14 @@
     <div class="card">
         <div class="card-header bg-white" id="heading-outcome-{{$outcome->id}}">
             <div class="row">
-                <div class="col-auto">
+                <div class="col-auto pl-1">
                     <h5 class="mb-0">
-                        <span class="btn cursor-default">
+                        <span class="px-0 btn cursor-default">
                             {{$outcome->name}}
                         </span>
                     </h5>
                 </div>
-                <div class="col-auto d-flex py-2 align-items-center">
+                <div class="col-auto d-flex py-2 px-1 align-items-center">
                     @if($outcome->completed)
                         <a href="#" class="badge badge-success font-100" data-toggle="collapse"
                            data-target="#collapse-outcome-{{$outcome->id}}"

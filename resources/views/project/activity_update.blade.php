@@ -42,15 +42,17 @@
                    class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Money
                 spent</label>
             @if (isset($show) && $show)
-                <label class="font-weight-bold pl-1 col-form-label-sm">{{ceil($au->money)}} {{$a->project->getCurrencySymbol()}}</label>
+                <label class="font-weight-bold pl-1 col-8 col-sm-9 col-form-label-sm">{{ceil($au->money)}} {{$a->project->getCurrencySymbol()}}</label>
             @else
-                <div class="col col-sm-3 pl-1 pr-0">
-                    <input type="number" name="activity_money[]" placeholder="0"
-                           value="@if ($au){{ceil($au->money)}}@else 0 @endif" required
-                           class="form-control form-control-sm text-right">
-                </div>
-                <div class="input-group-append col col-sm-2 p-0 form-control-sm">
-                    <span class="input-group-text currency">{{$a->project->getCurrencySymbol()}}</span>
+                <div class="col-8 col-sm-auto px-1">
+                    <div class="input-group input-group-sm">
+                        <input type="number" name="activity_money[]" placeholder="0"
+                               value="@if ($au){{ceil($au->money)}}@else 0 @endif" required
+                               class="form-control text-right">
+                        <div class="input-group-append">
+                            <span class="input-group-text">{{$a->project->getCurrencySymbol()}}</span>
+                        </div>
+                    </div>
                 </div>
             @endif
         </div>

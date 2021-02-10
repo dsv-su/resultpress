@@ -17,11 +17,11 @@
     @if(!$activity_updates->isEmpty())
         <label for="aus_list" class="form-group-header">Covered activities</label>
         <div class="d-flex flex-wrap" id="aus_list">
-                @foreach($activity_updates as $au)
-                    <div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;">
-                        @include('project.activity_update', ['au' => $au, 'a' => $au->activity, 'show' => true, 'review' => $review])
-                    </div>
-                @endforeach
+            @foreach($activity_updates as $au)
+                <div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;">
+                    @include('project.activity_update', ['au' => $au, 'a' => $au->activity, 'show' => true, 'review' => $review])
+                </div>
+            @endforeach
 
         </div>
     @endif
@@ -58,13 +58,13 @@
 
     @can('project-create')
         <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
-    @if (!$project_update->project->outcomes->isEmpty())
         <div class="accordion" id="outcomes">
-            @include('project.outcomes')
+            @if (!$project_update->project->outcomes->isEmpty())
+                @include('project.outcomes')
+            @else
+                The project has no outcomes.
+            @endif
         </div>
-    @else
-        The project has no outcomes.
-    @endif
     @endcan
 
     @if(!$files->isEmpty())
@@ -103,8 +103,9 @@
                     <label for="outcomes" class="form-group-header mt-4">Comments</label>
                 </div>
                 <div class="form-row my-2">
-                    <label for="partner_comment">Partner</label>
-                    <textarea rows=4 placeholder="Partner's comment" class="form-control form-control-sm @error('partner_comment') is-danger @enderror"
+                    <label for="partner_comment" class="form-group-header mt-4">Partner</label>
+                    <textarea rows=4 placeholder="Partner's comment"
+                              class="form-control form-control-sm @error('partner_comment') is-danger @enderror"
                               name="partner_comment">{{ old('partner_comment', empty($project_update) ? '' : $project_update->partner_comment) }}</textarea>
                     @error('partner_comment')
                     <div class="text-danger">{{ $errors->first('partner_comment') }}</div>
@@ -112,7 +113,7 @@
                 </div>
                 @can('project-create')
                     <div class="form-row my-2">
-                        <label for="internal_comment">Spider's internal</label>
+                        <label for="internal_comment" class="form-group-header mt-4">Spider's internal</label>
                         <textarea rows=4 placeholder="Spider's internal comment"
                                   class="form-control form-control-sm @error('internal_comment') is-danger @enderror"
                                   name="internal_comment">{{ old('internal_comment', empty($project_update) ? '' : $project_update->internal_comment) }}</textarea>
@@ -133,7 +134,7 @@
     @else
         @if ($project_update->partner_comment || $project_update->internal_comment)
             @if ($project_update->partner_comment)
-                <h5>Partner's comment</h5>
+                <label class="form-group-header mt-4">Partner's comment</label>
                 <table class="table table-striped table-bordered">
                     <tr>
                         <td>{{$project_update->partner_comment}}</td>
@@ -141,7 +142,7 @@
                 </table>
             @endif
             @if ($project_update->internal_comment)
-                <h5>Spider's internal comment</h5>
+                <label class="form-group-header mt-4">Spider's internal comment</label>
                 <table class="table table-striped table-bordered">
                     <tr>
                         <td>{{$project_update->internal_comment}}</td>

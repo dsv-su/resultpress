@@ -241,7 +241,7 @@
                     html += '<td class="w-75"><input type="text" id="output" name="output_id[]" placeholder="Enter output name" required></td>';
                 }
                 html += '<td class="w-25"><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="0" value="0" size="3" required></td>';
-                html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
+                html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-trash-alt"></i></button></td>'
                 html += '</tr>';
                 if (id > 0) {
                     $('#' + id + '.add-output').hide();

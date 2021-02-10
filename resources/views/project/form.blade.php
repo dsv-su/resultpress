@@ -174,16 +174,20 @@
 
                                                 <div class="form-group mb-1 row">
                                                     <label for="activity_budget[]"
-                                                           class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label>
-                                                    <div class="col col-sm-3 pl-1 pr-0">
-                                                        <input type="number" name="activity_budget[]" placeholder="0"
-                                                               value="{{$activity->budget}}" required
-                                                               class="form-control form-control-sm text-right">
-                                                    </div>
-                                                    <div class="input-group-append col col-sm-2 p-0 form-control-sm">
-                                                        <span class="input-group-text currency"></span>
+                                                           class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label>
+                                                    <div class="col col-sm-4 pl-1 pr-1">
+                                                        <div class="input-group input-group-sm">
+                                                            <input type="number" name="activity_money[]" placeholder="0"
+                                                                   value="{{$activity->budget}}"
+                                                                   required
+                                                                   class="form-control text-right">
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text currency"></span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
+
                                                 <div class="form-group row mb-0">
                                                     <label for="activity_template[]"
                                                            class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Template
@@ -421,7 +425,8 @@
                             html += '<label for="activity_end[]" class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_end[]" placeholder="End date" required class="form-control form-control-sm datepicker"></div></div>';
                             html += '<div class="form-group mb-1 row"><label for="activity_reminder[]" class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email reminder</label><div class="col-8 col-sm-9 px-1 form-inline"><select name="activity_reminder[]" class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select>';
                             html += '<input type="number" placeholder="7" value="7" name="activity_reminder_due_days[]" class="form-control form-control-sm text-right mx-1" style="width:60px;"><label for="activity_reminder_due_days[]" class="pl-0 pr-1 col-form-label-sm text-left">days before end</label></div></div>';
-                            html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-3 pl-1 pr-0"><input type="number" name="activity_budget[]" placeholder="0" value=0 required class="form-control form-control-sm text-right"></div><div class="input-group-append col col-sm-2 p-0 form-control-sm"><span class="input-group-text currency"></span></div></div>';
+                            html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-4 pl-1 pr-1"><div class="input-group input-group-sm"><input type="number" name="activity_money[]" placeholder="0" value="{{$activity->budget}}" required class="form-control text-right"><div class="input-group-append"><span class="input-group-text">' + currency + '</span></div></div></div></div>';
+                           // html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-3 pl-1 pr-0"><input type="number" name="activity_budget[]" placeholder="0" value=0 required class="form-control form-control-sm text-right"></div><div class="input-group-append col col-sm-2 p-0 form-control-sm"><span class="input-group-text">' + currency + '</span></div></div>';
                             html += '<div class="form-group row mb-0"><label for="activity_template[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Template<i class="fas fa-chevron-right collapseEditor"></i></label><div class="col-8 col-sm-9 px-1"><textarea name="activity_template[]" id="activity_template" placeholder="Activity description template" class="form-control form-control-sm mediumEditor collapsed"></textarea></div></div>';
                             html += '<div class="form-group row mt-2 mb-0"><a name="remove" class="btn btn-outline-danger btn-sm remove remove ml-auto mt-1"><i class="far fa-trash-alt"></i></a></div></div></div></div>';
 

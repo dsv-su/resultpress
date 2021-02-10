@@ -51,11 +51,14 @@
         <div class="alert alert-info" role="alert">
             @foreach ($project->pending_updates()->all() as $index => $pu)
                 <div class="row">
-                    <div class="col-auto d-flex align-items-center">#{{$index+1}} created
+                    <div class="col-auto pl-1 d-flex align-items-center">#{{$index+1}} created
                         on {{$pu->created_at->format('d/m/Y')}}
-                        by {{ $pu->user->name }} <span class="badge badge-warning mx-2">Pending approval</span>
+                        by {{ $pu->user->name }}
                     </div>
-                    <div class="col-auto">
+                    <div class="col-auto px-1 d-flex align-items-center">
+                        <span class="badge badge-warning mx-2 font-100">Pending approval</span>
+                    </div>
+                    <div class="col-auto px-1">
                         <a href="/project/update/{{$pu->id}}" class="btn btn-outline-secondary btn-sm">Show
                             <i class="fas fa-info-circle"></i></a>
                         <a href="/project/update/{{$pu->id}}/review"
@@ -74,24 +77,26 @@
                 <div class="card">
                     <div class="card-header bg-white" id="heading-activity-{{$a->id}}">
                         <div class="row">
-                            <div class="col-auto">
-                                <h5 class="mb-0">
-                                    <a class="btn btn-light @if(!$a->comments) disabled @endif"
-                                       type="button" data-toggle="collapse"
-                                       data-target="#collapse-activity-{{$a->id}}"
-                                       aria-expanded="false"
-                                       aria-controls="collapseactivity-{{$a->id}}">
-                                        {{$a->title}} @if ($a->comments) <span
-                                                class="badge badge-dark">{{count($a->comments)}}</span> @endif
-                                    </a>
-                                </h5>
+                            <div class="col-auto pl-1">
+                                 <span class="btn cursor-default px-0">
+                                    {{$a->title}}
+                                 </span>
                             </div>
-                            <div class="col-auto d-flex py-2 align-items-center">
+                            @if ($a->comments)
+                                <div class="col-auto d-flex py-2 px-1 align-items-center"><span
+                                            data-toggle="collapse"
+                                            data-target="#collapse-activity-{{$a->id}}"
+                                            aria-expanded="false"
+                                            role="button"
+                                            aria-controls="collapseactivity-{{$a->id}}"
+                                            class="badge badge-light font-100">{{count($a->comments)}} @if (count($a->comments) > 1)
+                                            updates @else update @endif</span></div> @endif
+                            <div class="col-auto d-flex py-2 px-1 align-items-center">
                                 <span class="badge font-100 @if ($a->moneyspent > $a->budget) badge-danger @else badge-info @endif">
                                     {{$a->moneyspent ?? 0}} {{$project->getCurrencySymbol()}} / {{ceil($a->budget) ?? 0}} {{$project->getCurrencySymbol()}}
                                 </span>
                             </div>
-                            <div class="col-auto d-flex py-2 align-items-center">
+                            <div class="col-auto d-flex py-2 px-1 align-items-center">
                                 @if($a->status == 1)
                                     <span class="badge badge-info font-100">In progress {{$a->statusdate}}</span>
                                 @elseif($a->status == 2)
@@ -123,13 +128,13 @@
     @endif
 
     <h5 class="mt-4">Outcomes</h5>
-    @if (!$project->outcomes->isEmpty())
-        <div class="accordion" id="outcomes">
+    <div class="accordion" id="outcomes">
+        @if (!$project->outcomes->isEmpty())
             @include('project.outcomes')
-        </div>
-    @else
-        The project has no outcomes.
-    @endif
+        @else
+            The project has no outcomes.
+        @endif
+    </div>
 
 
     <h5 class="mt-4">Outputs</h5>

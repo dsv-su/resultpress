@@ -21,8 +21,8 @@
                     </div>
                     <div class="row">
                         Area: @if($project->project_area)
-                            @foreach($project->project_area->all() as $project_area)
-                                {{$project_area->area->name}}
+                            @foreach($project->areas as $k => $area)
+                                {{$area->name}}@if ($k+1<count($project->areas)),@endif
                             @endforeach
                         @endif
                     </div>

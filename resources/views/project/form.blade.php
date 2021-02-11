@@ -177,7 +177,7 @@
                                                            class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label>
                                                     <div class="col col-sm-4 pl-1 pr-1">
                                                         <div class="input-group input-group-sm">
-                                                            <input type="number" name="activity_money[]" placeholder="0"
+                                                            <input type="number" name="activity_budget[]" placeholder="0"
                                                                    value="{{$activity->budget}}"
                                                                    required
                                                                    class="form-control text-right">
@@ -195,7 +195,7 @@
                                                     <div class="col-8 col-sm-9 px-1">
                                                         <textarea name="activity_template[]" id="activity_template"
                                                                   placeholder="Activity description template"
-                                                                  class="form-control form-control-sm mediumEditor collapsed">
+                                                                  class="form-control form-control-sm mediumEditor">
                                                                     {{$activity->template}}</textarea>
                                                     </div>
                                                 </div>
@@ -382,9 +382,22 @@
                 </form>
 
                 <script>
-                    let editor3 = new MediumEditor('.mediumEditor#activity_description', {placeholder: {text: "Description"}});
-                    let editor = new MediumEditor('.mediumEditor[name=project_description]', {placeholder: {text: "Description"}});
-                    let editor2 = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Activity template"}});
+                    let editor = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Activity template"}});
+                    $(function () {
+                        $('.mediumEditor#activity_template').mediumInsert({
+                            editor: editor,
+                            addons: {
+                                images: {
+                                    fileUploadOptions: {
+                                        url: '/images/upload',
+                                        type: 'post',
+                                        acceptFileTypes: /(.|\/)(gif|jpe?g|png)$/i
+                                    }
+                                }
+                            }
+                        });
+                    });
+
                     $(document).ready(function () {
                         $('#project_area').multiselect({
                             templates: {

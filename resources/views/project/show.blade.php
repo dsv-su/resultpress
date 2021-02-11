@@ -78,7 +78,7 @@
                     <div class="card-header bg-white" id="heading-activity-{{$a->id}}">
                         <div class="row">
                             <div class="col-auto pl-1">
-                                 <span class="btn cursor-default px-0">
+                                 <span class="btn cursor-default px-0 text-left">
                                     {{$a->title}}
                                  </span>
                             </div>

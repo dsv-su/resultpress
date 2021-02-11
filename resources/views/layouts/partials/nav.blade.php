@@ -27,7 +27,11 @@
                 <a class="nav-link" href="{{ route('logs') }}">Logs</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{route('profile')}}">{{ Auth::user()->name ?? 'UserName' }}</a>
+                @if(Auth::user()->setting == null )
+                <a class="nav-link" href="{{route('profile')}}">{{ Auth::user()->name ?? 'UserName' }}<span class="badge badge-primary" style="z-index:15;position:relative; left: 0; top:-10px">1</span></a>
+                @else
+                    <a class="nav-link" href="{{route('profile')}}">{{ Auth::user()->name ?? 'UserName' }}</a>
+                @endif
             </li>
             @can('partner')
                     <li class="nav-item">

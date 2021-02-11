@@ -176,6 +176,16 @@ class ProjectUpdateController extends Controller
         return $outputupdates;
     }
 
+
+    public function showActivityUpdateForm($a, $au) {
+        if ($au) {
+            $au = ActivityUpdate::findorfail($au);
+        } else {
+            $au = 0;
+        }
+        return view('project.activity_update', ['a' => Activity::findorfail($a), 'au' => $au])->render();
+    }
+
     /**
      * Calculates budget and timing based on activities data.
      *

@@ -9,8 +9,8 @@
             <div class="col"><h4>{{ $project->name }}: @if (empty($project_update)) write an update @else edit draft
                     update
                     #{{$project_update->index}}@endif</h4></div>
-            <div class="col-sm-auto field auto d-flex align-items-center">
-                <span>{{Carbon\Carbon::now()->format('d-m-Y')}}</span>
+            <div class="col-sm-auto d-flex align-items-center">
+                <span class="badge badge-info font-100">{{Carbon\Carbon::now()->format('d-m-Y')}}</span>
             </div>
         </div>
 
@@ -20,7 +20,7 @@
             <input type="hidden" value="{{$project_update->id}}" id="project_update_id" name="project_update_id">
         @endif
 
-        <span class="d-none" id="project_currency">{{$project->getCurrencySymbol()}}</span>
+    <!-- <span class="d-none" id="project_currency">{{$project->getCurrencySymbol()}}</span> -->
 
         @if ($project->hasDraft() && $project->cumulative)
             <div class="alert alert-warning" role="alert">
@@ -30,55 +30,18 @@
         @endif
 
         <div class="form-group">
-            <h4>Covered activities:</h4>
-            <table class="table table-sm w-100" @if (empty($aus) || $aus->isEmpty()) style="display: none;"
-                   @endif id="activities_table">
-                <thead>
-                <th>Activity</th>
-                <th>Status</th>
-                <th>Money spent</th>
-                <th>Date(s)</th>
-                <th></th>
-                </thead>
+            <label for="aus_list" class="form-group-header">Covered activities</label>
+            <div class="d-flex flex-wrap" id="aus_list">
                 @if (!empty($aus))
                     @foreach($aus as $au)
-                        <tr>
-                            <input type="hidden" name="activity_update_id[]" value="{{$au->id}}">
-                            <td class="auto"><input type="hidden" id="activity" name="activity_id[]"
-                                                    value="{{$au->activity_id}}">{{$au->title}}</td>
-                            <td class="editable">
-                                <select id="status" name="activity_status[]">
-                                    <option value="1" @if ($au->status == 1) selected @endif >In progress</option>
-                                    <option value="2" @if ($au->status == 2) selected @endif>Delayed</option>
-                                    <option value="3" @if ($au->status == 3) selected @endif>Done</option>
-                                </select>
-                            </td>
-                            <td><input type="number" name="activity_money[]" class="form-control form-control-sm"
-                                       placeholder="Money" size="3" required value="{{$au->money}}"></td>
-                            <td><input type="text" name="activity_date[]"
-                                       class="form-control form-control-sm datepicker"
-                                       placeholder="Date" size="1" value="{{$au->date->toDateString()}}" required></td>
-                            <td class="fit">
-                                <button type="button" name="remove" id="{{$au->activity_id}}"
-                                        class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span
-                                            class="glyphicon glyphicon-minus"></span></button>
-                            </td>
-                        </tr>
-                        <tr class="update">
-                            <td colspan=5>
-                                <table class="table mb-2 ">
-                                    <tr>
-                                        <td><textarea name="activity_comment[]"
-                                                      class="form-control form-control-sm mediumEditor"
-                                                      required>{!! $au->comment !!}</textarea></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
+                        <div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;">
+                            @include('project.activity_update', ['a' => $au->activity, 'au' => $au])
+                        </div>
                     @endforeach
                 @endif
-            </table>
-            <div class="dropdown">
+            </div>
+
+            <div class="col-lg-6 my-2 px-2 dropdown">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addActivities"
                         data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
@@ -93,97 +56,105 @@
                     @endforeach
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <h4>Affected outputs:</h4>
-            <table class="table table-sm mw-400" @if (empty($ous) || $ous->isEmpty()) style="display: none;" @endif
-            id="outputs_table">
-                <thead>
-                <th>Output</th>
-                <th>Value</th>
-                <th></th>
-                </thead>
-                @if (!empty($ous))
-                    @foreach($ous as $ou)
-                        <tr>
-                            <input type="hidden" name="output_update_id[]" value="{{$ou->id}}">
-                            <td class="w-75"><input type="hidden" id="output" name="output_id[]"
-                                                    value="{{$ou->output_id}}">{{$ou->indicator}}</td>
-                            <td class="w-25"><input type="number" name="output_value[]"
-                                                    class="form-control form-control-sm"
-                                                    size="3" required value="{{$ou->value}}"></td>
-                            <td>
-                                <button type="button" name="remove" id="{{$ou->output_id}}"
-                                        class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span
-                                            class="glyphicon glyphicon-minus"></span></button>
-                            </td>
-                        </tr>
-                    @endforeach
-                @endif
-            </table>
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutputs"
-                        data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                    Add Output
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @foreach ($project->outputs as $output)
-                        <a class="dropdown-item add-output" href="#" id="{{$output->id}}"
-                           @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status == 'draft') style="display: none;" @endif>{{$output->indicator}}</a>
-                    @endforeach
-                    <a class="dropdown-item add-output" href="#" id="0">Add a new output</a>
+            <div class="form-group">
+                <label for="outputs_table" class="form-group-header mt-4">Affected outputs</label>
+                <div class="col-md-8 col-lg-6 my-2 px-2" style="min-width: 16rem;">
+                    <table class="table table-sm" @if (empty($ous) || $ous->isEmpty()) style="display: none;"
+                           @endif
+                           id="outputs_table">
+                        <thead>
+                        <th>Output</th>
+                        <th>Value</th>
+                        <th></th>
+                        </thead>
+                        @if (!empty($ous))
+                            @foreach($ous as $ou)
+                                <tr>
+                                    <input type="hidden" name="output_update_id[]" value="{{$ou->id}}">
+                                    <td class="w-75"><input type="hidden" id="output" name="output_id[]"
+                                                            value="{{$ou->output_id}}">{{$ou->indicator}}</td>
+                                    <td class="w-25"><input type="number" name="output_value[]"
+                                                            class="form-control form-control-sm"
+                                                            size="3" required value="{{$ou->value}}"></td>
+                                    <td>
+                                        <button type="button" name="remove" id="{{$ou->output_id}}"
+                                                class="btn btn-outline-danger btn-sm remove"><i
+                                                    class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </table>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutputs"
+                                data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            Add Output
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            @foreach ($project->outputs as $output)
+                                <a class="dropdown-item add-output" href="#" id="{{$output->id}}"
+                                   @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status == 'draft') style="display: none;" @endif>{{$output->indicator}}</a>
+                            @endforeach
+                            <a class="dropdown-item add-output" href="#" id="0">Add a new output</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <h5>Attachments:</h5>
-            <div class="alert" id="message" style="display: none"></div>
-            <div>
-                <div id="attachments">
-                    @if (!empty($files))
-                        @foreach($files as $file)
-                            <span id="uploaded_file" class="d-block">
+            <div class="form-group">
+                <label for="attachments" class="form-group-header mt-4">Attachments</label>
+                <div class="alert" id="message" style="display: none"></div>
+                <div>
+                    <div id="attachments">
+                        @if (!empty($files))
+                            @foreach($files as $file)
+                                <span id="uploaded_file" class="d-block">
                             <input type="hidden" name="file_id[]" value="{{$file->id}}">
                             <a href="{{$file->path}}" target="_blank">{{$file->name}}</a>
                             <button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i
                                         class="far fa-trash-alt"></i></button>
                         </span>
-                        @endforeach
-                    @endif
+                            @endforeach
+                        @endif
+                    </div>
+                    <input type="file" id="files" name="attachments" placeholder="Choose file(s)" multiple>
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                    <button class="btn btn-secondary" id="laravel-ajax-file-upload" disabled>Upload</button>
                 </div>
-                <input type="file" id="files" name="attachments" placeholder="Choose file(s)" multiple>
-                <meta name="csrf-token" content="{{ csrf_token() }}">
-                <button class="btn btn-secondary" id="laravel-ajax-file-upload" disabled>Upload</button>
             </div>
-        </div>
 
-        <div class="form-group">
-            <h5>Summary</h5>
-            <textarea rows="4"
-                      class="form-control form-control-sm @error('project_update_summary') is-danger @enderror"
-                      name="project_update_summary" id="project_update_summary"
-            >{{ old('project_description', empty($project_update) ? '' : $project_update->summary) }}</textarea>
-            @error('project_description')
-            <div class="text-danger">
-                {{ $errors->first('project_update_summary') }}
-            </div>@enderror
-        </div>
+            <div class="form-group">
+                <label for="project_update_summary" class="form-group-header mt-4">Summary</label>
+                <textarea rows="4"
+                          class="form-control form-control-sm @error('project_update_summary') is-danger @enderror"
+                          name="project_update_summary" id="project_update_summary"
+                >{{ old('project_description', empty($project_update) ? '' : $project_update->summary) }}</textarea>
+                @error('project_description')
+                <div class="text-danger">
+                    {{ $errors->first('project_update_summary') }}
+                </div>@enderror
+            </div>
 
-        @if (empty($project_update) || $project_update->status == 'draft')
-            <input class="btn btn-lg btn-secondary" name="draft" value="Save as draft" type="submit">
-        @endif
-        @if (!empty($project_update) && $project_update->status == 'draft')
-            <input class="btn btn-lg bg-danger" name="delete" value="Delete this draft" type="submit">
-        @endif
-        <input class="btn btn-lg btn-success" name="submit" value="Submit" type="submit">
+            @if (empty($project_update) || $project_update->status == 'draft')
+                <input class="btn btn-lg btn-secondary" role="button" name="draft" value="Save as draft" type="submit">
+            @endif
+            @if (!empty($project_update) && $project_update->status == 'draft')
+                <input class="btn btn-lg btn-danger" role="button" name="delete" value="Delete this draft"
+                       type="submit">
+            @endif
+            <input class="btn btn-lg btn-success" role="button" name="submit" value="Submit" type="submit">
     </form>
 
     <script>
         $(document).ready(function () {
             let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}});
+            $(document).on('click', '.collapseEditor', function () {
+                $(this).closest('.form-group').find('.medium-editor-element').toggleClass("collapsed expanded");
+                $(this).toggleClass("fa-chevron-right fa-chevron-down");
+            });
+
             $(document).on('click', '#laravel-ajax-file-upload', function (e) {
                 e.preventDefault();
                 $.ajaxSetup({
@@ -247,28 +218,16 @@
             })
 
             $(document).on('click', '.add-activity', function () {
-                $('#activities_table').show();
                 let id = $(this).attr('id');
-                let activity = $(this).text();
-                let template = $(this).prev('p').text();
-                let currency = $('#project_currency').text();
-                let html = '<tr>';
-                html += '<input type="hidden" name="activity_update_id[]" value=0>';
-                html += '<td class="auto"><input type="hidden" id="activity" name="activity_id[]" value="' + id + '">' + activity + '</td>';
-                html += '<td class="editable"><select id="status" name="activity_status[]"><option value="1">In progress</option><option value="2">Delayed</option><option value="3">Done</option></select></td>'
-                html += '<td class="input-group"><input type="number" name="activity_money[]" class="form-control form-control-sm" placeholder="0" size="3" required value="0"><div class="input-group-append"><span class="input-group-text">' + currency + '</span></div></td>';
-                html += '<td><input type="text" name="activity_date[]" class="form-control form-control-sm datepicker" placeholder="Date" size="1" required></td>';
-                html += '<td class="fit"><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
-                html += '</tr>';
-                html += '<tr class="update"><td colspan=5><table class="table mb-2 "><tr><td><textarea name="activity_comment[]" ' +
-                    'class="form-control form-control-sm mediumEditor">' + template + '</textarea></td></tr></table></td></tr>';
+                $('#aus_list').append('<div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;" id="au-' + id + '"></div>');
+                $('#au-' + id).load('/au/' + id + '/0');
                 $('#' + id + '.add-activity').hide();
-                $('#activities_table').append(html);
+                if ($('#addActivities').next().children('.add-activity:visible').length == 0) {
+                    $('#addActivities').addClass('disabled');
+                }
+                ;
                 let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
-                $('input.datepicker').datepicker({
-                    format: 'dd-mm-yyyy',
-                    weekStart: 1
-                });
+                // $('#activities_table').append(html);
             });
             $(document).on('click', '.add-output', function () {
                 $('#outputs_table').show();
@@ -282,7 +241,7 @@
                     html += '<td class="w-75"><input type="text" id="output" name="output_id[]" placeholder="Enter output name" required></td>';
                 }
                 html += '<td class="w-25"><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="0" value="0" size="3" required></td>';
-                html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-minus"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
+                html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-trash-alt"></i></button></td>'
                 html += '</tr>';
                 if (id > 0) {
                     $('#' + id + '.add-output').hide();
@@ -297,31 +256,14 @@
                     $('#outputs_table').hide();
                 }
             });
-            $(document).on('click', '#activities_table .remove', function () {
+            $(document).on('click', '#aus_list .remove', function () {
                 let id = $(this).attr('id');
                 $('#' + id + '.add-activity').show();
-                $(this).closest('tr').next().remove();
-                $(this).closest('tr').remove();
-                if ($('tr', $('#activities_table')).length < 2) {
-                    $('#activities_table').hide();
+                $(this).closest('.col-lg-6').remove();
+                if ($('#addActivities').next().children('.add-activity[style*="display: none"]').length > 0) {
+                    $('#addActivities').removeClass('disabled');
                 }
-            });
-            $(document).on('change', '#status', function () {
-                let value = this.options[this.selectedIndex].value;
-                let status = '';
-                switch (value) {
-                    case '1':
-                        status = 'inprogress';
-                        break;
-                    case '2':
-                        status = 'delayed';
-                        break;
-                    case '3':
-                        status = 'done';
-                        break;
-                }
-                this.closest('td').classList.remove('inprogress', 'delayed', 'done');
-                this.closest('td').classList.add('status', status);
+                ;
             });
             $("form").submit(function () {
                 // Add extra confirmation on empty activity & output

@@ -52,6 +52,7 @@ p {
     margin-bottom: 6px;
 }
 
+/*
 a:link {
     color: #005b7f;
 }
@@ -62,7 +63,7 @@ a:visited {
 
 a:hover {
     color: #000;
-}
+}*/
 
 input, button, select {
     vertical-align: middle;
@@ -77,11 +78,12 @@ input:not([type="submit"]):focus, textarea:focus, select:focus {
 }
 
 button, input[type="submit"], .btn-submit {
+   /*
     font-family: Verdana, Arial, Helvetica, sans-serif;
     background-position: left;
     background-repeat: repeat-x;
     color: white;
-    border: none;
+    border: none;*/
 }
 
 /*

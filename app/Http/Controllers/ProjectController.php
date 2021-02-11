@@ -22,7 +22,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ProjectController extends Controller
@@ -38,7 +37,7 @@ class ProjectController extends Controller
         $user->givePermissionTo('project-list');
         $user->givePermissionTo('project-create');
         //If user should be redirected to profile setting page
-        if($user->setting == true) {
+        if ($user->setting == true) {
             return redirect()->intended('/home');
         }
         return redirect()->intended('/');
@@ -52,9 +51,9 @@ class ProjectController extends Controller
     public function home()
     {
         /****
-        *   This is the first page the user is routed to. It shows the three sections if the user is a spider or administrator.
+         *   This is the first page the user is routed to. It shows the three sections if the user is a spider or administrator.
          *  If the user is a Partner it shows the projects the user is assigned (invited) to
-        ****/
+         ****/
 
         $data['program_areas'] = Area::all();
 
@@ -65,7 +64,7 @@ class ProjectController extends Controller
                 $data['areas'] = Area::with('project_area.project.project_owner.user')->get();
                 $data['otherprojects'] = Project::doesntHave('project_area')->get();
 
-                return view('home.index',  $data);
+                return view('home.index', $data);
 
             } elseif ($user->hasRole(['Partner'])) {
 
@@ -95,7 +94,6 @@ class ProjectController extends Controller
         } elseif (Auth::check()) return abort(403);
         else return redirect()->route('partner-login');
     }
-
 
 
     /**
@@ -131,7 +129,6 @@ class ProjectController extends Controller
             // For cumulative displaying just the recent update comment.
             if (!$project->cumulative) {
                 foreach ($activityupdates as $au) {
-                    $moneyspent += $au->money;
                     $puindex = 0;
                     foreach ($project_updates as $index => $pu) {
                         if ($pu->id == $au->project_update_id) {
@@ -142,6 +139,11 @@ class ProjectController extends Controller
                 }
             } elseif (!$activityupdates->isEmpty()) {
                 $comments[] = $activityupdates->last()->comment;
+            }
+
+            foreach ($activityupdates as $au) {
+                $moneyspent += $au->money;
+                $a->moneyspent += $au->money;
             }
 
             ksort($comments);
@@ -244,6 +246,7 @@ class ProjectController extends Controller
      */
     public function update(Project $project)
     {
+        // dd(request());
         request()->validate([
             'project_name' => 'required'
         ]);
@@ -272,7 +275,6 @@ class ProjectController extends Controller
                 $new_pa->save();
             }
         }
-
 
 
         //Create permissions for a new project

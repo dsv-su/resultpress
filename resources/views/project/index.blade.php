@@ -3,65 +3,26 @@
 @section('content')
     <!-- Filter bar -->
     @can('project-create')
-    <nav class="navbar navbar-light">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Filter by
-            </button>
-            <div class="dropdown-menu">
-                @foreach($program_areas as $program_area)
-                <a class="dropdown-item" href="{{route('programarea_show', $program_area->id)}}">{{$program_area->name}}</a>
-                @endforeach
-            </div>
-        </div>
-    </nav>
-    <br>
-    @endcan
-    <!-- -->
-    <table id="example" class="table table-sm table-striped table-bordered" style="width:100%"
-           data-order='[[ 0, "desc" ]]'
-           data-page-length='25'>
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Project Name</th>
-            <th>Project Area</th>
-            <th>Status</th>
-            <th>Manager</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach( $projects as $project )
-            <tr>
-                <td>{{ $project->id }}</td>
-                <td><a href="/project/{{$project->id}}">{{ $project->name}}</a></td>
-                <td>@if($project->project_area)
-                        @foreach($project->project_area->all() as $project_area)
-                        {{$project_area->area->name}}
-                        @endforeach
-                    @endif
-                </td>
-                <td>
-                    @if($project->status == 1) <span class="badge badge-warning">In progress</span>
-                    @elseif($project->status == 2) <span class="badge badge-danger">Delayed</span>
-                    @elseif($project->status == 3) <span class="badge badge-success">Done</span>
-                    @endif
-                    @if($project->pending_updates()->count())
-                        <a href="/project/{{$project->id}}/updates"><span class=" badge badge-info">Update
-                        pending</span></a>
-                    @endif
-                </td>
-                <td>
-                    @foreach($project->project_owner->all() as $project_owner)
-                        {{$project_owner->user->name}}
+        <nav class="navbar navbar-light">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Filter by
+                </button>
+                <div class="dropdown-menu">
+                    @foreach($program_areas as $program_area)
+                        <a class="dropdown-item"
+                           href="{{route('programarea_show', $program_area->id)}}">{{$program_area->name}}</a>
                     @endforeach
-                </td>
-                <td class="text-center mw-400">
-                    @include('project.action_links')
-                </td>
-            </tr>
+                </div>
+            </div>
+        </nav>
+        <br>
+    @endcan
+    <h3 class="mx-3">Projects</h3>
+    <div class="container">
+        @foreach( $projects as $project )
+            @include('project.project_list', ['$project' => $project])
         @endforeach
-        </tbody>
-    </table>
+    </div>
 @endsection

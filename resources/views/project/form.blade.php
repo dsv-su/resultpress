@@ -33,10 +33,9 @@
                                 </div>
                             </div>
                             <div class="form-row row">
-                                <label for="project_description" class="col-4 col-sm-3 col-form-label-sm">Description <i
-                                            class="fas fa-chevron-right collapseEditor"></i></label>
+                                <label for="project_description" class="col-4 col-sm-3 col-form-label-sm">Description</label>
                                 <div class="col px-1">
-                                <textarea rows="1"
+                                <textarea rows="2"
                                           class="form-control form-control-sm @error('project_description') is-danger @enderror"
                                           name="project_description" id="project_description"
                                 >{!! old('project_description', empty($project) ? '' : $project->description) !!}</textarea>
@@ -118,7 +117,7 @@
                                                                class="form-control form-control-sm">
                                                     </div>
                                                 </div>
-                                                <div class="form-group mb-1 row">
+                                                <div class="form-group mb-2 row">
                                                     <label for="activity_name[]"
                                                            class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description</label>
                                                     <div class="col-8 col-sm-9 px-1">
@@ -144,7 +143,7 @@
                                                                class="form-control form-control-sm datepicker">
                                                     </div>
                                                 </div>
-                                                <div class="form-group mb-1 row">
+                                                <div class="form-group mb-2 row">
                                                     <label for="activity_reminder[]"
                                                            class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email
                                                         reminder</label>
@@ -172,7 +171,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group mb-1 row">
+                                                <div class="form-group mb-2 row">
                                                     <label for="activity_budget[]"
                                                            class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label>
                                                     <div class="col col-sm-4 pl-1 pr-1">

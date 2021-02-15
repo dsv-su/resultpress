@@ -80,13 +80,17 @@
     @endif
 
     @if ($project_update->summary)
-        <div class="my-1">
+        <div class="accordion" id="summary">
             <label for="outcomes" class="form-group-header mt-4">Summary</label>
-            <table class="table table-striped table-bordered">
-                <tr>
-                    <td>{{$project_update->summary}}</td>
-                </tr>
-            </table>
+            <div class="card">
+                <div class="card-header bg-white">
+                    <div class="row">
+                        <div class="col-auto pl-1">
+                            {{$project_update->summary}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
 
@@ -124,8 +128,11 @@
                 @endcan
 
                 @can('project-create')
-                    <input class="btn btn-danger btn-lg" name="reject" value="Reject" type="submit">
-                    <input class="btn btn-success btn-lg" name="approve" value="Approve" type="submit">
+                    @if ($project_update->status == 'submitted')
+                        <input class="btn btn-danger btn-lg" name="reject" value="Reject and revert to Draft"
+                               type="submit">
+                        <input class="btn btn-success btn-lg" name="approve" value="Approve" type="submit">
+                    @endif
                 @else
                     <input class="btn btn-success btn-lg" value="Save" value="save" type="submit">
                 @endcan
@@ -154,7 +161,7 @@
 
     <script>
         $(document).ready(function () {
-            let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}, toolbar: false});
+            let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}, toolbar: false, disableEditing: true});
             $(document).on('click', '.collapseEditor', function () {
                 $(this).closest('.form-group').find('.medium-editor-element').toggleClass("collapsed expanded");
                 $(this).toggleClass("fa-chevron-right fa-chevron-down");

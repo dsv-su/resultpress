@@ -79,8 +79,7 @@
             <div class="col-8 col-sm-9 px-1">
                 @if (isset($show) && $show)
                     <textarea name="activity_comment[]"
-                              class="form-control form-control-sm collapsed mediumEditor"
-                              readonly>@if ($au){!! $au->comment !!}@endif</textarea>
+                              class="form-control form-control-sm collapsed mediumEditor">@if ($au){!! $au->comment !!}@endif</textarea>
                 @else
                     <textarea name="activity_comment[]"
                               class="form-control form-control-sm collapsed mediumEditor"

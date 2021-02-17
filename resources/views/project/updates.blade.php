@@ -42,7 +42,7 @@
                                onclick="return confirm('Are you sure you want to delete this update?');">Delete <i
                                         class="fas fa-trash-alt"></i></a>
                         @else
-                            <a href="/project/update/{{$pu->id}}/review" class="btn btn-outline-secondary btn-sm">Review
+                            <a href="/project/update/{{$pu->id}}/review" class="btn btn-outline-secondary btn-sm">@if (Auth::user()->hasRole(['Spider', 'Administrator'])) Review @elseif (Auth::user()->hasRole(['Partner'])) Additional comments @endif
                                 <i class="fas fa-highlighter"></i></a>
                         @endif
                     </div>

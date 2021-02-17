@@ -108,8 +108,16 @@
     </div>
 </div>
 
+@if(isset($review) && $review)
+    <script>
+        var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}, toolbar: false, disableEditing: true});
+    </script>
+@else
+    <script>
+        var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
+    </script>
+    @endif
 <script>
-    var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
     $('input.datepicker:last-child').datepicker({
         format: 'dd-mm-yyyy',
         weekStart: 1

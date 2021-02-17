@@ -129,7 +129,7 @@
 
                 @can('project-create')
                     @if ($project_update->status == 'submitted')
-                        <input class="btn btn-danger btn-lg" name="reject" value="Reject and revert to Draft"
+                        <input class="btn btn-danger btn-lg" name="reject" value="Return for revision"
                                type="submit">
                         <input class="btn btn-success btn-lg" name="approve" value="Approve" type="submit">
                     @endif

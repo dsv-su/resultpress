@@ -271,7 +271,7 @@
                 if (!$('#project_update_summary').val()) {
                     confirmation += '\nSummary is empty';
                 }
-                if ($('#activities_table tr').length < 2 && $('#outputs_table tr').length < 2) {
+                if ($('#aus_list').children().length < 1 && $('#outputs_table tr').length < 2) {
                     confirmation += '\nThe update does not cover neither activities nor outputs';
                 }
                 if (!confirmation) {

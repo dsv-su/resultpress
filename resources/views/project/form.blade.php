@@ -437,7 +437,7 @@
                             let currency = $('#project_currency option:selected').text();
                             let html = '';
 
-                            html += '<div class="col-lg-6 my-2 px-2" style="min-width: 16rem;"><div class="card bg-light m-auto"><div class="card-body pb-1"><div class="form-group mb-1 row"><input type="hidden" name="activity_id[]" value=0><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label><div class="col-8 col-sm-9 px-1"><input type="text" placeholder="Name" name="activity_name[]" required class="form-control form-control-sm"  value=' + activity.find('input[name="activity_name[]"]').val() + '></div></div>';
+                            html += '<div class="col-lg-6 my-2 px-2" style="min-width: 16rem;"><div class="card bg-light m-auto"><div class="card-body pb-1"><div class="form-group mb-1 row"><input type="hidden" name="activity_id[]" value=0><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label><div class="col-8 col-sm-9 px-1"><input type="text" placeholder="Name" name="activity_name[]" required class="form-control form-control-sm" value="' + activity.find('input[name="activity_name[]"]').val() + '"></div></div>';
                             html += '<div class="form-group mb-1 row"><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description</label><div class="col-8 col-sm-9 px-1"><textarea type="text" name="activity_description[]" id="activity_description" required class="form-control form-control-sm" rows="2" placeholder="Description">' + activity.find('textarea[name="activity_description[]"]').text() + '</textarea></div></div>';
                             html += '<div class="form-group mb-1 row"><label for="activity_start[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_start[]" value=' + activity.find('input[name="activity_start[]"]').val() + ' placeholder="Start date" required class="form-control form-control-sm datepicker"></div>';
                             html += '<label for="activity_end[]" class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_end[]" placeholder="End date" value=' + activity.find('input[name="activity_end[]"]').val() + ' required class="form-control form-control-sm datepicker"></div></div>';
@@ -449,7 +449,7 @@
                             html += '<div class="form-group row mt-2 mb-0"><a name="copy" class="btn btn-outline-secondary btn-sm copy ml-auto mt-1"><i class="far fa-copy"></i></a><a name="remove" class="btn btn-outline-danger btn-sm remove ml-1 mt-1"><i class="far fa-trash-alt"></i></a></div></div></div></div>';
 
                             $('#activities_list').append(html);
-                            
+
                             let editor = new MediumEditor('#activities_list #activity_template', {
                                 placeholder: {text: "Activity template"}
                             });
@@ -511,7 +511,7 @@
                             let html = '';
                             html += '<tr>';
                             html += '<input type="hidden" name="output_id[]" value=0>';
-                            html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Output name" maxlength="255" data-target="tooltip" title="Maximum length is 255 chars"required></td>';
+                            html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></td>';
                             html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outputs_table').append(html);
@@ -524,7 +524,6 @@
                                 } else {
                                     $(this).tooltip('hide');
                                 }
-                                ;
                             });
                         });
                         $(document).on('click', '#activities_list .remove', function () {

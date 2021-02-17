@@ -33,7 +33,8 @@
                                 </div>
                             </div>
                             <div class="form-row row">
-                                <label for="project_description" class="col-4 col-sm-3 col-form-label-sm">Description</label>
+                                <label for="project_description"
+                                       class="col-4 col-sm-3 col-form-label-sm">Description</label>
                                 <div class="col px-1">
                                 <textarea rows="2"
                                           class="form-control form-control-sm @error('project_description') is-danger @enderror"
@@ -176,7 +177,8 @@
                                                            class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label>
                                                     <div class="col col-sm-4 pl-1 pr-1">
                                                         <div class="input-group input-group-sm">
-                                                            <input type="number" name="activity_budget[]" placeholder="0"
+                                                            <input type="number" name="activity_budget[]"
+                                                                   placeholder="0"
                                                                    value="{{$activity->budget}}"
                                                                    required
                                                                    class="form-control text-right">
@@ -199,8 +201,11 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-0">
+                                                    <a name="copy"
+                                                       class="btn btn-outline-secondary btn-sm copy ml-auto mt-1"><i
+                                                                class="far fa-copy"></i></a>
                                                     <a name="remove"
-                                                       class="btn btn-outline-danger btn-sm remove remove ml-auto mt-1"><i
+                                                       class="btn btn-outline-danger btn-sm remove ml-1 mt-1"><i
                                                                 class="far fa-trash-alt"></i></a>
                                                 </div>
                                             </div>
@@ -315,6 +320,10 @@
                                                            name="output_indicator[]"
                                                            value="{{$output->indicator}}"
                                                            placeholder="Output name" required
+                                                           maxlength="255"
+                                                           data-target="tooltip"
+                                                           data-trigger="manual"
+                                                           title="Maximum length is 255 chars"
                                                            class="form-control form-control-sm">
                                                 </td>
                                                 <td class="w-25"><input type="text" name="output_target[]"
@@ -403,6 +412,7 @@
                                 li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
                             }
                         });
+
                         $('.currency').each(function () {
                             $(this).text($('#project_currency option:selected').text());
                         });
@@ -410,6 +420,45 @@
                             $(this).closest('.form-group').find('.medium-editor-element').toggleClass("collapsed expanded");
                             $(this).toggleClass("fa-chevron-right fa-chevron-down");
                         });
+
+                        $('input[name="output_indicator[]"]').focusout(function () {
+                            $(this).tooltip('hide');
+                        });
+                        $('input[name="output_indicator[]"]').on('keyup', function () {
+                            if (this.value.length > 250) {
+                                $(this).tooltip('show');
+                            } else {
+                                $(this).tooltip('hide');
+                            }
+                        });
+
+                        $(document).on('click', '.copy', function () {
+                            let activity = $(this).closest('.card-body');
+                            let currency = $('#project_currency option:selected').text();
+                            let html = '';
+
+                            html += '<div class="col-lg-6 my-2 px-2" style="min-width: 16rem;"><div class="card bg-light m-auto"><div class="card-body pb-1"><div class="form-group mb-1 row"><input type="hidden" name="activity_id[]" value=0><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label><div class="col-8 col-sm-9 px-1"><input type="text" placeholder="Name" name="activity_name[]" required class="form-control form-control-sm"  value=' + activity.find('input[name="activity_name[]"]').val() + '></div></div>';
+                            html += '<div class="form-group mb-1 row"><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description</label><div class="col-8 col-sm-9 px-1"><textarea type="text" name="activity_description[]" id="activity_description" required class="form-control form-control-sm" rows="2" placeholder="Description">' + activity.find('textarea[name="activity_description[]"]').text() + '</textarea></div></div>';
+                            html += '<div class="form-group mb-1 row"><label for="activity_start[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_start[]" value=' + activity.find('input[name="activity_start[]"]').val() + ' placeholder="Start date" required class="form-control form-control-sm datepicker"></div>';
+                            html += '<label for="activity_end[]" class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_end[]" placeholder="End date" value=' + activity.find('input[name="activity_end[]"]').val() + ' required class="form-control form-control-sm datepicker"></div></div>';
+                            html += '<div class="form-group mb-1 row"><label for="activity_reminder[]" class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email reminder</label><div class="col-8 col-sm-9 px-1 form-inline"><select name="activity_reminder[]" class="form-control form-control-sm"><option value="1" ' + ((activity.find('select[name="activity_reminder[]"]').val() == 1) ? 'selected' : '') + '>Yes</option><option value="0" ' + ((activity.find('select[name="activity_reminder[]"]').val() == 0) ? 'selected' : '') + '>No</option></select>';
+                            html += '<input type="number" placeholder="7" name="activity_reminder_due_days[]" value=' + activity.find('input[name="activity_reminder_due_days[]"]').val() + ' class="form-control form-control-sm text-right mx-1" style="width:60px;"><label for="activity_reminder_due_days[]" class="pl-0 pr-1 col-form-label-sm text-left">days before end</label></div></div>';
+                            html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-4 pl-1 pr-1"><div class="input-group input-group-sm"><input type="number" name="activity_budget[]" placeholder="0"  value=' + activity.find('input[name="activity_budget[]"]').val() + ' required class="form-control text-right"><div class="input-group-append"><span class="input-group-text">' + currency + '</span></div></div></div></div>';
+                            // html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-3 pl-1 pr-0"><input type="number" name="activity_budget[]" placeholder="0" value=0 required class="form-control form-control-sm text-right"></div><div class="input-group-append col col-sm-2 p-0 form-control-sm"><span class="input-group-text">' + currency + '</span></div></div>';
+                            html += '<div class="form-group row mb-0"><label for="activity_template[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Template<i class="fas fa-chevron-right collapseEditor"></i></label><div class="col-8 col-sm-9 px-1"><textarea name="activity_template[]" id="activity_template" placeholder="Activity description template" class="form-control form-control-sm mediumEditor collapsed"></textarea></div></div>';
+                            html += '<div class="form-group row mt-2 mb-0"><a name="copy" class="btn btn-outline-secondary btn-sm copy ml-auto mt-1"><i class="far fa-copy"></i></a><a name="remove" class="btn btn-outline-danger btn-sm remove ml-1 mt-1"><i class="far fa-trash-alt"></i></a></div></div></div></div>';
+
+                            $('#activities_list').append(html);
+                            
+                            let editor = new MediumEditor('#activities_list #activity_template', {
+                                placeholder: {text: "Activity template"}
+                            });
+                            $('#activities_list input.datepicker:last-child').datepicker({
+                                format: 'dd-mm-yyyy',
+                                weekStart: 1
+                            });
+                        });
+
                         $(document).on('click', '.add-activities', function () {
 
                             //$('#activities_table').show();
@@ -437,15 +486,15 @@
                             html += '<label for="activity_end[]" class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_end[]" placeholder="End date" required class="form-control form-control-sm datepicker"></div></div>';
                             html += '<div class="form-group mb-1 row"><label for="activity_reminder[]" class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email reminder</label><div class="col-8 col-sm-9 px-1 form-inline"><select name="activity_reminder[]" class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select>';
                             html += '<input type="number" placeholder="7" value="7" name="activity_reminder_due_days[]" class="form-control form-control-sm text-right mx-1" style="width:60px;"><label for="activity_reminder_due_days[]" class="pl-0 pr-1 col-form-label-sm text-left">days before end</label></div></div>';
-                            html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-4 pl-1 pr-1"><div class="input-group input-group-sm"><input type="number" name="activity_money[]" placeholder="0" value="0" required class="form-control text-right"><div class="input-group-append"><span class="input-group-text">' + currency + '</span></div></div></div></div>';
-                           // html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-3 pl-1 pr-0"><input type="number" name="activity_budget[]" placeholder="0" value=0 required class="form-control form-control-sm text-right"></div><div class="input-group-append col col-sm-2 p-0 form-control-sm"><span class="input-group-text">' + currency + '</span></div></div>';
+                            html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-4 pl-1 pr-1"><div class="input-group input-group-sm"><input type="number" name="activity_budget[]" placeholder="0" value="0" required class="form-control text-right"><div class="input-group-append"><span class="input-group-text">' + currency + '</span></div></div></div></div>';
+                            // html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-3 pl-1 pr-0"><input type="number" name="activity_budget[]" placeholder="0" value=0 required class="form-control form-control-sm text-right"></div><div class="input-group-append col col-sm-2 p-0 form-control-sm"><span class="input-group-text">' + currency + '</span></div></div>';
                             html += '<div class="form-group row mb-0"><label for="activity_template[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Template<i class="fas fa-chevron-right collapseEditor"></i></label><div class="col-8 col-sm-9 px-1"><textarea name="activity_template[]" id="activity_template" placeholder="Activity description template" class="form-control form-control-sm mediumEditor collapsed"></textarea></div></div>';
                             html += '<div class="form-group row mt-2 mb-0"><a name="remove" class="btn btn-outline-danger btn-sm remove remove ml-auto mt-1"><i class="far fa-trash-alt"></i></a></div></div></div></div>';
 
                             $('#activities_list').append(html);
 
                             let editor = new MediumEditor('#activities_list #activity_template', {
-                                placeholder: {text: "Add a template"}
+                                placeholder: {text: "Activity template"}
                             });
                             $('#activities_list input.datepicker:last-child').datepicker({
                                 format: 'dd-mm-yyyy',
@@ -462,10 +511,21 @@
                             let html = '';
                             html += '<tr>';
                             html += '<input type="hidden" name="output_id[]" value=0>';
-                            html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Output name" required></td>';
+                            html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Output name" maxlength="255" data-target="tooltip" title="Maximum length is 255 chars"required></td>';
                             html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outputs_table').append(html);
+                            $('input[name="output_indicator[]"]').focusout(function () {
+                                $(this).tooltip('hide');
+                            });
+                            $('input[name="output_indicator[]"]').on('keyup', function () {
+                                if (this.value.length > 250) {
+                                    $(this).tooltip('show');
+                                } else {
+                                    $(this).tooltip('hide');
+                                }
+                                ;
+                            });
                         });
                         $(document).on('click', '#activities_list .remove', function () {
                             $(this).closest('.col-lg-6').remove();

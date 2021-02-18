@@ -13,7 +13,7 @@
         <div class="form-group mb-1 row">
             <label for="activity_status[]"
                    class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Status</label>
-            <div class="col-8 col-sm-9 px-1">
+            <div class="col-8 col-sm-3 px-1">
                 @if (isset($show) && $show)
                     <div class="form-control-sm px-0">
                         @if($au->status == 1)
@@ -79,12 +79,11 @@
             <div class="col-8 col-sm-9 px-1">
                 @if (isset($show) && $show)
                     <textarea name="activity_comment[]"
-                              class="form-control form-control-sm collapsed mediumEditor"
-                              readonly>@if ($au){!! $au->comment !!}@endif</textarea>
+                              class="form-control form-control-sm collapsed mediumEditor">@if ($au){!! $au->comment !!}@endif</textarea>
                 @else
                     <textarea name="activity_comment[]"
                               class="form-control form-control-sm collapsed mediumEditor"
-                              required>@if ($au){!! $au->comment !!}@endif</textarea>
+                              required>@if ($au){!! $au->comment !!} @else {!!$a->template!!} @endif</textarea>
                 @endif
             </div>
         </div>
@@ -109,6 +108,15 @@
     </div>
 </div>
 
+@if(isset($review) && $review)
+    <script>
+        var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}, toolbar: false, disableEditing: true});
+    </script>
+@else
+    <script>
+        var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
+    </script>
+    @endif
 <script>
     $('input.datepicker:last-child').datepicker({
         format: 'dd-mm-yyyy',

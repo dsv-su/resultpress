@@ -40,9 +40,9 @@
                                    type="file">
                         </div>
                         <ul class="list-group my-3">
-                            <li class="list-group-item text-muted">Program Areas&nbsp;&nbsp; <i
-                                        class="fa fa-dashboard fa-1x" data-toggle="modal"
-                                        data-target="#programAreas"></i>
+                            <li class="list-group-item text-muted">Program Areas <span data-toggle="tooltip"
+                                                                                       title="Summary of projects sorted by Program Areas"><i
+                                            class="fa fa-dashboard fa-1x"></i></span>
                             </li>
                             @foreach($programareas as $area)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -53,21 +53,24 @@
                         </ul>
                     </div>
                     <div class="col-md-9 my-3 my-md-0">
-                        <ul class="nav nav-tabs">
+                        <ul class="nav nav-tabs nav-justified">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#owned">Owned Projects&nbsp;&nbsp; <i
-                                            class="fa fa-dashboard fa-1x" data-toggle="modal"
-                                            data-target="#ownedProjects"></i></a>
+                                <a class="nav-link active" data-toggle="tab" href="#owned">Owned Projects <span
+                                            data-toggle="tooltip"
+                                            title="These are the projects for which you are registered as a project manager"><i
+                                                class="fa fa-dashboard fa-1x"></i></span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#programareas">Program Area Projects&nbsp;&nbsp;
-                                    <i class="fa fa-dashboard fa-1x" data-toggle="modal"
-                                       data-target="#areaProjects"></i></a>
+                                <a class="nav-link" data-toggle="tab" href="#programareas">Program Area Projects
+                                    <span data-toggle="tooltip"
+                                          title="Here you can select the projects you want to follow, sorted by Program area"><i
+                                                class="fa fa-dashboard fa-1x"></i></span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#other">Other Projects&nbsp;&nbsp; <i
-                                            class="fa fa-dashboard fa-1x" data-toggle="modal"
-                                            data-target="#otherProjects"></i></a>
+                                <a class="nav-link" data-toggle="tab" href="#other">Other Projects <span
+                                            data-toggle="tooltip"
+                                            title="Here you can select the projects you want to follow that are not organized in a Program area"><i
+                                                class="fa fa-dashboard fa-1x"></i></span></a>
                             </li>
                         </ul>
 
@@ -151,116 +154,12 @@
             </form>
         </div>
     </div><!--/row-->
-    <!-- Modal ProgramAreas-->
-    <div class="modal" id="programAreas">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Program Areas Summary</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    Summery of projects sorted by Program Areas
-                    <br>
-
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <!-- Modal Owned Projects-->
-    <div class="modal" id="ownedProjects">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Owned Projects</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    These are the projects for which you are registered as a project manager.
-                    <br>
-
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <!-- Modal Program Area Projects-->
-    <div class="modal" id="areaProjects">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Program Area Projects</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    Here you can select the projects you want to follow, sorted by Program area.
-                    <br>
-
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <!-- Modal Other Projects-->
-    <div class="modal" id="otherProjects">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Other Projects</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    Here you can select the projects you want to follow that are not organized in a Program area.
-                    <br>
-
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    </div>
     <script>
         $(document).ready(function () {
-            var readURL = function (input) {
+            let readURL = function (input) {
                 if (input.files && input.files[0]) {
-                    var reader = new FileReader();
+                    let reader = new FileReader();
                     reader.onload = function (e) {
                         $('.avatar').attr('src', e.target.result);
                     }
@@ -275,6 +174,9 @@
                     alert('You are registred as an owner to this project, hence not be unselected');
                     $(this).prop("checked", true);
                 }
+            });
+            $('span[data-toggle=tooltip]').mouseover(function () {
+                $(this).tooltip('show');
             });
         });
     </script>

@@ -80,13 +80,17 @@
     @endif
 
     @if ($project_update->summary)
-        <div class="my-1">
+        <div class="accordion" id="summary">
             <label for="outcomes" class="form-group-header mt-4">Summary</label>
-            <table class="table table-striped table-bordered">
-                <tr>
-                    <td>{{$project_update->summary}}</td>
-                </tr>
-            </table>
+            <div class="card">
+                <div class="card-header bg-white">
+                    <div class="row">
+                        <div class="col-auto pl-1">
+                            {{$project_update->summary}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
 
@@ -99,11 +103,9 @@
             @method('PUT')
             @csrf
             <div class="form-group">
+                @if (Auth::user()->hasRole(['Partner']))
                 <div class="form-row my-2">
-                    <label for="outcomes" class="form-group-header mt-4">Comments</label>
-                </div>
-                <div class="form-row my-2">
-                    <label for="partner_comment" class="form-group-header mt-4">Partner</label>
+                    <label for="partner_comment" class="form-group-header mt-4">Partner's comment</label>
                     <textarea rows=4 placeholder="Partner's comment"
                               class="form-control form-control-sm @error('partner_comment') is-danger @enderror"
                               name="partner_comment">{{ old('partner_comment', empty($project_update) ? '' : $project_update->partner_comment) }}</textarea>
@@ -111,9 +113,10 @@
                     <div class="text-danger">{{ $errors->first('partner_comment') }}</div>
                     @enderror
                 </div>
-                @can('project-create')
+                @endif
+                @if (Auth::user()->hasRole(['Spider']))
                     <div class="form-row my-2">
-                        <label for="internal_comment" class="form-group-header mt-4">Spider's internal</label>
+                        <label for="internal_comment" class="form-group-header mt-4">Spider's internal comment</label>
                         <textarea rows=4 placeholder="Spider's internal comment"
                                   class="form-control form-control-sm @error('internal_comment') is-danger @enderror"
                                   name="internal_comment">{{ old('internal_comment', empty($project_update) ? '' : $project_update->internal_comment) }}</textarea>
@@ -121,13 +124,14 @@
                         <div class="text-danger">{{ $errors->first('internal_comment') }}</div>
                         @enderror
                     </div>
-                @endcan
-
+                @endif
                 @can('project-create')
-                    <input class="btn btn-danger btn-lg" name="reject" value="Reject" type="submit">
-                    <input class="btn btn-success btn-lg" name="approve" value="Approve" type="submit">
-                @else
-                    <input class="btn btn-success btn-lg" value="Save" value="save" type="submit">
+                    @if ($project_update->status == 'submitted' && Auth::user()->hasRole(['Spider', 'Administrator']))
+                        <input class="btn btn-danger btn-lg" name="reject" value="Return for revision"
+                               type="submit">
+                        <input class="btn btn-success btn-lg" name="approve" value="Approve" type="submit">
+                    @endif
+                        <input class="btn btn-primary btn-lg" value="Save" value="save" type="submit">
                 @endcan
             </div>
         </form>
@@ -154,13 +158,12 @@
 
     <script>
         $(document).ready(function () {
-            let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}, toolbar: false});
+            //var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}, toolbar: false, disableEditing: true});
             $(document).on('click', '.collapseEditor', function () {
                 $(this).closest('.form-group').find('.medium-editor-element').toggleClass("collapsed expanded");
                 $(this).toggleClass("fa-chevron-right fa-chevron-down");
             });
         });
-
     </script>
 
 @endsection

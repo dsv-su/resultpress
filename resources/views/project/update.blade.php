@@ -238,7 +238,7 @@
                 if (id > 0) {
                     html += '<td class="w-75"><input type="hidden" id="output" name="output_id[]" value="' + id + '">' + output + '</td>';
                 } else {
-                    html += '<td class="w-75"><input type="text" id="output" name="output_id[]" placeholder="Enter output name" required></td>';
+                    html += '<td class="w-75"><input type="text" id="output" name="output_id[]" placeholder="Enter output name" data-trigger="manual" maxlength="255" data-target="tooltip" title="Maximum length is 255 chars" required></td>';
                 }
                 html += '<td class="w-25"><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="0" value="0" size="3" required></td>';
                 html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-trash-alt"></i></button></td>'
@@ -246,8 +246,21 @@
                 if (id > 0) {
                     $('#' + id + '.add-output').hide();
                 }
+
                 $('#outputs_table').append(html);
+
+                $('input[name="output_id[]"]').focusout(function () {
+                    $(this).tooltip('hide');
+                });
+                $('input[name="output_id[]"]').on('keyup', function() {
+                    if (this.value.length > 250) {
+                        $(this).tooltip('show');
+                    } else {
+                        $(this).tooltip('hide');
+                    };
+                });
             });
+
             $(document).on('click', '#outputs_table .remove', function () {
                 let id = $(this).attr('id');
                 $('#' + id + '.add-output').show();
@@ -271,7 +284,7 @@
                 if (!$('#project_update_summary').val()) {
                     confirmation += '\nSummary is empty';
                 }
-                if ($('#activities_table tr').length < 2 && $('#outputs_table tr').length < 2) {
+                if ($('#aus_list').children().length < 1 && $('#outputs_table tr').length < 2) {
                     confirmation += '\nThe update does not cover neither activities nor outputs';
                 }
                 if (!confirmation) {

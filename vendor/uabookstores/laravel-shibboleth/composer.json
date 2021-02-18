@@ -1,0 +1,55 @@
+{
+  "name": "uabookstores/laravel-shibboleth",
+  "description": "Enable basic Shibboleth support for Laravel 5.x",
+  "authors": [
+    {
+      "name": "Christopher Maio",
+      "email": "cjmaio@uwm.edu"
+    },
+    {
+      "name": "Michael Schuett",
+      "email": "michaeljs1990@gmail.com"
+    },
+    {
+      "name": "Taylor Donald Harvey Smith",
+      "email": "smit2482@uwm.edu"
+    },
+    {
+      "name": "Jeff Puckett",
+      "email": "jpucket@uark.edu"
+    },
+    {
+      "name": "Brandon Williams",
+      "email": "brandonwilliams@email.arizona.edu"
+    }
+  ],
+  "require": {
+    "illuminate/support": "5.* || ^6.0 || ^7.0 || ^8.0",
+    "mrclay/shibalike": "1.0.0",
+    "laravel/framework": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+    "tymon/jwt-auth": "^1.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "StudentAffairsUwm\\Shibboleth\\": "src/StudentAffairsUwm/Shibboleth"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "StudentAffairsUwm\\Shibboleth\\Tests\\Stubs\\": "tests/setup/Stubs",
+      "App\\": "tests/setup/app"
+    }
+  },
+  "minimum-stability": "stable",
+  "require-dev": {
+    "phpunit/phpunit": "^6.0|^7.0|^8.0",
+    "orchestra/testbench": "^3.4|^4.0|^5.0"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "StudentAffairsUwm\\Shibboleth\\ShibbolethServiceProvider"
+      ]
+    }
+  }
+}

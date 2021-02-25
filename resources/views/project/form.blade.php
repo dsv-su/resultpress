@@ -437,7 +437,7 @@
                             let currency = $('#project_currency option:selected').text();
                             let html = '';
 
-                            html += '<div class="col-lg-6 my-2 px-2" style="min-width: 16rem;"><div class="card bg-light m-auto"><div class="card-body pb-1"><div class="form-group mb-1 row"><input type="hidden" name="activity_id[]" value=0><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label><div class="col-8 col-sm-9 px-1"><input type="text" placeholder="Name" name="activity_name[]" required class="form-control form-control-sm" value="' + activity.find('input[name="activity_name[]"]').val() + '"></div></div>';
+                            html += '<div class="col-lg-6 my-2 px-2" data-type="copy" style="min-width: 16rem;"><div class="card bg-light m-auto"><div class="card-body pb-1"><div class="form-group mb-1 row"><input type="hidden" name="activity_id[]" value=0><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label><div class="col-8 col-sm-9 px-1"><input type="text" placeholder="Name" name="activity_name[]" required class="form-control form-control-sm" value="' + activity.find('input[name="activity_name[]"]').val() + '"></div></div>';
                             html += '<div class="form-group mb-1 row"><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description</label><div class="col-8 col-sm-9 px-1"><textarea type="text" name="activity_description[]" id="activity_description" required class="form-control form-control-sm" rows="2" placeholder="Description">' + activity.find('textarea[name="activity_description[]"]').text() + '</textarea></div></div>';
                             html += '<div class="form-group mb-1 row"><label for="activity_start[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_start[]" value=' + activity.find('input[name="activity_start[]"]').val() + ' placeholder="Start date" required class="form-control form-control-sm datepicker"></div>';
                             html += '<label for="activity_end[]" class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_end[]" placeholder="End date" value=' + activity.find('input[name="activity_end[]"]').val() + ' required class="form-control form-control-sm datepicker"></div></div>';
@@ -450,9 +450,13 @@
 
                             $('#activities_list').append(html);
 
+                            let template = $(activity).find('#activity_template').val();
+                            $('#activities_list div[data-type="copy"] textarea[id="activity_template"]').html(template);
+
                             let editor = new MediumEditor('#activities_list #activity_template', {
                                 placeholder: {text: "Activity template"}
                             });
+
                             $('#activities_list input.datepicker:last-child').datepicker({
                                 format: 'dd-mm-yyyy',
                                 weekStart: 1

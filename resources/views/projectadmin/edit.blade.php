@@ -31,14 +31,14 @@
         </div>
     </div>
     <div class="form-row">
-       <div class="form-group border border p-5">
+       <div class="form-group border p-2">
            <form action="{{ route('projectadmin.update', $project->id) }}" method="POST">
            @method('PATCH')
            @csrf
           <div class="form-row">
               <div class="col">
                   <label class="text-primary">Managers:</label>
-                  <div class="col-md-4 py-2">
+                  <div class="col-md-12 py-2">
                   <select name="user_id[]" class="custom-select" id="managers" multiple="multiple">
                   @foreach($users as $user)
                      <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
@@ -50,7 +50,7 @@
           <div class="form-row">
               <div class="col">
                   <label class="text-primary">Partners:</label>
-                  <div class="col-md-4 py-2">
+                  <div class="col-md-12 py-2">
                    <select name="partner_id[]" class="custom-select" id="partners" multiple="multiple">
                    @foreach($users as $user)
                       <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>

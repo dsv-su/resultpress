@@ -289,8 +289,8 @@ class ProjectController extends Controller
             $user = Auth::user();
             $acl = new ACLHandler($project, $user);
             $acl->setNewProjectPermissions();
-
         }
+
         //Activities
         //Request from form --> this should later be refactored
         $activity_array['id'] = request('activity_id') ?? null;

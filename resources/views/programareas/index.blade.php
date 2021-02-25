@@ -3,8 +3,8 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Program Areas</h2><i class="fas fa-info-circle" data-toggle="modal" data-target="#programAreas"></i>
+            <div class="pull-left d-flex align-items-center">
+                <h2>Program Areas</h2><i class="fas fa-info-circle ml-1" data-toggle="modal" data-target="#programAreas"></i>
             </div>
             @if (session('status'))
                 <div class="alert alert-success">
@@ -15,7 +15,7 @@
         </div>
     </div>
     @foreach($programareas as $programarea)
-    <div class="card">
+    <div class="card my-2">
         <div class="card-header">
             {{$programarea->name}}
         </div>

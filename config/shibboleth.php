@@ -76,24 +76,13 @@ return [
     'entitlement' => $system_config['global']['authorization'],
 
     'user' => [
-        'name' => 'displayName',
-        'first_name' => 'givenName',
-        'last_name' => 'sn',
-        'email' => 'mail',
-        'emplid' => 'eppn',
+        'name' => env('SHIBB_NAME', 'displayName'),
+        'first_name' => env('SHIBB_FNAME', 'givenName'),
+        'last_name' => env('SHIBB_LNAME', 'sn'),
+        'email' => env('SHIBB_EMAIL', 'mail'),
+        'emplid' => env('SHIBB_EMPLID', 'eppn'),
     ],
-
-    //'entitlement' => 'Shib-isMemberOf',
-/*
-    'user' => [
-        // fillable user model attribute => server variable
-        'name' => 'Shib-cn',
-        'first_name' => 'Shib-givenName',
-        'last_name' => 'Shib-sn',
-        'email' => 'Shib-mail',
-        'emplid' => 'Shib-emplId',
-    ],
-*/
+    
     //The user model field (from the user array above) that should be used for authentication
     'user_authentication_field' => 'email',
 

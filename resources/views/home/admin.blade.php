@@ -11,10 +11,9 @@
                     {{ session('status') }}
                 </div>
             @endif
-            <br>
         </div>
     </div>
-    <div class="card">
+    <div class="card my-2">
         <div class="card-header">
             Projects
         </div>
@@ -24,7 +23,7 @@
             <a href="{{ route('projectadmin.index') }}" class="btn btn-outline-primary">Manage</a>
         </div>
     </div>
-    <div class="card">
+    <div class="card my-2">
         <div class="card-header">
             Users
         </div>
@@ -34,7 +33,7 @@
             <a href="{{ route('users.index') }}" class="btn btn-outline-primary">Manage</a>
         </div>
     </div>
-    <div class="card">
+    <div class="card my-2">
         <div class="card-header">
             Roles
         </div>

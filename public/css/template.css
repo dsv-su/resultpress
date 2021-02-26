@@ -138,7 +138,7 @@ button, input[type="submit"], .btn-submit {
 }
 
 #top-links, #header {
-    background-color: #002e5f;
+    background-color: #eb7125;
     color: white;
 }
 
@@ -178,11 +178,13 @@ button, input[type="submit"], .btn-submit {
 
 #header-dsv {
     float: left;
+    padding-top: 50px;
+    padding-bottom: 25px;
 }
 
 #header-dsv > img {
     width: 100%;
-    max-width: 399px;
+    max-width: 284px;
 }
 
 #header-su {
@@ -278,6 +280,14 @@ button, input[type="submit"], .btn-submit {
     #header-su-responsive {
         display: inline-block;
     }
+
+    #header-dsv {
+        padding-top: 5px;
+    }
+
+    #header-dsv img {
+        width: 60%;
+    }
 }
 
 @media screen and (min-width: 767px) {
@@ -287,10 +297,6 @@ button, input[type="submit"], .btn-submit {
 
     #header-su-responsive {
         display: none;
-    }
-
-    #header-dsv {
-        padding-top: 75px;
     }
 }
 

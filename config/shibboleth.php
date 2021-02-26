@@ -49,7 +49,7 @@ return [
             'Shib-emplId' => 'admin',
         ],
         'staff' => [
-            'Shib-cn' => 'Ryan Dias',
+            'Shib-cn' => 'DSV Developer',
             'Shib-mail' => 'staff@dsv.su.se',
             'Shib-givenName' => 'Staff',
             'Shib-sn' => 'User',
@@ -82,7 +82,7 @@ return [
         'email' => env('SHIBB_EMAIL', 'mail'),
         'emplid' => env('SHIBB_EMPLID', 'eppn'),
     ],
-    
+
     //The user model field (from the user array above) that should be used for authentication
     'user_authentication_field' => 'email',
 

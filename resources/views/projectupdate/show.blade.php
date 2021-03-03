@@ -13,7 +13,6 @@
     </div>
     <p><a href="{{ route('projectupdate_index', $project_update->project_id) }}">Back to project updates list</a></p>
 
-
     @if(!$activity_updates->isEmpty())
         <label for="aus_list" class="form-group-header">Covered activities</label>
         <div class="d-flex flex-wrap" id="aus_list">
@@ -104,15 +103,15 @@
             @csrf
             <div class="form-group">
                 @if (Auth::user()->hasRole(['Partner']))
-                <div class="form-row my-2">
-                    <label for="partner_comment" class="form-group-header mt-4">Partner's comment</label>
-                    <textarea rows=4 placeholder="Partner's comment"
-                              class="form-control form-control-sm @error('partner_comment') is-danger @enderror"
-                              name="partner_comment">{{ old('partner_comment', empty($project_update) ? '' : $project_update->partner_comment) }}</textarea>
-                    @error('partner_comment')
-                    <div class="text-danger">{{ $errors->first('partner_comment') }}</div>
-                    @enderror
-                </div>
+                    <div class="form-row my-2">
+                        <label for="partner_comment" class="form-group-header mt-4">Partner's comment</label>
+                        <textarea rows=4 placeholder="Partner's comment"
+                                  class="form-control form-control-sm @error('partner_comment') is-danger @enderror"
+                                  name="partner_comment">{{ old('partner_comment', empty($project_update) ? '' : $project_update->partner_comment) }}</textarea>
+                        @error('partner_comment')
+                        <div class="text-danger">{{ $errors->first('partner_comment') }}</div>
+                        @enderror
+                    </div>
                 @endif
                 @if (Auth::user()->hasRole(['Spider']))
                     <div class="form-row my-2">
@@ -126,12 +125,14 @@
                     </div>
                 @endif
                 @can('project-create')
-                    @if ($project_update->status == 'submitted' && Auth::user()->hasRole(['Spider', 'Administrator']))
-                        <input class="btn btn-danger btn-lg" name="reject" value="Return for revision"
-                               type="submit">
-                        <input class="btn btn-success btn-lg" name="approve" value="Approve" type="submit">
-                    @endif
-                        <input class="btn btn-primary btn-lg" value="Save" value="save" type="submit">
+                    <div class="form-row my-2">
+                        @if ($project_update->status == 'submitted' && Auth::user()->hasRole(['Spider', 'Administrator']))
+                            <input class="btn btn-danger btn-lg mr-2" name="reject" value="Return for revision"
+                                   type="submit">
+                            <input class="btn btn-success btn-lg mr-2" name="approve" value="Approve" type="submit">
+                        @endif
+                        <input class="btn btn-primary btn-lg mr-2" value="Save" value="save" type="submit">
+                    </div>
                 @endcan
             </div>
         </form>

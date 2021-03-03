@@ -1,7 +1,24 @@
 @extends('layouts.master')
 
 @section('content')
-    <h4>{{$project->name}} — project summary</h4>
+    <div class="row justify-content-between">
+        <div class="col-6"><h4>{{ $project->name }}</h4></div>
+        <div class="col-sm-auto d-flex align-items-center">
+            @if($project->status() == 1)
+                <span class="badge badge-light font-100">Pending</span>
+            @elseif($project->status() == 2)
+                <span class="badge badge-warning font-100">In progress</span>
+            @elseif($project->status() == 3)
+                <span class="badge badge-danger font-100">Delayed</span>
+            @elseif($project->status() == 4)
+                <span class="badge badge-primary font-100">Pending review</span>
+            @elseif($project->status() == 5)
+                <span class="badge badge-success font-100">Completed</span>
+            @elseif($project->status() == 6)
+                <span class="badge badge-secondary font-100">Archived</span>
+            @endif
+        </div>
+    </div>
 
     <p><a href="{{ url()->previous() }}">Return back</a></p>
     <p>@include('project.action_links')</p>
@@ -97,14 +114,16 @@
                                 </span>
                             </div>
                             <div class="col-auto d-flex py-2 px-1 align-items-center">
-                                @if($a->status == 1)
-                                    <span class="badge badge-info font-100">In progress {{$a->statusdate}}</span>
-                                @elseif($a->status == 2)
-                                    <span class="badge badge-warning font-100">Delayed {{$a->statusdate}}</span>
-                                @elseif($a->status == 3)
-                                    <span class="badge badge-success font-100">Done {{$a->statusdate}}</span>
-                                @elseif($a->status == 0)
-                                    <span class="badge badge-light font-100">Not started</span>
+                                @if($a->status() == 1)
+                                    <span class="badge badge-light font-100">Pending</span>
+                                @elseif($a->status() == 2)
+                                    <span class="badge badge-warning font-100">In progress</span>
+                                @elseif($a->status() == 3)
+                                    <span class="badge badge-danger font-100">Delayed</span>
+                                @elseif($a->status() == 4)
+                                    <span class="badge badge-info font-100">Pending review</span>
+                                @elseif($a->status() == 5)
+                                    <span class="badge badge-success font-100">Completed</span>
                                 @endif
                             </div>
                         </div>

@@ -207,7 +207,7 @@ class ProjectUpdateController extends Controller
             $remainingpercentage = number_format(abs(1 - ($totalmoneyspent / $activity->budget)) * 100) . '%';
             $moneyspent = ' ' . abs($activity->budget - $totalmoneyspent) . ' (' . $remainingpercentage . ')';
 
-            if ($au->status == 3) {
+            if ($au->completed) {
                 $deadlinestring .= ' was completed';
                 $budgetstring .= ' was completed';
                 if ($totalmoneyspent > $activity->budget) {

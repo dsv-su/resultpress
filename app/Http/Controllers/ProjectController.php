@@ -456,7 +456,6 @@ class ProjectController extends Controller
         $activity_update_array['activity_id'] = request('activity_id');
         $activity_update_array['activity_update_id'] = request('activity_update_id');
         $activity_update_array['comment'] = request('activity_comment');
-        $activity_update_array['status'] = request('activity_status');
         $activity_update_array['money'] = request('activity_money');
         $activity_update_array['date'] = request('activity_date') ?? null;
 
@@ -472,7 +471,6 @@ class ProjectController extends Controller
                 $activityupdate = ActivityUpdate::firstOrNew(['id' => $activity_update_array['activity_update_id'][$key]]);
                 $activityupdate->activity_id = Activity::findOrFail($id)->id;
                 $activityupdate->comment = $activity_update_array['comment'][$key];
-                $activityupdate->status = $activity_update_array['status'][$key];
                 $activityupdate->money = $activity_update_array['money'][$key];
                 $activityupdate->date = $activity_update_array['date'][$key];
                 $activityupdate->project_update_id = $projectupdate_id;
@@ -604,5 +602,27 @@ class ProjectController extends Controller
         // Delete project
         $project->delete();
         return redirect()->route('project_home');
+    }
+
+    public function archive(Project $project) {
+        $project->archived = true;
+        $project->update();
+        return redirect()->route('project_show', $project);
+    }
+
+    public function unarchive(Project $project) {
+        $project->archived = false;
+        $project->update();
+        return redirect()->route('project_show', $project);
+    }
+
+    public function completeActivity(Request $request) {
+        $activity = Activity::find($request->activity_id);
+        $activity->completed = $request->activity_completed;
+        $activity->update();
+        return Response()->json([
+            'message' => 'Success',
+            'text' => 'Marked as completed'
+        ]);
     }
 }

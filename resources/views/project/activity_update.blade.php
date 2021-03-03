@@ -10,32 +10,27 @@
                         class="col-form-label-sm font-weight-bold">{{$a->title}}</label>
             </div>
         </div>
-        <div class="form-group mb-1 row">
-            <label for="activity_status[]"
-                   class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Status</label>
-            <div class="col-8 col-sm-3 px-1">
-                @if (isset($show) && $show)
+        @if(isset($review) && $review)
+            <div class="form-group mb-1 row">
+                <label for="activity_status[]"
+                       class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Status</label>
+                <div class="col-8 col-sm-3 px-1">
                     <div class="form-control-sm px-0">
-                        @if($au->status == 1)
-                            <span class="badge badge-info font-100">Started</span>
-                        @elseif($au->status == 2)
-                            <span class="badge badge-warning font-100">Delayed</span>
-                        @elseif($au->status == 3)
-                            <span class="badge badge-success font-100">Done</span>
+                        @if($au->activity->status() == 1)
+                            <span class="badge badge-light font-100">Pending</span>
+                        @elseif($au->activity->status() == 2)
+                            <span class="badge badge-warning font-100">In progress</span>
+                        @elseif($au->activity->status() == 3)
+                            <span class="badge badge-danger font-100">Delayed</span>
+                        @elseif($au->activity->status() == 4)
+                            <span class="badge badge-info font-100">Pending review</span>
+                        @elseif($au->activity->status() == 5)
+                            <span class="badge badge-success font-100">Completed</span>
                         @endif
                     </div>
-                @else
-                    <select id="status" name="activity_status[]"
-                            class="form-control-sm form-control">
-                        <option value="1" @if ($au && $au->status == 1) selected @endif >In progress
-                        </option>
-                        <option value="2" @if ($au && $au->status == 2) selected @endif>Delayed
-                        </option>
-                        <option value="3" @if ($au && $au->status == 3) selected @endif>Done</option>
-                    </select>
-                @endif
+                </div>
             </div>
-        </div>
+        @endif
 
         <div class="form-group mb-1 row">
             <label for="activity_money[]"
@@ -98,10 +93,23 @@
             </div>
         @endif
 
+        @if (isset($review) && $review && $au->activity->status() != 5)
+            <div class="form-group row mb-0">
+                <meta name="csrf-token" content="{{ csrf_token() }}">
+                @if ($au->activity->completed == 1)
+                    <a href="#" id="complete" data-completed="1"
+                       class="badge badge-sm badge-success font-100 mt-1 ml-auto">Completed</a>
+                @else
+                    <a href="#" id="complete" data-completed="0"
+                       class="badge badge-sm badge-primary font-100 mt-1 ml-auto">Mark as complete</a>
+                @endif
+            </div>
+        @endif
+
         @if (!isset($show))
             <div class="form-group row mb-0">
                 <a name="remove" id="{{$a->id}}"
-                   class="btn btn-outline-danger btn-sm remove remove ml-auto mt-1"><i
+                   class="btn btn-outline-danger btn-sm remove ml-auto mt-1"><i
                             class="far fa-trash-alt"></i></a>
             </div>
         @endif
@@ -110,13 +118,56 @@
 
 @if(isset($review) && $review)
     <script>
-        var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}, toolbar: false, disableEditing: true});
+        var editor = new MediumEditor('.mediumEditor', {
+            placeholder: {text: "Description"},
+            toolbar: false,
+            disableEditing: true
+        });
+        $('#complete').on('click', function (e) {
+            e.preventDefault();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $(this).prev('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            let formData = new FormData();
+            let completed = null;
+            if ($(this).attr('data-completed') == 1) {
+                completed = 0;
+            } else {
+                completed = 1;
+            }
+            formData.append("activity_id", "{{$au->activity->id}}");
+            formData.append("activity_completed", completed);
+            $.ajax({
+                type: 'POST',
+                url: "{{ url('complete_activity')}}",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: (data) => {
+                    alert('Complete');
+                    $(this).text(data.text);
+                    $(this).attr('data-completed', completed);
+                    $(this).toggleClass('badge-primary badge-success');
+                    if (completed) {
+                        $(this).text('Completed');
+                    } else {
+                        $(this).text('Mark as complete');
+                    }
+                },
+                error: function (data) {
+                    alert('There was an error in updating completion status.');
+                }
+            });
+        });
     </script>
 @else
     <script>
         var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
     </script>
-    @endif
+@endif
 <script>
     $('input.datepicker:last-child').datepicker({
         format: 'dd-mm-yyyy',

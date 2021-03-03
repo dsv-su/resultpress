@@ -15,7 +15,7 @@
         </div>
     </div>
     @foreach($programareas as $programarea)
-    <div class="card my-2">
+    <div class="card my-3">
         <div class="card-header">
             {{$programarea->name}}
         </div>

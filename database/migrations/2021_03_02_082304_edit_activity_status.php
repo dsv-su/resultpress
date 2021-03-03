@@ -18,7 +18,6 @@ class EditActivityStatus extends Migration
         });
         Schema::table('activity_updates', function (Blueprint $table) {
             $table->dropColumn('status');
-            $table->boolean('completed')->nullable();
         });
     }
 

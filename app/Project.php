@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -84,6 +85,40 @@ class Project extends Model
     public function project_owner()
     {
         return $this->hasMany(ProjectOwner::class);
+    }
+
+    public function status() {
+        $delayed = false;
+        if ($this->archived) {
+            // Archived
+            return 6;
+        }
+        foreach ($this->activities() as $a) {
+            if ($a->status() == 3) {
+                $delayed = true;
+            }
+        }
+        if ($delayed) {
+            // Delayed
+            return 3;
+        }
+        if ($this->pending_updates()->count()) {
+            // Pending review
+            return 4;
+        }
+        if ($this->start->lt(Carbon::now())) {
+            // Pending
+            return 1;
+        }
+        if ($this->start->gte(Carbon::now())) {
+            // In progress
+            return 2;
+        }
+        if (($this->end->lte(Carbon::now()))) {
+            // Finished
+            return 5;
+        }
+        // Archived
     }
 }
 

@@ -419,6 +419,7 @@ class ProjectController extends Controller
                 }
             }
         }
+
         // Update Project managers and partners
         $project_owners = ProjectOwner::where('project_id', $project->id)->get();
         $project_partners = ProjectPartner::where('project_id', $project->id)->get();
@@ -427,10 +428,10 @@ class ProjectController extends Controller
         {
             $owner = ProjectOwner::find($project_owner->id);
             $user = User::find($owner->user_id);
-            $user->revokePermissionTo('project-'.$id.'-list');
-            $user->revokePermissionTo('project-'.$id.'-edit');
-            $user->revokePermissionTo('project-'.$id.'-update');
-            $user->revokePermissionTo('project-'.$id.'-delete');
+            $user->revokePermissionTo('project-'.$project->id.'-list');
+            $user->revokePermissionTo('project-'.$project->id.'-edit');
+            $user->revokePermissionTo('project-'.$project->id.'-update');
+            $user->revokePermissionTo('project-'.$project->id.'-delete');
             $owner->delete();
         }
         //Store new managers
@@ -442,7 +443,7 @@ class ProjectController extends Controller
             $new_owner->save();
             //Give specific project permissions to user
             $user = User::find($owner);
-            $user->givePermissionTo('project-'.$id.'-list', 'project-'.$id.'-edit', 'project-'.$id.'-update', 'project-'.$id.'-delete');
+            $user->givePermissionTo('project-'.$project->id.'-list', 'project-'.$project->id.'-edit', 'project-'.$project->id.'-update', 'project-'.$project->id.'-delete');
         }
         //Erase existing partners
         if($project_partners)
@@ -451,8 +452,8 @@ class ProjectController extends Controller
             {
                 $partner = ProjectPartner::find($project_partner->id);
                 $user = User::find($partner->partner_id);
-                $user->revokePermissionTo('project-'.$id.'-list');
-                $user->revokePermissionTo('project-'.$id.'-update');
+                $user->revokePermissionTo('project-'.$project->id.'-list');
+                $user->revokePermissionTo('project-'.$project->id.'-update');
                 $partner->delete();
             }
         }
@@ -467,7 +468,7 @@ class ProjectController extends Controller
                 $new_partner->save();
                 //Give specific project permissions to partner
                 $user = User::find($partner);
-                $user->givePermissionTo('project-'.$id.'-list', 'project-'.$id.'-update');
+                $user->givePermissionTo('project-'.$project->id.'-list', 'project-'.$project->id.'-update');
             }
         }
 

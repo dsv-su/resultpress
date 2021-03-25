@@ -233,8 +233,15 @@ class ProjectController extends Controller
             'outputs' => $project->submitted_outputs(),
             'project_areas' => $project->project_area()->get(),
             'areas' => Area::all(),
-            'old_pa' => $project->project_area->pluck('area_id')->toArray()
-        ]);
+            'old_pa' => $project->project_area->pluck('area_id')->toArray(),
+            'users' => User::all(),
+            'old_users' => ProjectOwner::where('project_id', $project->id)->pluck('user_id')->toArray(),
+            'partners' => ProjectPartner::where('project_id', $project->id)->pluck('partner_id')->toArray()
+            /*'managers' => User::whereHas('project_owner', function ($query) use($project) {
+                            return $query->where('project_id', $project->id);
+                            })->get()*/
+            ]);
+
     }
 
     /**
@@ -244,7 +251,7 @@ class ProjectController extends Controller
      *
      * @return RedirectResponse
      */
-    public function update(Project $project)
+    public function update(Request $request, Project $project)
     {
         // dd(request());
         request()->validate([
@@ -410,6 +417,57 @@ class ProjectController extends Controller
                         ->performedOn(Outcome::find($newoutcome->id))
                         ->log('NewOutcome');
                 }
+            }
+        }
+        // Update Project managers and partners
+        $project_owners = ProjectOwner::where('project_id', $project->id)->get();
+        $project_partners = ProjectPartner::where('project_id', $project->id)->get();
+        //Erase existing owners
+        foreach($project_owners as $project_owner)
+        {
+            $owner = ProjectOwner::find($project_owner->id);
+            $user = User::find($owner->user_id);
+            $user->revokePermissionTo('project-'.$id.'-list');
+            $user->revokePermissionTo('project-'.$id.'-edit');
+            $user->revokePermissionTo('project-'.$id.'-update');
+            $user->revokePermissionTo('project-'.$id.'-delete');
+            $owner->delete();
+        }
+        //Store new managers
+        foreach ($request->user_id as $owner)
+        {
+            $new_owner = new ProjectOwner();
+            $new_owner->project_id = $project->id;
+            $new_owner->user_id = $owner;
+            $new_owner->save();
+            //Give specific project permissions to user
+            $user = User::find($owner);
+            $user->givePermissionTo('project-'.$id.'-list', 'project-'.$id.'-edit', 'project-'.$id.'-update', 'project-'.$id.'-delete');
+        }
+        //Erase existing partners
+        if($project_partners)
+        {
+            foreach($project_partners as $project_partner)
+            {
+                $partner = ProjectPartner::find($project_partner->id);
+                $user = User::find($partner->partner_id);
+                $user->revokePermissionTo('project-'.$id.'-list');
+                $user->revokePermissionTo('project-'.$id.'-update');
+                $partner->delete();
+            }
+        }
+        //Store new partners
+        if($request->partner_id)
+        {
+            foreach ($request->partner_id as $partner)
+            {
+                $new_partner = new ProjectPartner();
+                $new_partner->project_id = $project->id;
+                $new_partner->partner_id = $partner;
+                $new_partner->save();
+                //Give specific project permissions to partner
+                $user = User::find($partner);
+                $user->givePermissionTo('project-'.$id.'-list', 'project-'.$id.'-update');
             }
         }
 

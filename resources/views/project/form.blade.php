@@ -380,6 +380,36 @@
                                     Outcome <i class="fas fa-plus"></i></button>
                             </div>
 
+                            <!-- Project managers and partners -->
+                            <div class="form-row">
+                                <div class="form-group border p-2">
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <label class="text-primary">Managers:</label>
+                                            <div class="col-md-12 py-2">
+                                                <select name="user_id[]" class="custom-select" id="managers" multiple="multiple">
+                                                    @foreach($users as $user)
+                                                        <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <label class="text-primary">Partners:</label>
+                                            <div class="col-md-12 py-2">
+                                                <select name="partner_id[]" class="custom-select" id="partners" multiple="multiple">
+                                                    @foreach($users as $user)
+                                                        <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
                                        @else value="Update"
@@ -390,6 +420,16 @@
                 </form>
 
                 <script>
+                    $('#managers').multiselect({
+                        templates: {
+                            li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
+                        }
+                    });
+                    $('#partners').multiselect({
+                        templates: {
+                            li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
+                        }
+                    });
                     let editor = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Activity template"}});
                     $(function () {
                         $('.mediumEditor#activity_template').mediumInsert({

@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\ProjectDeadlines',
     ];
 
     /**
@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('notify:reminder')->dailyAt('09:00');
+        $schedule->command('project:deadlines')->dailyAt('09:00');
     }
 
     /**

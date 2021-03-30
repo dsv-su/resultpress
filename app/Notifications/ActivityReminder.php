@@ -45,7 +45,7 @@ class ActivityReminder extends Notification
                     ->line('This is an automatic reminder from ResultPress to remind you that there is less than '. $this->details['days'].' days left on activity,
                      '.$this->details['title'].',  please review your project, '.$this->details['project'].', and update as necessary.')
                     ->action('Project summary', $this->details['url'])
-                    ->line('Thank you for using our application!');
+                    ->line('-ResultPress');
     }
 
     /**

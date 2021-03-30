@@ -72,6 +72,48 @@
                                            class="form-control form-control-sm datepicker">
                                 </div>
                             </div>
+
+                            <!-- Email reminders for project deadlines -->
+                            <div class="form-row row">
+                                <label for="add_reminder" class="col-3 col-form-label-sm">Add deadline</label>
+                                <div>
+                                    <button type="button" id="add_reminder" name="add_reminder" class="btn btn-outline-secondary btn-sm add-reminder m-2">Add <i class="far fa-bell"></i><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                            @foreach($project_reminders as $thisproject)
+                            <div class="form-row border row">
+                                <label for="project_reminder[]" class="col-3 col-form-label-sm">Deadline</label>
+                                <div class="col-8 col-sm-9 px-0 form-inline">
+                                    <input class="form-control form-control-sm" name="project_reminder_name[]" type="text" placeholder="Name" value="{{ old('project_reminder_name', empty($thisproject->name) ? '' : $thisproject->name) }}">
+                                </div>
+                                <label for="project_reminder[]" class="col-3 col-form-label-sm">Email reminder</label>
+                                <div class="col-8 col-sm-9 px-0 form-inline">
+                                    <select name="project_reminder[]" class="form-inline form-control-sm">
+                                        @if($thisproject->reminder)
+                                            <option value="1" selected="selected">Yes</option>
+                                            <option value="0" >No</option>
+                                        @else
+                                            <option value="0" selected="selected">No</option>
+                                            <option value="1" >Yes</option>
+                                        @endif
+                                    </select>
+
+                                    <input type="number" name="project_reminder_due_days[]" value="{{ $thisproject->reminder_due_days}}" class="form-control form-control-sm" style="width:50px;">
+
+                                    <label for="project_reminder_due_days[]" class="col-2 col-form-label-sm text-left">days before</label>
+                                    <div class="col-4">
+                                        <input type="text" name="project_reminder_date[]" id="project_reminder_date" placeholder="Deadline Date" value="{{ old('project_reminder_date', empty($thisproject->set) ? '' : $thisproject->set->format('d-m-Y')) }}"
+                                               class="form-control form-control-sm datepicker">
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            @endforeach
+                            <div class="d-flex flex-wrap" id="reminders_list">
+                            </div>
+                            <!-- end email reminders -->
+
                             <div class="form-row row">
                                 <label for="project_currency" class="col-3 col-form-label-sm">Currency</label>
                                 <div class="col-2">
@@ -502,7 +544,28 @@
                                 weekStart: 1
                             });
                         });
-
+                        /* -- */
+                        $(document).on('click', '.add-reminder', function () {
+                            let html = '';
+                            html += '<div class="form-row border row"><label for="project_reminder[]" class="col-3 col-form-label-sm">Deadline</label>';
+                            html += '<div class="col-8 col-sm-9 px-0 form-inline">';
+                            html += '<input class="form-control form-control-sm" name="project_reminder_name[]" type="text" placeholder="Name" value="{{ old('project_reminder_name', empty($thisproject->name) ? '' : $thisproject->name) }}"></div>';
+                            html += '<label for="project_reminder[]" class="col-3 col-form-label-sm">Email reminder</label>';
+                            html += '<div class="col-8 col-sm-9 px-0 form-inline">';
+                            html += '<select name="project_reminder[]" class="form-inline form-control-sm">' +
+                                '<option value="1" @if($project->reminder) selected="selected" @endif>Yes</option><option value="0" @if(!$project->reminder) selected="selected" @endif>No</option></select>';
+                            html += '<input type="number" name="project_reminder_due_days[]" value="{{$project->reminder_due_days}}" class="form-control form-control-sm" style="width:50px;">';
+                            html += '<label for="project_reminder_due_days[]" class="col-2 col-form-label-sm text-left">days before</label>';
+                            html += '<div class="col-4">' +
+                                '<input type="text" name="project_reminder_date[]" id="project_reminder_date" placeholder="Deadline Date" value="{{ old('project_reminder_date', empty($project->reminder_date) ? '' : $project->reminder_date->format('d-m-Y'))}}" class="form-control form-control-sm datepicker">';
+                            html += '</div></div></div>';
+                            $('#reminders_list').append(html);
+                            $('#reminders_list input.datepicker:last-child').datepicker({
+                                format: 'dd-mm-yyyy',
+                                weekStart: 1
+                            });
+                        });
+                        /* -- */
                         $(document).on('click', '.add-activities', function () {
 
                             //$('#activities_table').show();

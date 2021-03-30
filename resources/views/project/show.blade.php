@@ -61,6 +61,23 @@
                         @if ($project->moneyspent > $project->budget) class="badge badge-danger font-100" @endif> {{$project->moneyspent ?? 0}} {{$project->getCurrencySymbol()}}
                     / {{$project->budget ?? 0}} {{$project->getCurrencySymbol()}}</span></div>
         </div>
+        <div class="row my-1">
+            <div class="col-sm font-weight-bold">Deadlines:</div>
+            @if (!$deadlines->isEmpty())
+                <div class="col-sm">
+                @foreach($deadlines as $deadline)
+                    {{ $deadline->name }}: {{ $deadline->set->format('m/d/Y') }}
+                    @if($deadline->reminder == true) <i class="far fa-bell"></i> @endif
+                    <br>
+                @endforeach
+                </div>
+            @else <div class="col-sm">Not set</div>
+            @endif
+
+        </div>
+
+
+
     </div>
 
     @if($project->pending_updates()->count())

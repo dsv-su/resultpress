@@ -53,7 +53,7 @@ class MailActivityReminder extends Command
             if ($this->activity->reminder == true)
             {
                 $duedate = Carbon::now()->addDays($this->activity->reminder_due_days)->toDateString();
-                if($this->activity->end->toDateString() == $duedate)
+                if($this->activity->end->toDateString() == $duedate && $this->activity->status() != 5)
                 {
                     //Get Project
                     $this->project = Project::find($this->activity->project_id);

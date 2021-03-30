@@ -13,4 +13,9 @@ class ProjectPartner extends Model
     protected static $logAttributes = ['project_id', 'partner_id'];
     protected static $logName = 'ProjectPartner';
     protected static $logOnlyDirty = true;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'partner_id')->withDefault();
+    }
 }

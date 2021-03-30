@@ -13,6 +13,7 @@ use App\Project;
 use App\ProjectArea;
 use App\ProjectOwner;
 use App\ProjectPartner;
+use App\ProjectReminder;
 use App\ProjectUpdate;
 use App\Services\ACLHandler;
 use App\User;
@@ -201,7 +202,9 @@ class ProjectController extends Controller
         $project->moneyspent = $moneyspent;
         $project->budget = $budget;
 
-        return view('project.show', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs]);
+        $projectDeadlines = ProjectReminder::where('project_id', $project->id)->get();
+
+        return view('project.show', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs, 'deadlines' => $projectDeadlines]);
     }
 
     public function project_dates(Project $project)
@@ -236,7 +239,8 @@ class ProjectController extends Controller
             'old_pa' => $project->project_area->pluck('area_id')->toArray(),
             'users' => User::all(),
             'old_users' => ProjectOwner::where('project_id', $project->id)->pluck('user_id')->toArray(),
-            'partners' => ProjectPartner::where('project_id', $project->id)->pluck('partner_id')->toArray()
+            'partners' => ProjectPartner::where('project_id', $project->id)->pluck('partner_id')->toArray(),
+            'project_reminders' => ProjectReminder::where('project_id', $project->id)->get()
             /*'managers' => User::whereHas('project_owner', function ($query) use($project) {
                             return $query->where('project_id', $project->id);
                             })->get()*/
@@ -253,9 +257,9 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        // dd(request());
         request()->validate([
-            'project_name' => 'required'
+            'project_name' => 'required',
+            'user_id' => 'required',
         ]);
         $project->name = request('project_name');
         $project->description = request('project_description');
@@ -280,6 +284,21 @@ class ProjectController extends Controller
                 }
                 $new_pa->area_id = $project_area;
                 $new_pa->save();
+            }
+        }
+
+        //Set project reminders
+        if(count($request->project_reminder ?? [])>0) {
+            foreach($request->project_reminder as $key => $reminder) {
+                    ProjectReminder::updateOrCreate([
+                        'project_id' => $project->id,
+                        'set' => Carbon::createFromFormat('d-m-Y', $request->project_reminder_date[$key])->format('Y-m-d')
+                    ],
+                        [
+                        'name' => $request->project_reminder_name[$key],
+                        'reminder' => $request->project_reminder[$key],
+                        'reminder_due_days'=> $request->project_reminder_due_days[$key]
+                    ]);
             }
         }
 
@@ -434,16 +453,19 @@ class ProjectController extends Controller
             $user->revokePermissionTo('project-'.$project->id.'-delete');
             $owner->delete();
         }
+
         //Store new managers
-        foreach ($request->user_id as $owner)
-        {
-            $new_owner = new ProjectOwner();
-            $new_owner->project_id = $project->id;
-            $new_owner->user_id = $owner;
-            $new_owner->save();
-            //Give specific project permissions to user
-            $user = User::find($owner);
-            $user->givePermissionTo('project-'.$project->id.'-list', 'project-'.$project->id.'-edit', 'project-'.$project->id.'-update', 'project-'.$project->id.'-delete');
+        if($request->user_id) {
+            foreach ($request->user_id as $owner)
+            {
+                $new_owner = new ProjectOwner();
+                $new_owner->project_id = $project->id;
+                $new_owner->user_id = $owner;
+                $new_owner->save();
+                //Give specific project permissions to user
+                $user = User::find($owner);
+                $user->givePermissionTo('project-'.$project->id.'-list', 'project-'.$project->id.'-edit', 'project-'.$project->id.'-update', 'project-'.$project->id.'-delete');
+            }
         }
         //Erase existing partners
         if($project_partners)
@@ -482,6 +504,7 @@ class ProjectController extends Controller
 
     public function save_update(Project $project, Request $request)
     {
+        //dd($request->all());
         $projectupdate = ProjectUpdate::firstOrNew(['id' => request('project_update_id') ?? 0]);
         $projectupdate->project_id = $project->id;
         $projectupdate->summary = request('project_update_summary') ?? null;

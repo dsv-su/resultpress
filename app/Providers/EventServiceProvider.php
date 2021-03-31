@@ -20,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'Illuminate\Auth\Events\Login' => ['App\Listeners\LoginSuccessful'],
         'Illuminate\Notifications\Events\NotificationSent' => ['App\Listeners\SentNotificationSuccessful'],
+        'App\Events\PartnerUpdateEvent' => [
+            'App\Listeners\PartnerUpdateListener',
+        ]
     ];
 
     /**

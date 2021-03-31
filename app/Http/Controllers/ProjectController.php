@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Activity;
 use App\ActivityUpdate;
 use App\Area;
+use App\Events\PartnerUpdateEvent;
 use App\File;
+use App\Events\PartnerUpdate;
 use App\Outcome;
 use App\Output;
 use App\OutputUpdate;
@@ -624,6 +626,8 @@ class ProjectController extends Controller
                 $file->save();
             }
         }
+        // Fire an event
+        event(new PartnerUpdateEvent($projectupdate));
 
         return redirect()->route('projectupdate_show', $projectupdate_id);
     }

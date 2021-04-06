@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Activity;
 use App\ActivityUpdate;
+use App\Events\ProjectUpdateAcceptEvent;
+use App\Events\ProjectUpdateRejectEvent;
 use App\File;
 use App\Output;
 use App\OutputUpdate;
@@ -283,12 +285,16 @@ class ProjectUpdateController extends Controller
         $status = '';
         if ($request->input('approve')) {
             $status = 'approved';
+            //Fire Approved event
+            event(new ProjectUpdateAcceptEvent($project_update));
             activity()
                 ->causedBy(Auth::user()->id)
                 ->performedOn($project_update)
                 ->log('ProjectUpdateApproved');
         } else if ($request->input('reject')) {
             $status = 'draft';
+            //Fire Rejected event
+            event(new ProjectUpdateRejectEvent($project_update));
             activity()
                 ->causedBy(Auth::user()->id)
                 ->performedOn($project_update)

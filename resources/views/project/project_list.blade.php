@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="row my-1">
+                    <div class="row my-1 d-flex align-content-center">
                         <a href="/project/{{$project->id}}" class="mr-2">{{ $project->name}}</a>
                         @if($project->status == 1) <span class="badge badge-warning font-100">In progress</span>
                         @elseif($project->status == 2) <span class="badge badge-danger font-100">Delayed</span>

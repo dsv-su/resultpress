@@ -304,3 +304,8 @@ select[name="activity_reminder[]"] {
 .cursor-default {
     cursor: default !important;
 }
+
+.badge {
+    display: inline-flex !important;
+    align-items: center !important;
+}

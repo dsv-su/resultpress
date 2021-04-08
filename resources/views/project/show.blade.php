@@ -113,7 +113,7 @@
                         <div class="row">
                             <div class="col-auto pl-1">
                                  <span class="btn cursor-default px-0 text-left">
-                                    {{$a->title}}
+                                     {{$a->title}} @if ($a->priority=='high') <span data-toggle="tooltip" title="High priority"><i class="fas fa-arrow-alt-circle-up text-danger"></i></span> @endif
                                  </span>
                             </div>
                             @if ($a->comments)
@@ -191,6 +191,9 @@
     @endif
 
     <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
         $('.btn.disabled').on('click', function (e) {
             e.preventDefault();
         });

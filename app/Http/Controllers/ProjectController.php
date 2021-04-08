@@ -329,6 +329,7 @@ class ProjectController extends Controller
         $activity_array['end'] = request('activity_end');
         $activity_array['name'] = request('activity_name');
         $activity_array['budget'] = request('activity_budget');
+        $activity_array['priority'] = request('activity_priority');
         //Email reminder
         $activity_array['reminder'] = request('activity_reminder');
         $activity_array['reminder_due_days'] = request('activity_reminder_due_days');
@@ -360,6 +361,7 @@ class ProjectController extends Controller
                 $data['reminder'] = $activity_array['reminder'][$key];
                 $data['reminder_due_days'] = $activity_array['reminder_due_days'][$key];
                 $data['project_id'] = $project->id;
+                $data['priority'] = $activity_array['priority'][$key];
                 if ($id) {
                     Activity::where('id', $id)->update($data);
                     //Log activity update

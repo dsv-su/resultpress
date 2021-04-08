@@ -125,6 +125,24 @@
                 </div>
             </div>
 
+            <!--
+            <div class="form-group">
+                <label for="project_state" class="form-group-header mt-4">Project state</label>
+                <div class="col-lg-6 my-2 px-2 dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="project_state"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        Propose state changes
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <button class="dropdown-item" type="button">Action</button>
+                        <button class="dropdown-item" type="button">Another action</button>
+                        <button class="dropdown-item" type="button">Something else here</button>
+                    </div>
+                </div>
+            </div>
+            -->
+
             <div class="form-group">
                 <label for="project_update_summary" class="form-group-header mt-4">Summary</label>
                 <textarea rows="4"
@@ -145,6 +163,7 @@
                        type="submit">
             @endif
             <input class="btn btn-lg btn-success" role="button" name="submit" value="Submit" type="submit">
+        </div>
     </form>
 
     <script>

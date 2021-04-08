@@ -508,10 +508,12 @@ class ProjectController extends Controller
 
     public function save_update(Project $project, Request $request)
     {
-        //dd($request->all());
         $projectupdate = ProjectUpdate::firstOrNew(['id' => request('project_update_id') ?? 0]);
         $projectupdate->project_id = $project->id;
         $projectupdate->summary = request('project_update_summary') ?? null;
+
+        $project->status = request('project_status') ?? null;
+        $project->save();
 
         $status = '';
         if ($request->input('draft')) {

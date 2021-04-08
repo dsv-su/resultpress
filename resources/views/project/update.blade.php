@@ -125,23 +125,17 @@
                 </div>
             </div>
 
-            <!--
             <div class="form-group">
-                <label for="project_state" class="form-group-header mt-4">Project state</label>
-                <div class="col-lg-6 my-2 px-2 dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="project_state"
-                            data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                        Propose state changes
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <button class="dropdown-item" type="button">Action</button>
-                        <button class="dropdown-item" type="button">Another action</button>
-                        <button class="dropdown-item" type="button">Something else here</button>
-                    </div>
+                <label for="project_status" class="form-group-header mt-4">Project state</label>
+                <div class="col col-md-4">
+                    <select class="custom-select" name="project_status" id="project_status">
+                        <option value="0" selected>Propose state change</option>
+                        <option value="onhold" @if ($project->status=='onhold') selected @endif>Oh hold</option>
+                        <option value="terminated" @if ($project->status=='terminated') selected @endif>Terminated</option>
+                        <option value="archived" @if ($project->status=='archived') selected @endif>Archived</option>
+                    </select>
                 </div>
             </div>
-            -->
 
             <div class="form-group">
                 <label for="project_update_summary" class="form-group-header mt-4">Summary</label>
@@ -168,10 +162,24 @@
 
     <script>
         $(document).ready(function () {
+            if ($('#project_status').val() == 0) {
+                $("#project_update_summary").prop('required', false);
+            } else {
+                $("#project_update_summary").prop('required', true);
+            }
+
             let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}});
             $(document).on('click', '.collapseEditor', function () {
                 $(this).closest('.form-group').find('.medium-editor-element').toggleClass("collapsed expanded");
                 $(this).toggleClass("fa-chevron-right fa-chevron-down");
+            });
+
+            $(document).on('change', '#project_status', function () {
+                if ($(this).val() != 0) {
+                    $("#project_update_summary").prop('required', true);
+                } else {
+                    $("#project_update_summary").prop('required', false);
+                }
             });
 
             $(document).on('click', '#laravel-ajax-file-upload', function (e) {
@@ -271,12 +279,13 @@
                 $('input[name="output_id[]"]').focusout(function () {
                     $(this).tooltip('hide');
                 });
-                $('input[name="output_id[]"]').on('keyup', function() {
+                $('input[name="output_id[]"]').on('keyup', function () {
                     if (this.value.length > 250) {
                         $(this).tooltip('show');
                     } else {
                         $(this).tooltip('hide');
-                    };
+                    }
+                    ;
                 });
             });
 

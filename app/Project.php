@@ -106,11 +106,11 @@ class Project extends Model
             // Pending review
             return 4;
         }
-        if ($this->start->lt(Carbon::now())) {
+        if ($this->start->gte(Carbon::now())) {
             // Pending
             return 1;
         }
-        if ($this->start->gte(Carbon::now())) {
+        if ($this->start->lte(Carbon::now()) && $this->end->gte(Carbon::now())) {
             // In progress
             return 2;
         }

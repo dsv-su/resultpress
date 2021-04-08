@@ -313,3 +313,94 @@ button, input[type="submit"], .btn-submit {
         width: calc(100% - 8px);
     }
 }
+
+.link {
+    cursor: pointer;
+}
+
+.link .fas {
+    margin-right: 6px;
+}
+
+tr.update {
+    border: none;
+    box-shadow: none;
+}
+
+tr.update > td {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0px 0px 0px 30px;
+}
+
+.form-group-header {
+    color: #002f5f;
+    text-decoration-color: #002f5f;
+    font-weight: 500;
+    font-size: 140%;
+    line-height: 1.2;
+}
+
+.mw-400 {
+    max-width: 400px;
+}
+
+.spacer {
+    min-height: 5px;
+    line-height: 5px;
+    border-collapse: separate;
+    border-spacing: 0 1em;
+}
+
+.mediumEditor {
+    height: 100% !important;
+}
+
+.medium-editor-toolbar li button {
+    background-color: orange;
+}
+
+.medium-editor-element.expanded {
+    height: 100%;
+    overflow: visible;
+}
+
+.medium-editor-element.collapsed {
+    height: 29px !important;
+    overflow: hidden;
+}
+
+.collapseEditor {
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+select[name="activity_reminder[]"] {
+    width: 60px;
+}
+
+.multiselect-container li, button.multiselect {
+    padding-top: calc(.25rem + 1px);
+    padding-bottom: calc(.25rem + 1px);
+    font-size: .875rem;
+    color: inherit;
+    line-height: 1.5;
+}
+
+.font-100 {
+    font-size: 100% !important;
+}
+
+.font-14 {
+    font-size: 14px !important;
+}
+
+.cursor-default {
+    cursor: default !important;
+}
+
+.badge {
+    display: inline-flex !important;
+    align-items: center !important;
+}

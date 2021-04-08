@@ -21,5 +21,4 @@
 <!-- Include Bootstrap Multiselect -->
 <script src="{{asset('bootstrap/multiselect/bootstrap-multiselect.min.js')}}"></script>
 <link rel="stylesheet" type="text/css" href="{{asset('bootstrap/multiselect/bootstrap-multiselect.css')}}" />
-<link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}"/>
 <title>Spider ResultPress</title>

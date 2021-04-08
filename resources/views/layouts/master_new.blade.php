@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    @include('layouts.partials.head_new')
+    @include('layouts.partials.head')
 </head>
 
 <body>

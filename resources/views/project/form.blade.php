@@ -473,21 +473,7 @@
                         }
                     });
                     let editor = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Activity template"}});
-                    $(function () {
-                        $('.mediumEditor#activity_template').mediumInsert({
-                            editor: editor,
-                            addons: {
-                                images: {
-                                    fileUploadOptions: {
-                                        url: '/images/upload',
-                                        type: 'post',
-                                        acceptFileTypes: /(.|\/)(gif|jpe?g|png)$/i
-                                    }
-                                }
-                            }
-                        });
-                    });
-
+                    
                     $(document).ready(function () {
                         $('#project_area').multiselect({
                             templates: {

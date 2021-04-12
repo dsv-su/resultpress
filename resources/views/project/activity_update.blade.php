@@ -51,7 +51,7 @@
                 <label for="activity_status[]"
                        class="col-4 col-sm-3 pl-1 pr-1 col-form-label-sm text-right">Status</label>
                 <div class="col-8 col-sm-3 px-1">
-                    @if ($show)
+                    @if (isset($show) && $show)
                         @if ($au->status=='cancelled')
                             <span class="badge badge-warning font-100">Cancelled</span>
                         @elseif ($au->status=='completed')

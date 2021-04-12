@@ -11,22 +11,6 @@
             </div>
         </div>
 
-        @if ($au->status == 'completed' || $au->status == 'cancelled')
-            <div class="form-group mb-1 row">
-                <label for="activity_status[]"
-                       class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Status</label>
-                <div class="col-8 col-sm-3 px-1">
-                    <div class="form-control-sm px-0">
-                        @if($au->status == 'completed')
-                            <span class="badge badge-success font-100">Completed</span>
-                        @elseif($au->status == 'cancelled')
-                            <span class="badge badge-info font-100">Cancelled</span>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        @endif
-
         <div class="form-group mb-1 row">
             <label for="activity_money[]"
                    class="col col-sm-3 pl-1 pr-1 col-form-label-sm text-right">Money
@@ -62,17 +46,26 @@
             </div>
         </div>
 
-        @if (!isset($show))
+        @if (!isset($show) || ($au && $au->status))
             <div class="form-group mb-1 row">
                 <label for="activity_status[]"
                        class="col-4 col-sm-3 pl-1 pr-1 col-form-label-sm text-right">Status</label>
                 <div class="col-8 col-sm-3 px-1">
-                    <select class="custom-select-sm" name="activity_status[]" id="activity_status[]">
-                        <option value="0" selected>Propose state change</option>
-                        <option value="cancelled" @if ($au->status=='cancelled') selected @endif>Cancelled</option>
-                        <option value="completed" @if ($au->status=='completed') selected @endif>Completed</option>
-                    </select>
-
+                    @if ($show)
+                        @if ($au->status=='cancelled')
+                            <span class="badge badge-warning font-100">Cancelled</span>
+                        @elseif ($au->status=='completed')
+                            <span class="badge badge-warning font-100">Completed</span>
+                        @endif
+                    @else
+                        <select class="custom-select-sm" name="activity_status[]" id="activity_status[]">
+                            <option value="0" selected>Propose state change</option>
+                            <option value="cancelled" @if ($au && $au->status=='cancelled') selected @endif>Cancelled
+                            </option>
+                            <option value="completed" @if ($au && $au->status=='completed') selected @endif>Completed
+                            </option>
+                        </select>
+                    @endif
                 </div>
             </div>
         @endif
@@ -102,21 +95,6 @@
                 </div>
             </div>
         @endif
-
-    <!--
-        @if (isset($review) && $review && $au->activity->status() != 5)
-        <div class="form-group row mb-0">
-            <meta name="csrf-token" content="{{ csrf_token() }}">
-                @if ($au->activity->completed == 1)
-            <a href="#" id="complete" data-completed="1"
-               class="badge badge-sm badge-success font-100 mt-1 ml-auto">Completed</a>
-@else
-            <a href="#" id="complete" data-completed="0"
-               class="badge badge-sm badge-primary font-100 mt-1 ml-auto">Mark as complete</a>
-@endif
-                </div>
-@endif
-            -->
 
         @if (!isset($show))
             <div class="form-group row mb-0">

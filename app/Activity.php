@@ -25,31 +25,37 @@ class Activity extends Model
 
     public function status()
     {
-        $completed = false;
-        $pending = false;
-        foreach ($this->activity_updates as $au) {
-            if ($au->completed) {
-                $completed = true;
+        foreach ($this->activity_updates->sortBy('created_at', SORT_REGULAR, true) as $au) {
+            if ($au->project_update->status == 'approved') {
+                if ($au->status == 'completed') {
+                    return 'completed';
+                }
+                if ($au->status == 'cancelled') {
+                    return 'cancelled';
+                }
             }
+
             if ($au->project_update->status == 'submitted') {
-                $pending = true;
+                return 'pendingreview';
             }
         }
-        if ($completed) {
-            return 5;
-        }
-        if ($pending) {
-            return 4;
-        }
+
         if ($this->start->gte(Carbon::now()) && $this->activity_updates()->count() == 0) {
-            return 1;
+            return 'planned';
         }
         if ($this->start->lt(Carbon::now()) || $this->activity_updates()->count() > 0) {
-            return 2;
+            return 'inprogress';
         }
         if ($this->end->lt(Carbon::now())) {
-            return 3;
+            if ($this->priority == 'high') {
+                return 'delayedhigh';
+            } else {
+                return 'delayednormal';
+            }
+
         }
+
+        return 'finished';
     }
 
     public function getComment()

@@ -9,17 +9,6 @@
                 class="d-none d-sm-inline-block">All updates </span><i class="far fa-list-alt ml-sm-1"></i></a>
 @endcan
 @can('project-'.$project->id.'-delete')
-    @if (!$project->archived)
-        <a href="/project/{{$project->id}}/archive" class="btn btn-outline-dark btn-sm mb-1"
-           onclick="return confirm('Are you sure you want to archive this project?');"><span
-                    class="d-none d-sm-inline-block">Archive </span><i class="far fa-file-archive ml-sm-1"></i></a>
-    @else
-        <a href="/project/{{$project->id}}/unarchive" class="btn btn-outline-dark btn-sm mb-1"
-           onclick="return confirm('Are you sure you want to restore this project?');"><span
-                    class="d-none d-sm-inline-block">Restore </span><i class="far fa-file-archive ml-sm-1"></i></a>
-    @endif
-@endcan
-@can('project-'.$project->id.'-delete')
     <a href="/project/{{$project->id}}/delete" class="btn btn-outline-danger btn-sm mb-1"
        onclick="return confirm('Are you sure you want to delete this item?');"><span class="d-none d-sm-inline-block">Delete </span><i
                 class="far fa-trash-alt ml-sm-1"></i></a>

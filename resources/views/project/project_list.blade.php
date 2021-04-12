@@ -5,22 +5,24 @@
                 <div class="col-md-6">
                     <div class="row my-1 d-flex align-content-center">
                         <a href="/project/{{$project->id}}" class="mr-2">{{ $project->name}}</a>
-                        @if($project->status == 1) <span class="badge badge-warning font-100">In progress</span>
-                        @elseif($project->status == 2) <span class="badge badge-danger font-100">Delayed</span>
-                        @elseif($project->status == 3) <span class="badge badge-success font-100">Done</span>
-                        @endif
-                        @if($project->status() == 1)
-                            <span class="badge badge-light font-100">Pending</span>
-                        @elseif($project->status() == 2)
+                        @if($project->status() == 'planned')
+                            <span class="badge badge-light font-100">Planned</span>
+                        @elseif($project->status() == 'inprogress')
                             <span class="badge badge-warning font-100">In progress</span>
-                        @elseif($project->status() == 3)
+                        @elseif($project->status() == 'delayedhigh')
                             <span class="badge badge-danger font-100">Delayed</span>
-                        @elseif($project->status() == 4)
+                        @elseif($project->status() == 'delayednormal')
+                            <span class="badge badge-danger font-100">Delayed</span>
+                        @elseif($project->status() == 'pendingreview')
                             <span class="badge badge-primary font-100">Pending review</span>
-                        @elseif($project->status() == 5)
+                        @elseif($project->status() == 'completed')
                             <span class="badge badge-success font-100">Completed</span>
-                        @elseif($project->status() == 6)
+                        @elseif($project->status() == 'archived')
                             <span class="badge badge-secondary font-100">Archived</span>
+                        @elseif($project->status() == 'onhold')
+                            <span class="badge badge-secondary font-100">On hold</span>
+                        @elseif($project->status() == 'terminated')
+                            <span class="badge badge-secondary font-100">Terminated</span>
                         @endif
                     </div>
                     <div class="row">

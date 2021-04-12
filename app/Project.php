@@ -59,6 +59,7 @@ class Project extends Model
     {
         return $this->hasMany(ProjectArea::class);
     }
+
     public function areas()
     {
         return $this->belongsToMany(Area::class, 'project_areas');
@@ -87,38 +88,63 @@ class Project extends Model
         return $this->hasMany(ProjectOwner::class);
     }
 
-    public function status() {
-        $delayed = false;
-        if ($this->archived) {
+    public function status()
+    {
+        $delayedhigh = 0;
+        $delayednormal = 0;
+        $completed = 0;
+
+        if ($this->status == 'archived') {
             // Archived
-            return 6;
+            return 'archived';
         }
+
+        if ($this->status == 'terminated') {
+            // Archived
+            return 'terminated';
+        }
+
+        if ($this->status == 'onhold') {
+            // Archived
+            return 'onhold';
+        }
+
         foreach ($this->activities() as $a) {
-            if ($a->status() == 3) {
-                $delayed = true;
+            if ($a->status() == 'delayedhigh') {
+                $delayedhigh++;
+            }
+            if ($a->status() == 'delayednormak') {
+                $delayednormal++;
+            }
+            if ($a->status() == 'completed') {
+                $completed++;
             }
         }
-        if ($delayed) {
+
+        if ($delayedhigh) {
             // Delayed
-            return 3;
+            return 'delayedhigh';
+        } elseif ($delayednormal) {
+            return 'delayednormal';
         }
+
         if ($this->pending_updates()->count()) {
             // Pending review
-            return 4;
+            return 'pendingreview';
         }
         if ($this->start->gte(Carbon::now())) {
             // Pending
-            return 1;
+            return 'planned';
         }
         if ($this->start->lte(Carbon::now()) && $this->end->gte(Carbon::now())) {
             // In progress
-            return 2;
+            return 'inprogress';
         }
-        if (($this->end->lte(Carbon::now()))) {
+        if (($this->end->lte(Carbon::now())) && ($this->activities()->count() == $completed)) {
             // Finished
-            return 5;
+            return 'completed';
         }
-        // Archived
+
     }
 }
 

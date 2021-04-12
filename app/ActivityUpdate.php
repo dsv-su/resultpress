@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ActivityUpdate extends Model
 {
     protected $dates = ['date'];
-    protected $fillable = ['project_update_id', 'activity_id', 'status', 'money', 'comment', 'date'];
+    protected $fillable = ['project_update_id', 'activity_id', 'money', 'comment', 'date', 'status'];
 
     public function activity()
     {

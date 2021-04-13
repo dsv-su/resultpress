@@ -540,7 +540,7 @@ class ProjectController extends Controller
         $activity_update_array['activity_update_id'] = request('activity_update_id');
         $activity_update_array['comment'] = request('activity_comment');
         $activity_update_array['money'] = request('activity_money');
-        $activity_update_array['status'] = request('activity_status') ?? null;
+        $activity_update_array['state'] = request('activity_state') ?? null;
         $activity_update_array['date'] = request('activity_date') ?? null;
 
         // Remove deleted activity updates
@@ -557,7 +557,7 @@ class ProjectController extends Controller
                 $activityupdate->comment = $activity_update_array['comment'][$key];
                 $activityupdate->money = $activity_update_array['money'][$key];
                 $activityupdate->date = $activity_update_array['date'][$key];
-                $activityupdate->status = $activity_update_array['status'][$key];
+                $activityupdate->state = $activity_update_array['state'][$key];
                 $activityupdate->project_update_id = $projectupdate_id;
                 $activityupdate->save();
                 //Log update for submitted ActivityUpdate

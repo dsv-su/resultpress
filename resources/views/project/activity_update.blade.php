@@ -49,20 +49,20 @@
         @if (!isset($show) || ($au && $au->status))
             <div class="form-group mb-1 row">
                 <label for="activity_status[]"
-                       class="col-4 col-sm-3 pl-1 pr-1 col-form-label-sm text-right">Status</label>
+                       class="col-4 col-sm-3 pl-1 pr-1 col-form-label-sm text-right">State</label>
                 <div class="col-8 col-sm-3 px-1">
                     @if (isset($show) && $show)
-                        @if ($au->status=='cancelled')
+                        @if ($au->state=='cancelled')
                             <span class="badge badge-warning font-100">Cancelled</span>
-                        @elseif ($au->status=='completed')
+                        @elseif ($au->state=='completed')
                             <span class="badge badge-warning font-100">Completed</span>
                         @endif
                     @else
-                        <select class="custom-select-sm" name="activity_status[]" id="activity_status[]">
+                        <select class="custom-select-sm" name="activity_state[]" id="activity_state[]">
                             <option value="0" selected>Propose state change</option>
-                            <option value="cancelled" @if ($au && $au->status=='cancelled') selected @endif>Cancelled
+                            <option value="cancelled" @if ($au && $au->state=='cancelled') selected @endif>Cancelled
                             </option>
-                            <option value="completed" @if ($au && $au->status=='completed') selected @endif>Completed
+                            <option value="completed" @if ($au && $au->state=='completed') selected @endif>Completed
                             </option>
                         </select>
                     @endif

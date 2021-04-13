@@ -12,7 +12,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="row my-1">
-                                    <a href="/project/{{$project->id}}" class="mr-2">#{{$index+1}}</a>
+                                    <a href="/project/update/{{$pu->id}}" class="mr-2">#{{$index+1}}</a>
                                     @if($pu->status == 'draft') <span class="badge badge-danger font-100">Draft</span>
                                     @elseif($pu->status == 'submitted') <span
                                             class="badge badge-warning font-100">Pending approval</span>
@@ -41,7 +41,7 @@
                             <a href="/project/update/{{$pu->id}}/delete" class="btn btn-outline-danger btn-sm"
                                onclick="return confirm('Are you sure you want to delete this update?');">Delete <i
                                         class="fas fa-trash-alt"></i></a>
-                        @else
+                        @elseif ($pu->status == 'submitted')
                             <a href="/project/update/{{$pu->id}}/review" class="btn btn-outline-secondary btn-sm">@if (Auth::user()->hasRole(['Spider', 'Administrator'])) Review @elseif (Auth::user()->hasRole(['Partner'])) Additional comments @endif
                                 <i class="fas fa-highlighter"></i></a>
                         @endif

@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Activity;
 use App\ActivityUpdate;
 use App\Area;
+use App\Events\PartnerUpdate;
 use App\Events\PartnerUpdateEvent;
 use App\File;
-use App\Events\PartnerUpdate;
 use App\Outcome;
 use App\Output;
 use App\OutputUpdate;
@@ -246,7 +246,7 @@ class ProjectController extends Controller
             /*'managers' => User::whereHas('project_owner', function ($query) use($project) {
                             return $query->where('project_id', $project->id);
                             })->get()*/
-            ]);
+        ]);
 
     }
 
@@ -290,16 +290,16 @@ class ProjectController extends Controller
         }
 
         //Set project reminders
-        if(count($request->project_reminder ?? [])>0) {
-            foreach($request->project_reminder as $key => $reminder) {
-                    ProjectReminder::updateOrCreate([
-                        'project_id' => $project->id,
-                        'set' => Carbon::createFromFormat('d-m-Y', $request->project_reminder_date[$key])->format('Y-m-d')
-                    ],
-                        [
+        if (count($request->project_reminder ?? []) > 0) {
+            foreach ($request->project_reminder as $key => $reminder) {
+                ProjectReminder::updateOrCreate([
+                    'project_id' => $project->id,
+                    'set' => Carbon::createFromFormat('d-m-Y', $request->project_reminder_date[$key])->format('Y-m-d')
+                ],
+                    [
                         'name' => $request->project_reminder_name[$key],
                         'reminder' => $request->project_reminder[$key],
-                        'reminder_due_days'=> $request->project_reminder_due_days[$key]
+                        'reminder_due_days' => $request->project_reminder_due_days[$key]
                     ]);
             }
         }
@@ -447,54 +447,48 @@ class ProjectController extends Controller
         $project_owners = ProjectOwner::where('project_id', $project->id)->get();
         $project_partners = ProjectPartner::where('project_id', $project->id)->get();
         //Erase existing owners
-        foreach($project_owners as $project_owner)
-        {
+        foreach ($project_owners as $project_owner) {
             $owner = ProjectOwner::find($project_owner->id);
             $user = User::find($owner->user_id);
-            $user->revokePermissionTo('project-'.$project->id.'-list');
-            $user->revokePermissionTo('project-'.$project->id.'-edit');
-            $user->revokePermissionTo('project-'.$project->id.'-update');
-            $user->revokePermissionTo('project-'.$project->id.'-delete');
+            $user->revokePermissionTo('project-' . $project->id . '-list');
+            $user->revokePermissionTo('project-' . $project->id . '-edit');
+            $user->revokePermissionTo('project-' . $project->id . '-update');
+            $user->revokePermissionTo('project-' . $project->id . '-delete');
             $owner->delete();
         }
 
         //Store new managers
-        if($request->user_id) {
-            foreach ($request->user_id as $owner)
-            {
+        if ($request->user_id) {
+            foreach ($request->user_id as $owner) {
                 $new_owner = new ProjectOwner();
                 $new_owner->project_id = $project->id;
                 $new_owner->user_id = $owner;
                 $new_owner->save();
                 //Give specific project permissions to user
                 $user = User::find($owner);
-                $user->givePermissionTo('project-'.$project->id.'-list', 'project-'.$project->id.'-edit', 'project-'.$project->id.'-update', 'project-'.$project->id.'-delete');
+                $user->givePermissionTo('project-' . $project->id . '-list', 'project-' . $project->id . '-edit', 'project-' . $project->id . '-update', 'project-' . $project->id . '-delete');
             }
         }
         //Erase existing partners
-        if($project_partners)
-        {
-            foreach($project_partners as $project_partner)
-            {
+        if ($project_partners) {
+            foreach ($project_partners as $project_partner) {
                 $partner = ProjectPartner::find($project_partner->id);
                 $user = User::find($partner->partner_id);
-                $user->revokePermissionTo('project-'.$project->id.'-list');
-                $user->revokePermissionTo('project-'.$project->id.'-update');
+                $user->revokePermissionTo('project-' . $project->id . '-list');
+                $user->revokePermissionTo('project-' . $project->id . '-update');
                 $partner->delete();
             }
         }
         //Store new partners
-        if($request->partner_id)
-        {
-            foreach ($request->partner_id as $partner)
-            {
+        if ($request->partner_id) {
+            foreach ($request->partner_id as $partner) {
                 $new_partner = new ProjectPartner();
                 $new_partner->project_id = $project->id;
                 $new_partner->partner_id = $partner;
                 $new_partner->save();
                 //Give specific project permissions to partner
                 $user = User::find($partner);
-                $user->givePermissionTo('project-'.$project->id.'-list', 'project-'.$project->id.'-update');
+                $user->givePermissionTo('project-' . $project->id . '-list', 'project-' . $project->id . '-update');
             }
         }
 
@@ -511,15 +505,17 @@ class ProjectController extends Controller
         $projectupdate = ProjectUpdate::firstOrNew(['id' => request('project_update_id') ?? 0]);
         $projectupdate->project_id = $project->id;
         $projectupdate->summary = request('project_update_summary') ?? null;
-
-        $project->status = request('project_status') ?? null;
-        $project->save();
+        $projectupdate->state = request('project_state') ?? null;
 
         $status = '';
         if ($request->input('draft')) {
             $status = 'draft';
         } else if ($request->input('submit')) {
-            $status = 'submitted';
+            if (Auth::user()->hasRole(['Spider', 'Administrator'])) {
+                $status = 'approved';
+            } else {
+                $status = 'submitted';
+            }
         } else if ($request->input('delete')) {
             return redirect()->route('projectupdate_delete', $projectupdate);
         }
@@ -696,19 +692,22 @@ class ProjectController extends Controller
         return redirect()->route('project_home');
     }
 
-    public function archive(Project $project) {
+    public function archive(Project $project)
+    {
         $project->archived = true;
         $project->update();
         return redirect()->route('project_show', $project);
     }
 
-    public function unarchive(Project $project) {
+    public function unarchive(Project $project)
+    {
         $project->archived = false;
         $project->update();
         return redirect()->route('project_show', $project);
     }
 
-    public function completeActivity(Request $request) {
+    public function completeActivity(Request $request)
+    {
         $activity = Activity::find($request->activity_id);
         $activity->completed = $request->activity_completed;
         $activity->update();

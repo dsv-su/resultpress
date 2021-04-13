@@ -27,10 +27,10 @@ class Activity extends Model
     {
         foreach ($this->activity_updates->sortBy('created_at', SORT_REGULAR, true) as $au) {
             if ($au->project_update->status == 'approved') {
-                if ($au->status == 'completed') {
+                if ($au->state == 'completed') {
                     return 'completed';
                 }
-                if ($au->status == 'cancelled') {
+                if ($au->state == 'cancelled') {
                     return 'cancelled';
                 }
             }

@@ -11,10 +11,10 @@ class Project extends Model
     use LogsActivity;
 
     //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
-    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status'];
+    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state'];
     protected $dates = ['start', 'end'];
     //protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id'];  -->refactored<--
-    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status'];
+    protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state'];
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 
@@ -79,10 +79,6 @@ class Project extends Model
         }
     }
 
-    /*public function user()
-    {
-        return $this->belongsTo(User::class);
-    }*/
     public function project_owner()
     {
         return $this->hasMany(ProjectOwner::class);
@@ -94,19 +90,21 @@ class Project extends Model
         $delayednormal = 0;
         $completed = 0;
 
-        if ($this->status == 'archived') {
-            // Archived
-            return 'archived';
-        }
+        foreach ($this->project_updates->sortBy('created_at', SORT_REGULAR, true) as $pu) {
+            if ($pu->state == 'archived') {
+                // Archived
+                return 'archived';
+            }
 
-        if ($this->status == 'terminated') {
-            // Archived
-            return 'terminated';
-        }
+            if ($pu->state == 'terminated') {
+                // Archived
+                return 'terminated';
+            }
 
-        if ($this->status == 'onhold') {
-            // Archived
-            return 'onhold';
+            if ($pu->state == 'onhold') {
+                // Archived
+                return 'onhold';
+            }
         }
 
         foreach ($this->activities() as $a) {

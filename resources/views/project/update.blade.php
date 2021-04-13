@@ -125,17 +125,19 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="project_status" class="form-group-header mt-4">Project state</label>
-                <div class="col col-md-4">
-                    <select class="custom-select" name="project_status" id="project_status">
-                        <option value="0" selected>Propose state change</option>
-                        <option value="onhold" @if ($project->status=='onhold') selected @endif>Oh hold</option>
-                        <option value="terminated" @if ($project->status=='terminated') selected @endif>Terminated</option>
-                        <option value="archived" @if ($project->status=='archived') selected @endif>Archived</option>
-                    </select>
+            @if (Auth::user()->hasRole(['Spider', 'Administrator']))
+                <div class="form-group">
+                    <label for="project_state" class="form-group-header mt-4">Project state</label>
+                    <div class="col col-md-4">
+                        <select class="custom-select" name="project_state" id="project_state">
+                            <option value="0" selected>Propose state change</option>
+                            <option value="onhold">Oh hold</option>
+                            <option value="terminated">Terminated</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
+            @endif
 
             <div class="form-group">
                 <label for="project_update_summary" class="form-group-header mt-4">Summary</label>
@@ -162,7 +164,7 @@
 
     <script>
         $(document).ready(function () {
-            if ($('#project_status').val() == 0) {
+            if ($('#project_state').val() == 0) {
                 $("#project_update_summary").prop('required', false);
             } else {
                 $("#project_update_summary").prop('required', true);
@@ -174,7 +176,7 @@
                 $(this).toggleClass("fa-chevron-right fa-chevron-down");
             });
 
-            $(document).on('change', '#project_status', function () {
+            $(document).on('change', '#project_state', function () {
                 if ($(this).val() != 0) {
                     $("#project_update_summary").prop('required', true);
                 } else {

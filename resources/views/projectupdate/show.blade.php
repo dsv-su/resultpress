@@ -78,6 +78,21 @@
         </div>
     @endif
 
+    @if (Auth::user()->hasRole(['Spider', 'Administrator']) && $project_update->state)
+        <div class="form-group">
+            <label for="project_status" class="form-group-header mt-4">Proposed project state</label>
+            <div>
+                @if ($project_update->state == 'onhold')
+                    <span class="badge badge-info font-100">On hold</span>
+                @elseif ($project_update->state == 'terminated')
+                    <span class="badge badge-info font-100">Terminated</span>
+                @elseif ($project_update->state == 'archived')
+                    <span class="badge badge-info font-100">Archived</span>
+                @endif
+            </div>
+        </div>
+    @endif
+
     @if ($project_update->summary)
         <div class="accordion" id="summary">
             <label for="outcomes" class="form-group-header mt-4">Summary</label>

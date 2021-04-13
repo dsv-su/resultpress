@@ -9,7 +9,7 @@ class ProjectUpdate extends Model
 {
 
     protected $dates = ['created_at'];
-    protected $fillable = ['project_id', 'summary', 'comment', 'status', 'reviewer_comment', 'internal_comment'];
+    protected $fillable = ['project_id', 'summary', 'comment', 'status', 'state', 'reviewer_comment', 'internal_comment'];
 
     public function project()
     {

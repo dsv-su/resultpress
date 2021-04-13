@@ -538,7 +538,7 @@ class ProjectController extends Controller
         // Process activity updates
         $activity_update_array['activity_id'] = request('activity_id');
         $activity_update_array['activity_update_id'] = request('activity_update_id');
-        $activity_update_array['comment'] = request('activity_comment');
+        $activity_update_array['comment'] = request('activity_comment') ?? null;
         $activity_update_array['money'] = request('activity_money');
         $activity_update_array['state'] = request('activity_state') ?? null;
         $activity_update_array['date'] = request('activity_date') ?? null;

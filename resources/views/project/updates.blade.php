@@ -35,7 +35,7 @@
                     <div class="col text-right">
                         <a href="/project/update/{{$pu->id}}" class="btn btn-outline-secondary btn-sm">Show <i
                                     class="fas fa-info-circle"></i></a>
-                        @if ($pu->status == 'draft')
+                        @if ($pu->status == 'draft' && Auth::user()->id == $pu->user_id)
                             <a href="/project/update/{{$pu->id}}/edit" class="btn btn-outline-secondary btn-sm">Edit <i
                                         class="fas fa-info-circle"></i></a>
                             <a href="/project/update/{{$pu->id}}/delete" class="btn btn-outline-danger btn-sm"

@@ -202,12 +202,17 @@ class ProjectUpdateController extends Controller
             $activity = Activity::where('id', $au->activity_id)->first();
             $allactivityupdates = ActivityUpdate::where('activity_id', $activity->id)->get();
             $totalmoneyspent = 0;
+
             foreach ($allactivityupdates as $aau) {
                 $totalmoneyspent += $aau->money;
             }
 
-            $remainingpercentage = number_format(abs(1 - ($totalmoneyspent / $activity->budget)) * 100) . '%';
-            $moneyspent = ' ' . abs($activity->budget - $totalmoneyspent) . ' (' . $remainingpercentage . ')';
+            if ($activity->budget) {
+                $remainingpercentage = number_format(abs(1 - ($totalmoneyspent / $activity->budget)) * 100) . '%';
+                $moneyspent = ' ' . abs($activity->budget - $totalmoneyspent) . ' (' . $remainingpercentage . ')';
+            } else {
+                $moneyspent = ' ' . abs($activity->budget - $totalmoneyspent);
+            }
 
             if ($au->activity->completed) {
                 $deadlinestring .= ' was completed';

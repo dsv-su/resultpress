@@ -7,7 +7,7 @@
             <div class="col-8 col-sm-9 px-1">
                 <input type="hidden" id="activity" name="activity_id[]"
                        value="@if ($au) {{$au->activity_id}} @else {{$a->id}} @endif"><label
-                        class="col-form-label-sm font-weight-bold">{{$a->title}}</label>
+                        class="col-form-label-sm font-weight-bold" id="activity_label">{{$a->title}}</label>
             </div>
         </div>
 

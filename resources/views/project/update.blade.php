@@ -309,6 +309,17 @@
                 ;
             });
             $("form").submit(function () {
+                let activity_template = '';
+                $('#aus_list .medium-editor-element').each(function (index) {
+                    if (!$(this).text().trim()) {
+                        let activity_name = $(this).closest('.card-body').find('#activity_label').text();
+                        activity_template += '\nActivity template for ' + activity_name + ' is empty';
+                    }
+                });
+                if (activity_template) {
+                    alert (activity_template);
+                    return false;
+                }
                 // Add extra confirmation on empty activity & output
                 let confirmation = '';
                 if (!$('#project_update_summary').val()) {

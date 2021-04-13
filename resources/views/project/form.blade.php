@@ -84,7 +84,7 @@
                             <div class="form-row border row">
                                 <label for="project_reminder[]" class="col-3 col-form-label-sm">Deadline</label>
                                 <div class="col-8 col-sm-9 px-0 form-inline">
-                                    <input class="form-control form-control-sm" name="project_reminder_name[]" type="text" placeholder="Name" value="{{ old('project_reminder_name', empty($thisproject->name) ? '' : $thisproject->name) }}">
+                                    <input class="form-control form-control-sm w-100" name="project_reminder_name[]" type="text" placeholder="Name" value="{{ old('project_reminder_name', empty($thisproject->name) ? '' : $thisproject->name) }}">
                                 </div>
                                 <label for="project_reminder[]" class="col-3 col-form-label-sm">Email reminder</label>
                                 <div class="col-8 col-sm-9 px-0 form-inline">
@@ -555,7 +555,7 @@
                             let html = '';
                             html += '<div class="form-row border row"><label for="project_reminder[]" class="col-3 col-form-label-sm">Deadline</label>';
                             html += '<div class="col-8 col-sm-9 px-0 form-inline">';
-                            html += '<input class="form-control form-control-sm" name="project_reminder_name[]" type="text" placeholder="Name" value="{{ old('project_reminder_name', empty($thisproject->name) ? '' : $thisproject->name) }}"></div>';
+                            html += '<input class="form-control form-control-sm w-100" name="project_reminder_name[]" type="text" placeholder="Name" value="{{ old('project_reminder_name', empty($thisproject->name) ? '' : $thisproject->name) }}"></div>';
                             html += '<label for="project_reminder[]" class="col-3 col-form-label-sm">Email reminder</label>';
                             html += '<div class="col-8 col-sm-9 px-0 form-inline">';
                             html += '<select name="project_reminder[]" class="form-inline form-control-sm">' +

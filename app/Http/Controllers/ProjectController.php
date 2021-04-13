@@ -266,7 +266,6 @@ class ProjectController extends Controller
         $project->name = request('project_name');
         $project->description = request('project_description');
         $project->start = Carbon::createFromFormat('d-m-Y', request('project_start') ?? null)->format('Y-m-d');
-        $project->status = 0; // temp value
         $project->end = Carbon::createFromFormat('d-m-Y', request('project_end') ?? null)->format('Y-m-d');
         $project->currency = request('project_currency') ?? null;
         $project->cumulative = request('project_cumulative');

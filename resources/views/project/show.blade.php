@@ -143,7 +143,7 @@
                                     <span class="badge badge-warning font-100">In progress</span>
                                 @elseif($a->status() == 'delayednormal')
                                     <span class="badge badge-danger font-100">Delayed Normal</span>
-                                @elseif($a->status() == 'delayedhign')
+                                @elseif($a->status() == 'delayedhigh')
                                     <span class="badge badge-danger font-100">Delayed Major</span>
                                 @elseif($a->status() == 'pendingreview')
                                     <span class="badge badge-info font-100">Pending review</span>

@@ -40,19 +40,20 @@ class Activity extends Model
             }
         }
 
-        if ($this->start->gte(Carbon::now()) && $this->activity_updates()->count() == 0) {
-            return 'planned';
-        }
-        if ($this->start->lt(Carbon::now()) || $this->activity_updates()->count() > 0) {
-            return 'inprogress';
-        }
         if ($this->end->lt(Carbon::now())) {
             if ($this->priority == 'high') {
                 return 'delayedhigh';
             } else {
                 return 'delayednormal';
             }
+        }
 
+        if ($this->start->gte(Carbon::now()) && $this->activity_updates()->count() == 0) {
+            return 'planned';
+        }
+
+        if ($this->start->lt(Carbon::now()) || $this->activity_updates()->count() > 0) {
+            return 'inprogress';
         }
 
         return 'finished';

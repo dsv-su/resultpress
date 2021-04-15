@@ -681,8 +681,8 @@
                             }
                             let datealert = '';
                             $('input[name="activity_start[]"]').each(function (index) {
-                                let startdate = $(this).val();
-                                let enddate = $(this).closest('.card-body').find('input[name="activity_end[]"]').val();
+                                let startdate = new Date($(this).datepicker("getDate"));
+                                let enddate = new Date($(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("getDate"));
                                 if (enddate < startdate) {
                                     datealert += 'End date is earlier that start date for Activity ' + $(this).closest('.card-body').find('input[name="activity_name[]"]').val() +'\r\n';
                                 }

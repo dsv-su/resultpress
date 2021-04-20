@@ -21,7 +21,7 @@
                 <div class="col-8 col-sm-auto px-1">
                     <div class="input-group input-group-sm">
                         <input type="number" name="activity_money[]" placeholder="0"
-                               value="@if ($au){{ceil($au->money)}}@else 0 @endif" required
+                               @if ($au) value="{{ceil($au->money)}}" @else value="0" @endif required
                                class="form-control text-right">
                         <div class="input-group-append">
                             <span class="input-group-text">{{$a->project->getCurrencySymbol()}}</span>

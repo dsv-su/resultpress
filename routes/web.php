@@ -26,7 +26,8 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::get('/shibboleth', 'ProjectController@shibboleth')->name('shibboleth');
     Route::get('/project/create', 'ProjectController@edit')->name('project_create');
     Route::post('/project', 'ProjectController@update')->name('update');
-    Route::get('/au/{activity}/{activity_update}', 'ProjectUpdateController@showActivityUpdateForm')->name('au_form');
+    Route::get('/au/{activity}/{activity_update}', 'ProjectUpdateController@showActivityUpdateForm')->name('au_update_form');
+    Route::get('/a/{activity}/{index}', 'ProjectUpdateController@showActivityCreateForm')->name('au_create_form');
     //Route::get('/au/{activity_update}/show', 'ProjectUpdateController@showActivityUpdate')->name('au_show');
     Route::get('/project/update/{project_update}', 'ProjectUpdateController@show')->name('projectupdate_show');
     Route::get('/project/update/{project_update}/edit', 'ProjectUpdateController@edit')->name('projectupdate_edit');

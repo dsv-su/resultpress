@@ -77,38 +77,48 @@
                             <div class="form-row row">
                                 <label for="add_reminder" class="col-3 col-form-label-sm">Add deadline</label>
                                 <div>
-                                    <button type="button" id="add_reminder" name="add_reminder" class="btn btn-outline-secondary btn-sm add-reminder m-2">Add <i class="far fa-bell"></i><i class="fas fa-plus"></i></button>
+                                    <button type="button" id="add_reminder" name="add_reminder"
+                                            class="btn btn-outline-secondary btn-sm add-reminder m-2">Add <i
+                                                class="far fa-bell"></i><i class="fas fa-plus"></i></button>
                                 </div>
                             </div>
                             @foreach($project_reminders as $thisproject)
-                            <div class="form-row border row">
-                                <label for="project_reminder[]" class="col-3 col-form-label-sm">Deadline</label>
-                                <div class="col-8 col-sm-9 px-0 form-inline">
-                                    <input class="form-control form-control-sm w-100" name="project_reminder_name[]" type="text" placeholder="Name" value="{{ old('project_reminder_name', empty($thisproject->name) ? '' : $thisproject->name) }}">
-                                </div>
-                                <label for="project_reminder[]" class="col-3 col-form-label-sm">Email reminder</label>
-                                <div class="col-8 col-sm-9 px-0 form-inline">
-                                    <select name="project_reminder[]" class="form-inline form-control-sm">
-                                        @if($thisproject->reminder)
-                                            <option value="1" selected="selected">Yes</option>
-                                            <option value="0" >No</option>
-                                        @else
-                                            <option value="0" selected="selected">No</option>
-                                            <option value="1" >Yes</option>
-                                        @endif
-                                    </select>
+                                <div class="form-row border row">
+                                    <label for="project_reminder[]" class="col-3 col-form-label-sm">Deadline</label>
+                                    <div class="col-8 col-sm-9 px-0 form-inline">
+                                        <input class="form-control form-control-sm w-100" name="project_reminder_name[]"
+                                               type="text" placeholder="Name"
+                                               value="{{ old('project_reminder_name', empty($thisproject->name) ? '' : $thisproject->name) }}">
+                                    </div>
+                                    <label for="project_reminder[]" class="col-3 col-form-label-sm">Email
+                                        reminder</label>
+                                    <div class="col-8 col-sm-9 px-0 form-inline">
+                                        <select name="project_reminder[]" class="form-inline form-control-sm">
+                                            @if($thisproject->reminder)
+                                                <option value="1" selected="selected">Yes</option>
+                                                <option value="0">No</option>
+                                            @else
+                                                <option value="0" selected="selected">No</option>
+                                                <option value="1">Yes</option>
+                                            @endif
+                                        </select>
 
-                                    <input type="number" name="project_reminder_due_days[]" value="{{ $thisproject->reminder_due_days}}" class="form-control form-control-sm" style="width:50px;">
+                                        <input type="number" name="project_reminder_due_days[]"
+                                               value="{{ $thisproject->reminder_due_days}}"
+                                               class="form-control form-control-sm" style="width:50px;">
 
-                                    <label for="project_reminder_due_days[]" class="col-2 col-form-label-sm text-left">days before</label>
-                                    <div class="col-4">
-                                        <input type="text" name="project_reminder_date[]" id="project_reminder_date" placeholder="Deadline Date" value="{{ old('project_reminder_date', empty($thisproject->set) ? '' : $thisproject->set->format('d-m-Y')) }}"
-                                               class="form-control form-control-sm datepicker">
+                                        <label for="project_reminder_due_days[]"
+                                               class="col-2 col-form-label-sm text-left">days before</label>
+                                        <div class="col-4">
+                                            <input type="text" name="project_reminder_date[]" id="project_reminder_date"
+                                                   placeholder="Deadline Date"
+                                                   value="{{ old('project_reminder_date', empty($thisproject->set) ? '' : $thisproject->set->format('d-m-Y')) }}"
+                                                   class="form-control form-control-sm datepicker">
+                                        </div>
+
                                     </div>
 
                                 </div>
-
-                            </div>
                             @endforeach
                             <div class="d-flex flex-wrap" id="reminders_list">
                             </div>
@@ -148,218 +158,13 @@
                             <div class="d-flex flex-wrap" id="activities_list">
                                 @foreach ($activities as $activity)
                                     <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                        <div class="card bg-light m-auto">
-                                            <div class="card-body pb-1">
-                                                <div class="form-group mb-1 row">
-                                                    <input type="hidden" name="activity_id[]" value="{{$activity->id}}">
-                                                    <label for="activity_name[]"
-                                                           class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label>
-                                                    <div class="col-8 col-sm-9 px-1">
-                                                        <input type="text" name="activity_name[]"
-                                                               value="{{$activity->title}}" required
-                                                               class="form-control form-control-sm">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group mb-2 row">
-                                                    <label for="activity_name[]"
-                                                           class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description</label>
-                                                    <div class="col-8 col-sm-9 px-1">
-                                                        <textarea type="text" name="activity_description[]"
-                                                                  id="activity_description" required
-                                                                  class="form-control form-control-sm"
-                                                                  placeholder="Description">{{$activity->description}}</textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group mb-1 row">
-                                                    <label for="activity_start[]"
-                                                           class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label>
-                                                    <div class="col-8 col-sm-4 px-1">
-                                                        <input type="text" name="activity_start[]"
-                                                               value="{{$activity->start->format('d-m-Y')}}" required
-                                                               class="form-control form-control-sm datepicker">
-                                                    </div>
-                                                    <label for="activity_end[]"
-                                                           class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label>
-                                                    <div class="col-8 col-sm-4 px-1">
-                                                        <input type="text" name="activity_end[]"
-                                                               value="{{$activity->end->format('d-m-Y')}}" required
-                                                               class="form-control form-control-sm datepicker">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group mb-2 row">
-                                                    <label for="activity_reminder[]"
-                                                           class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email
-                                                        reminder</label>
-                                                    <div class="col-8 col-sm-9 px-1 form-inline">
-                                                        <select name="activity_reminder[]"
-                                                                class="form-control form-control-sm">
-                                                            <option value="1"
-                                                                    @if($activity->reminder) selected="selected" @endif>
-                                                                Yes
-                                                            </option>
-                                                            <option value="0"
-                                                                    @if(!$activity->reminder) selected="selected" @endif>
-                                                                No
-                                                            </option>
-                                                        </select>
-
-                                                        <input type="number" name="activity_reminder_due_days[]"
-                                                               value="{{$activity->reminder_due_days}}"
-                                                               class="form-control form-control-sm text-right mx-1"
-                                                               style="width:60px;">
-
-                                                        <label for="activity_reminder_due_days[]"
-                                                               class="pl-0 pr-1 col-form-label-sm text-left">days
-                                                            before end</label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group mb-2 row">
-                                                    <label for="activity_priority[]"
-                                                           class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Priority</label>
-                                                    <div class="col-8 col-sm-9 px-1 form-inline">
-                                                        <select name="activity_priority[]"
-                                                                class="form-control form-control-sm">
-                                                            <option value="normal"
-                                                                    @if($activity->priority=='normal') selected="selected" @endif>
-                                                                Normal
-                                                            </option>
-                                                            <option value="high"
-                                                                    @if($activity->priority=='high') selected="selected" @endif>
-                                                                High
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group mb-2 row">
-                                                    <label for="activity_budget[]"
-                                                           class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label>
-                                                    <div class="col col-sm-4 pl-1 pr-1">
-                                                        <div class="input-group input-group-sm">
-                                                            <input type="number" name="activity_budget[]"
-                                                                   placeholder="0"
-                                                                   value="{{$activity->budget}}"
-                                                                   required
-                                                                   class="form-control text-right">
-                                                            <div class="input-group-append">
-                                                                <span class="input-group-text currency"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row mb-0">
-                                                    <label for="activity_template[]"
-                                                           class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Template
-                                                        <i class="fas fa-chevron-right collapseEditor"></i></label>
-                                                    <div class="col-8 col-sm-9 px-1">
-                                                        <textarea name="activity_template[]" id="activity_template"
-                                                                  placeholder="Activity description template"
-                                                                  class="form-control form-control-sm mediumEditor collapsed">
-                                                                    {{$activity->template}}</textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row mb-0">
-                                                    <a name="copy"
-                                                       class="btn btn-outline-secondary btn-sm copy ml-auto mt-1"><i
-                                                                class="far fa-copy"></i></a>
-                                                    <a name="remove"
-                                                       class="btn btn-outline-danger btn-sm remove ml-1 mt-1"><i
-                                                                class="far fa-trash-alt"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        @include('project.activity_form', ['activity' => $activity])
                                     </div>
                                 @endforeach
                             </div>
                             <button type="button" name="add_activities"
                                     class="btn btn-outline-secondary btn-sm add-activities m-2">Add
                                 Activity <i class="fas fa-plus"></i></button>
-
-                        <!--
-                            <div>
-                                <table class="table table-sm" id="activities_table"
-                                       @if($activities->isEmpty()) style="display:none;" @endif>
-                                    <thead>
-                                    <th scope="row">Activity Name</th>
-                                    <th scope="row">Description</th>
-                                    <th scope="row">Start</th>
-                                    <th scope="row">End</th>
-                                    <th scope="row">Email reminder</th>
-                                    <th scope="row">Due days before</th>
-                                    <th scope="row">Budget</th>
-                                    <th></th>
-                                    </thead>
-
-                                    @foreach ($activities as $activity)
-                            <tr>
-                                <td><input type="hidden" name="activity_id[]" value="{{$activity->id}}">
-                                                <input type="text" name="activity_name[]"
-                                                       value="{{$activity->title}}" required
-                                                       class="form-control form-control-sm">
-                                            </td>
-                                            <td><input type="text" name="activity_description[]"
-                                                       value="{{$activity->description}}" required
-                                                       class="form-control form-control-sm">
-                                            </td>
-                                            <td><input type="text" name="activity_start[]"
-                                                       value="{{$activity->start->format('d-m-Y')}}" required
-                                                       class="form-control form-control-sm datepicker">
-                                            </td>
-                                            <td><input type="text" name="activity_end[]"
-                                                       value="{{$activity->end->format('d-m-Y')}}" required
-                                                       class="form-control form-control-sm datepicker">
-                                            </td>
-                                            <td><select name="activity_reminder[]" class="form-control form-control-sm">
-                                                    <option value="1"
-                                                            @if($activity->reminder) selected="selected" @endif>Yes
-                                                    </option>
-                                                    <option value="0"
-                                                            @if(!$activity->reminder) selected="selected" @endif>No
-                                                    </option>
-                                                </select>
-                                            </td>
-                                            <td><input type="number" name="activity_reminder_due_days[]"
-                                                       value="{{$activity->reminder_due_days}}"
-                                                       class="form-control form-control-sm">
-                                            </td>
-                                            <td class="input-group">
-                                                <input type="number" name="activity_budget[]" placeholder="0"
-                                                       value="{{$activity->budget}}" required
-                                                       class="form-control form-control-sm">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text currency"></span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <button type="button" name="remove"
-                                                        class="btn btn-outline-danger btn-sm remove"><i
-                                                            class="far fa-trash-alt"></i><span
-                                                            class="glyphicon glyphicon-minus"></span></button>
-                                            </td>
-                                        </tr>
-                                        <tr class="update activity_template">
-                                            <td colspan=8>
-                                                <table class="table mb-2">
-                                                    <tr>
-                                                        <td><textarea name="activity_template[]" id="activity_template"
-                                                                      placeholder="Activity description template"
-                                                                      class="form-control form-control-sm mediumEditor">
-                                                                {{$activity->template}}</textarea>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </table>
-                                <button type="button" name="add_activities"
-                                        class="btn btn-outline-secondary btn-sm add-activities">Add
-                                    Activity <i class="fas fa-plus"></i></button>
-                            </div>
-                        </div>
-                        -->
                             <div class="form-group">
                                 <label for="outputs_table" class="form-group-header">Outputs</label>
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
@@ -447,7 +252,8 @@
                                         <div class="col">
                                             <label class="text-primary">Managers:</label>
                                             <div class="col-md-12 py-2">
-                                                <select name="user_id[]" class="custom-select" id="managers" multiple="multiple">
+                                                <select name="user_id[]" class="custom-select" id="managers"
+                                                        multiple="multiple">
                                                     @foreach($users as $user)
                                                         <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
                                                     @endforeach
@@ -459,7 +265,8 @@
                                         <div class="col">
                                             <label class="text-primary">Partners:</label>
                                             <div class="col-md-12 py-2">
-                                                <select name="partner_id[]" class="custom-select" id="partners" multiple="multiple">
+                                                <select name="partner_id[]" class="custom-select" id="partners"
+                                                        multiple="multiple">
                                                     @foreach($users as $user)
                                                         <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>
                                                     @endforeach
@@ -491,7 +298,15 @@
                             li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
                         }
                     });
-                    let editor = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Activity template"}});
+
+                    var editor = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Activity template"}});
+
+                    $(document).ready(function () {
+                        $(document).on('click', '.collapseEditor', function () {
+                            $(this).closest('.form-group').find('.medium-editor-element').toggleClass("collapsed expanded");
+                            $(this).toggleClass("fa-chevron-right fa-chevron-down");
+                        });
+                    });
 
                     $(document).ready(function () {
                         $('#project_area').multiselect({
@@ -502,10 +317,6 @@
 
                         $('.currency').each(function () {
                             $(this).text($('#project_currency option:selected').text());
-                        });
-                        $(document).on('click', '.collapseEditor', function () {
-                            $(this).closest('.form-group').find('.medium-editor-element').toggleClass("collapsed expanded");
-                            $(this).toggleClass("fa-chevron-right fa-chevron-down");
                         });
 
                         $('input[name="output_indicator[]"]').focusout(function () {
@@ -520,36 +331,11 @@
                         });
 
                         $(document).on('click', '.copy', function () {
-                            let activity = $(this).closest('.card-body');
-                            let currency = $('#project_currency option:selected').text();
-                            let html = '';
-
-                            html += '<div class="col-lg-6 my-2 px-2" data-type="copy" style="min-width: 16rem;"><div class="card bg-light m-auto"><div class="card-body pb-1"><div class="form-group mb-1 row"><input type="hidden" name="activity_id[]" value=0><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label><div class="col-8 col-sm-9 px-1"><input type="text" placeholder="Name" name="activity_name[]" required class="form-control form-control-sm" value="' + activity.find('input[name="activity_name[]"]').val() + '"></div></div>';
-                            html += '<div class="form-group mb-1 row"><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description</label><div class="col-8 col-sm-9 px-1"><textarea type="text" name="activity_description[]" id="activity_description" required class="form-control form-control-sm" rows="2" placeholder="Description">' + activity.find('textarea[name="activity_description[]"]').text() + '</textarea></div></div>';
-                            html += '<div class="form-group mb-1 row"><label for="activity_start[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_start[]" value=' + activity.find('input[name="activity_start[]"]').val() + ' placeholder="Start date" required class="form-control form-control-sm datepicker"></div>';
-                            html += '<label for="activity_end[]" class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_end[]" placeholder="End date" value=' + activity.find('input[name="activity_end[]"]').val() + ' required class="form-control form-control-sm datepicker"></div></div>';
-                            html += '<div class="form-group mb-1 row"><label for="activity_reminder[]" class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email reminder</label><div class="col-8 col-sm-9 px-1 form-inline"><select name="activity_reminder[]" class="form-control form-control-sm"><option value="1" ' + ((activity.find('select[name="activity_reminder[]"]').val() == 1) ? 'selected' : '') + '>Yes</option><option value="0" ' + ((activity.find('select[name="activity_reminder[]"]').val() == 0) ? 'selected' : '') + '>No</option></select>';
-                            html += '<input type="number" placeholder="7" name="activity_reminder_due_days[]" value=' + activity.find('input[name="activity_reminder_due_days[]"]').val() + ' class="form-control form-control-sm text-right mx-1" style="width:60px;"><label for="activity_reminder_due_days[]" class="pl-0 pr-1 col-form-label-sm text-left">days before end</label></div></div>';
-                            html += '<div class="form-group mb-2 row"><label for="activity_priority[]" class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Priority</label><div class="col-8 col-sm-9 px-1 form-inline"><select name="activity_priority[]" class="form-control form-control-sm"><option value="normal" '+ ((activity.find('select[name="activity_priority[]"]').val() == "normal") ? 'selected' : '') + '>Normal</option><option value="high" '+ ((activity.find('select[name="activity_priority[]"]').val() == "high") ? 'selected' : '') + '>High</option></select></div></div>';
-                            html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-4 pl-1 pr-1"><div class="input-group input-group-sm"><input type="number" name="activity_budget[]" placeholder="0"  value=' + activity.find('input[name="activity_budget[]"]').val() + ' required class="form-control text-right"><div class="input-group-append"><span class="input-group-text">' + currency + '</span></div></div></div></div>';
-                            // html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-3 pl-1 pr-0"><input type="number" name="activity_budget[]" placeholder="0" value=0 required class="form-control form-control-sm text-right"></div><div class="input-group-append col col-sm-2 p-0 form-control-sm"><span class="input-group-text">' + currency + '</span></div></div>';
-                            html += '<div class="form-group row mb-0"><label for="activity_template[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Template<i class="fas fa-chevron-right collapseEditor"></i></label><div class="col-8 col-sm-9 px-1"><textarea name="activity_template[]" id="activity_template" placeholder="Activity description template" class="form-control form-control-sm mediumEditor collapsed"></textarea></div></div>';
-                            html += '<div class="form-group row mt-2 mb-0"><a name="copy" class="btn btn-outline-secondary btn-sm copy ml-auto mt-1"><i class="far fa-copy"></i></a><a name="remove" class="btn btn-outline-danger btn-sm remove ml-1 mt-1"><i class="far fa-trash-alt"></i></a></div></div></div></div>';
-
-                            $('#activities_list').append(html);
-
-                            let template = $(activity).find('#activity_template').val();
-                            $('#activities_list div[data-type="copy"] textarea[id="activity_template"]').html(template);
-
-                            let editor = new MediumEditor('#activities_list #activity_template', {
-                                placeholder: {text: "Activity template"}
-                            });
-
-                            $('#activities_list input.datepicker:last-child').datepicker({
-                                format: 'dd-mm-yyyy',
-                                weekStart: 1
-                            });
+                            let index = $(this).closest('.col-lg-6').index()+1;
+                            $('#activities_list').append('<div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;"></div>');
+                            $('#activities_list div.col-lg-6:last-child').load('/a/0/'+index);
                         });
+                        
                         /* -- */
                         $(document).on('click', '.add-reminder', function () {
                             let html = '';
@@ -573,53 +359,10 @@
                         });
                         /* -- */
                         $(document).on('click', '.add-activities', function () {
-
-                            //$('#activities_table').show();
-                            let currency = $('#project_currency option:selected').text();
-                            let html = '';
-                            /*
-                            html += '<tr>';
-                            html += '<input type="hidden" name="activity_id[]" value=0>';
-                            html += '<td><input type="text" name="activity_name[]" class="form-control form-control-sm" placeholder="Activity name" required></td>';
-                            html += '<td><input type="text" name="activity_description[]" class="form-control form-control-sm" placeholder="Description" required></td>';
-                            html += '<td><input type="text" name="activity_start[]" class="form-control form-control-sm datepicker" placeholder="Startdate" size="1" required></td>';
-                            html += '<td><input type="text" name="activity_end[]" class="form-control form-control-sm datepicker" placeholder="Enddate" size="1" required></td>';
-                            html += '<td><select name="activity_reminder[]" class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select></td>';
-                            html += '<td><input type="number" name="activity_reminder_due_days[]" class="form-control form-control-sm" value="7" size="1" required></td>';
-                            html += '<td class="input-group"><input type="number" name="activity_budget[]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required><div class="input-group-append"><span class="input-group-text currency">' + currency + '</span></div></td>';
-                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="far fa-trash-alt"></i><span class="glyphicon glyphicon-minus"></span></button></td>'
-                            html += '</tr>';
-                            html += '<tr class="update activity_template"><td colspan=8><table class="table mb-2"><tr><td><textarea placeholder="Activity template" name="activity_template[]" ' +
-                                'class="form-control form-control-sm mediumEditor"></textarea></td></tr></table></td></tr>';
-                            */
-
-                            html += '<div class="col-lg-6 my-2 px-2" style="min-width: 16rem;"><div class="card bg-light m-auto"><div class="card-body pb-1"><div class="form-group mb-1 row"><input type="hidden" name="activity_id[]" value=0><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label><div class="col-8 col-sm-9 px-1"><input type="text" placeholder="Name" name="activity_name[]" required class="form-control form-control-sm"></div></div>';
-                            html += '<div class="form-group mb-1 row"><label for="activity_name[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Description</label><div class="col-8 col-sm-9 px-1"><textarea type="text" name="activity_description[]" id="activity_description" required class="form-control form-control-sm" rows="2" placeholder="Description"></textarea></div></div>';
-                            html += '<div class="form-group mb-1 row"><label for="activity_start[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_start[]" placeholder="Start date" required class="form-control form-control-sm datepicker"></div>';
-                            html += '<label for="activity_end[]" class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label><div class="col-8 col-sm-4 px-1"><input type="text" name="activity_end[]" placeholder="End date" required class="form-control form-control-sm datepicker"></div></div>';
-                            html += '<div class="form-group mb-1 row"><label for="activity_reminder[]" class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email reminder</label><div class="col-8 col-sm-9 px-1 form-inline"><select name="activity_reminder[]" class="form-control form-control-sm"><option value="1">Yes</option><option value="0">No</option></select>';
-                            html += '<input type="number" placeholder="7" value="7" name="activity_reminder_due_days[]" class="form-control form-control-sm text-right mx-1" style="width:60px;"><label for="activity_reminder_due_days[]" class="pl-0 pr-1 col-form-label-sm text-left">days before end</label></div></div>';
-                            html += '<div class="form-group mb-2 row"><label for="activity_priority[]" class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Priority</label><div class="col-8 col-sm-9 px-1 form-inline"><select name="activity_priority[]" class="form-control form-control-sm"><option value="normal" selected>Normal</option><option value="high">High</option></select></div></div>';
-                            html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-4 pl-1 pr-1"><div class="input-group input-group-sm"><input type="number" name="activity_budget[]" placeholder="0" value="0" required class="form-control text-right"><div class="input-group-append"><span class="input-group-text">' + currency + '</span></div></div></div></div>';
-                            // html += '<div class="form-group mb-1 row"><label for="activity_budget[]" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Budget</label><div class="col col-sm-3 pl-1 pr-0"><input type="number" name="activity_budget[]" placeholder="0" value=0 required class="form-control form-control-sm text-right"></div><div class="input-group-append col col-sm-2 p-0 form-control-sm"><span class="input-group-text">' + currency + '</span></div></div>';
-                            html += '<div class="form-group row mb-0"><label for="activity_template[]" class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Template<i class="fas fa-chevron-right collapseEditor"></i></label><div class="col-8 col-sm-9 px-1"><textarea name="activity_template[]" id="activity_template" placeholder="Activity description template" class="form-control form-control-sm mediumEditor collapsed"></textarea></div></div>';
-                            html += '<div class="form-group row mt-2 mb-0"><a name="remove" class="btn btn-outline-danger btn-sm remove remove ml-auto mt-1"><i class="far fa-trash-alt"></i></a></div></div></div></div>';
-
-                            $('#activities_list').append(html);
-
-                            let editor = new MediumEditor('#activities_list #activity_template', {
-                                placeholder: {text: "Activity template"}
-                            });
-                            $('#activities_list input.datepicker:last-child').datepicker({
-                                format: 'dd-mm-yyyy',
-                                weekStart: 1
-                            });
-                            $('#activities_list input.datepicker').eq(-2).datepicker("setDate", new Date());
-                            $('input[name="activity_start[]"]').on('change', function () {
-                                $(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("setStartDate", $(this).val());
-                                $(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("setDate", $(this).val());
-                            });
+                            $('#activities_list').append('<div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;"></div>');
+                            $('#activities_list div.col-lg-6:last-child').load('/a/0/0');
                         });
+
                         $(document).on('click', '.add-outputs', function () {
                             $('#outputs_table').show();
                             let html = '';
@@ -684,7 +427,7 @@
                                 let startdate = new Date($(this).datepicker("getDate"));
                                 let enddate = new Date($(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("getDate"));
                                 if (enddate < startdate) {
-                                    datealert += 'End date is earlier that start date for Activity ' + $(this).closest('.card-body').find('input[name="activity_name[]"]').val() +'\r\n';
+                                    datealert += 'End date is earlier that start date for Activity ' + $(this).closest('.card-body').find('input[name="activity_name[]"]').val() + '\r\n';
                                 }
                             });
                             if (datealert) {

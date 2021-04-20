@@ -254,10 +254,9 @@
                 if ($('#addActivities').next().children('.add-activity:visible').length == 0) {
                     $('#addActivities').addClass('disabled');
                 }
-                ;
                 let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
-                // $('#activities_table').append(html);
             });
+
             $(document).on('click', '.add-output', function () {
                 $('#outputs_table').show();
                 let id = $(this).attr('id');

@@ -335,7 +335,7 @@
                             $('#activities_list').append('<div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;"></div>');
                             $('#activities_list div.col-lg-6:last-child').load('/a/0/'+index);
                         });
-                        
+
                         /* -- */
                         $(document).on('click', '.add-reminder', function () {
                             let html = '';

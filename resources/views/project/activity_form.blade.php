@@ -147,6 +147,6 @@
         $('#activities_list div.col-lg-6:last-child').find('input[name="activity_budget[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_budget[]"]').val());
         $('#activities_list div.col-lg-6:last-child textarea[id="activity_template"]').html($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('#activity_template').val());
         @endif
-        var editor = new MediumEditor('#activities_list #activity_template', {placeholder: {text: "Activity template"}});s
+        var editor = new MediumEditor('#activities_list #activity_template', {placeholder: {text: "Activity template"}});
     </script>
 @endif

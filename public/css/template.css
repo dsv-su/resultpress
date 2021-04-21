@@ -404,3 +404,83 @@ select[name="activity_reminder[]"] {
     display: inline-flex !important;
     align-items: center !important;
 }
+
+div.wrapper {
+    background-image: url("../images/container-repeater.gif");
+    background-repeat: repeat-x;
+}
+
+/* --- The Table Structure --- */
+
+table {
+    /*    font-family: Nunito, sans-serif;*/
+    border-collapse: separate;
+}
+
+table b {
+    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/check.svg);
+    font-size: 1rem;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    opacity: 100%;
+}
+
+table list {
+    font-size: 1rem;
+    box-shadow: 2px 2px 2px 2px #e5dfcc;
+}
+
+table td, table tr {
+    vertical-align: middle !important;
+}
+
+table tr th, table tr td {
+    box-shadow: 2px 2px 1px #e5dfcc;
+}
+
+/* top-left border-radius */
+
+table tr:first-child th:first-child {
+    border-top-left-radius: 5px;
+}
+
+/* top-right border-radius */
+
+table tr:first-child th:last-child {
+    border-top-right-radius: 5px;
+}
+
+/* bottom-left border-radius */
+
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 3px;
+}
+
+/* bottom-right border-radius */
+
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 3px;
+}
+
+/* -- The Styles -- */
+
+th, td {
+    padding: 8px 20px;
+}
+
+th {
+    background: #002e5f;
+    color: #fff;
+    border: 0;
+}
+
+td {
+    background: #F8F8FF;
+    /* Ghostwhite */
+}
+
+.table td.fit,
+.table th.fit {
+    white-space: nowrap;
+    width: 1%;
+}

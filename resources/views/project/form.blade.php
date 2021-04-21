@@ -246,12 +246,14 @@
                             </div>
 
                             <!-- Project managers and partners -->
-                            <div class="form-row">
-                                <div class="form-group border p-2">
-                                    <div class="form-row">
-                                        <div class="col">
-                                            <label class="text-primary">Managers:</label>
-                                            <div class="col-md-12 py-2">
+
+                            <div class="form-group">
+                                <label for="users" class="form-group-header">Users</label>
+                                <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
+                                    <div class="card p-2">
+                                        <div class="form-row row">
+                                            <label class="text-primary col-form-label">Managers:</label>
+                                            <div class="col px-1">
                                                 <select name="user_id[]" class="custom-select" id="managers"
                                                         multiple="multiple">
                                                     @foreach($users as $user)
@@ -260,11 +262,9 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="col">
-                                            <label class="text-primary">Partners:</label>
-                                            <div class="col-md-12 py-2">
+                                        <div class="form-row row">
+                                            <label class="text-primary col-form-label">Partners:</label>
+                                            <div class="col px-1">
                                                 <select name="partner_id[]" class="custom-select" id="partners"
                                                         multiple="multiple">
                                                     @foreach($users as $user)
@@ -276,7 +276,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <div class="form-group">
                                 <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
                                        @else value="Update"
@@ -331,9 +331,9 @@
                         });
 
                         $(document).on('click', '.copy', function () {
-                            let index = $(this).closest('.col-lg-6').index()+1;
+                            let index = $(this).closest('.col-lg-6').index() + 1;
                             $('#activities_list').append('<div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;"></div>');
-                            $('#activities_list div.col-lg-6:last-child').load('/a/0/'+index);
+                            $('#activities_list div.col-lg-6:last-child').load('/a/0/' + index);
                         });
 
                         /* -- */

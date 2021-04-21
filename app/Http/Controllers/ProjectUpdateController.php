@@ -216,7 +216,7 @@ class ProjectUpdateController extends Controller
                 $totalmoneyspent += $aau->money;
             }
 
-            if ($activity->budget) {
+            if ((int)$activity->budget) {
                 $remainingpercentage = number_format(abs(1 - ($totalmoneyspent / $activity->budget)) * 100) . '%';
                 $moneyspent = ' ' . abs($activity->budget - $totalmoneyspent) . ' (' . $remainingpercentage . ')';
             } else {

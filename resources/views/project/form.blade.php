@@ -276,7 +276,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
                                        @else value="Update"

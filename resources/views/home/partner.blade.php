@@ -39,10 +39,27 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if($project->status == 1) <span class="badge badge-warning">In progress</span>
-                                                @elseif($project->status == 2) <span class="badge badge-danger">Delayed</span>
-                                                @elseif($project->status == 3) <span class="badge badge-success">Done</span>
-                                                @endif
+                                                <div class="row my-1 d-flex align-content-center">
+                                                    @if($project->status() == 'planned')
+                                                        <span class="badge badge-light font-100">Planned</span>
+                                                    @elseif($project->status() == 'inprogress')
+                                                        <span class="badge badge-warning font-100">In progress</span>
+                                                    @elseif($project->status() == 'delayedhigh')
+                                                        <span class="badge badge-danger font-100">Delayed</span>
+                                                    @elseif($project->status() == 'delayednormal')
+                                                        <span class="badge badge-danger font-100">Delayed</span>
+                                                    @elseif($project->status() == 'pendingreview')
+                                                        <span class="badge badge-primary font-100">Pending review</span>
+                                                    @elseif($project->status() == 'completed')
+                                                        <span class="badge badge-success font-100">Completed</span>
+                                                    @elseif($project->status() == 'archived')
+                                                        <span class="badge badge-secondary font-100">Archived</span>
+                                                    @elseif($project->status() == 'onhold')
+                                                        <span class="badge badge-secondary font-100">On hold</span>
+                                                    @elseif($project->status() == 'terminated')
+                                                        <span class="badge badge-secondary font-100">Terminated</span>
+                                                    @endif
+                                                </div>
                                                 @if($project->pending_updates()->count())
                                                     <a href="/project/{{$project->id}}/updates"><span class=" badge badge-info">Update
                                         pending</span></a>

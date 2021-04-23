@@ -94,13 +94,13 @@
     @endif
 
     @if ($project_update->summary)
-        <div class="accordion" id="summary">
+        <div class="accordion my-3" id="summary">
             <label for="outcomes" class="form-group-header mt-4">Summary</label>
             <div class="card">
                 <div class="card-header bg-white">
                     <div class="row">
                         <div class="col-auto pl-1">
-                            {{$project_update->summary}}
+                            {!!$project_update->summary!!}
                         </div>
                     </div>
                 </div>

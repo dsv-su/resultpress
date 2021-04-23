@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="row my-1">{{$project->description}}</div>
+                    <div class="row my-1 trimmed-text">{!!$project->description!!}</div>
                 </div>
             </div>
         </div>

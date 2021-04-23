@@ -37,7 +37,7 @@
                                        class="col-4 col-sm-3 col-form-label-sm">Description</label>
                                 <div class="col px-1">
                                 <textarea rows="2"
-                                          class="form-control form-control-sm @error('project_description') is-danger @enderror"
+                                          class="form-control mediumEditor form-control-sm @error('project_description') is-danger @enderror"
                                           name="project_description" id="project_description"
                                 >{!! old('project_description', empty($project) ? '' : $project->description) !!}</textarea>
                                     @error('project_description')
@@ -300,6 +300,7 @@
                     });
 
                     var editor = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Activity template"}});
+                    var editor = new MediumEditor('.mediumEditor#project_description', {placeholder: {text: "Activity template"}});
 
                     $(document).ready(function () {
                         $(document).on('click', '.collapseEditor', function () {

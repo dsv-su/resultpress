@@ -142,7 +142,7 @@
             <div class="form-group">
                 <label for="project_update_summary" class="form-group-header mt-4">Summary</label>
                 <textarea rows="4"
-                          class="form-control form-control-sm @error('project_update_summary') is-danger @enderror"
+                          class="form-control form-control-sm mediumEditor @error('project_update_summary') is-danger @enderror"
                           name="project_update_summary" id="project_update_summary"
                 >{{ old('project_description', empty($project_update) ? '' : $project_update->summary) }}</textarea>
                 @error('project_description')
@@ -170,7 +170,8 @@
                 $("#project_update_summary").prop('required', true);
             }
 
-            let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}});
+            var editor = new MediumEditor('.mediumEditor#project_update_summary', {placeholder: {text: "Summary"}});
+
             $(document).on('click', '.collapseEditor', function () {
                 $(this).closest('.form-group').find('.medium-editor-element').toggleClass("collapsed expanded");
                 $(this).toggleClass("fa-chevron-right fa-chevron-down");

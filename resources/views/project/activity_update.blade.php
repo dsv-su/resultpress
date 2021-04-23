@@ -58,7 +58,7 @@
                             <span class="badge badge-warning font-100">Completed</span>
                         @endif
                     @else
-                        <select class="custom-select-sm" name="activity_state[]" id="activity_state[]">
+                        <select class="custom-select" name="activity_state[]" id="activity_state[]">
                             <option value="0" selected>Propose state change</option>
                             <option value="cancelled" @if ($au && $au->state=='cancelled') selected @endif>Cancelled
                             </option>

@@ -484,3 +484,11 @@ td {
     white-space: nowrap;
     width: 1%;
 }
+
+.trimmed-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 5; /* number of lines to show */
+    -webkit-box-orient: vertical;
+}

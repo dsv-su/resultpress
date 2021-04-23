@@ -26,7 +26,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="row my-1">@if($pu->summary){{$pu->summary}} @else No summary provided @endif</div>
+                                <div class="row my-1 trimmed-text">@if($pu->summary){!!$pu->summary!!} @else No summary provided @endif</div>
                             </div>
                         </div>
                     </div>

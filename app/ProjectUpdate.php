@@ -26,6 +26,11 @@ class ProjectUpdate extends Model
         return $this->hasMany(OutputUpdate::class);
     }
 
+    public function outcome_updates()
+    {
+        return $this->hasMany(OutcomeUpdate::class);
+    }
+
     public function files()
     {
         return File::where(['filearea' => 'project_update', 'itemid' => $this->id]);

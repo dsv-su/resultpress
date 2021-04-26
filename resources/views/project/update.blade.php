@@ -104,6 +104,35 @@
             </div>
 
             <div class="form-group">
+                <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
+                <div id="outcomes">
+                    @if (!empty($project_update->outcome_updates))
+                        @foreach($project_update->outcome_updates as $ou)
+                            <div class="card mb-3">
+                                @include('project.outcome_update', ['outcome' => $ou->outcome, 'outcome_update' => $ou])
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+                <div class="col-md-8 col-lg my-2 px-2" style="min-width: 16rem;">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutcomes"
+                                data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            Add Outcome
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            @foreach ($project->outcomes as $outcome)
+                                <a class="dropdown-item add-outcome" href="#"
+                                   id="{{$outcome->id}}"
+                                   @if (!empty($project_update->outcome_updates) && $project_update->outcome_updates->keyBy('outcome_id')->get($outcome->id)) style="display: none;" @endif>{{$outcome->name}}</a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label for="attachments" class="form-group-header mt-4">Attachments</label>
                 <div class="alert" id="message" style="display: none"></div>
                 <div>
@@ -258,6 +287,16 @@
                 let editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
             });
 
+            $(document).on('click', '.add-outcome', function () {
+                let id = $(this).attr('id');
+                $('#outcomes').append('<div class="card mb-3" id="ou-' + id + '"></div>');
+                $('#ou-' + id).load('/outcome_update/' + id + '/0');
+                $('#' + id + '.add-outcome').hide();
+                if ($('#addOutcomes').next().children('.add-outcome:visible').length == 0) {
+                    $('#addOutcomes').addClass('disabled');
+                }
+            });
+
             $(document).on('click', '.add-output', function () {
                 $('#outputs_table').show();
                 let id = $(this).attr('id');
@@ -287,7 +326,6 @@
                     } else {
                         $(this).tooltip('hide');
                     }
-                    ;
                 });
             });
 
@@ -306,7 +344,14 @@
                 if ($('#addActivities').next().children('.add-activity[style*="display: none"]').length > 0) {
                     $('#addActivities').removeClass('disabled');
                 }
-                ;
+            });
+            $(document).on('click', '#outcomes .remove', function () {
+                let id = $(this).attr('id');
+                $('#' + id + '.add-outcome').show();
+                $(this).closest('.card').remove();
+                if ($('#addOutcomes').next().children('.add-outcome[style*="display: none"]').length > 0) {
+                    $('#addOutcomes').removeClass('disabled');
+                }
             });
             $("form").submit(function () {
                 let activity_template = '';
@@ -317,7 +362,7 @@
                     }
                 });
                 if (activity_template) {
-                    alert (activity_template);
+                    alert(activity_template);
                     return false;
                 }
                 // Add extra confirmation on empty activity & output

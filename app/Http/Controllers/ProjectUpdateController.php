@@ -7,6 +7,8 @@ use App\ActivityUpdate;
 use App\Events\ProjectUpdateAcceptEvent;
 use App\Events\ProjectUpdateRejectEvent;
 use App\File;
+use App\Outcome;
+use App\OutcomeUpdate;
 use App\Output;
 use App\OutputUpdate;
 use App\Project;
@@ -195,6 +197,15 @@ class ProjectUpdateController extends Controller
             $a = 0;
         }
         return view('project.activity_form', ['activity' => $a, 'index' => $index])->render();
+    }
+
+    public function showOutcomeUpdateForm($outcome, $ou) {
+        if ($ou) {
+            $ou = OutcomeUpdate::findorfail($ou);
+        } else {
+            $ou = 0;
+        }
+        return view('project.outcome_update', ['outcome' => Outcome::findorfail($outcome), 'outcome_update' => $ou])->render();
     }
 
     /**

@@ -9,7 +9,7 @@
             @elseif($project->status() == 'inprogress')
                 <span class="badge badge-warning font-100">In progress</span>
             @elseif($project->status() == 'delayedhigh')
-                <span class="badge badge-danger font-100">Delayed</span>
+                <span class="badge badge-danger font-100">Delayed Major</span>
             @elseif($project->status() == 'delayednormal')
                 <span class="badge badge-danger font-100">Delayed</span>
             @elseif($project->status() == 'pendingreview')
@@ -71,17 +71,17 @@
             <div class="col-sm font-weight-bold">Deadlines:</div>
             @if (!$deadlines->isEmpty())
                 <div class="col-sm">
-                @foreach($deadlines as $deadline)
-                    {{ $deadline->name }}: {{ $deadline->set->format('m/d/Y') }}
-                    @if($deadline->reminder == true) <i class="far fa-bell"></i> @endif
-                    <br>
-                @endforeach
+                    @foreach($deadlines as $deadline)
+                        {{ $deadline->name }}: {{ $deadline->set->format('m/d/Y') }}
+                        @if($deadline->reminder == true) <i class="far fa-bell"></i> @endif
+                        <br>
+                    @endforeach
                 </div>
-            @else <div class="col-sm">Not set</div>
+            @else
+                <div class="col-sm">Not set</div>
             @endif
 
         </div>
-
 
 
     </div>
@@ -119,7 +119,9 @@
                         <div class="row">
                             <div class="col-auto pl-1">
                                  <span class="btn cursor-default px-0 text-left">
-                                     {{$a->title}} @if ($a->priority=='high') <span data-toggle="tooltip" title="High priority"><i class="fas fa-arrow-alt-circle-up text-danger"></i></span> @endif
+                                     {{$a->title}} @if ($a->priority=='high') <span data-toggle="tooltip"
+                                                                                    title="High priority"><i
+                                                 class="fas fa-arrow-alt-circle-up text-danger"></i></span> @endif
                                  </span>
                             </div>
                             @if ($a->comments)
@@ -174,9 +176,14 @@
     @endif
 
     <h5 class="mt-4">Outcomes</h5>
-    <div class="accordion" id="outcomes">
+    <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
+    <div id="outcomes">
         @if (!$project->outcomes->isEmpty())
-            @include('project.outcomes')
+            @foreach($project->outcomes as $outcome)
+                <div class="card mb-3">
+                    @include('project.outcome_update', ['outcome_update' => $outcome->latest_approved_update(), 'outcome' => $outcome, 'show' => true])
+                </div>
+            @endforeach
         @else
             The project has no outcomes.
         @endif

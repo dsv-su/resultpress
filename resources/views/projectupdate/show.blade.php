@@ -55,16 +55,16 @@
         </table>
     @endif
 
-    @can('project-create')
+    @if (!$project_update->project->outcomes->isEmpty())
         <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
-        <div class="accordion" id="outcomes">
-            @if (!$project_update->project->outcomes->isEmpty())
-                @include('project.outcomes')
-            @else
-                The project has no outcomes.
-            @endif
+        <div id="outcomes">
+            @foreach($project_update->outcome_updates as $ou)
+                <div class="card mb-3">
+                    @include('project.outcome_update', ['outcome_update' => $ou, 'outcome' => $ou->outcome, 'show' => true])
+                </div>
+            @endforeach
         </div>
-    @endcan
+    @endif
 
     @if(!$files->isEmpty())
         <div class="my-1">

@@ -45,20 +45,21 @@
                         @endforeach
                     </div>
                 @else
-                    <form action="{{ route('outcome_update', $outcome) }}" method="POST">
+            <!--        <form action="{{ route('outcome_update', $outcome) }}" method="POST">
                         @method('PUT')
-                        @csrf
+                        @csrf-->
                         <div class="p-2">
                             <div class="form-group row">
                                 <div class="col-auto col-sm-4 col-md-3">
-                                    <input name="project" value="{{$project->id}}" hidden>
+                                    <!--<input name="project" value="{{$project->id}}" hidden>-->
+                                        <input name="outcome_id[]" value="{{$outcome->id}}" hidden>
                                     <label for="project_area" class="col-form-labe">Outputs covered:</label>
                                 </div>
                                 <div class="col-sm">
                                     <select name="outcome_outputs[]" id="outcome_outputs"
                                             class="custom-select"
                                             multiple="multiple" required>
-                                        @foreach($outputs as $output)
+                                        @foreach($project->outputs as $output)
                                             <option value="{{$output->id}}" {{ old('output_id') == $output->id || ($outcome->outputs && in_array($output->id, json_decode($outcome->outputs, true))) ? 'selected':''}}>{{$output->indicator}}</option>
                                         @endforeach
                                     </select>
@@ -71,13 +72,13 @@
                                         description:</label>
                                 </div>
                                 <div class="col-sm">
-                                <textarea class="form-control" id="summary" name="summary"
+                                <textarea class="form-control" id="summary" name="outcome_summary[]"
                                           placeholder="Describe the outcome completion summary"></textarea>
                                 </div>
                             </div>
                             <input class="btn btn-primary" value="Save" type="submit">
                         </div>
-                    </form>
+               <!--     </form>-->
                 @endif
             </div>
         </div>

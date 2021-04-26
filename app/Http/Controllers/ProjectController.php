@@ -9,6 +9,7 @@ use App\Events\PartnerUpdate;
 use App\Events\PartnerUpdateEvent;
 use App\File;
 use App\Outcome;
+use App\OutcomeUpdate;
 use App\Output;
 use App\OutputUpdate;
 use App\Project;
@@ -567,6 +568,33 @@ class ProjectController extends Controller
                         ->performedOn($activityupdate)
                         ->log('ActivityUpdate');
                 }
+            }
+        }
+
+        // Outcome updates
+        $outcome_update_array['outcome_id'] = request('outcome_id');
+        $outcome_update_array['outcome_update_id'] = request('outcome_update_id');
+        $outcome_update_array['outcome_outputs'] = request('outcome_outputs');
+        $outcome_update_array['outcome_summary'] = request('outcome_summary');
+
+        // Remove deleted activity updates
+        foreach ($projectupdate->outcome_updates()->get() as $ou) {
+            if (!$outcome_update_array['outcome_id'] || !in_array($ou->id, $outcome_update_array['outcome_update_id'])) {
+                dump($ou);
+                OutcomeUpdate::findOrFail($ou->id)->delete();
+            }
+        }
+
+        if ($outcome_update_array['outcome_id']) {
+            foreach ($outcome_update_array['outcome_id'] as $key => $id) {
+
+                $ou = OutcomeUpdate::firstOrNew(['id' => $outcome_update_array['outcome_update_id'][$key]]);
+                $ou->outcome_id = Outcome::findOrFail($id)->id;
+                $ou->outputs = $outcome_update_array['outcome_outputs'][$key];
+                $ou->summary = $outcome_update_array['outcome_summary'][$key];
+                $ou->completed_on = Carbon::now();
+                $ou->project_update_id = $projectupdate_id;
+                $ou->save();
             }
         }
 

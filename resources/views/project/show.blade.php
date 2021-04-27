@@ -80,24 +80,23 @@
             @else
                 <div class="col-sm">Not set</div>
             @endif
-
         </div>
-
-
     </div>
 
     @if($project->pending_updates()->count())
         <h5 class="my-4">Pending updates</h5>
         <div class="alert alert-info" role="alert">
             @foreach ($project->pending_updates()->all() as $index => $pu)
-                <div class="row">
-                    <div class="col-auto pl-1 d-flex align-items-center">#{{$index+1}} created
+                <div class="row my-2">
+                    <div class="col-auto pl-1 d-flex align-items-center">#{{$pu->getIndex()}} created
                         on {{$pu->created_at->format('d/m/Y')}}
                         by {{ $pu->user->name }}
                     </div>
+                    <!--
                     <div class="col-auto px-1 d-flex align-items-center">
                         <span class="badge badge-warning mx-2 font-100">Pending approval</span>
                     </div>
+                    -->
                     <div class="col-auto px-1">
                         <a href="/project/update/{{$pu->id}}" class="btn btn-outline-secondary btn-sm">Show
                             <i class="fas fa-info-circle"></i></a>
@@ -175,7 +174,6 @@
     @else The project has no activities.
     @endif
 
-    <h5 class="mt-4">Outcomes</h5>
     <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
     <div id="outcomes">
         @if (!$project->outcomes->isEmpty())

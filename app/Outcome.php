@@ -3,24 +3,25 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Outcome extends Model
 {
     protected $dates = ['start', 'end'];
     protected $fillable = ['name', 'summary', 'outputs', 'completed', 'completed_on', 'project_id', 'user_id'];
 
-    public function project()
+    public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
 
-    public function outcome_updates()
+    public function outcome_updates(): HasMany
     {
         return $this->hasMany(OutcomeUpdate::class);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

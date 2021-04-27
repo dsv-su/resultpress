@@ -17,24 +17,26 @@
     </div>
 </div>
 
-@if ($outcome->completed() || ($outcome_update && isset($show) && $show))
-    <div class="card-body">
-        <div class="p-2">
-            <label for="summary" class="col-form-label">Completion
-                description:</label>
-            {{$outcome_update->summary}}
-            <br/>
-            <label for="summary" class="col-form-label">Outputs status:</label>
-            @foreach(json_decode($outcome_update->outputs, true) as $output)
-                <div class="row my-1">
-                    <div class="col">
-                                <span>{{\App\Output::find($output)->indicator}}<span
-                                            class="badge ml-2 badge-light font-100">{{$outcome_update->calculateOutputValue($output)}}</span></span>
+@if (isset($show) && $show)
+    @if ($outcome_update && $outcome_update->outputs)
+        <div class="card-body">
+            <div class="p-2">
+                <label for="summary" class="col-form-label">Completion description:</label>
+                @if ($outcome_update) {{$outcome_update->summary}} @endif
+                <br/>
+                <!--<label for="summary" class="col-form-label">Outputs status:</label>-->
+                @foreach(json_decode($outcome_update->outputs, true) as $output)
+                    <div class="row my-1">
+                        <div class="col">
+                        <span>{{\App\Output::find($output)->indicator}}
+                            <span class="badge ml-2 badge-light font-100">{{$outcome_update->calculateOutputValue($output)}}</span>
+                        </span>
+                        </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
-    </div>
+    @endif
 @elseif (!isset($show))
     <div class="card-body">
         <div class="p-2">

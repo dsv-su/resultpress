@@ -55,7 +55,7 @@
         </table>
     @endif
 
-    @if (!$project_update->project->outcomes->isEmpty())
+    @if (!$project_update->outcome_updates->isEmpty())
         <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
         <div id="outcomes">
             @foreach($project_update->outcome_updates as $ou)

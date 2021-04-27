@@ -580,14 +580,12 @@ class ProjectController extends Controller
         // Remove deleted activity updates
         foreach ($projectupdate->outcome_updates()->get() as $ou) {
             if (!$outcome_update_array['outcome_id'] || !in_array($ou->id, $outcome_update_array['outcome_update_id'])) {
-                dump($ou);
                 OutcomeUpdate::findOrFail($ou->id)->delete();
             }
         }
 
         if ($outcome_update_array['outcome_id']) {
             foreach ($outcome_update_array['outcome_id'] as $key => $id) {
-
                 $ou = OutcomeUpdate::firstOrNew(['id' => $outcome_update_array['outcome_update_id'][$key]]);
                 $ou->outcome_id = Outcome::findOrFail($id)->id;
                 $ou->outputs = $outcome_update_array['outcome_outputs'][$key];
@@ -595,6 +593,16 @@ class ProjectController extends Controller
                 $ou->completed_on = Carbon::now();
                 $ou->project_update_id = $projectupdate_id;
                 $ou->save();
+                activity()
+                    ->causedBy(Auth::user())
+                    ->performedOn($ou)
+                    ->log('OutcomeUpdateReported');
+                if ($status == 'approved') {
+                    activity()
+                        ->causedBy(Auth::user())
+                        ->performedOn($ou)
+                        ->log('OutcomeUpdateApproved');
+                }
             }
         }
 

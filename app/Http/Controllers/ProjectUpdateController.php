@@ -342,6 +342,12 @@ class ProjectUpdateController extends Controller
                     $output->save();
                 }
             }
+            foreach ($project_update->outcome_updates as $ou) {
+                activity()
+                    ->causedBy(Auth::user())
+                    ->performedOn($ou)
+                    ->log('OutcomeUpdateApproved');
+            }
         }
 
         $project_update->save();

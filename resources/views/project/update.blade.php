@@ -125,7 +125,7 @@
                             @foreach ($project->outcomes as $outcome)
                                 <a class="dropdown-item add-outcome" href="#"
                                    id="{{$outcome->id}}"
-                                   @if (!empty($project_update->outcome_updates) && $project_update->outcome_updates->keyBy('outcome_id')->get($outcome->id)) style="display: none;" @endif>{{$outcome->name}}</a>
+                                   @if ((!empty($project_update->outcome_updates) && $project_update->outcome_updates->keyBy('outcome_id')->get($outcome->id)) || !$outcome->outcome_updates->isEmpty()) style="display: none;" @endif>{{$outcome->name}}</a>
                             @endforeach
                         </div>
                     </div>

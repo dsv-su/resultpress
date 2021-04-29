@@ -20,6 +20,7 @@
     "laravel/ui": "^3.0",
     "spatie/laravel-activitylog": "^3.14",
     "spatie/laravel-permission": "^3.17",
+    "swaggest/json-diff": "^3.8",
     "uabookstores/laravel-shibboleth": "^3.3"
   },
   "require-dev": {

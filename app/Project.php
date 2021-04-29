@@ -33,6 +33,11 @@ class Project extends Model
         return $this->hasMany(Outcome::class);
     }
 
+    public function history()
+    {
+        return $this->hasMany(ProjectHistory::class);
+    }
+
     public function submitted_outputs()
     {
         return $this->outputs()->get()->filter(function ($output, $key) {
@@ -111,7 +116,7 @@ class Project extends Model
             if ($a->status() == 'delayedhigh') {
                 $delayedhigh++;
             }
-            if ($a->status() == 'delayednormak') {
+            if ($a->status() == 'delayednormal') {
                 $delayednormal++;
             }
             if ($a->status() == 'completed') {
@@ -142,7 +147,52 @@ class Project extends Model
             // Finished
             return 'completed';
         }
+    }
 
+    public function wrapJson() {
+        foreach ($this->outputs as $o) {
+            $o->makeHidden('updated_at');
+            $o->makeHidden('created_at');
+            $o->makeHidden('project_id');
+        }
+        foreach ($this->activities as $a) {
+            $a->makeHidden('updated_at');
+            $a->makeHidden('created_at');
+            $a->makeHidden('project_id');
+            $a->makeHidden('deleted_at');
+        }
+        foreach ($this->outcomes as $o) {
+            $o->makeHidden('updated_at');
+            $o->makeHidden('created_at');
+            $o->makeHidden('user_id');
+            $o->makeHidden('project_id');
+        }
+        foreach ($this->project_updates as $pu) {
+            $pu->makeHidden('project_id');
+            $pu->makeHidden('updated_at');
+            $pu->makeHidden('created_at');
+            foreach ($pu->activity_updates as $au) {
+                $au->makeHidden('updated_at');
+                $au->makeHidden('created_at');
+            }
+            foreach ($pu->outcome_updates as $ou) {
+                $ou->makeHidden('updated_at');
+                $ou->makeHidden('created_at');
+            }
+            foreach ($pu->output_updates as $ou) {
+                $ou->makeHidden('updated_at');
+                $ou->makeHidden('created_at');
+            }
+        }
+        $this->makeHidden('updated_at');
+        $this->makeHidden('created_at');
+
+        $json = $this->toJson(JSON_PRETTY_PRINT);
+        $previous = $this->history()->orderBy('id', 'desc')->first()->data ?? null;
+        if ($json != $previous) {
+            return $json;
+        }
+        return false;
     }
 }
 

@@ -12,9 +12,11 @@ use App\OutcomeUpdate;
 use App\Output;
 use App\OutputUpdate;
 use App\Project;
+use App\ProjectHistory;
 use App\ProjectUpdate;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -351,6 +353,17 @@ class ProjectUpdateController extends Controller
         }
 
         $project_update->save();
+
+        // Save to history
+        if ($status == 'approved' || $status == 'draft') {
+            $history = new ProjectHistory();
+            $history->project_id = $project_update->project->id;
+            $history->user_id = Auth::user()->id;
+            $history->data = $project_update->project->wrapJson();
+            if ($history->data) {
+                $history->save();
+            }
+        }
         return redirect()->route('projectupdate_index', $project_update->project_id);
     }
 

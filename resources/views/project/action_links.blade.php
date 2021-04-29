@@ -1,6 +1,8 @@
 @can('project-'.$project->id.'-edit')
     <a href="/project/{{$project->id}}/edit" class="btn btn-outline-secondary btn-sm mb-1"><span
                 class="d-none d-sm-inline-block">Edit </span><i class="far fa-edit ml-sm-1"></i></a>
+    <a href="/project/{{$project->id}}/history" class="btn btn-outline-secondary btn-sm mb-1"><span
+                class="d-none d-sm-inline-block">History </span><i class="far fa-edit ml-sm-1"></i></a>
 @endcan
 @can('project-'.$project->id.'-update')
     <a href="/project/{{$project->id}}/update" class="btn btn-outline-secondary btn-sm mb-1"><span

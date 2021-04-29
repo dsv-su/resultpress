@@ -4,6 +4,8 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Activity extends Model
@@ -13,17 +15,17 @@ class Activity extends Model
     protected $dates = ['start', 'end'];
     protected $fillable = ['title', 'template', 'description', 'start', 'end', 'budget', 'project_id', 'reminder', 'reminder_due_days', 'priority'];
 
-    public function project()
+    public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
 
-    public function activity_updates()
+    public function activity_updates(): HasMany
     {
         return $this->hasMany(ActivityUpdate::class);
     }
 
-    public function status()
+    public function status(): string
     {
         foreach ($this->activity_updates->sortBy('created_at', SORT_REGULAR, true) as $au) {
             if ($au->project_update->status == 'approved') {

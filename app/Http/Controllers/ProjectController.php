@@ -14,6 +14,7 @@ use App\Output;
 use App\OutputUpdate;
 use App\Project;
 use App\ProjectArea;
+use App\ProjectHistory;
 use App\ProjectOwner;
 use App\ProjectPartner;
 use App\ProjectReminder;
@@ -118,7 +119,7 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         $project_updates = ProjectUpdate::where('project_id', $project->id)->where('project_updates.status', 'approved')->get();
-        $activities = $project->activities()->get();
+        $activities = $project->activities;
         $outputs = $project->submitted_outputs();
         $moneyspent = 0;
         $budget = 0;
@@ -235,9 +236,9 @@ class ProjectController extends Controller
     {
         return view('project.form', [
             'project' => $project,
-            'activities' => $project->activities()->get(),
+            'activities' => $project->activities,
             'outputs' => $project->submitted_outputs(),
-            'project_areas' => $project->project_area()->get(),
+            'project_areas' => $project->project_area,
             'areas' => Area::all(),
             'old_pa' => $project->project_area->pluck('area_id')->toArray(),
             'users' => User::all(),
@@ -492,6 +493,15 @@ class ProjectController extends Controller
             }
         }
 
+        // Save to history
+        $history = new ProjectHistory();
+        $history->project_id = $project->id;
+        $history->user_id = Auth::user()->id;
+        $history->data = $project->wrapJson();
+        if ($history->data) {
+            $history->save();
+        }
+
         return redirect()->route('project_show', $project);
     }
 
@@ -666,6 +676,17 @@ class ProjectController extends Controller
         // Fire an event
         event(new PartnerUpdateEvent($projectupdate));
 
+        // Save to history
+        if ($status == 'submitted' || $status == 'approved') {
+            $history = new ProjectHistory();
+            $history->project_id = $project->id;
+            $history->user_id = Auth::user()->id;
+            $history->data = $project->wrapJson();
+            if ($history->data) {
+                $history->save();
+            }
+        }
+
         return redirect()->route('projectupdate_show', $projectupdate_id);
     }
 
@@ -750,5 +771,10 @@ class ProjectController extends Controller
             'message' => 'Success',
             'text' => 'Marked as completed'
         ]);
+    }
+
+    public function history(Project $project)
+    {
+        return view('project.history', ['project' => $project]);
     }
 }

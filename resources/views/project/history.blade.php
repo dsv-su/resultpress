@@ -43,15 +43,17 @@
                                 @if (is_array($m))
                                     <h5 class="mt-2">{{ucfirst($key)}}:</h5>
                                     @foreach($m as $i => $item)
-                                        <p>id #{{$history->diff()->getRearranged()->$key[$i]->id}} new values: {{json_encode($item)}}</p>
+                                        <p>id #{{$history->diff()->getRearranged()->$key[$i]->id}} new
+                                            values: {{json_encode($item)}}</p>
 
                                     @endforeach
                                 @elseif ($key == 'project_updates')
                                     <h5 class="mt-2">Project updates</h5>
                                     @foreach($m as $i => $pu)
-                                        <p>id #{{$history->diff()->getRearranged()->$key[$i]->id}} new status: {{$pu->status == 'draft' ? 'returned for revision' : $pu->status}}</p>
+                                        <p><a href="/project/update/{{$history->diff()->getRearranged()->$key[$i]->id}}">#{{$history->diff()->getRearranged()->$key[$i]->id}}</a> submitted by {{\App\User::find($history->diff()->getRearranged()->$key[$i]->user_id)->name}} new
+                                            status: {{$pu->status == 'draft' ? 'returned for revision' : $pu->status}}</p>
                                     @endforeach
-                                    @else
+                                @else
                                     <p>{{ucfirst($key)}}
                                         : {{($key=='start' || $key=='end') ? Carbon\Carbon::parse($m)->format('d/m/Y') : $m}}</p>
                                 @endif
@@ -62,7 +64,7 @@
                             @foreach($history->diff()->getAdded() as $key => $a)
                                 <h5>{{ucfirst($key)}}:</h5>
                                 @foreach($a as $value)
-                                    <p>{{json_encode($value)}}</p>
+                                        <p>@if ($key == 'project_updates') <a href="/project/update/{{$value->id}}">#{{$value->id}}</a> submitted by {{\App\User::find($value->user_id)->name}} @endif {{json_encode($value)}}</p>
                                 @endforeach
                             @endforeach
                         @endif
@@ -77,8 +79,8 @@
                                 @elseif (is_array($r))
                                     @foreach($r as $item)
                                         {{json_encode($item)}}
-                                        @endforeach
-                                    @else
+                                    @endforeach
+                                @else
                                     <p>{{json_encode($r)}}</p>
                                 @endif
                             @endforeach

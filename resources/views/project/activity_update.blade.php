@@ -34,13 +34,13 @@
         <div class="form-group mb-1 row">
             <label for="activity_date[]"
                    class="col-4 col-sm-3 pl-1 pr-1 col-form-label-sm text-right">Date</label>
-            <div class="col-8 col-sm-3 px-1">
+            <div class="col-8 col-sm-4 px-1">
                 @if (isset($show) && $show)
-                    <label class="font-weight-bold pl-1 col-form-label-sm">{{$au->date->toDateString()}}</label>
+                    <label class="font-weight-bold pl-1 col-form-label-sm">{{$au->start->format('d/m/Y')}} - {{($au->end ? $au->end->format('d/m/Y') : $au->start->format('d/m/Y'))}}</label>
                 @else
                     <input type="text" name="activity_date[]"
-                           class="form-control form-control-sm datepicker"
-                           placeholder="Date" size="1" value="@if ($au) {{$au->date->toDateString()}} @endif"
+                           class="form-control form-control-sm"
+                           placeholder="Date" size="1" @if ($au) value="{{$au->start->format('d/m/Y')}} - {{($au->end ? $au->end->format('d/m/Y') : $au->start->format('d/m/Y'))}}" @else value="" @endif
                            required>
                 @endif
             </div>
@@ -50,7 +50,7 @@
             <div class="form-group mb-1 row">
                 <label for="activity_status[]"
                        class="col-4 col-sm-3 pl-1 pr-1 col-form-label-sm text-right">State</label>
-                <div class="col-8 col-sm-3 px-1">
+                <div class="col-8 col-sm-4 px-1">
                     @if (isset($show) && $show)
                         @if ($au->state=='cancelled')
                             <span class="badge badge-warning font-100">Cancelled</span>
@@ -106,7 +106,7 @@
     </div>
 </div>
 
-@if(isset($review) && $review)
+@if((isset($review) && $review) || (isset($show) && $show) )
     <script>
         var editor = new MediumEditor('.mediumEditor', {
             placeholder: {text: "Description"},
@@ -159,8 +159,22 @@
     </script>
 @endif
 <script>
-    $('input.datepicker:last-child').datepicker({
+    $('input[name="activity_date[]"]:last-child').daterangepicker({
+        locale: {
+            format: 'DD/MM/YYYY',
+            daysOfWeek: [
+                "Mo",
+                "Tu",
+                "We",
+                "Th",
+                "Fr",
+                "Sa",
+                "Su"
+            ]
+        }
+    });
+    /*$('input.datepicker:last-child').datepicker({
         format: 'dd-mm-yyyy',
         weekStart: 1
-    });
+    });*/
 </script>

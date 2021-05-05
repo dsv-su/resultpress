@@ -127,7 +127,7 @@ class ProjectController extends Controller
             $activityupdates = ActivityUpdate::where('activity_id', $a->id)
                 ->join('project_updates', 'project_update_id', '=', 'project_updates.id')
                 ->where('project_updates.status', 'approved')
-                ->orderBy('date', 'asc')
+                ->orderBy('start', 'asc')
                 ->get(['activity_updates.*']);
 
             $comments = array();
@@ -567,7 +567,9 @@ class ProjectController extends Controller
                 $activityupdate->activity_id = Activity::findOrFail($id)->id;
                 $activityupdate->comment = $activity_update_array['comment'][$key];
                 $activityupdate->money = $activity_update_array['money'][$key];
-                $activityupdate->date = $activity_update_array['date'][$key];
+                $dates = explode(' - ', $activity_update_array['date'][$key]);
+                $activityupdate->start = Carbon::createFromFormat('d/m/Y', $dates[0]);
+                $activityupdate->end = Carbon::createFromFormat('d/m/Y', $dates[1]);
                 $activityupdate->state = $activity_update_array['state'][$key];
                 $activityupdate->project_update_id = $projectupdate_id;
                 $activityupdate->save();

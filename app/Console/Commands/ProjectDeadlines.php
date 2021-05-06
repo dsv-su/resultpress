@@ -9,6 +9,7 @@ use App\ProjectPartner;
 use App\ProjectReminder;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
 class ProjectDeadlines extends Command
@@ -79,12 +80,12 @@ class ProjectDeadlines extends Command
                 //Send notification reminder to all project owners
                 $projectowners = ProjectOwner::with('user')->where('project_id', $this->project->id)->get();
                 foreach($projectowners as $projectowner) {
-                    Notification::route('mail', $projectowner->user->email)->notify(new \App\Notifications\ProjectDeadlines(Project::find($this->project_reminder->project_id), $this->project_reminder, $this->delayed_reminder));
+                    Mail::to($projectowner->user->email)->send(new \App\Mail\ProjectDeadlines(Project::find($this->project_reminder->project_id), $this->project_reminder, $this->delayed_reminder));
                 }
                 //Send notification reminder to all project partners
                 $projectpartners = ProjectPartner::with('user')->where('project_id', $this->project->id)->get();
                 foreach($projectpartners as $projectpartner) {
-                    Notification::route('mail', $projectpartner->user->email)->notify(new \App\Notifications\ProjectDeadlines(Project::find($this->project_reminder->project_id), $this->project_reminder, $this->delayed_reminder));
+                    Mail::to($projectpartner->user->email)->send(new \App\Mail\ProjectDeadlines(Project::find($this->project_reminder->project_id), $this->project_reminder, $this->delayed_reminder));
                 }
 
             }

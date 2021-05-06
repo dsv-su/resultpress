@@ -29,67 +29,54 @@
     <p><a href="{{ url()->previous() }}">Return back</a></p>
     <p>@include('project.action_links')</p>
 
-    @foreach($project->history as $index => $history)
+    @foreach($history as $i => $data)
         <div class="card my-2 bg-white">
             <div class="card-header">
-                #{{$index+1}} from {{$history->created_at->format('m/d/Y')}} by {{$history->user->name}}
+                #{{$i+1}} from {{$data['created']}} by {{$data['user']}}
             </div>
             <div class="card-body">
-                @if ($index)
-                    @if ($history->diff()->getDiffCnt())
-                        @if (!empty($history->diff()->getModifiedDiff()))
-                            <h4>Modified:</h4>
-                            @foreach($history->diff()->getModifiedNew() as $key => $m)
-                                @if (is_array($m))
-                                    <h5 class="mt-2">{{ucfirst($key)}}:</h5>
-                                    @foreach($m as $i => $item)
-                                        <p>id #{{$history->diff()->getRearranged()->$key[$i]->id}} new
-                                            values: {{json_encode($item)}}</p>
-
-                                    @endforeach
-                                @elseif ($key == 'project_updates')
-                                    <h5 class="mt-2">Project updates</h5>
-                                    @foreach($m as $i => $pu)
-                                        <p><a href="/project/update/{{$history->diff()->getRearranged()->$key[$i]->id}}">#{{$history->diff()->getRearranged()->$key[$i]->id}}</a> submitted by {{\App\User::find($history->diff()->getRearranged()->$key[$i]->user_id)->name}} new
-                                            status: {{$pu->status == 'draft' ? 'returned for revision' : $pu->status}}</p>
-                                    @endforeach
-                                @else
-                                    <p>{{ucfirst($key)}}
-                                        : {{($key=='start' || $key=='end') ? Carbon\Carbon::parse($m)->format('d/m/Y') : $m}}</p>
-                                @endif
-                            @endforeach
-                        @endif
-                        @if (!empty($history->diff()->getAdded()))
-                            <h4 class="mt-2">Added:</h4>
-                            @foreach($history->diff()->getAdded() as $key => $a)
-                                <h5>{{ucfirst($key)}}:</h5>
-                                @foreach($a as $value)
-                                        <p>@if ($key == 'project_updates') <a href="/project/update/{{$value->id}}">#{{$value->id}}</a> submitted by {{\App\User::find($value->user_id)->name}} @endif {{json_encode($value)}}</p>
-                                @endforeach
-                            @endforeach
-                        @endif
-                        @if (!empty($history->diff()->getRemoved()))
-                            <h4 class="mt-2">Removed:</h4>
-                            @foreach($history->diff()->getRemoved() as $key => $r)
-                                <h5 class="mt-2">{{ucfirst($key)}}:</h5>
-                                @if (is_object($r))
-                                    @foreach($r as $value)
-                                        <p>{{json_encode($value)}}</p>
-                                    @endforeach
-                                @elseif (is_array($r))
-                                    @foreach($r as $item)
-                                        {{json_encode($item)}}
-                                    @endforeach
-                                @else
-                                    <p>{{json_encode($r)}}</p>
-                                @endif
-                            @endforeach
-                        @endif
+                @if (isset($data['modified']))
+                    @if (!is_array($data['modified']))
+                        {{$data['modified']}}
                     @else
-                        No changes
+                        <h4>Modified:</h4>
+                        @foreach($data['modified'] as $k => $m)
+                            <h5 class="mt-2">{{ucfirst(str_replace('_', ' ', $k))}}</h5>
+                            @foreach($m as $j => $value)
+                                @if ($k == 'project_updates')
+                                    <p><a href="/project/update/{{$j}}">#{{$j}}</a>: {{json_encode($value)}}</p>
+                                @else
+                                    <p>{{$j}}: {{json_encode($value)}}</p>
+                                @endif
+                            @endforeach
+                        @endforeach
                     @endif
-                @else
-                    Initial version
+                @endif
+                @if (isset($data['added']))
+                    <h4>Added:</h4>
+                    @foreach($data['added'] as $k => $a)
+                        <h5 class="mt-2">{{ucfirst(str_replace('_', ' ', $k))}}</h5>
+                        @foreach($a as $j => $value)
+                            @if ($k == 'project_updates')
+                                <p><a href="/project/update/{{$j}}">#{{$j}}</a>: {{json_encode($value)}}</p>
+                            @else
+                                <p>{{json_encode($value)}}</p>
+                            @endif
+                        @endforeach
+                    @endforeach
+                @endif
+                @if (isset($data['removed']))
+                    <h4>Removed:</h4>
+                    @foreach($data['removed'] as $k => $r)
+                        <h5 class="mt-2">{{ucfirst(str_replace('_', ' ', $k))}}</h5>
+                        @foreach($r as $j => $value)
+                            @if ($k == 'project_updates')
+                                <p><a href="/project/update/{{$j}}">{{$j}}</a>: {{json_encode($value)}}</p>
+                            @else
+                                <p>{{json_encode($value)}}</p>
+                            @endif
+                        @endforeach
+                    @endforeach
                 @endif
             </div>
         </div>

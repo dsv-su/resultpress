@@ -160,7 +160,7 @@
                     <div class="col col-md-4">
                         <select class="custom-select" name="project_state" id="project_state">
                             <option value="0" selected>Propose state change</option>
-                            <option value="onhold">Oh hold</option>
+                            <option value="onhold">On hold</option>
                             <option value="terminated">Terminated</option>
                             <option value="archived">Archived</option>
                         </select>

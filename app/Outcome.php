@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Outcome extends Model
 {
-    protected $dates = ['start', 'end'];
-    protected $fillable = ['name', 'summary', 'outputs', 'completed', 'completed_on', 'project_id', 'user_id'];
+    protected $fillable = ['name', 'project_id', 'user_id'];
 
     public function project(): BelongsTo
     {

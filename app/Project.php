@@ -33,7 +33,7 @@ class Project extends Model
         return $this->hasMany(Outcome::class);
     }
 
-    public function history()
+    public function histories()
     {
         return $this->hasMany(ProjectHistory::class);
     }
@@ -150,7 +150,10 @@ class Project extends Model
     }
 
     public function wrapJson() {
-        foreach ($this->outputs as $o) {
+        foreach ($this->outputs as $i => $o) {
+            if (!$o->status) {
+                $this->outputs->forget($i);
+            }
             $o->makeHidden('updated_at');
             $o->makeHidden('created_at');
             $o->makeHidden('project_id');
@@ -188,7 +191,7 @@ class Project extends Model
         $this->makeHidden('created_at');
 
         $json = $this->toJson(JSON_PRETTY_PRINT);
-        $previous = $this->history()->orderBy('id', 'desc')->first()->data ?? null;
+        $previous = $this->histories()->orderBy('id', 'desc')->first()->data ?? null;
         if ($json != $previous) {
             return $json;
         }

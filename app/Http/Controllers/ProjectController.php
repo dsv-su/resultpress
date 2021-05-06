@@ -497,7 +497,7 @@ class ProjectController extends Controller
                 $user->givePermissionTo('project-' . $project->id . '-list', 'project-' . $project->id . '-update');
             }
         }
-
+        $project->refresh();
         // Save to history
         $history = new ProjectHistory();
         $history->project_id = $project->id;
@@ -643,6 +643,9 @@ class ProjectController extends Controller
                     $data['indicator'] = $output_update_array['output_id'][$key];
                     $data['target'] = 0;
                     $data['project_id'] = $project->id;
+                    if ($status == 'approved') {
+                        $data['status'] = 'custom';
+                    }
                     $id = Output::create($data)->id;
                 }
                 $outputupdate = OutputUpdate::firstOrNew(['id' => $output_update_array['output_update_id'][$key]]);
@@ -796,7 +799,7 @@ class ProjectController extends Controller
                 if ($diff->getDiffCnt()) {
                     if (!empty($diff->getModifiedDiff())) {
                         foreach ($diff->getModifiedNew() as $key => $m) {
-                            if (is_array($m)) {
+                            if (is_array($m) || is_object($m)) {
                                 foreach ($m as $i => $item) {
                                     $data[$index]['modified'][$key][$diff->getRearranged()->$key[$i]->id] = $item;
                                 }
@@ -823,9 +826,9 @@ class ProjectController extends Controller
                         }
                     }
                     if (!empty($diff->getRemoved())) {
-                        foreach($diff->getRemoved() as $key => $r) {
+                        foreach ($diff->getRemoved() as $key => $r) {
                             if (is_object($r) || is_array($r)) {
-                                foreach($r as $value) {
+                                foreach ($r as $value) {
                                     $data[$index]['removed'][$key][] = $value;
                                 }
                             } else {

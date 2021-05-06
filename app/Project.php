@@ -150,7 +150,10 @@ class Project extends Model
     }
 
     public function wrapJson() {
-        foreach ($this->outputs as $o) {
+        foreach ($this->outputs as $i => $o) {
+            if (!$o->status) {
+                $this->outputs->forget($i);
+            }
             $o->makeHidden('updated_at');
             $o->makeHidden('created_at');
             $o->makeHidden('project_id');

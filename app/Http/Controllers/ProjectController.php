@@ -28,6 +28,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Swaggest\JsonDiff\Exception;
+use Swaggest\JsonDiff\JsonDiff;
 
 class ProjectController extends Controller
 {
@@ -775,8 +777,67 @@ class ProjectController extends Controller
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function history(Project $project)
     {
-        return view('project.history', ['project' => $project]);
+        $data = array();
+        foreach ($project->histories as $index => $history) {
+            $data[$index]['created'] = $history->created_at->format('d/m/Y');
+            $data[$index]['user'] = $history->user->name;
+            if ($index) {
+                $previous = json_decode($project->histories()->orderBy('id', 'desc')->where('id', '<', $history->id)->first()->data);
+                $current = json_decode($history->data);
+                $diff = new JsonDiff($previous, $current, JsonDiff::COLLECT_MODIFIED_DIFF);
+                if ($diff->getDiffCnt()) {
+                    if (!empty($diff->getModifiedDiff())) {
+                        foreach ($diff->getModifiedNew() as $key => $m) {
+                            if (is_array($m)) {
+                                foreach ($m as $i => $item) {
+                                    $data[$index]['modified'][$key][$diff->getRearranged()->$key[$i]->id] = $item;
+                                }
+                            } elseif ($key == 'project_updates') {
+                                foreach ($m as $i => $pu) {
+                                    $pu->user = User::find($diff->getRearranged()->$key[$i]->user_id)->name;
+                                    $data[$index]['modified'][$key][$diff->getRearranged()->$key[$i]->id] = $pu;
+                                }
+                            } else {
+                                $data[$index]['modified']['project'][$key] = ($key == 'start' || $key == 'end') ? Carbon::parse($m)->format('d/m/Y') : $m;
+                            }
+                        }
+                    }
+                    if (!empty($diff->getAdded())) {
+                        foreach ($diff->getAdded() as $key => $a) {
+                            foreach ($a as $id => $value) {
+                                if ($key == 'project_updates') {
+                                    $value->user = User::find($diff->getRearranged()->$key[$id]->user_id)->name;
+                                    $data[$index]['added'][$key][$diff->getRearranged()->$key[$id]->id] = $value;
+                                } else {
+                                    $data[$index]['added'][$key][] = $value;
+                                }
+                            }
+                        }
+                    }
+                    if (!empty($diff->getRemoved())) {
+                        foreach($diff->getRemoved() as $key => $r) {
+                            if (is_object($r) || is_array($r)) {
+                                foreach($r as $value) {
+                                    $data[$index]['removed'][$key][] = $value;
+                                }
+                            } else {
+                                $data[$index]['removed'][$key] = $r;
+                            }
+                        }
+                    }
+                } else {
+                    $data[$index]['modified'] = 'No changes';
+                }
+            } else {
+                $data[$index]['modified'] = 'Initial version';
+            }
+        }
+
+        return view('project.history', ['project' => $project, 'history' => $data]);
     }
 }

@@ -295,6 +295,9 @@ class ProjectController extends Controller
         //Set project reminders
         if (count($request->project_reminder ?? []) > 0) {
             foreach ($request->project_reminder as $key => $reminder) {
+                ProjectReminder::where('project_id', $project->id)->delete();
+            }
+            foreach ($request->project_reminder as $key => $reminder) {
                 ProjectReminder::updateOrCreate([
                     'project_id' => $project->id,
                     'set' => Carbon::createFromFormat('d-m-Y', $request->project_reminder_date[$key])->format('Y-m-d')

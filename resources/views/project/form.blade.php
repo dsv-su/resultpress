@@ -74,7 +74,8 @@
                             </div>
 
                             <!-- Email reminders for project deadlines -->
-                            <div class="form-row row">
+                            <label for="deadlines" class="form-group-header">Deadlines</label>
+                            <div class="form-row row" id="deadlines">
                                 <label for="add_reminder" class="col-3 col-form-label-sm">Add deadline</label>
                                 <div>
                                     <button type="button" id="add_reminder" name="add_reminder"
@@ -105,7 +106,7 @@
 
                                         <input type="number" name="project_reminder_due_days[]"
                                                value="{{ $thisproject->reminder_due_days}}"
-                                               class="form-control form-control-sm" style="width:50px;">
+                                               class="form-control form-control-sm" style="width:50px;" required>
 
                                         <label for="project_reminder_due_days[]"
                                                class="col-2 col-form-label-sm text-left">days before</label>
@@ -113,7 +114,12 @@
                                             <input type="text" name="project_reminder_date[]" id="project_reminder_date"
                                                    placeholder="Deadline Date"
                                                    value="{{ old('project_reminder_date', empty($thisproject->set) ? '' : $thisproject->set->format('d-m-Y')) }}"
-                                                   class="form-control form-control-sm datepicker">
+                                                   class="form-control form-control-sm datepicker" required>
+
+                                        </div>
+                                        <div class="col-8 col-sm-9 px-0 form-inline">
+                                            <button type="button" name="reminder-remove" class="btn btn-outline-danger btn-sm reminder-remove">
+                                                <i class="far fa-trash-alt"></i></button>
                                         </div>
 
                                     </div>
@@ -347,16 +353,21 @@
                             html += '<div class="col-8 col-sm-9 px-0 form-inline">';
                             html += '<select name="project_reminder[]" class="form-inline form-control-sm">' +
                                 '<option value="1" @if($project->reminder) selected="selected" @endif>Yes</option><option value="0" @if(!$project->reminder) selected="selected" @endif>No</option></select>';
-                            html += '<input type="number" name="project_reminder_due_days[]" value="{{$project->reminder_due_days}}" class="form-control form-control-sm" style="width:50px;">';
+                            html += '<input type="number" name="project_reminder_due_days[]" value="{{$project->reminder_due_days}}" class="form-control form-control-sm" style="width:50px;" required>';
                             html += '<label for="project_reminder_due_days[]" class="col-2 col-form-label-sm text-left">days before</label>';
                             html += '<div class="col-4">' +
-                                '<input type="text" name="project_reminder_date[]" id="project_reminder_date" placeholder="Deadline Date" value="{{ old('project_reminder_date', empty($project->reminder_date) ? '' : $project->reminder_date->format('d-m-Y'))}}" class="form-control form-control-sm datepicker">';
+                                '<input type="text" name="project_reminder_date[]" id="project_reminder_date" placeholder="Deadline Date" value="{{ old('project_reminder_date', empty($project->reminder_date) ? '' : $project->reminder_date->format('d-m-Y'))}}" class="form-control form-control-sm datepicker" required>';
+                            html += '</div>';
+                            html += '<div class="col-8 col-sm-9 px-0 form-inline"><button type="button" name="reminder-remove" class="btn btn-outline-danger btn-sm reminder-remove"><i class="far fa-trash-alt"></i></button>';
                             html += '</div></div></div>';
                             $('#reminders_list').append(html);
                             $('#reminders_list input.datepicker:last-child').datepicker({
                                 format: 'dd-mm-yyyy',
                                 weekStart: 1
                             });
+                        });
+                        $(document).on('click', '.reminder-remove', function () {
+                            $(this).closest('.form-row').remove();
                         });
                         /* -- */
                         $(document).on('click', '.add-activities', function () {

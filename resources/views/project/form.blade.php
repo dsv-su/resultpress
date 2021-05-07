@@ -306,7 +306,7 @@
                     });
 
                     var editor = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Activity template"}});
-                    var editor = new MediumEditor('.mediumEditor#project_description', {placeholder: {text: "Activity template"}});
+                    var editor = new MediumEditor('.mediumEditor#project_description', {placeholder: {text: "Describe the project"}});
 
                     $(document).ready(function () {
                         $(document).on('click', '.collapseEditor', function () {

@@ -3,7 +3,10 @@
 namespace App;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Project extends Model
@@ -18,66 +21,67 @@ class Project extends Model
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 
-    public function activities()
+    public function activities(): HasMany
     {
         return $this->hasMany(Activity::class);
     }
 
-    public function outputs()
+    public function outputs(): HasMany
     {
         return $this->hasMany(Output::class);
     }
 
-    public function outcomes()
+    public function outcomes(): HasMany
     {
         return $this->hasMany(Outcome::class);
     }
 
-    public function histories()
+    public function histories(): HasMany
     {
         return $this->hasMany(ProjectHistory::class);
     }
 
-    public function submitted_outputs()
+    public function submitted_outputs(): Collection
     {
-        return $this->outputs()->get()->filter(function ($output, $key) {
+        return $this->outputs()->get()->filter(function ($output) {
             return $output->status == 'custom' || $output->status == 'default';
         });
     }
 
-    public function drafts($pu = null)
+    public function drafts($pu = null): bool
     {
         if ($pu) {
-            return $this->project_updates()->where('status', 'draft')->where('id', '<>', $pu->id)->count()>0;
+            return $this->project_updates()->where('status', 'draft')->where('id', '<>', $pu->id)->count() > 0;
         }
-        return ($this->project_updates()->where('status', 'draft')->get());
+        return $this->project_updates()->where('status', 'draft')->count() > 0;
     }
 
-    public function project_updates()
+    public function project_updates(): HasMany
     {
         return $this->hasMany(ProjectUpdate::class);
     }
 
-    public function pending_updates()
+    public function pending_updates(): Collection
     {
         return $this->project_updates()->where('status', 'submitted')->get();
     }
 
-    public function project_area()
+    public function project_area(): HasMany
     {
         return $this->hasMany(ProjectArea::class);
     }
 
-    public function partners() {
+    public function partners(): HasMany
+    {
         return $this->hasMany(ProjectPartner::class);
     }
 
-    public function areas()
+    public function areas(): BelongsToMany
     {
         return $this->belongsToMany(Area::class, 'project_areas');
     }
 
-    public function getCurrencySymbol()
+    public function getCurrencySymbol(): string
     {
         switch ($this->currency) {
             case "USD":
@@ -91,12 +95,12 @@ class Project extends Model
         }
     }
 
-    public function project_owner()
+    public function project_owner(): HasMany
     {
         return $this->hasMany(ProjectOwner::class);
     }
 
-    public function status()
+    public function status(): string
     {
         $delayedhigh = 0;
         $delayednormal = 0;
@@ -156,7 +160,8 @@ class Project extends Model
         }
     }
 
-    public function wrapJson() {
+    public function wrapJson()
+    {
         foreach ($this->outputs as $i => $o) {
             if (!$o->status) {
                 $this->outputs->forget($i);

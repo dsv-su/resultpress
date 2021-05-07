@@ -22,7 +22,7 @@
 
     <!-- <span class="d-none" id="project_currency">{{$project->getCurrencySymbol()}}</span> -->
 
-        @if ($project->drafts($project_update) && $project->cumulative)
+        @if ($project->drafts($project_update ?? null) && $project->cumulative)
             <div class="alert alert-warning" role="alert">
                 There are some drafts for this project. Please take this into account when covering activities (activity
                 templates are based on the most recent update, including drafts).
@@ -41,6 +41,7 @@
 
         <div class="form-group">
             <label for="aus_list" class="form-group-header">Covered activities</label>
+            @if (!$project->activities->isEmpty())
             <div class="d-flex flex-wrap" id="aus_list">
                 @if (!empty($aus))
                     @foreach($aus as $au)
@@ -66,6 +67,9 @@
                     @endforeach
                 </div>
             </div>
+            @else
+                <p>The project has no activities added</p>
+            @endif
 
             <div class="form-group">
                 <label for="outputs_table" class="form-group-header mt-4">Affected outputs</label>
@@ -115,6 +119,7 @@
 
             <div class="form-group">
                 <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
+                @if (!$project->outcomes->isEmpty())
                 <div id="outcomes">
                     @if (!empty($project_update->outcome_updates))
                         @foreach($project_update->outcome_updates as $ou)
@@ -140,6 +145,9 @@
                         </div>
                     </div>
                 </div>
+                @else
+                    <p>The project has no outcomes added</p>
+                @endif
             </div>
 
             <div class="form-group">
@@ -167,7 +175,7 @@
             @if (Auth::user()->hasRole(['Spider', 'Administrator']))
                 <div class="form-group">
                     <label for="project_state" class="form-group-header mt-4">Project state</label>
-                    <div class="col col-md-4">
+                    <div class="col p-0 col-md-4">
                         <select class="custom-select" name="project_state" id="project_state">
                             <option value="0" selected>Propose state change</option>
                             <option value="onhold">On hold</option>

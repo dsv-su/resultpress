@@ -4,7 +4,7 @@
             <h5 class="mb-0">
                 <input type="hidden" name="outcome_update_id[]"
                        value="@if ($outcome_update) {{$outcome_update->id}} @else 0 @endif">
-                <span class="px-0 btn cursor-default">{{$outcome->name}}</span>
+                <span class="px-0 btn cursor-default text-left">{{$outcome->name}}</span>
                 @if (isset($show) && $show)
                     @if($outcome->completed())
                         <span class="badge badge-success">Completed on {{$outcome->completed()->format('d/m/Y')}}</span>
@@ -77,16 +77,18 @@
     </div>
 @endif
 
-<script>
-    $(document).ready(function () {
-        $('#outcome_outputs_{{$outcome->id}}').multiselect({
-            templates: {
-                li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
-            }
-        });
-        $('#outcome_outputs_{{$outcome->id}}').on('change', function () {
-            $(this).closest('div').find('input[name="outcome_outputs[]"]').val(JSON.stringify($(this).val()));
-        });
+@if (!isset($show))
+    <script>
+        $(document).ready(function () {
+            $('#outcome_outputs_{{$outcome->id}}').multiselect({
+                templates: {
+                    li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
+                }
+            });
+            $('#outcome_outputs_{{$outcome->id}}').on('change', function () {
+                $(this).closest('div').find('input[name="outcome_outputs[]"]').val(JSON.stringify($(this).val()));
+            });
 
-    });
-</script>
+        });
+    </script>
+@endif

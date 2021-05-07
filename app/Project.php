@@ -123,7 +123,7 @@ class Project extends Model
             }
         }
 
-        foreach ($this->activities() as $a) {
+        foreach ($this->activities as $a) {
             if ($a->status() == 'delayedhigh') {
                 $delayedhigh++;
             }

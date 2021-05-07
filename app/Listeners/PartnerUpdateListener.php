@@ -10,6 +10,7 @@ use App\ProjectUpdate;
 use App\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
 class PartnerUpdateListener
@@ -37,7 +38,7 @@ class PartnerUpdateListener
         $managers = ProjectOwner::with('user')->where('project_id', $event->projectUpdate->project_id)->get();
         $message = $event->projectUpdate;
         foreach($managers as $manager) {
-            Notification::send($manager->user, new PartnerSentUpdateNotification($message, $project, $user));
+            Mail::to($manager->user)->send(new \App\Mail\PartnerSentUpdate($message, $project, $user));
         }
 
     }

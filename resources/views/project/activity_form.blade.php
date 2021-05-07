@@ -36,6 +36,7 @@
                        class="form-control form-control-sm datepicker">
             </div>
         </div>
+        <!--
         <div class="form-group mb-2 row">
             <label for="activity_reminder[]"
                    class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email
@@ -63,7 +64,7 @@
                     before end</label>
             </div>
         </div>
-
+        -->
         <div class="form-group mb-2 row">
             <label for="activity_priority[]"
                    class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Priority</label>
@@ -139,9 +140,9 @@
         $('#activities_list div.col-lg-6:last-child').find('textarea[name="activity_description[]"]').text($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('textarea[name="activity_description[]"]').text());
         $('#activities_list div.col-lg-6:last-child').find('input[name="activity_start[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_start[]"]').val());
         $('#activities_list div.col-lg-6:last-child').find('input[name="activity_end[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_end[]"]').val());
-        $('#activities_list div.col-lg-6:last-child').find('select[name="activity_reminder[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('select[name="activity_reminder[]"]').val()).change();
-        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_reminder_due_days[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_reminder_due_days[]"]').val());
-        $('#activities_list div.col-lg-6:last-child').find('select[name="activity_reminder[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('select[name="activity_reminder[]"]').val()).change();
+        //$('#activities_list div.col-lg-6:last-child').find('select[name="activity_reminder[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('select[name="activity_reminder[]"]').val()).change();
+        //$('#activities_list div.col-lg-6:last-child').find('input[name="activity_reminder_due_days[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_reminder_due_days[]"]').val());
+        //$('#activities_list div.col-lg-6:last-child').find('select[name="activity_reminder[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('select[name="activity_reminder[]"]').val()).change();
         $('#activities_list div.col-lg-6:last-child').find('select[name="activity_priority[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('select[name="activity_priority[]"]').val()).change();
         $('#activities_list div.col-lg-6:last-child').find('input[name="activity_budget[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_budget[]"]').val());
         $('#activities_list div.col-lg-6:last-child').find('input[name="activity_budget[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_budget[]"]').val());

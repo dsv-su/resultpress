@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use Illuminate\Notifications\Events\NotificationSent;
+use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Spatie\Activitylog\Models\Activity;
@@ -15,12 +15,12 @@ class SentNotificationSuccessful
      * @return void
      */
 
-    public function handle(NotificationSent $event)
+    public function handle(MessageSent $event)
     {
         $event->subject = 'Notification sent';
-        $event->description = 'A notification has been sent to: '.$event->notifiable->routes['mail'];
+        $event->description = 'A notification has been sent';
         activity($event->subject)
-            ->withProperties(['properties' => $event->notification->details])
+            ->withProperties(['properties' => $event->message->getBody()])
             ->log($event->description);
     }
 }

@@ -16,9 +16,10 @@ class ProjectUpdateReject extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($projectUpdate, $project)
     {
-        //
+        $this->details = $projectUpdate;
+        $this->project = $project;
     }
 
     /**
@@ -28,6 +29,10 @@ class ProjectUpdateReject extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->view('email.project_update_rejected')
+                    ->with([
+                        'project' => $this->project,
+                        'url' => url('/project/update/'.$this->details->id),
+                    ]);
     }
 }

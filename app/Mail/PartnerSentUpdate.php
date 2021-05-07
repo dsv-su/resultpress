@@ -16,9 +16,11 @@ class PartnerSentUpdate extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($projectUpdate, $project, $user)
     {
-        //
+        $this->details = $projectUpdate;
+        $this->project = $project;
+        $this->user = $user;
     }
 
     /**
@@ -28,6 +30,11 @@ class PartnerSentUpdate extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->view('email.partner_sent_update')
+                    ->with([
+                        'project' => $this->project,
+                        'user' => $this->user,
+                        'url' => url('/project/'.$this->project->id),
+                    ]);
     }
 }

@@ -337,8 +337,8 @@ class ProjectController extends Controller
         $activity_array['budget'] = request('activity_budget');
         $activity_array['priority'] = request('activity_priority');
         //Email reminder
-        $activity_array['reminder'] = request('activity_reminder');
-        $activity_array['reminder_due_days'] = request('activity_reminder_due_days');
+        //$activity_array['reminder'] = request('activity_reminder');
+        //$activity_array['reminder_due_days'] = request('activity_reminder_due_days');
         //Outputs
         $output_array['id'] = request('output_id') ?? null;
         $output_array['indicator'] = request('output_indicator');
@@ -364,8 +364,8 @@ class ProjectController extends Controller
                 $data['start'] = Carbon::createFromFormat('d-m-Y', $activity_array['start'][$key])->format('Y-m-d');
                 $data['end'] = Carbon::createFromFormat('d-m-Y', $activity_array['end'][$key])->format('Y-m-d');
                 $data['budget'] = $activity_array['budget'][$key];
-                $data['reminder'] = $activity_array['reminder'][$key];
-                $data['reminder_due_days'] = $activity_array['reminder_due_days'][$key];
+                //$data['reminder'] = $activity_array['reminder'][$key];
+                //$data['reminder_due_days'] = $activity_array['reminder_due_days'][$key];
                 $data['project_id'] = $project->id;
                 $data['priority'] = $activity_array['priority'][$key];
                 if ($id) {

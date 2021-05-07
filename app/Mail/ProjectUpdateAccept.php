@@ -16,9 +16,10 @@ class ProjectUpdateAccept extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($projectUpdate, $project)
     {
-        //
+        $this->details = $projectUpdate;
+        $this->project = $project;
     }
 
     /**
@@ -28,6 +29,9 @@ class ProjectUpdateAccept extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->view('email.project_update_approved')
+                    ->with([
+                        'project' => $this->project,
+                    ]);
     }
 }

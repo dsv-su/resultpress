@@ -13,7 +13,7 @@ class Activity extends Model
     use SoftDeletes;
 
     protected $dates = ['start', 'end'];
-    protected $fillable = ['title', 'template', 'description', 'start', 'end', 'budget', 'project_id', 'reminder', 'reminder_due_days', 'priority'];
+    protected $fillable = ['title', 'template', 'description', 'start', 'end', 'budget', 'project_id', 'priority'];
 
     public function project(): BelongsTo
     {

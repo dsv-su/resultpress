@@ -521,6 +521,9 @@ class ProjectController extends Controller
         $projectupdate->project_id = $project->id;
         $projectupdate->summary = request('project_update_summary') ?? null;
         $projectupdate->state = request('project_state') ?? null;
+        $dates = explode(' - ', request('dates'));
+        $projectupdate->start = Carbon::createFromFormat('d/m/Y', $dates[0]);
+        $projectupdate->end = Carbon::createFromFormat('d/m/Y', $dates[1]);
 
         $status = '';
         if ($request->input('draft')) {
@@ -557,7 +560,6 @@ class ProjectController extends Controller
         $activity_update_array['comment'] = request('activity_comment') ?? null;
         $activity_update_array['money'] = request('activity_money');
         $activity_update_array['state'] = request('activity_state') ?? null;
-        $activity_update_array['date'] = request('activity_date') ?? null;
 
         // Remove deleted activity updates
         foreach ($projectupdate->activity_updates()->get() as $au) {
@@ -572,9 +574,6 @@ class ProjectController extends Controller
                 $activityupdate->activity_id = Activity::findOrFail($id)->id;
                 $activityupdate->comment = $activity_update_array['comment'][$key];
                 $activityupdate->money = $activity_update_array['money'][$key];
-                $dates = explode(' - ', $activity_update_array['date'][$key]);
-                $activityupdate->start = Carbon::createFromFormat('d/m/Y', $dates[0]);
-                $activityupdate->end = Carbon::createFromFormat('d/m/Y', $dates[1]);
                 $activityupdate->state = $activity_update_array['state'][$key];
                 $activityupdate->project_update_id = $projectupdate_id;
                 $activityupdate->save();
@@ -799,13 +798,30 @@ class ProjectController extends Controller
                 if ($diff->getDiffCnt()) {
                     if (!empty($diff->getModifiedDiff())) {
                         foreach ($diff->getModifiedNew() as $key => $m) {
-                            if (is_array($m) || is_object($m)) {
+                            if ($key == 'project_owner') {
+                                foreach ($m as $i => $item) {
+                                    $item->old_name = $previous->$key[$i]->name;
+                                    $item->old_user_id = $previous->$key[$i]->user_id;
+                                    $data[$index]['modified'][$key][] = $item;
+                                }
+                            } elseif ($key == 'partners') {
+                                foreach ($m as $i => $item) {
+                                    $item->old_name = $previous->$key[$i]->name;
+                                    $item->old_partner_id = $previous->$key[$i]->partner_id;
+                                    $data[$index]['modified'][$key][] = $item;
+                                }
+                            } elseif ($key == 'areas'){
+                                foreach ($m as $i => $item) {
+                                    $item->old_name = $previous->$key[$i]->name;
+                                    $item->old_description = $previous->$key[$i]->description;
+                                    $data[$index]['modified'][$key][] = $item;
+                                }
+                            } elseif (is_array($m) || is_object($m)) {
                                 foreach ($m as $i => $item) {
                                     $data[$index]['modified'][$key][$diff->getRearranged()->$key[$i]->id] = $item;
                                 }
                             } elseif ($key == 'project_updates') {
                                 foreach ($m as $i => $pu) {
-                                    $pu->user = User::find($diff->getRearranged()->$key[$i]->user_id)->name;
                                     $data[$index]['modified'][$key][$diff->getRearranged()->$key[$i]->id] = $pu;
                                 }
                             } else {
@@ -817,7 +833,6 @@ class ProjectController extends Controller
                         foreach ($diff->getAdded() as $key => $a) {
                             foreach ($a as $id => $value) {
                                 if ($key == 'project_updates') {
-                                    $value->user = User::find($diff->getRearranged()->$key[$id]->user_id)->name;
                                     $data[$index]['added'][$key][$diff->getRearranged()->$key[$id]->id] = $value;
                                 } else {
                                     $data[$index]['added'][$key][] = $value;

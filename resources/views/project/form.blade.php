@@ -420,10 +420,16 @@
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outcomes_table').append(html);
                         });
+
                         $('input[name="activity_start[]"]').on('change', function () {
                             $(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("setStartDate", $(this).val());
-                            $(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("setDate", $(this).val());
+                            var end = new Date($(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("getDate"));
+                            var start = new Date($(this).datepicker("getDate"));
+                            if (new Date($(this).datepicker("getDate")) > end) {
+                                $(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("setDate", $(this).val());
+                            }
                         });
+
                         $('#project_currency').on('change', function () {
                             $('.currency').each(function () {
                                 $(this).text($('#project_currency option:selected').text());
@@ -463,11 +469,7 @@
                             if (!confirmation) {
                                 return true;
                             } else {
-                                if (confirm('Please confirm the following empty fields:' + confirmation)) {
-                                    return true;
-                                } else {
-                                    return false;
-                                }
+                                return confirm('Please confirm the following empty fields:' + confirmation);
                             }
                         });
                     });

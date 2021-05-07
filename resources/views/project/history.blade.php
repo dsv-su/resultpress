@@ -46,7 +46,7 @@
                                 @if ($k == 'project_updates')
                                     <p><a href="/project/update/{{$j}}">#{{$j}}</a>: {{json_encode($value)}}</p>
                                 @else
-                                    <p>{{$j}}: {{json_encode($value)}}</p>
+                                    <p>@if ($k != 'project_owner' && $k != 'partners' && $k != 'areas') {{$j}}: @endif {{json_encode($value)}}</p>
                                 @endif
                             @endforeach
                         @endforeach

@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Auth;
 class ProjectUpdate extends Model
 {
 
-    protected $dates = ['created_at'];
-    protected $fillable = ['project_id', 'summary', 'comment', 'status', 'state', 'reviewer_comment', 'internal_comment'];
+    protected $dates = ['start', 'end', 'created_at'];
+    protected $fillable = ['project_id', 'summary', 'comment', 'status', 'start', 'end', 'state', 'reviewer_comment', 'internal_comment'];
 
     public function project(): BelongsTo
     {

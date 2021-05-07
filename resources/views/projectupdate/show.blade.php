@@ -13,6 +13,12 @@
     </div>
     <p><a href="{{ route('projectupdate_index', $project_update->project_id) }}">Back to project updates list</a></p>
 
+    <label for="dates" class="form-group-header">Dates covered</label>
+    <div class="d-flex flex-wrap" id="dates">
+        <label class="pl-1 col-form-label">{{($project_update->start ? $project_update->start->format('d/m/Y') : 'not specified')}}
+            - {{($project_update->end ? $project_update->end->format('d/m/Y') : 'not specified')}}</label>
+    </div>
+
     @if(!$activity_updates->isEmpty())
         <label for="aus_list" class="form-group-header">Covered activities</label>
         <div class="d-flex flex-wrap" id="aus_list">

@@ -45,9 +45,12 @@ class Project extends Model
         });
     }
 
-    public function hasDraft()
+    public function drafts($pu = null)
     {
-        return ($this->project_updates()->where('status', 'draft')->count() > 0);
+        if ($pu) {
+            return $this->project_updates()->where('status', 'draft')->where('id', '<>', $pu->id)->count()>0;
+        }
+        return ($this->project_updates()->where('status', 'draft')->get());
     }
 
     public function project_updates()

@@ -22,12 +22,22 @@
 
     <!-- <span class="d-none" id="project_currency">{{$project->getCurrencySymbol()}}</span> -->
 
-        @if ($project->hasDraft() && $project->cumulative)
+        @if ($project->drafts($project_update) && $project->cumulative)
             <div class="alert alert-warning" role="alert">
                 There are some drafts for this project. Please take this into account when covering activities (activity
                 templates are based on the most recent update, including drafts).
             </div>
         @endif
+
+        <div class="form-group">
+            <label for="dates" class="form-group-header">Dates covered</label>
+            <div class="col col-sm-5 col-md-3 px-1">
+                    <input type="text" name="dates"
+                           class="form-control form-control-sm"
+                           placeholder="Date" size="1" @if (!empty($project_update)) value="{{$project_update->start->format('d/m/Y')}} - {{($project_update->end ? $project_update->end->format('d/m/Y') : $project_update->start->format('d/m/Y'))}}" @else value="" @endif
+                           required>
+            </div>
+        </div>
 
         <div class="form-group">
             <label for="aus_list" class="form-group-header">Covered activities</label>
@@ -198,6 +208,21 @@
             } else {
                 $("#project_update_summary").prop('required', true);
             }
+
+            $('input[name="dates"]').daterangepicker({
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    daysOfWeek: [
+                        "Mo",
+                        "Tu",
+                        "We",
+                        "Th",
+                        "Fr",
+                        "Sa",
+                        "Su"
+                    ]
+                }
+            });
 
             var editor = new MediumEditor('.mediumEditor#project_update_summary', {placeholder: {text: "Summary"}});
 

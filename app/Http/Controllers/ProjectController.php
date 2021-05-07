@@ -521,6 +521,9 @@ class ProjectController extends Controller
         $projectupdate->project_id = $project->id;
         $projectupdate->summary = request('project_update_summary') ?? null;
         $projectupdate->state = request('project_state') ?? null;
+        $dates = explode(' - ', request('dates'));
+        $projectupdate->start = Carbon::createFromFormat('d/m/Y', $dates[0]);
+        $projectupdate->end = Carbon::createFromFormat('d/m/Y', $dates[1]);
 
         $status = '';
         if ($request->input('draft')) {
@@ -557,7 +560,6 @@ class ProjectController extends Controller
         $activity_update_array['comment'] = request('activity_comment') ?? null;
         $activity_update_array['money'] = request('activity_money');
         $activity_update_array['state'] = request('activity_state') ?? null;
-        $activity_update_array['date'] = request('activity_date') ?? null;
 
         // Remove deleted activity updates
         foreach ($projectupdate->activity_updates()->get() as $au) {
@@ -572,9 +574,6 @@ class ProjectController extends Controller
                 $activityupdate->activity_id = Activity::findOrFail($id)->id;
                 $activityupdate->comment = $activity_update_array['comment'][$key];
                 $activityupdate->money = $activity_update_array['money'][$key];
-                $dates = explode(' - ', $activity_update_array['date'][$key]);
-                $activityupdate->start = Carbon::createFromFormat('d/m/Y', $dates[0]);
-                $activityupdate->end = Carbon::createFromFormat('d/m/Y', $dates[1]);
                 $activityupdate->state = $activity_update_array['state'][$key];
                 $activityupdate->project_update_id = $projectupdate_id;
                 $activityupdate->save();

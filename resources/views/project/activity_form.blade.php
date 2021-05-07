@@ -25,14 +25,14 @@
                    class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Start</label>
             <div class="col-8 col-sm-4 px-1">
                 <input type="text" name="activity_start[]" placeholder="Start date"
-                       value="@if ($activity) {{$activity->start->format('d-m-Y')}} @endif" required
+                       @if ($activity) value="{{$activity->start->format('d-m-Y')}}" @endif required
                        class="form-control form-control-sm datepicker">
             </div>
             <label for="activity_end[]"
                    class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label>
             <div class="col-8 col-sm-4 px-1">
                 <input type="text" name="activity_end[]" placeholder="End date"
-                       value="@if ($activity) {{$activity->end->format('d-m-Y')}} @endif" required
+                       @if ($activity) value="{{$activity->end->format('d-m-Y')}}" @endif required
                        class="form-control form-control-sm datepicker">
             </div>
         </div>
@@ -132,13 +132,17 @@
         $('#activities_list div.col-lg-6:last-child input.datepicker').datepicker("setDate", new Date());
         $('input[name="activity_start[]"]').on('change', function () {
             $(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("setStartDate", $(this).val());
-            $(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("setDate", $(this).val());
+            var end = new Date($(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("getDate"));
+            var start = new Date($(this).datepicker("getDate"));
+            if (new Date($(this).datepicker("getDate")) > end) {
+                $(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("setDate", $(this).val());
+            }
         });
         @if ($index)
         $('#activities_list div.col-lg-6:last-child').find('input[name="activity_name[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_name[]"]').val());
         $('#activities_list div.col-lg-6:last-child').find('textarea[name="activity_description[]"]').text($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('textarea[name="activity_description[]"]').text());
-        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_start[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_start[]"]').val());
-        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_end[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_end[]"]').val());
+        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_start[]"]').datepicker("setDate", $('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_start[]"]').datepicker("getDate"));
+        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_end[]"]').datepicker("setDate", $('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_end[]"]').datepicker("getDate"));
         $('#activities_list div.col-lg-6:last-child').find('select[name="activity_reminder[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('select[name="activity_reminder[]"]').val()).change();
         $('#activities_list div.col-lg-6:last-child').find('input[name="activity_reminder_due_days[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_reminder_due_days[]"]').val());
         $('#activities_list div.col-lg-6:last-child').find('select[name="activity_reminder[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('select[name="activity_reminder[]"]').val()).change();

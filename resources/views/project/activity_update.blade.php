@@ -31,21 +31,6 @@
             @endif
         </div>
 
-        <div class="form-group mb-1 row">
-            <label for="activity_date[]"
-                   class="col-4 col-sm-3 pl-1 pr-1 col-form-label-sm text-right">Date</label>
-            <div class="col-8 col-sm-4 px-1">
-                @if (isset($show) && $show)
-                    <label class="font-weight-bold pl-1 col-form-label-sm">{{$au->start->format('d/m/Y')}} - {{($au->end ? $au->end->format('d/m/Y') : $au->start->format('d/m/Y'))}}</label>
-                @else
-                    <input type="text" name="activity_date[]"
-                           class="form-control form-control-sm"
-                           placeholder="Date" size="1" @if ($au) value="{{$au->start->format('d/m/Y')}} - {{($au->end ? $au->end->format('d/m/Y') : $au->start->format('d/m/Y'))}}" @else value="" @endif
-                           required>
-                @endif
-            </div>
-        </div>
-
         @if (!isset($show) || ($au && $au->status))
             <div class="form-group mb-1 row">
                 <label for="activity_status[]"
@@ -158,23 +143,3 @@
         var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Comment", hideOnClick: true}});
     </script>
 @endif
-<script>
-    $('input[name="activity_date[]"]:last-child').daterangepicker({
-        locale: {
-            format: 'DD/MM/YYYY',
-            daysOfWeek: [
-                "Mo",
-                "Tu",
-                "We",
-                "Th",
-                "Fr",
-                "Sa",
-                "Su"
-            ]
-        }
-    });
-    /*$('input.datepicker:last-child').datepicker({
-        format: 'dd-mm-yyyy',
-        weekStart: 1
-    });*/
-</script>

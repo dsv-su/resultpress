@@ -65,6 +65,10 @@ class Project extends Model
         return $this->hasMany(ProjectArea::class);
     }
 
+    public function partners() {
+        return $this->hasMany(ProjectPartner::class);
+    }
+
     public function areas()
     {
         return $this->belongsToMany(Area::class, 'project_areas');
@@ -174,6 +178,7 @@ class Project extends Model
             $pu->makeHidden('project_id');
             $pu->makeHidden('updated_at');
             $pu->makeHidden('created_at');
+            $pu->user = User::find($pu->user_id)->name;
             foreach ($pu->activity_updates as $au) {
                 $au->makeHidden('updated_at');
                 $au->makeHidden('created_at');
@@ -186,6 +191,23 @@ class Project extends Model
                 $ou->makeHidden('updated_at');
                 $ou->makeHidden('created_at');
             }
+        }
+        foreach ($this->areas as $a) {
+            $a->makeHidden('updated_at');
+            $a->makeHidden('created_at');
+            $a->makeHidden('pivot');
+        }
+        foreach ($this->project_owner as $po) {
+            $po->makeHidden('updated_at');
+            $po->makeHidden('created_at');
+            $po->makeHidden('id');
+            $po->name = User::find($po->user_id)->name;
+        }
+        foreach ($this->partners as $p) {
+            $p->makeHidden('updated_at');
+            $p->makeHidden('created_at');
+            $p->makeHidden('id');
+            $p->name = USer::find($p->partner_id)->name;
         }
         $this->makeHidden('updated_at');
         $this->makeHidden('created_at');

@@ -799,13 +799,30 @@ class ProjectController extends Controller
                 if ($diff->getDiffCnt()) {
                     if (!empty($diff->getModifiedDiff())) {
                         foreach ($diff->getModifiedNew() as $key => $m) {
-                            if (is_array($m) || is_object($m)) {
+                            if ($key == 'project_owner') {
+                                foreach ($m as $i => $item) {
+                                    $item->old_name = $previous->$key[$i]->name;
+                                    $item->old_user_id = $previous->$key[$i]->user_id;
+                                    $data[$index]['modified'][$key][] = $item;
+                                }
+                            } elseif ($key == 'partners') {
+                                foreach ($m as $i => $item) {
+                                    $item->old_name = $previous->$key[$i]->name;
+                                    $item->old_partner_id = $previous->$key[$i]->partner_id;
+                                    $data[$index]['modified'][$key][] = $item;
+                                }
+                            } elseif ($key == 'areas'){
+                                foreach ($m as $i => $item) {
+                                    $item->old_name = $previous->$key[$i]->name;
+                                    $item->old_description = $previous->$key[$i]->description;
+                                    $data[$index]['modified'][$key][] = $item;
+                                }
+                            } elseif (is_array($m) || is_object($m)) {
                                 foreach ($m as $i => $item) {
                                     $data[$index]['modified'][$key][$diff->getRearranged()->$key[$i]->id] = $item;
                                 }
                             } elseif ($key == 'project_updates') {
                                 foreach ($m as $i => $pu) {
-                                    $pu->user = User::find($diff->getRearranged()->$key[$i]->user_id)->name;
                                     $data[$index]['modified'][$key][$diff->getRearranged()->$key[$i]->id] = $pu;
                                 }
                             } else {
@@ -817,7 +834,6 @@ class ProjectController extends Controller
                         foreach ($diff->getAdded() as $key => $a) {
                             foreach ($a as $id => $value) {
                                 if ($key == 'project_updates') {
-                                    $value->user = User::find($diff->getRearranged()->$key[$id]->user_id)->name;
                                     $data[$index]['added'][$key][$diff->getRearranged()->$key[$id]->id] = $value;
                                 } else {
                                     $data[$index]['added'][$key][] = $value;

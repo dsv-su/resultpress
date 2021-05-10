@@ -8,6 +8,7 @@ use App\Area;
 use App\Events\PartnerUpdate;
 use App\Events\PartnerUpdateEvent;
 use App\File;
+use App\Invite;
 use App\Outcome;
 use App\OutcomeUpdate;
 use App\Output;
@@ -246,7 +247,8 @@ class ProjectController extends Controller
             'users' => User::all(),
             'old_users' => ProjectOwner::where('project_id', $project->id)->pluck('user_id')->toArray(),
             'partners' => ProjectPartner::where('project_id', $project->id)->pluck('partner_id')->toArray(),
-            'project_reminders' => ProjectReminder::where('project_id', $project->id)->get()
+            'project_reminders' => ProjectReminder::where('project_id', $project->id)->get(),
+            'invites' => Invite::where('project_id', $project->id)->get()
             /*'managers' => User::whereHas('project_owner', function ($query) use($project) {
                             return $query->where('project_id', $project->id);
                             })->get()*/

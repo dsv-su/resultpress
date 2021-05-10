@@ -252,36 +252,50 @@
                             </div>
 
                             <!-- Project managers and partners -->
-
-                            <div class="form-group">
-                                <label for="users" class="form-group-header">Users</label>
+                            <div class="d-flex flex-wrap" id="activities_list">
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                    <div class="card p-2">
-                                        <div class="form-row row">
-                                            <label class="text-primary col-form-label">Managers:</label>
-                                            <div class="col px-1">
-                                                <select name="user_id[]" class="custom-select" id="managers"
-                                                        multiple="multiple">
-                                                    @foreach($users as $user)
-                                                        <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-row row">
-                                            <label class="text-primary col-form-label">Partners:</label>
-                                            <div class="col px-1">
-                                                <select name="partner_id[]" class="custom-select" id="partners"
-                                                        multiple="multiple">
-                                                    @foreach($users as $user)
-                                                        <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>
-                                                    @endforeach
-                                                </select>
+                                    <div class="form-group">
+                                        <label for="users" class="form-group-header">Users</label>
+                                        <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
+                                            <div class="card p-2">
+                                                <div class="form-row row">
+                                                    <label class="text-primary col-form-label">Managers:</label>
+                                                    <div class="col px-1">
+                                                        <select name="user_id[]" class="custom-select" id="managers"
+                                                                multiple="multiple">
+                                                            @foreach($users as $user)
+                                                                <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row row">
+                                                    <label class="text-primary col-form-label">Partners:</label>
+                                                    <div class="col px-1">
+                                                        <select name="partner_id[]" class="custom-select" id="partners"
+                                                                multiple="multiple">
+                                                            @foreach($users as $user)
+                                                                <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
+                                    <!-- Invites list -->
+                                    <div class="form-group">
+                                        <label for="invites" class="form-group-header">Active Invites</label>
+                                        @include('project.invite_form')
+                                    </div>
+
+                                </div>
+
                             </div>
+
+
 
                             <div class="form-group">
                                 <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"

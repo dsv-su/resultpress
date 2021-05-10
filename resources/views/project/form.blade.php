@@ -252,7 +252,7 @@
                             </div>
 
                             <!-- Project managers and partners -->
-                            <div class="d-flex flex-wrap" id="activities_list">
+
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
                                     <div class="form-group">
                                         <label for="users" class="form-group-header">Users</label>
@@ -284,18 +284,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                    <!-- Invites list -->
-                                    <div class="form-group">
-                                        <label for="invites" class="form-group-header">Active Invites</label>
-                                        @include('project.invite_form')
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
 
                             <div class="form-group">
                                 <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
@@ -306,7 +294,15 @@
                         </div>
                     </div>
                 </form>
+                <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
+                    <!-- Invites list -->
+                    <div class="form-group">
+                        <label for="invites" class="form-group-header">Active Invites</label>
+                            <span data-toggle="tooltip" title="Sent invites"><i class="fa fa-dashboard fa-1x"></i></span>
+                        @include('project.invite_form')
+                    </div>
 
+                </div>
                 <script>
                     $('#managers').multiselect({
                         templates: {

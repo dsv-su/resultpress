@@ -223,4 +223,10 @@ class UserController extends Controller
             return view('auth.register', ['invite' => $invite]);
         else abort(401);
     }
+
+    public function remove_invite(Invite $invite)
+    {
+        $invite->delete();
+        return back();
+    }
 }

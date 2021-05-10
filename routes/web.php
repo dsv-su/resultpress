@@ -63,6 +63,7 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::resource('users','UserController');
     Route::post('/user/invite', 'UserController@process_invites')->name('process_invite');
     Route::get('/user/invite/{project}', 'UserController@invite_view')->name('invite_view');
+    Route::get('/user/remove_invite/{invite}', 'UserController@remove_invite')->name('invite_remove');
 
     //Profile
     Route::get('/home', 'HomeController@index')->name('profile');

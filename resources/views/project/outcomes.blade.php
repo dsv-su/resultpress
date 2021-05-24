@@ -29,7 +29,7 @@
              data-parent="#outcomes">
             <div class="card-body">
                 @if ($outcome->completed)
-                    <div class="p-2">
+                    <div class="row p-2">
                         <label for="summary" class="col-form-label">Completion
                             description:</label>
                         {{$outcome->summary}}

@@ -20,7 +20,7 @@
 @if (isset($show) && $show)
     @if ($outcome_update && $outcome_update->outputs)
         <div class="card-body">
-            <div class="p-2">
+            <div>
                 <label for="summary" class="col-form-label">Completion description:</label>
                 @if ($outcome_update) {{$outcome_update->summary}} @endif
                 <br/>

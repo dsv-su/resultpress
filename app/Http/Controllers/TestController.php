@@ -6,6 +6,6 @@ class TestController extends Controller
 {
     public function server()
     {
-
+        return $request->session()->all();
     }
 }

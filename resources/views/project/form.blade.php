@@ -118,7 +118,8 @@
 
                                         </div>
                                         <div class="col-8 col-sm-9 px-0 form-inline">
-                                            <button type="button" name="reminder-remove" class="btn btn-outline-danger btn-sm reminder-remove">
+                                            <button type="button" name="reminder-remove"
+                                                    class="btn btn-outline-danger btn-sm reminder-remove">
                                                 <i class="far fa-trash-alt"></i></button>
                                         </div>
 
@@ -160,8 +161,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="activities_list" class="form-group-header">Activities</label>
                             <div class="d-flex flex-wrap" id="activities_list">
+                                <label for="activities_list" class="form-group-header px-2">Activities</label>
                                 @foreach ($activities as $activity)
                                     <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
                                         @include('project.activity_form', ['activity' => $activity])
@@ -172,44 +173,48 @@
                                     class="btn btn-outline-secondary btn-sm add-activities m-2">Add
                                 Activity <i class="fas fa-plus"></i></button>
                             <div class="form-group">
-                                <label for="outputs_table" class="form-group-header">Outputs</label>
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                    <table class="table table-sm" id="outputs_table"
-                                           @if($outputs->isEmpty()) style="display: none;" @endif>
-                                        <thead>
-                                        <th scope="row">Output</th>
-                                        <th scope="row">Target</th>
-                                        <th></th>
-                                        </thead>
-                                        <!-- Here comes a foreach to show the outputs -->
+                                    <label for="outputs_table" class="form-group-header">Outputs</label>
+                                    <div class="card bg-light m-auto"
+                                         @if($outputs->isEmpty()) style="display: none;" @endif>
+                                        <div class="card-body p-1">
+                                            <table class="table table-sm table-borderless mb-0" id="outputs_table">
+                                                <thead>
+                                                <th scope="row">Output</th>
+                                                <th scope="row">Target</th>
+                                                <th></th>
+                                                </thead>
+                                                <!-- Here comes a foreach to show the outputs -->
 
-                                        @foreach ($outputs as $output)
-                                            <tr>
-                                                <td class="w-75"><input type="hidden" name="output_id[]"
-                                                                        value="{{$output->id}}">
-                                                    <input type="text"
-                                                           name="output_indicator[]"
-                                                           value="{{$output->indicator}}"
-                                                           placeholder="Output name" required
-                                                           maxlength="255"
-                                                           data-target="tooltip"
-                                                           data-trigger="manual"
-                                                           title="Maximum length is 255 chars"
-                                                           class="form-control form-control-sm">
-                                                </td>
-                                                <td class="w-25"><input type="text" name="output_target[]"
-                                                                        class="form-control form-control-sm"
-                                                                        placeholder="0"
-                                                                        value="{{$output->target}}" required>
-                                                </td>
-                                                <td>
-                                                    <button type="button" name="remove"
-                                                            class="btn btn-outline-danger btn-sm remove"><i
-                                                                class="far fa-trash-alt"></i></button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </table>
+                                                @foreach ($outputs as $output)
+                                                    <tr>
+                                                        <td class="w-75"><input type="hidden" name="output_id[]"
+                                                                                value="{{$output->id}}">
+                                                            <input type="text"
+                                                                   name="output_indicator[]"
+                                                                   value="{{$output->indicator}}"
+                                                                   placeholder="Output name" required
+                                                                   maxlength="255"
+                                                                   data-target="tooltip"
+                                                                   data-trigger="manual"
+                                                                   title="Maximum length is 255 chars"
+                                                                   class="form-control form-control-sm">
+                                                        </td>
+                                                        <td class="w-25"><input type="text" name="output_target[]"
+                                                                                class="form-control form-control-sm"
+                                                                                placeholder="0"
+                                                                                value="{{$output->target}}" required>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" name="remove"
+                                                                    class="btn btn-outline-danger btn-sm remove"><i
+                                                                        class="far fa-trash-alt"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                                 <button type="button" name="add_outputs"
                                         class="btn btn-outline-secondary btn-sm add-outputs mx-2">Add
@@ -217,34 +222,38 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="outcomes_table" class="form-group-header">Outcomes</label>
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                    <table class="table table-sm" id="outcomes_table"
-                                           @if($project->outcomes->isEmpty()) style="display: none;" @endif>
-                                        <thead>
-                                        <th scope="row">Outcome</th>
-                                        <th></th>
-                                        </thead>
+                                    <label for="outcomes_table" class="form-group-header">Outcomes</label>
+                                    <div class="card bg-light m-auto"
+                                         @if($project->outcomes->isEmpty()) style="display: none;" @endif>
+                                        <div class="card-body p-1">
+                                            <table class="table table-sm table-borderless mb-0" id="outcomes_table">
+                                                <thead>
+                                                <th scope="row">Outcome</th>
+                                                <th></th>
+                                                </thead>
 
-                                        <!-- Here comes a foreach to show the outcomes -->
-                                        @foreach ($project->outcomes as $outcome)
-                                            <tr>
-                                                <td class="w-100"><input type="hidden" name="outcome_id[]"
-                                                                         value="{{$outcome->id}}">
-                                                    <input type="text"
-                                                           name="outcome_name[]"
-                                                           value="{{$outcome->name}}"
-                                                           placeholder="Outcome name" required
-                                                           class="form-control form-control-sm">
-                                                </td>
-                                                <td>
-                                                    <button type="button" name="remove"
-                                                            class="btn btn-outline-danger btn-sm remove"><i
-                                                                class="far fa-trash-alt"></i></button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </table>
+                                                <!-- Here comes a foreach to show the outcomes -->
+                                                @foreach ($project->outcomes as $outcome)
+                                                    <tr>
+                                                        <td class="w-100"><input type="hidden" name="outcome_id[]"
+                                                                                 value="{{$outcome->id}}">
+                                                            <input type="text"
+                                                                   name="outcome_name[]"
+                                                                   value="{{$outcome->name}}"
+                                                                   placeholder="Outcome name" required
+                                                                   class="form-control form-control-sm">
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" name="remove"
+                                                                    class="btn btn-outline-danger btn-sm remove"><i
+                                                                        class="far fa-trash-alt"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                                 <button type="button" name="add_outcomes"
                                         class="btn btn-outline-secondary btn-sm add-outcomes mx-2">Add
@@ -252,44 +261,43 @@
                             </div>
 
                             <!-- Project managers and partners -->
-
+                            <div class="form-group">
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                    <div class="form-group">
-                                        <label for="users" class="form-group-header">Users</label>
-                                        <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                            <div class="card p-2">
-                                                <div class="form-row row">
-                                                    <label class="text-primary col-form-label">Managers:</label>
-                                                    <div class="col px-1">
-                                                        <select name="user_id[]" class="custom-select" id="managers"
-                                                                multiple="multiple">
-                                                            @foreach($users as $user)
-                                                                <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row row">
-                                                    <label class="text-primary col-form-label">Partners:</label>
-                                                    <div class="col px-1">
-                                                        <select name="partner_id[]" class="custom-select" id="partners"
-                                                                multiple="multiple">
-                                                            @foreach($users as $user)
-                                                                <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                    <label for="users" class="form-group-header">Users</label>
+                                    <div class="card bg-light m-auto">
+                                        <div class="form-row row mx-1">
+                                            <label class="col-form-label">Managers:</label>
+                                            <div class="col px-1 d-flex align-items-center">
+                                                <select name="user_id[]" class="custom-select" id="managers"
+                                                        multiple="multiple">
+                                                    @foreach($users as $user)
+                                                        <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-row row mx-1">
+                                            <label class="col-form-label">Partners:</label>
+                                            <div class="col px-1 d-flex align-items-center">
+                                                <select name="partner_id[]" class="custom-select" id="partners"
+                                                        multiple="multiple">
+                                                    @foreach($users as $user)
+                                                        <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
                             <div class="form-group">
-                                <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
-                                       @else value="Update"
-                                       @endempty
-                                       type="submit">
+                                <div class="col-lg-6 my-2 px-2">
+                                    <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
+                                           @else value="Update"
+                                           @endempty
+                                           type="submit">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -298,7 +306,7 @@
                     <!-- Invites list -->
                     <div class="form-group">
                         <label for="invites" class="form-group-header">Active Invites</label>
-                            <span data-toggle="tooltip" title="Sent invites"><i class="fa fa-dashboard fa-1x"></i></span>
+                        <span data-toggle="tooltip" title="Sent invites"><i class="fa fa-dashboard fa-1x"></i></span>
                         @include('project.invite_form')
                     </div>
 
@@ -386,7 +394,7 @@
                         });
 
                         $(document).on('click', '.add-outputs', function () {
-                            $('#outputs_table').show();
+                            $('#outputs_table').closest('.card').show();
                             let html = '';
                             html += '<tr>';
                             html += '<input type="hidden" name="output_id[]" value=0>';
@@ -415,14 +423,14 @@
                                 $('#activities_table').hide();
                             }*/
                             if ($('tr', $('#outputs_table')).length < 2) {
-                                $('#outputs_table').hide();
+                                $('#outputs_table').closest('.card').hide();
                             }
                             if ($('tr', $('#outcomes_table')).length < 2) {
-                                $('#outcomes_table').hide();
+                                $('#outcomes_table').closest('.card').hide();
                             }
                         });
                         $(document).on('click', '.add-outcomes', function () {
-                            $('#outcomes_table').show();
+                            $('#outcomes_table').closest('.card').show();
                             let html = '';
                             html += '<tr>';
                             html += '<input type="hidden" name="outcome_id[]" value=0>';

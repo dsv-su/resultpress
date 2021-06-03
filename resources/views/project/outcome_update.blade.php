@@ -20,7 +20,7 @@
 @if (isset($show) && $show)
     @if ($outcome_update && $outcome_update->outputs)
         <div class="card-body">
-            <div class="p-2">
+            <div>
                 <label for="summary" class="col-form-label">Completion description:</label>
                 @if ($outcome_update) {{$outcome_update->summary}} @endif
                 <br/>
@@ -38,7 +38,7 @@
         </div>
     @endif
 @elseif (!isset($show))
-    <div class="card-body">
+    <div class="card-body p-1">
         <div class="p-2">
             <div class="form-group row">
                 <div class="col-auto col-sm-4 col-md-3">
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group row mb-0">
+        <div class="form-group row mb-0 mx-0">
             <a name="remove" id="{{$outcome->id}}"
                class="btn btn-outline-danger btn-sm remove ml-auto mt-1"><i
                         class="far fa-trash-alt"></i></a>

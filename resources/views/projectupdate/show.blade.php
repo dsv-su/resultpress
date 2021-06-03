@@ -33,32 +33,38 @@
 
     @if(!$output_updates->isEmpty())
         <label for="outputs_table" class="form-group-header mt-4">Affected outputs</label>
-        <table class="table mw-400" id="outputs_table">
-            <thead>
-            <th>Output</th>
-            <th>Value</th>
-            </thead>
-            @foreach($output_updates as $ou)
-                <tr>
-                    <td class="w-75">{{$ou->indicator}}</td>
-                    <td class="w-25">{{$ou->value}}</td>
-                </tr>
-                @if($review && ($ou->contributionstring || $ou->totalstring))
-                    <tr class="update">
-                        <td colspan=2>
-                            <table class="table mb-2">
-                                <tr>
-                                    <td class="derived">
-                                        @if ($ou->contributionstring){{$ou->contributionstring}}<br/>@endif
-                                        @if ($ou->totalstring){{$ou->totalstring}}@endif
+        <div class="col-md-6 my-2 px-0" style="min-width: 16rem;">
+            <div class="card bg-light m-auto">
+                <div class="card-body p-1">
+                    <table class="table table-sm table-borderless mb-0" id="outputs_table">
+                        <thead>
+                        <th>Output</th>
+                        <th>Value</th>
+                        </thead>
+                        @foreach($output_updates as $ou)
+                            <tr>
+                                <td class="w-75">{{$ou->indicator}}</td>
+                                <td class="w-25">{{$ou->value}}</td>
+                            </tr>
+                            @if($review && ($ou->contributionstring || $ou->totalstring))
+                                <tr class="update">
+                                    <td colspan=2>
+                                        <table class="table mb-2">
+                                            <tr>
+                                                <td class="derived">
+                                                    @if ($ou->contributionstring){{$ou->contributionstring}}<br/>@endif
+                                                    @if ($ou->totalstring){{$ou->totalstring}}@endif
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
-                            </table>
-                        </td>
-                    </tr>
-                @endif
-            @endforeach
-        </table>
+                            @endif
+                        @endforeach
+                    </table>
+                </div>
+            </div>
+        </div>
     @endif
 
     @if (!$project_update->outcome_updates->isEmpty())

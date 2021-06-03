@@ -32,41 +32,43 @@
         <div class="form-group">
             <label for="dates" class="form-group-header">Dates covered</label>
             <div class="col col-sm-5 col-md-3 px-1">
-                    <input type="text" name="dates"
-                           class="form-control form-control-sm"
-                           placeholder="Date" size="1" @if (!empty($project_update)) value="{{$project_update->start->format('d/m/Y')}} - {{($project_update->end ? $project_update->end->format('d/m/Y') : $project_update->start->format('d/m/Y'))}}" @else value="" @endif
-                           required>
+                <input type="text" name="dates"
+                       class="form-control form-control-sm"
+                       placeholder="Date" size="1"
+                       @if (!empty($project_update)) value="{{$project_update->start->format('d/m/Y')}} - {{($project_update->end ? $project_update->end->format('d/m/Y') : $project_update->start->format('d/m/Y'))}}"
+                       @else value="" @endif
+                       required>
             </div>
         </div>
 
         <div class="form-group">
             <label for="aus_list" class="form-group-header">Covered activities</label>
             @if (!$project->activities->isEmpty())
-            <div class="d-flex flex-wrap" id="aus_list">
-                @if (!empty($aus))
-                    @foreach($aus as $au)
-                        <div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;">
-                            @include('project.activity_update', ['a' => $au->activity, 'au' => $au])
-                        </div>
-                    @endforeach
-                @endif
-            </div>
-
-            <div class="col-lg-6 my-2 px-2 dropdown">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addActivities"
-                        data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                    Add Activity
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @foreach ($project->activities as $activity)
-                        <p class="d-none">{{$activity->getComment()}}</p>
-                        <a class="dropdown-item add-activity" href="#"
-                           id="{{$activity->id}}"
-                           @if (!empty($aus) && $aus->keyBy('activity_id')->get($activity->id)) style="display: none;" @endif>{{$activity->title}}</a>
-                    @endforeach
+                <div class="d-flex flex-wrap" id="aus_list">
+                    @if (!empty($aus))
+                        @foreach($aus as $au)
+                            <div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;">
+                                @include('project.activity_update', ['a' => $au->activity, 'au' => $au])
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
-            </div>
+
+                <div class="col-lg-6 my-2 px-2 dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addActivities"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        Add Activity
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        @foreach ($project->activities as $activity)
+                            <p class="d-none">{{$activity->getComment()}}</p>
+                            <a class="dropdown-item add-activity" href="#"
+                               id="{{$activity->id}}"
+                               @if (!empty($aus) && $aus->keyBy('activity_id')->get($activity->id)) style="display: none;" @endif>{{$activity->title}}</a>
+                        @endforeach
+                    </div>
+                </div>
             @else
                 <p>The project has no activities added</p>
             @endif
@@ -74,33 +76,36 @@
             <div class="form-group">
                 <label for="outputs_table" class="form-group-header mt-4">Affected outputs</label>
                 <div class="col-md-8 col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                    <table class="table table-sm" @if (empty($ous) || $ous->isEmpty()) style="display: none;"
-                           @endif
-                           id="outputs_table">
-                        <thead>
-                        <th>Output</th>
-                        <th>Value</th>
-                        <th></th>
-                        </thead>
-                        @if (!empty($ous))
-                            @foreach($ous as $ou)
-                                <tr>
-                                    <input type="hidden" name="output_update_id[]" value="{{$ou->id}}">
-                                    <td class="w-75"><input type="hidden" id="output" name="output_id[]"
-                                                            value="{{$ou->output_id}}">{{$ou->indicator}}</td>
-                                    <td class="w-25"><input type="number" name="output_value[]"
-                                                            class="form-control form-control-sm"
-                                                            size="3" required value="{{$ou->value}}"></td>
-                                    <td>
-                                        <button type="button" name="remove" id="{{$ou->output_id}}"
-                                                class="btn btn-outline-danger btn-sm remove"><i
-                                                    class="fas fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @endif
-                    </table>
-                    <div class="dropdown">
+                    <div class="card bg-light m-auto"
+                         @if (empty($ous) || $ous->isEmpty()) style="display: none;" @endif>
+                        <div class="card-body p-1">
+                            <table class="table table-sm table-borderless mb-0" id="outputs_table">
+                                <thead>
+                                <th>Output</th>
+                                <th>Value</th>
+                                <th></th>
+                                </thead>
+                                @if (!empty($ous))
+                                    @foreach($ous as $ou)
+                                        <tr>
+                                            <input type="hidden" name="output_update_id[]" value="{{$ou->id}}">
+                                            <td class="w-75"><input type="hidden" id="output" name="output_id[]"
+                                                                    value="{{$ou->output_id}}">{{$ou->indicator}}</td>
+                                            <td class="w-25"><input type="number" name="output_value[]"
+                                                                    class="form-control form-control-sm"
+                                                                    size="3" required value="{{$ou->value}}"></td>
+                                            <td>
+                                                <button type="button" name="remove" id="{{$ou->output_id}}"
+                                                        class="btn btn-outline-danger btn-sm remove"><i
+                                                            class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </table>
+                        </div>
+                    </div>
+                    <div class="dropdown mt-2">
                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutputs"
                                 data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
@@ -120,31 +125,31 @@
             <div class="form-group">
                 <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
                 @if (!$project->outcomes->isEmpty())
-                <div id="outcomes">
-                    @if (!empty($project_update->outcome_updates))
-                        @foreach($project_update->outcome_updates as $ou)
-                            <div class="card mb-3">
-                                @include('project.outcome_update', ['outcome' => $ou->outcome, 'outcome_update' => $ou])
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-                <div class="col-md-8 col-lg my-2 px-2" style="min-width: 16rem;">
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutcomes"
-                                data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                            Add Outcome
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @foreach ($project->outcomes as $outcome)
-                                <a class="dropdown-item add-outcome" href="#"
-                                   id="{{$outcome->id}}"
-                                   @if ((!empty($project_update->outcome_updates) && $project_update->outcome_updates->keyBy('outcome_id')->get($outcome->id)) || !$outcome->outcome_updates->isEmpty()) style="display: none;" @endif>{{$outcome->name}}</a>
+                    <div id="outcomes">
+                        @if (!empty($project_update->outcome_updates))
+                            @foreach($project_update->outcome_updates as $ou)
+                                <div class="card mb-3">
+                                    @include('project.outcome_update', ['outcome' => $ou->outcome, 'outcome_update' => $ou])
+                                </div>
                             @endforeach
+                        @endif
+                    </div>
+                    <div class="col-md-8 col-lg my-2 px-2" style="min-width: 16rem;">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutcomes"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                Add Outcome
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                @foreach ($project->outcomes as $outcome)
+                                    <a class="dropdown-item add-outcome" href="#"
+                                       id="{{$outcome->id}}"
+                                       @if ((!empty($project_update->outcome_updates) && $project_update->outcome_updates->keyBy('outcome_id')->get($outcome->id)) || !$outcome->outcome_updates->isEmpty()) style="display: none;" @endif>{{$outcome->name}}</a>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
-                </div>
                 @else
                     <p>The project has no outcomes added</p>
                 @endif
@@ -175,7 +180,7 @@
             @if (Auth::user()->hasRole(['Spider', 'Administrator']))
                 <div class="form-group">
                     <label for="project_state" class="form-group-header mt-4">Project state</label>
-                    <div class="col p-0 col-md-4">
+                    <div class="col col-sm-6 p-0 col-md-4">
                         <select class="custom-select" name="project_state" id="project_state">
                             <option value="0" selected>Propose state change</option>
                             <option value="onhold">On hold</option>
@@ -331,7 +336,7 @@
             });
 
             $(document).on('click', '.add-output', function () {
-                $('#outputs_table').show();
+                $('#outputs_table').closest('.card').show();
                 let id = $(this).attr('id');
                 let output = $(this).text();
                 let html = '<tr>';
@@ -339,7 +344,7 @@
                 if (id > 0) {
                     html += '<td class="w-75"><input type="hidden" id="output" name="output_id[]" value="' + id + '">' + output + '</td>';
                 } else {
-                    html += '<td class="w-75"><input type="text" id="output" name="output_id[]" placeholder="Enter output name" data-trigger="manual" maxlength="255" data-target="tooltip" title="Maximum length is 255 chars" required></td>';
+                    html += '<td class="w-75"><input type="text" id="output" name="output_id[]" placeholder="Enter output name" data-trigger="manual" maxlength="255" data-target="tooltip" title="Maximum length is 255 chars" required class="w-100"></td>';
                 }
                 html += '<td class="w-25"><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="0" value="0" size="3" required></td>';
                 html += '<td><button type="button" name="remove" id="' + id + '" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-trash-alt"></i></button></td>'
@@ -367,7 +372,7 @@
                 $('#' + id + '.add-output').show();
                 $(this).closest('tr').remove();
                 if ($('tr', $('#outputs_table')).length < 2) {
-                    $('#outputs_table').hide();
+                    $('#outputs_table').closest('.card').hide();
                 }
             });
             $(document).on('click', '#aus_list .remove', function () {

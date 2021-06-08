@@ -7,11 +7,16 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\URL;
+use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 
-class Project extends Model
+class Project extends Model implements Searchable
 {
     use LogsActivity;
+    use SearchableTrait;
 
     //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
     protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state'];
@@ -20,6 +25,15 @@ class Project extends Model
     protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state'];
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
+
+    protected $searchable = [
+        'columns' => [
+            'name' => 10,
+            'description' => 5
+        ]
+    ];
+
+    protected $appends = ['link', 'type'];
 
     public function activities(): HasMany
     {
@@ -71,7 +85,17 @@ class Project extends Model
         return $this->hasMany(ProjectArea::class);
     }
 
-    public function partners(): HasMany
+    public function managers(): Collection
+    {
+        return $this->belongsToMany(User::class, 'project_owners', 'project_id', 'user_id')->get();
+    }
+
+    public function partners(): Collection
+    {
+        return $this->belongsToMany(User::class, 'project_partners', 'project_id', 'partner_id')->get();
+    }
+
+    public function project_partner(): HasMany
     {
         return $this->hasMany(ProjectPartner::class);
     }
@@ -211,7 +235,7 @@ class Project extends Model
             $po->makeHidden('id');
             $po->name = User::find($po->user_id)->name;
         }
-        foreach ($this->partners as $p) {
+        foreach ($this->project_partner as $p) {
             $p->makeHidden('updated_at');
             $p->makeHidden('created_at');
             $p->makeHidden('id');
@@ -227,6 +251,22 @@ class Project extends Model
         }
         return false;
     }
+
+    public function getSearchResult(): SearchResult
+    {
+        // TODO: Implement getSearchResult() method.
+    }
+
+    public function getLinkAttribute(): string
+    {
+        return $this->attributes['link'] = URL::to('/') . '/project/' . $this->id;
+    }
+
+    public function getTypeAttribute(): string
+    {
+        return 'project';
+    }
+
 }
 
 

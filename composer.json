@@ -18,8 +18,10 @@
     "laravel/socialite": "^5.0",
     "laravel/tinker": "^2.0",
     "laravel/ui": "^3.0",
+    "nicolaslopezj/searchable": "^1.13",
     "spatie/laravel-activitylog": "^3.14",
     "spatie/laravel-permission": "^3.17",
+    "spatie/laravel-searchable": "^1.9",
     "swaggest/json-diff": "^3.8",
     "uabookstores/laravel-shibboleth": "^3.3"
   },

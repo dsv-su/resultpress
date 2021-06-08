@@ -65,6 +65,11 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::get('/user/invite/{project}', 'UserController@invite_view')->name('invite_view');
     Route::get('/user/remove_invite/{invite}', 'UserController@remove_invite')->name('invite_remove');
 
+    //Search
+    Route::get('/search/{q}', 'SearchController@search')->name('search');
+    Route::post('/search/{q}', 'SearchController@filterSearch')->name('filter_search');
+    Route::get('/find', 'SearchController@find')->name('find');
+
     //Profile
     Route::get('/home', 'HomeController@index')->name('profile');
     Route::post('/profile/{id}', 'HomeController@store')->name('profile_store');

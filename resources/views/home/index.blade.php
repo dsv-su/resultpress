@@ -1,6 +1,7 @@
 @extends('layouts.master_new')
 
 @section('content')
+    @include('layouts.partials.searchbox')
     <!-- Filter bar -->
     @can('project-create')
         <nav class="navbar navbar-light">
@@ -24,6 +25,7 @@
             {{ session('status') }}
         </div>
     @endif
+
     <div class="col">
         <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
             <li class="nav-item">
@@ -80,4 +82,5 @@
             $(this).tooltip('show');
         });
     </script>
+
 @endsection

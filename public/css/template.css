@@ -410,77 +410,68 @@ div.wrapper {
     background-repeat: repeat-x;
 }
 
-/* --- The Table Structure --- */
-
-/*
-
-table {
-    border-collapse: separate;
+#header-main-search-form {
+    position: relative
 }
 
-table b {
-    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/check.svg);
-    font-size: 1rem;
-    background-size: 18px;
-    background-repeat: no-repeat;
-    opacity: 100%;
+#header-main-search-text {
+    font-size: 150%;
 }
 
-table list {
-    font-size: 1rem;
-    box-shadow: 2px 2px 2px 2px #e5dfcc;
+#header-main-search-form .form-control-main-search {
+    background-color: #fff;
+
 }
 
-table td, table tr {
-    vertical-align: middle !important;
+#header-main-search-form .twitter-typeahead {
+    margin: auto;
+    width: 75%;
 }
 
-table tr th, table tr td {
-    box-shadow: 2px 2px 1px #e5dfcc;
-}
-
-table tr:first-child th:first-child {
-    border-top-left-radius: 5px;
-}
-
-table tr:first-child th:last-child {
-    border-top-right-radius: 5px;
-}
-
-table tr:last-child td:first-child {
-    border-bottom-left-radius: 3px;
-}
-
-table tr:last-child td:last-child {
-    border-bottom-right-radius: 3px;
-}
-
-th, td {
-    padding: 8px 20px;
-}
-
-th {
-    background: #002e5f;
-    color: #fff;
-    border: 0;
-}
-
-td {
-    background: #F8F8FF;
-}
-
-.table td.fit,
-.table th.fit {
-    white-space: nowrap;
-    width: 1%;
-}
-
-.trimmed-text {
+#header-main-search-form .search_autocomplete {
+    -webkit-box-shadow: 0 0 6px 0 rgba(76, 76, 76, 0.2);
+    box-shadow: 0 0 6px 0 rgba(76, 76, 76, 0.2);
+    padding: 0;
+    margin: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 5; /* number of lines to show */
-    -webkit-box-orient: vertical;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #dadada;
+    width: 100%;
+    z-index: 99999;
+    color: #002f5f
 }
 
-*/
+#header-main-search-form .search_autocomplete ul, #header-main-search-form .autoc-autocomplete-items {
+    padding: 1.4rem 0;
+    margin: 0
+}
+
+#header-main-search-form .search_autocomplete li {
+    border-bottom: 0;
+    font-size: 120%;
+    padding: .3rem 0 .3rem 1.8rem;
+    cursor: pointer;
+    display: block;
+    width: 100%
+}
+
+#header-main-search-form .search_autocomplete li.active,
+#header-main-search-form .search_autocomplete li.tt-cursor {
+    background: #eef9fa;
+}
+
+#header-main-search-form .search_autocomplete li.active a,
+#header-main-search-form .search_autocomplete li:hover a,
+#header-main-search-form .search_autocomplete li.tt-cursor a {
+    color: inherit;
+    text-decoration: none;
+}
+
+#header-main-search-form .search_autocomplete li:last-child {
+    border-bottom: 0
+}
+
+#header-main-search-form .search_autocomplete .autocomplete-separator {
+    border-bottom: #dadada
+}

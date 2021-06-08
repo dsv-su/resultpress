@@ -21,7 +21,10 @@
 <!-- Include Bootstrap Multiselect -->
 <script src="{{asset('bootstrap/multiselect/bootstrap-multiselect.min.js')}}"></script>
 <link rel="stylesheet" type="text/css" href="{{asset('bootstrap/multiselect/bootstrap-multiselect.css')}}" />
+<script src="{{ asset('bootstrap/select/bootstrap-select.min.js')}}"></script>
+<link rel="stylesheet" href="{{asset('bootstrap/select/bootstrap-select.min.css')}}" />
 <script type="text/javascript" src="{{asset('daterangepicker/moment.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('daterangepicker/daterangepicker.min.js')}}"></script>
 <link rel="stylesheet" type="text/css" href="{{asset('daterangepicker/daterangepicker.css')}}" />
+<script src="{{ asset('js/typeahead/typeahead.bundle.js') }}"></script>
 <title>Spider ResultPress</title>

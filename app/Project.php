@@ -10,10 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\URL;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Searchable\Searchable;
-use Spatie\Searchable\SearchResult;
 
-class Project extends Model implements Searchable
+class Project extends Model
 {
     use LogsActivity;
     use SearchableTrait;
@@ -250,11 +248,6 @@ class Project extends Model implements Searchable
             return $json;
         }
         return false;
-    }
-
-    public function getSearchResult(): SearchResult
-    {
-        // TODO: Implement getSearchResult() method.
     }
 
     public function getLinkAttribute(): string

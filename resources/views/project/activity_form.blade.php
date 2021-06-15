@@ -113,10 +113,10 @@
         </div>
         <div class="form-group row mb-0">
             <a name="copy"
-               class="btn btn-outline-secondary btn-sm copy ml-auto mt-1"><i
+               class="btn btn-outline-secondary btn-sm copy ml-auto mt-1" data-toggle="tooltip" title="Copy this activity"><i
                         class="far fa-copy"></i></a>
             <a name="remove"
-               class="btn btn-outline-danger btn-sm remove ml-1 mt-1"><i
+               class="btn btn-outline-danger btn-sm remove ml-1 mt-1" data-toggle="tooltip" title="Delete this activity"><i
                         class="far fa-trash-alt"></i></a>
         </div>
     </div>

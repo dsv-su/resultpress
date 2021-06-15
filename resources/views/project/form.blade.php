@@ -75,8 +75,11 @@
 
                             <!-- Email reminders for project deadlines -->
                             <label for="deadlines" class="form-group-header">Deadlines</label>
+                            <span data-toggle="tooltip"
+                                  title="Each deadline will trigger an email reminder when the date is reached"><i
+                                        class="fa fa-dashboard fa-1x"></i></span>
                             <div class="form-row row" id="deadlines">
-                                <label for="add_reminder" class="col-3 col-form-label-sm">Add deadline</label>
+                                <label for="add_reminder" class="col-3 col-form-label-sm">Add deadline </label>
                                 <div>
                                     <button type="button" id="add_reminder" name="add_reminder"
                                             class="btn btn-outline-secondary btn-sm add-reminder m-2">Add <i
@@ -149,7 +152,9 @@
                                     </select>
                                 </div>
                                 <label for="project_cumulative" class="col-5 col-form-label-sm text-right">Cumulative
-                                    updates</label>
+                                    updates <span data-toggle="tooltip"
+                                                  title="Each activity update will build on the previous one"><i
+                                                class="fa fa-dashboard fa-1x"></i></span></label>
                                 <div class="col-2">
                                     <select name="project_cumulative" class="form-control form-control-sm">
                                         <option value="1" @if($project->cumulative) selected="selected" @endif>Yes
@@ -161,8 +166,8 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="activities_list" class="form-group-header px-2">Activities</label>
                             <div class="d-flex flex-wrap" id="activities_list">
-                                <label for="activities_list" class="form-group-header px-2">Activities</label>
                                 @foreach ($activities as $activity)
                                     <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
                                         @include('project.activity_form', ['activity' => $activity])
@@ -264,6 +269,9 @@
                             <div class="form-group">
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
                                     <label for="users" class="form-group-header">Users</label>
+                                    <span data-toggle="tooltip"
+                                          title="Users and permissions associated with this project"><i
+                                                class="fa fa-dashboard fa-1x"></i></span>
                                     <div class="card bg-light m-auto">
                                         <div class="form-row row mx-1">
                                             <label class="col-form-label">Managers:</label>
@@ -291,6 +299,16 @@
                                 </div>
                             </div>
 
+                            <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
+                                <!-- Invites list -->
+                                <div class="form-group">
+                                    <label for="invites" class="form-group-header">Active Invites</label>
+                                    <span data-toggle="tooltip" title="Sent invites"><i
+                                                class="fa fa-dashboard fa-1x"></i></span>
+                                    @include('project.invite_form')
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-lg-6 my-2 px-2">
                                     <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
@@ -302,15 +320,6 @@
                         </div>
                     </div>
                 </form>
-                <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                    <!-- Invites list -->
-                    <div class="form-group">
-                        <label for="invites" class="form-group-header">Active Invites</label>
-                        <span data-toggle="tooltip" title="Sent invites"><i class="fa fa-dashboard fa-1x"></i></span>
-                        @include('project.invite_form')
-                    </div>
-
-                </div>
                 <script>
                     $('#managers').multiselect({
                         templates: {
@@ -400,7 +409,7 @@
                             html += '<input type="hidden" name="output_id[]" value=0>';
                             html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></td>';
                             html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required></td>';
-                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="far fa-trash-alt"></i></button></td></tr>';
+                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this output"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outputs_table').append(html);
                             $('input[name="output_indicator[]"]').focusout(function () {
                                 $(this).tooltip('hide');
@@ -434,8 +443,8 @@
                             let html = '';
                             html += '<tr>';
                             html += '<input type="hidden" name="outcome_id[]" value=0>';
-                            html += '<td class="w-75"><input type="text" name="outcome_name[]" class="form-control form-control-sm" placeholder="Outcome name" required></td>';
-                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove"><i class="far fa-trash-alt"></i></button></td></tr>';
+                            html += '<td class="w-100"><input type="text" name="outcome_name[]" class="form-control form-control-sm" placeholder="Outcome name" required></td>';
+                            html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this outcome"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outcomes_table').append(html);
                         });
 

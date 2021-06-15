@@ -475,3 +475,11 @@ div.wrapper {
 #header-main-search-form .search_autocomplete .autocomplete-separator {
     border-bottom: #dadada
 }
+
+.trimmed-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 5; /* number of lines to show */
+    -webkit-box-orient: vertical;
+}

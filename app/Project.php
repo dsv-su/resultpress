@@ -241,7 +241,8 @@ class Project extends Model
         }
         $this->makeHidden('updated_at');
         $this->makeHidden('created_at');
-
+        $this->makeHidden('type');
+        $this->makeHidden('link');
         $json = $this->toJson(JSON_PRETTY_PRINT);
         $previous = $this->histories()->orderBy('id', 'desc')->first()->data ?? null;
         if ($json != $previous) {

@@ -17,8 +17,11 @@
                     @endempty
                     @csrf
                     <div class="form-group">
-                        <label for="activities_list" class="form-group-header">Details</label>
                         <div class="col-lg-6 my-2 px-2" id="project_details" style="min-width: 16rem;">
+                            <label for="activities_list" class="form-group-header">Details</label>
+                            <span data-toggle="tooltip"
+                                  title="Here you add basic information about the project"><i
+                                        class="fa fa-dashboard fa-1x"></i></span>
                             <div class="form-row mb-2 row">
                                 <label for="project_name" class="col-sm-3 col-form-label-sm">Name</label>
                                 <div class="px-1 col-sm-9">
@@ -112,7 +115,7 @@
 
                         <!-- Email reminders for project deadlines -->
                         <div class="form-group">
-                            <label for="deadlines" class="form-group-header px-2">Deadlines</label>
+                            <label for="deadlines" class="form-group-header pl-2 pr-0">Deadlines</label>
                             <span data-toggle="tooltip"
                                   title="Each deadline will trigger an email reminder when the date is reached"><i
                                         class="fa fa-dashboard fa-1x"></i></span>
@@ -130,7 +133,10 @@
                         <!-- end email reminders -->
 
                         <div class="form-group">
-                            <label for="activities_list" class="form-group-header px-2">Activities</label>
+                            <label for="activities_list" class="form-group-header pl-2 pr-0">Activities</label>
+                            <span data-toggle="tooltip"
+                                  title="Here you add project activities information and reporting templates"><i
+                                        class="fa fa-dashboard fa-1x"></i></span>
                             <div class="d-flex flex-wrap" id="activities_list">
                                 @foreach ($activities as $activity)
                                     <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
@@ -144,6 +150,9 @@
                             <div class="form-group">
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
                                     <label for="outputs_table" class="form-group-header">Outputs</label>
+                                    <span data-toggle="tooltip"
+                                          title="Here you add project outputs and targets"><i
+                                                class="fa fa-dashboard fa-1x"></i></span>
                                     <div class="card bg-light m-auto"
                                          @if($outputs->isEmpty()) style="display: none;" @endif>
                                         <div class="card-body p-1">
@@ -193,6 +202,9 @@
                             <div class="form-group">
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
                                     <label for="outcomes_table" class="form-group-header">Outcomes</label>
+                                    <span data-toggle="tooltip"
+                                          title="Here you add project outcomes"><i
+                                                class="fa fa-dashboard fa-1x"></i></span>
                                     <div class="card bg-light m-auto"
                                          @if($project->outcomes->isEmpty()) style="display: none;" @endif>
                                         <div class="card-body p-1">
@@ -267,7 +279,7 @@
                                 <!-- Invites list -->
                                 <div class="form-group">
                                     <label for="invites" class="form-group-header">Active Invites</label>
-                                    <span data-toggle="tooltip" title="Sent invites"><i
+                                    <span data-toggle="tooltip" title="Sent invites are listed here"><i
                                                 class="fa fa-dashboard fa-1x"></i></span>
                                     @include('project.invite_form')
                                 </div>
@@ -278,6 +290,7 @@
                                     <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
                                            @else value="Update"
                                            @endempty
+                                           data-toggle="tooltip" title="Save the project"
                                            type="submit">
                                 </div>
                             </div>

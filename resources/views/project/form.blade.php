@@ -19,9 +19,9 @@
                     <div class="form-group">
                         <label for="activities_list" class="form-group-header">Details</label>
                         <div class="col-lg-6 my-2 px-2" id="project_details" style="min-width: 16rem;">
-                            <div class="form-row mb-1 row">
-                                <label for="project_name" class="col-4 col-sm-3 col-form-label-sm">Name</label>
-                                <div class="px-1 col">
+                            <div class="form-row mb-2 row">
+                                <label for="project_name" class="col-sm-3 col-form-label-sm">Name</label>
+                                <div class="px-1 col-sm-9">
                                     <input class="form-control form-control-sm @error('project_name') is-danger @enderror"
                                            type="text" name="project_name" id="project_name"
                                            placeholder="Project title"
@@ -32,10 +32,10 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="form-row row">
+                            <div class="form-row mb-2 row">
                                 <label for="project_description"
-                                       class="col-4 col-sm-3 col-form-label-sm">Description</label>
-                                <div class="col px-1">
+                                       class="col-sm-3 col-form-label-sm">Description</label>
+                                <div class="col-sm-9 px-1">
                                 <textarea rows="2"
                                           class="form-control mediumEditor form-control-sm @error('project_description') is-danger @enderror"
                                           name="project_description" id="project_description"
@@ -46,9 +46,9 @@
                                     </div>@enderror
                                 </div>
                             </div>
-                            <div class="form-row row">
-                                <label for="project_area" class="col-4 col-sm-3 col-form-label-sm">Area</label>
-                                <div class="col px-1">
+                            <div class="form-row mb-2 row">
+                                <label for="project_area" class="col-sm-3 col-form-label-sm">Area</label>
+                                <div class="col-sm-9 px-1">
                                     <select name="project_area[]" id="project_area" class="custom-select-sm"
                                             multiple="multiple">
                                         @foreach($areas as $pa)
@@ -57,86 +57,28 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-row row">
-                                <label for="project_start" class="col-3 col-form-label-sm">Start</label>
-                                <div class="col-4">
+                            <div class="form-row mb-2 row">
+                                <label for="project_start" class="col-auto col-sm-3 col-form-label-sm">Start</label>
+                                <div class="col-auto">
                                     <input type="text" name="project_start" id="project_start"
                                            placeholder="Start date"
                                            value="{{ old('project_start', empty($project->start) ? '' : $project->start->format('d-m-Y'))}}"
                                            class="form-control form-control-sm datepicker" required>
                                 </div>
-                                <label for="project_end" class="col-1 col-form-label-sm text-right">End</label>
-                                <div class="col-4">
+                            </div>
+                            <div class="form-row mb-2 row">
+                                <label for="project_end" class="col-auto col-sm-3 col-form-label-sm">End</label>
+                                <div class="col-auto">
                                     <input type="text" name="project_end" id="project_end" placeholder="End date"
                                            value="{{ old('project_end', empty($project->end) ? '' : $project->end->format('d-m-Y'))}}"
                                            class="form-control form-control-sm datepicker">
                                 </div>
                             </div>
 
-                            <!-- Email reminders for project deadlines -->
-                            <label for="deadlines" class="form-group-header">Deadlines</label>
-                            <span data-toggle="tooltip"
-                                  title="Each deadline will trigger an email reminder when the date is reached"><i
-                                        class="fa fa-dashboard fa-1x"></i></span>
-                            <div class="form-row row" id="deadlines">
-                                <label for="add_reminder" class="col-3 col-form-label-sm">Add deadline </label>
-                                <div>
-                                    <button type="button" id="add_reminder" name="add_reminder"
-                                            class="btn btn-outline-secondary btn-sm add-reminder m-2">Add <i
-                                                class="far fa-bell"></i><i class="fas fa-plus"></i></button>
-                                </div>
-                            </div>
-                            @foreach($project_reminders as $thisproject)
-                                <div class="form-row border row">
-                                    <label for="project_reminder[]" class="col-3 col-form-label-sm">Deadline</label>
-                                    <div class="col-8 col-sm-9 px-0 form-inline">
-                                        <input class="form-control form-control-sm w-100" name="project_reminder_name[]"
-                                               type="text" placeholder="Name"
-                                               value="{{ old('project_reminder_name', empty($thisproject->name) ? '' : $thisproject->name) }}">
-                                    </div>
-                                    <label for="project_reminder[]" class="col-3 col-form-label-sm">Email
-                                        reminder</label>
-                                    <div class="col-8 col-sm-9 px-0 form-inline">
-                                        <select name="project_reminder[]" class="form-inline form-control-sm">
-                                            @if($thisproject->reminder)
-                                                <option value="1" selected="selected">Yes</option>
-                                                <option value="0">No</option>
-                                            @else
-                                                <option value="0" selected="selected">No</option>
-                                                <option value="1">Yes</option>
-                                            @endif
-                                        </select>
-
-                                        <input type="number" name="project_reminder_due_days[]"
-                                               value="{{ $thisproject->reminder_due_days}}"
-                                               class="form-control form-control-sm" style="width:50px;" required>
-
-                                        <label for="project_reminder_due_days[]"
-                                               class="col-2 col-form-label-sm text-left">days before</label>
-                                        <div class="col-4">
-                                            <input type="text" name="project_reminder_date[]" id="project_reminder_date"
-                                                   placeholder="Deadline Date"
-                                                   value="{{ old('project_reminder_date', empty($thisproject->set) ? '' : $thisproject->set->format('d-m-Y')) }}"
-                                                   class="form-control form-control-sm datepicker" required>
-
-                                        </div>
-                                        <div class="col-8 col-sm-9 px-0 form-inline">
-                                            <button type="button" name="reminder-remove"
-                                                    class="btn btn-outline-danger btn-sm reminder-remove">
-                                                <i class="far fa-trash-alt"></i></button>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            @endforeach
-                            <div class="d-flex flex-wrap" id="reminders_list">
-                            </div>
-                            <!-- end email reminders -->
-
-                            <div class="form-row row">
-                                <label for="project_currency" class="col-3 col-form-label-sm">Currency</label>
-                                <div class="col-2">
+                            <div class="form-row mb-2 row">
+                                <label for="project_currency"
+                                       class="col-auto col-sm-3 col-form-label-sm">Currency</label>
+                                <div class="col-auto">
                                     <select name="project_currency" id="project_currency"
                                             class="form-control form-control-sm">
                                         <option value="SEK"
@@ -151,11 +93,13 @@
                                         </option>
                                     </select>
                                 </div>
-                                <label for="project_cumulative" class="col-5 col-form-label-sm text-right">Cumulative
+                            </div>
+                            <div class="form-row mb-2 row">
+                                <label for="project_cumulative" class="col-auto col-sm-3 col-form-label-sm">Cumulative
                                     updates <span data-toggle="tooltip"
                                                   title="Each activity update will build on the previous one"><i
                                                 class="fa fa-dashboard fa-1x"></i></span></label>
-                                <div class="col-2">
+                                <div class="col-auto">
                                     <select name="project_cumulative" class="form-control form-control-sm">
                                         <option value="1" @if($project->cumulative) selected="selected" @endif>Yes
                                         </option>
@@ -165,159 +109,235 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Email reminders for project deadlines -->
                         <div class="form-group">
-                            <label for="activities_list" class="form-group-header px-2">Activities</label>
-                            <div class="d-flex flex-wrap" id="activities_list">
-                                @foreach ($activities as $activity)
-                                    <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                        @include('project.activity_form', ['activity' => $activity])
-                                    </div>
-                                @endforeach
-                            </div>
-                            <button type="button" name="add_activities"
-                                    class="btn btn-outline-secondary btn-sm add-activities m-2">Add
-                                Activity <i class="fas fa-plus"></i></button>
-                            <div class="form-group">
+                            <label for="deadlines" class="form-group-header px-2">Deadlines</label>
+                            <span data-toggle="tooltip"
+                                  title="Each deadline will trigger an email reminder when the date is reached"><i
+                                        class="fa fa-dashboard fa-1x"></i></span>
+                            @foreach($project_reminders as $thisproject)
                                 <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                    <label for="outputs_table" class="form-group-header">Outputs</label>
-                                    <div class="card bg-light m-auto"
-                                         @if($outputs->isEmpty()) style="display: none;" @endif>
-                                        <div class="card-body p-1">
-                                            <table class="table table-sm table-borderless mb-0" id="outputs_table">
-                                                <thead>
-                                                <th scope="row">Output</th>
-                                                <th scope="row">Target</th>
-                                                <th></th>
-                                                </thead>
-                                                <!-- Here comes a foreach to show the outputs -->
-
-                                                @foreach ($outputs as $output)
-                                                    <tr>
-                                                        <td class="w-75"><input type="hidden" name="output_id[]"
-                                                                                value="{{$output->id}}">
-                                                            <input type="text"
-                                                                   name="output_indicator[]"
-                                                                   value="{{$output->indicator}}"
-                                                                   placeholder="Output name" required
-                                                                   maxlength="255"
-                                                                   data-target="tooltip"
-                                                                   data-trigger="manual"
-                                                                   title="Maximum length is 255 chars"
-                                                                   class="form-control form-control-sm">
-                                                        </td>
-                                                        <td class="w-25"><input type="text" name="output_target[]"
-                                                                                class="form-control form-control-sm"
-                                                                                placeholder="0"
-                                                                                value="{{$output->target}}" required>
-                                                        </td>
-                                                        <td>
-                                                            <button type="button" name="remove"
-                                                                    class="btn btn-outline-danger btn-sm remove"><i
-                                                                        class="far fa-trash-alt"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" name="add_outputs"
-                                        class="btn btn-outline-secondary btn-sm add-outputs mx-2">Add
-                                    Output <i class="fas fa-plus"></i></button>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                    <label for="outcomes_table" class="form-group-header">Outcomes</label>
-                                    <div class="card bg-light m-auto"
-                                         @if($project->outcomes->isEmpty()) style="display: none;" @endif>
-                                        <div class="card-body p-1">
-                                            <table class="table table-sm table-borderless mb-0" id="outcomes_table">
-                                                <thead>
-                                                <th scope="row">Outcome</th>
-                                                <th></th>
-                                                </thead>
-
-                                                <!-- Here comes a foreach to show the outcomes -->
-                                                @foreach ($project->outcomes as $outcome)
-                                                    <tr>
-                                                        <td class="w-100"><input type="hidden" name="outcome_id[]"
-                                                                                 value="{{$outcome->id}}">
-                                                            <input type="text"
-                                                                   name="outcome_name[]"
-                                                                   value="{{$outcome->name}}"
-                                                                   placeholder="Outcome name" required
-                                                                   class="form-control form-control-sm">
-                                                        </td>
-                                                        <td>
-                                                            <button type="button" name="remove"
-                                                                    class="btn btn-outline-danger btn-sm remove"><i
-                                                                        class="far fa-trash-alt"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" name="add_outcomes"
-                                        class="btn btn-outline-secondary btn-sm add-outcomes mx-2">Add
-                                    Outcome <i class="fas fa-plus"></i></button>
-                            </div>
-
-                            <!-- Project managers and partners -->
-                            <div class="form-group">
-                                <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                    <label for="users" class="form-group-header">Users</label>
-                                    <span data-toggle="tooltip"
-                                          title="Users and permissions associated with this project"><i
-                                                class="fa fa-dashboard fa-1x"></i></span>
                                     <div class="card bg-light m-auto">
-                                        <div class="form-row row mx-1">
-                                            <label class="col-form-label">Managers:</label>
-                                            <div class="col px-1 d-flex align-items-center">
-                                                <select name="user_id[]" class="custom-select" id="managers"
-                                                        multiple="multiple">
-                                                    @foreach($users as $user)
-                                                        <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
-                                                    @endforeach
-                                                </select>
+                                        <div class="card-body pb-1">
+                                            <div class="form-group mb-2 row">
+                                                <label for="project_reminder[]"
+                                                       class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label>
+                                                <div class="col-8 col-sm-9 px-1">
+                                                    <input class="form-control form-control-sm w-100"
+                                                           name="project_reminder_name[]"
+                                                           type="text" placeholder="Name"
+                                                           value="{{ old('project_reminder_name', empty($thisproject->name) ? '' : $thisproject->name) }}">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-row row mx-1">
-                                            <label class="col-form-label">Partners:</label>
-                                            <div class="col px-1 d-flex align-items-center">
-                                                <select name="partner_id[]" class="custom-select" id="partners"
-                                                        multiple="multiple">
-                                                    @foreach($users as $user)
-                                                        <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>
-                                                    @endforeach
-                                                </select>
+                                            <div class="form-group mb-2 row">
+                                                <label for="project_reminder[]"
+                                                       class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Email
+                                                    reminder</label>
+                                                <div class="col-8 col-sm-auto px-1">
+                                                    <select name="project_reminder[]"
+                                                            class="form-control form-control-sm">
+                                                        @if($thisproject->reminder)
+                                                            <option value="1" selected="selected">Yes</option>
+                                                            <option value="0">No</option>
+                                                        @else
+                                                            <option value="0" selected="selected">No</option>
+                                                            <option value="1">Yes</option>
+                                                        @endif
+                                                    </select>
+                                                </div>
+                                                <div class="col-2 col-sm-auto px-1">
+                                                    <input type="number" name="project_reminder_due_days[]"
+                                                           value="{{ $thisproject->reminder_due_days}}"
+                                                           class="form-control form-control-sm form-inline"
+                                                           style="width:50px;"
+                                                           required>
+                                                </div>
+                                                <label for="project_reminder_due_days[]"
+                                                       class="col-auto col-form-label-sm text-right">days before</label>
+                                                <div class="col-auto col-sm-auto px-1">
+                                                    <input type="text" name="project_reminder_date[]"
+                                                           id="project_reminder_date"
+                                                           placeholder="Deadline Date"
+                                                           value="{{ old('project_reminder_date', empty($thisproject->set) ? '' : $thisproject->set->format('d-m-Y')) }}"
+                                                           class="form-control form-control-sm datepicker" required>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-8 col-sm-9 px-0 form-inline">
+                                                <button type="button" name="reminder-remove"
+                                                        class="btn btn-outline-danger btn-sm reminder-remove">
+                                                    <i class="far fa-trash-alt"></i></button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                        </div>
+                        @endforeach
+                        <div class="d-flex flex-wrap" id="reminders_list">
+                        </div>
+                        <div>
+                            <button type="button" id="add_reminder" name="add_reminder"
+                                    class="btn btn-outline-secondary btn-sm add-reminder m-2">Add Reminder <i
+                                        class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <!-- end email reminders -->
 
+                    <div class="form-group">
+                        <label for="activities_list" class="form-group-header px-2">Activities</label>
+                        <div class="d-flex flex-wrap" id="activities_list">
+                            @foreach ($activities as $activity)
+                                <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
+                                    @include('project.activity_form', ['activity' => $activity])
+                                </div>
+                            @endforeach
+                        </div>
+                        <button type="button" name="add_activities"
+                                class="btn btn-outline-secondary btn-sm add-activities m-2">Add
+                            Activity <i class="fas fa-plus"></i></button>
+                        <div class="form-group">
                             <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                <!-- Invites list -->
-                                <div class="form-group">
-                                    <label for="invites" class="form-group-header">Active Invites</label>
-                                    <span data-toggle="tooltip" title="Sent invites"><i
-                                                class="fa fa-dashboard fa-1x"></i></span>
-                                    @include('project.invite_form')
+                                <label for="outputs_table" class="form-group-header">Outputs</label>
+                                <div class="card bg-light m-auto"
+                                     @if($outputs->isEmpty()) style="display: none;" @endif>
+                                    <div class="card-body p-1">
+                                        <table class="table table-sm table-borderless mb-0" id="outputs_table">
+                                            <thead>
+                                            <th scope="row">Output</th>
+                                            <th scope="row">Target</th>
+                                            <th></th>
+                                            </thead>
+                                            <!-- Here comes a foreach to show the outputs -->
+
+                                            @foreach ($outputs as $output)
+                                                <tr>
+                                                    <td class="w-75"><input type="hidden" name="output_id[]"
+                                                                            value="{{$output->id}}">
+                                                        <input type="text"
+                                                               name="output_indicator[]"
+                                                               value="{{$output->indicator}}"
+                                                               placeholder="Output name" required
+                                                               maxlength="255"
+                                                               data-target="tooltip"
+                                                               data-trigger="manual"
+                                                               title="Maximum length is 255 chars"
+                                                               class="form-control form-control-sm">
+                                                    </td>
+                                                    <td class="w-25"><input type="text" name="output_target[]"
+                                                                            class="form-control form-control-sm"
+                                                                            placeholder="0"
+                                                                            value="{{$output->target}}" required>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" name="remove"
+                                                                class="btn btn-outline-danger btn-sm remove"><i
+                                                                    class="far fa-trash-alt"></i></button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
+                            <button type="button" name="add_outputs"
+                                    class="btn btn-outline-secondary btn-sm add-outputs mx-2">Add
+                                Output <i class="fas fa-plus"></i></button>
+                        </div>
 
-                            <div class="form-group">
-                                <div class="col-lg-6 my-2 px-2">
-                                    <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
-                                           @else value="Update"
-                                           @endempty
-                                           type="submit">
+                        <div class="form-group">
+                            <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
+                                <label for="outcomes_table" class="form-group-header">Outcomes</label>
+                                <div class="card bg-light m-auto"
+                                     @if($project->outcomes->isEmpty()) style="display: none;" @endif>
+                                    <div class="card-body p-1">
+                                        <table class="table table-sm table-borderless mb-0" id="outcomes_table">
+                                            <thead>
+                                            <th scope="row">Outcome</th>
+                                            <th></th>
+                                            </thead>
+
+                                            <!-- Here comes a foreach to show the outcomes -->
+                                            @foreach ($project->outcomes as $outcome)
+                                                <tr>
+                                                    <td class="w-100"><input type="hidden" name="outcome_id[]"
+                                                                             value="{{$outcome->id}}">
+                                                        <input type="text"
+                                                               name="outcome_name[]"
+                                                               value="{{$outcome->name}}"
+                                                               placeholder="Outcome name" required
+                                                               class="form-control form-control-sm">
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" name="remove"
+                                                                class="btn btn-outline-danger btn-sm remove"><i
+                                                                    class="far fa-trash-alt"></i></button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" name="add_outcomes"
+                                    class="btn btn-outline-secondary btn-sm add-outcomes mx-2">Add
+                                Outcome <i class="fas fa-plus"></i></button>
+                        </div>
+
+                        <!-- Project managers and partners -->
+                        <div class="form-group">
+                            <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
+                                <label for="users" class="form-group-header">Users</label>
+                                <span data-toggle="tooltip"
+                                      title="Users and permissions associated with this project"><i
+                                            class="fa fa-dashboard fa-1x"></i></span>
+                                <div class="card bg-light m-auto">
+                                    <div class="form-row row mx-1">
+                                        <label class="col-form-label">Managers:</label>
+                                        <div class="col px-1 d-flex align-items-center">
+                                            <select name="user_id[]" class="custom-select" id="managers"
+                                                    multiple="multiple">
+                                                @foreach($users as $user)
+                                                    <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row row mx-1">
+                                        <label class="col-form-label">Partners:</label>
+                                        <div class="col px-1 d-flex align-items-center">
+                                            <select name="partner_id[]" class="custom-select" id="partners"
+                                                    multiple="multiple">
+                                                @foreach($users as $user)
+                                                    <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
+                            <!-- Invites list -->
+                            <div class="form-group">
+                                <label for="invites" class="form-group-header">Active Invites</label>
+                                <span data-toggle="tooltip" title="Sent invites"><i
+                                            class="fa fa-dashboard fa-1x"></i></span>
+                                @include('project.invite_form')
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-6 my-2 px-2">
+                                <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
+                                       @else value="Update"
+                                       @endempty
+                                       type="submit">
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </form>
                 <script>
@@ -344,6 +364,7 @@
 
                     $(document).ready(function () {
                         $('#project_area').multiselect({
+                            buttonWidth: '100%',
                             templates: {
                                 li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
                             }
@@ -352,7 +373,6 @@
                         $('.currency').each(function () {
                             $(this).text($('#project_currency option:selected').text());
                         });
-
                         $('input[name="output_indicator[]"]').focusout(function () {
                             $(this).tooltip('hide');
                         });
@@ -411,6 +431,9 @@
                             html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this output"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outputs_table').append(html);
+                            $(function () {
+                                $('[data-toggle="tooltip"]').tooltip()
+                            })
                             $('input[name="output_indicator[]"]').focusout(function () {
                                 $(this).tooltip('hide');
                             });
@@ -423,9 +446,11 @@
                             });
                         });
                         $(document).on('click', '#activities_list .remove', function () {
+                            $(this).tooltip('hide');
                             $(this).closest('.col-lg-6').remove();
                         });
                         $(document).on('click', '.remove', function () {
+                            $(this).tooltip('hide');
                             $(this).closest('tr').remove();
                             /*
                             if ($('tr', $('#activities_table')).length < 2) {
@@ -446,6 +471,9 @@
                             html += '<td class="w-100"><input type="text" name="outcome_name[]" class="form-control form-control-sm" placeholder="Outcome name" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this outcome"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outcomes_table').append(html);
+                            $(function () {
+                                $('[data-toggle="tooltip"]').tooltip();
+                            })
                         });
 
                         $('input[name="activity_start[]"]').on('change', function () {

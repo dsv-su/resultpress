@@ -36,35 +36,6 @@
                        class="form-control form-control-sm datepicker">
             </div>
         </div>
-    <!--
-        <div class="form-group mb-2 row">
-            <label for="activity_reminder[]"
-                   class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email
-                reminder</label>
-            <div class="col-8 col-sm-9 px-1 form-inline">
-                <select name="activity_reminder[]"
-                        class="form-control form-control-sm">
-                    <option value="1"
-                            @if($activity && $activity->reminder) selected="selected" @endif>
-                        Yes
-                    </option>
-                    <option value="0"
-                            @if($activity && !$activity->reminder) selected="selected" @endif>
-                        No
-                    </option>
-                </select>
-
-                <input type="number" name="activity_reminder_due_days[]"
-                       @if ($activity) value="{{$activity->reminder_due_days}}" @else value=7 @endif
-            class="form-control form-control-sm text-right mx-1"
-            style="width:60px;">
-
-     <label for="activity_reminder_due_days[]"
-                       class="pl-0 pr-1 col-form-label-sm text-left">days
-                    before end</label>
-            </div>
-        </div>
-        -->
         <div class="form-group mb-2 row">
             <label for="activity_priority[]"
                    class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Priority</label>

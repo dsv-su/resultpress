@@ -338,7 +338,7 @@
                             $('#reminders_list').append('<div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;"></div>');
                             $('#reminders_list div.col-lg-6:last-child').load('/reminder/0/');
                         });
-                        
+
                         $(document).on('click', '#reminders_list .remove', function () {
                             console.log('ddd');
                             $(this).tooltip('hide');

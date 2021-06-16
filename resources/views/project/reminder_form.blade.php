@@ -34,9 +34,9 @@
 
             </div>
             <label for="project_reminder_due_days[]"
-                   class="col-4 col-sm-3 col-form-label-sm text-right">Days
+                   class="col-4 col-sm-auto col-form-label-sm text-right pr-1">Days
                 before</label>
-            <div class="col-8 col-sm-auto px-1">
+            <div class="col-8 col-sm-1 px-1">
                 <input type="number" name="project_reminder_due_days[]"
                        @if ($reminder) value="{{ $reminder->reminder_due_days}}" @else value="0" @endif
                         placeholder="0"

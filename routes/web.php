@@ -61,6 +61,8 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::resource('projectadmin','ProjectAdminController');
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');
+    Route::resource('organisation', 'OrganisationController');
+
     Route::post('/user/invite', 'UserController@process_invites')->name('process_invite');
     Route::get('/user/invite/{project}', 'UserController@invite_view')->name('invite_view');
     Route::get('/user/remove_invite/{invite}', 'UserController@remove_invite')->name('invite_remove');

@@ -14,7 +14,7 @@ class CreateAdminUserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::find(1);
+        $user = User::find(3);
         $user->assignRole('Administrator');
         $user->assignRole('Spider');
         $user->assignRole('Partner');

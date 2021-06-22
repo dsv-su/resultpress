@@ -27,4 +27,6 @@
 <script type="text/javascript" src="{{asset('daterangepicker/daterangepicker.min.js')}}"></script>
 <link rel="stylesheet" type="text/css" href="{{asset('daterangepicker/daterangepicker.css')}}" />
 <script src="{{ asset('js/typeahead/typeahead.bundle.js') }}"></script>
+<!-- Include Livewire -->
+@livewireStyles
 <title>Spider ResultPress</title>

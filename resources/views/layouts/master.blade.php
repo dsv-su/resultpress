@@ -19,6 +19,8 @@
     </div>
 
 </div>
+<!-- Livewire -->
+@livewireScripts
 </body>
 @include('layouts.partials.footer-scripts')
 </html>

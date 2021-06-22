@@ -64,5 +64,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Project::class, 'project_owners');
     }
+    /**
+     * Get all of the prganisations for the user.
+     */
+    public function organisations()
+    {
+        return $this->belongsToMany(Organisation::class, 'user_organisations');
+    }
+
 
 }

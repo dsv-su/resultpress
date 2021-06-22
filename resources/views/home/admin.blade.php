@@ -25,12 +25,16 @@
     </div>
     <div class="card my-3">
         <div class="card-header">
-            Users
+            Organisations and Users
         </div>
         <div class="card-body">
-            <h5 class="card-title">Manage Users</h5>
-            <p class="card-text">Update user information (non spider staff), add roles</p>
+            <h5 class="card-title">Manage Organisations and Users</h5>
+            <p class="card-text">Update organisation and user information (non spider staff), link users to organisations, add roles</p>
+            <a href="{{ route('organisation.index') }}" class="btn btn-outline-primary">Manage</a>
+            {{-- Old route }}
             <a href="{{ route('users.index') }}" class="btn btn-outline-primary">Manage</a>
+            {{ --}}
+
         </div>
     </div>
     <div class="card my-3">
@@ -43,5 +47,4 @@
             <a href="{{ route('roles.index') }}" class="btn btn-outline-primary">Manage</a>
         </div>
     </div>
-
 @endsection

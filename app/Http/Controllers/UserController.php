@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Invite;
 use App\Notifications\InviteNotification;
+use App\Organisation;
 use App\Project;
 use App\User;
 use DB;
@@ -181,15 +182,17 @@ class UserController extends Controller
 
     public function invite_view(Project $project)
     {
-        return view('projectadmin.invite', compact('project'));
+        $organisations = Organisation::all();
+        return view('projectadmin.invite', compact('project', 'organisations'));
     }
 
     public function process_invites(Request $request)
     {
-        //dd($request->input('project_id'));
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users,email'
+            'email' => 'required|email|unique:users,email',
+            'org' => 'required'
         ]);
+
         $validator->after(function ($validator) use ($request) {
             if (Invite::where('email', $request->input('email'))->exists()) {
                 $validator->errors()->add('email', 'There exists an invite with this email!');
@@ -206,7 +209,8 @@ class UserController extends Controller
         Invite::create([
             'token' => $token,
             'email' => $request->input('email'),
-            'project_id' => $request->input('project_id')
+            'project_id' => $request->input('project_id'),
+            'org_id' => $request->input('org')
         ]);
 
         $url = URL::temporarySignedRoute(
@@ -214,7 +218,8 @@ class UserController extends Controller
             'registration', now()->addMinutes(480), ['token' => $token]
         );
         Mail::to($request->input('email'))->send(new \App\Mail\PartnerInvite($url, $request->email));
-        return redirect('/users')->with('success', 'The Invite has been sent successfully');
+        return redirect(session('links')[1]);
+        //return redirect('/users')->with('success', 'The Invite has been sent successfully');
     }
 
     public function registration_view($token)

@@ -7,6 +7,7 @@ use App\Invite;
 use App\ProjectPartner;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\UserOrganisation;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -83,6 +84,13 @@ class RegisterController extends Controller
                  'email' => $data['email'],
                  'password' => Hash::make($data['password']),
              ]);
+
+             //Associate user with organisation
+             $org = UserOrganisation::create([
+                 'user_id' => $user->id,
+                 'organisation_id' => $invite->org_id,
+             ]);
+
              //Set user permissions
              $user->givePermissionTo('project-'.$invite->project_id.'-list'); //List project
              $user->givePermissionTo('project-'.$invite->project_id.'-update'); //Create project updates

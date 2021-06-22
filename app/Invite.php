@@ -9,8 +9,8 @@ class Invite extends Model
 {
     use LogsActivity;
 
-    protected $fillable = ['email', 'token', 'project_id'];
-    protected static $logAttributes = ['email', 'token', 'project_id'];
+    protected $fillable = ['email', 'token', 'project_id', 'org_id'];
+    protected static $logAttributes = ['email', 'token', 'project_id', 'org_id'];
     protected static $logName = 'Invite';
     protected static $logOnlyDirty = true;
 }

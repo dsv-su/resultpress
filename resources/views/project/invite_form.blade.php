@@ -9,14 +9,13 @@
             </div>
             @endforeach
             @empty(!$project->id)
-                    <button type="button" class="btn btn-outline-primary btn-sm ml-1" data-toggle="modal" data-target="#inviteModal"><i class="far fa-envelope"></i> Add Invite</button>
+                    <a href="{{route('invite_view', $project)}}" role="button" class="btn btn-outline-primary btn-sm ml-1"><i class="far fa-envelope"></i> Add Invite</a>
             @endempty
         @else
             <label for="invite_email" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">No active invites</label>
             @empty(!$project->id)
-                <button type="button" class="btn btn-outline-primary btn-sm ml-1" data-toggle="modal" data-target="#inviteModal"><i class="far fa-envelope"></i> Invite</button>
+                <a href="{{route('invite_view', $project)}}" role="button" class="btn btn-outline-primary btn-sm ml-1"><i class="far fa-envelope"></i> Invite</a>
             @endempty
         @endif
     </div>
 </div>
-@include('project.invite_modal')

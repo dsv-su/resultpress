@@ -9,6 +9,7 @@ use App\Events\PartnerUpdate;
 use App\Events\PartnerUpdateEvent;
 use App\File;
 use App\Invite;
+use App\Organisation;
 use App\Outcome;
 use App\OutcomeUpdate;
 use App\Output;
@@ -237,6 +238,13 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+        //Session
+        $links = session()->has('links') ? session('links') : [];
+        $currentLink = request()->path(); // Getting current URI like 'category/books/'
+        array_unshift($links, $currentLink); // Putting it in the beginning of links array
+        session(['links' => $links]); // Saving links array to the session
+
+
         return view('project.form', [
             'project' => $project,
             'activities' => $project->activities,
@@ -248,7 +256,8 @@ class ProjectController extends Controller
             'old_users' => ProjectOwner::where('project_id', $project->id)->pluck('user_id')->toArray(),
             'partners' => ProjectPartner::where('project_id', $project->id)->pluck('partner_id')->toArray(),
             'project_reminders' => ProjectReminder::where('project_id', $project->id)->get(),
-            'invites' => Invite::where('project_id', $project->id)->get()
+            'invites' => Invite::where('project_id', $project->id)->get(),
+            'organisations' => Organisation::all()
             /*'managers' => User::whereHas('project_owner', function ($query) use($project) {
                             return $query->where('project_id', $project->id);
                             })->get()*/

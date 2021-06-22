@@ -36,35 +36,6 @@
                        class="form-control form-control-sm datepicker">
             </div>
         </div>
-        <!--
-        <div class="form-group mb-2 row">
-            <label for="activity_reminder[]"
-                   class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Email
-                reminder</label>
-            <div class="col-8 col-sm-9 px-1 form-inline">
-                <select name="activity_reminder[]"
-                        class="form-control form-control-sm">
-                    <option value="1"
-                            @if($activity && $activity->reminder) selected="selected" @endif>
-                        Yes
-                    </option>
-                    <option value="0"
-                            @if($activity && !$activity->reminder) selected="selected" @endif>
-                        No
-                    </option>
-                </select>
-
-                <input type="number" name="activity_reminder_due_days[]"
-                       @if ($activity) value="{{$activity->reminder_due_days}}" @else value=7 @endif
-                       class="form-control form-control-sm text-right mx-1"
-                       style="width:60px;">
-
-                <label for="activity_reminder_due_days[]"
-                       class="pl-0 pr-1 col-form-label-sm text-left">days
-                    before end</label>
-            </div>
-        </div>
-        -->
         <div class="form-group mb-2 row">
             <label for="activity_priority[]"
                    class="col-4 col-sm-3 mb-0 pl-0 pr-1 col-form-label-sm text-right">Priority</label>
@@ -113,10 +84,12 @@
         </div>
         <div class="form-group row mb-0">
             <a name="copy"
-               class="btn btn-outline-secondary btn-sm copy ml-auto mt-1"><i
+               class="btn btn-outline-secondary btn-sm copy ml-auto mt-1" data-toggle="tooltip"
+               title="Copy this activity"><i
                         class="far fa-copy"></i></a>
             <a name="remove"
-               class="btn btn-outline-danger btn-sm remove ml-1 mt-1"><i
+               class="btn btn-outline-danger btn-sm remove ml-1 mt-1" data-toggle="tooltip"
+               title="Delete this activity"><i
                         class="far fa-trash-alt"></i></a>
         </div>
     </div>
@@ -139,18 +112,21 @@
                 $(this).closest('.card-body').find('input[name="activity_end[]"]').datepicker("setDate", $(this).val());
             }
         });
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
         @if ($index)
-        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_name[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_name[]"]').val());
-        $('#activities_list div.col-lg-6:last-child').find('textarea[name="activity_description[]"]').text($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('textarea[name="activity_description[]"]').text());
-        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_start[]"]').datepicker("setDate", $('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_start[]"]').datepicker("getDate"));
-        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_end[]"]').datepicker("setDate", $('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_end[]"]').datepicker("getDate"));
+        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_name[]"]').val($('#activities_list div.col-lg-6:nth-child(' + {{$index}} + ')').find('input[name="activity_name[]"]').val());
+        $('#activities_list div.col-lg-6:last-child').find('textarea[name="activity_description[]"]').text($('#activities_list div.col-lg-6:nth-child(' + {{$index}} + ')').find('textarea[name="activity_description[]"]').text());
+        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_start[]"]').datepicker("setDate", $('#activities_list div.col-lg-6:nth-child(' + {{$index}} + ')').find('input[name="activity_start[]"]').datepicker("getDate"));
+        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_end[]"]').datepicker("setDate", $('#activities_list div.col-lg-6:nth-child(' + {{$index}} + ')').find('input[name="activity_end[]"]').datepicker("getDate"));
         //$('#activities_list div.col-lg-6:last-child').find('select[name="activity_reminder[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('select[name="activity_reminder[]"]').val()).change();
         //$('#activities_list div.col-lg-6:last-child').find('input[name="activity_reminder_due_days[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_reminder_due_days[]"]').val());
         //$('#activities_list div.col-lg-6:last-child').find('select[name="activity_reminder[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('select[name="activity_reminder[]"]').val()).change();
-        $('#activities_list div.col-lg-6:last-child').find('select[name="activity_priority[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('select[name="activity_priority[]"]').val()).change();
-        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_budget[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_budget[]"]').val());
-        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_budget[]"]').val($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('input[name="activity_budget[]"]').val());
-        $('#activities_list div.col-lg-6:last-child textarea[id="activity_template"]').html($('#activities_list div.col-lg-6:nth-child('+{{$index}}+')').find('#activity_template').val());
+        $('#activities_list div.col-lg-6:last-child').find('select[name="activity_priority[]"]').val($('#activities_list div.col-lg-6:nth-child(' + {{$index}} + ')').find('select[name="activity_priority[]"]').val()).change();
+        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_budget[]"]').val($('#activities_list div.col-lg-6:nth-child(' + {{$index}} + ')').find('input[name="activity_budget[]"]').val());
+        $('#activities_list div.col-lg-6:last-child').find('input[name="activity_budget[]"]').val($('#activities_list div.col-lg-6:nth-child(' + {{$index}} + ')').find('input[name="activity_budget[]"]').val());
+        $('#activities_list div.col-lg-6:last-child textarea[id="activity_template"]').html($('#activities_list div.col-lg-6:nth-child(' + {{$index}} + ')').find('#activity_template').val());
         @endif
         var editor = new MediumEditor('#activities_list #activity_template', {placeholder: {text: "Activity template"}});
     </script>

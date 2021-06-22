@@ -833,6 +833,9 @@ class ProjectController extends Controller
                     }
                     if (!empty($diff->getAdded())) {
                         foreach ($diff->getAdded() as $key => $a) {
+                            if (!is_array($a)) {
+                                $a = array($a);
+                            }
                             foreach ($a as $id => $value) {
                                 if ($key == 'project_updates') {
                                     $data[$index]['added'][$key][$diff->getRearranged()->$key[$id]->id] = $value;

@@ -9,10 +9,15 @@ class SearchController extends Controller
 {
     public function search($q, Request $request = null)
     {
-        $projects = Project::search($q, null, true, true)->get();
+        if ($q) {
+            $projects = Project::search($q, null, true, true)->get();
+        } else {
+            $projects = Project::all();
+        }
         $projectmanagers = $this->extractManagers($projects);
         $projectpartners = $this->extractPartners($projects);
-        return view('home.search', compact('projects', 'q', 'projectpartners', 'projectmanagers'));
+        $programareas = $this->extractAreas($projects);
+        return view('home.search', compact('projects', 'q', 'projectpartners', 'projectmanagers', 'programareas'));
     }
 
     public function filterSearch($q, Request $request) {
@@ -20,9 +25,10 @@ class SearchController extends Controller
         $projects = Project::search($q, null, true, true)->get();
         $managers = request('manager') ? explode(',', request('manager')) : null;
         $partners = request('partner') ? explode(',', request('partner')) : null;
+        $areas = request('area') ? explode(',', request('area')) : null;
 
         foreach ($projects as $key => $project) {
-            $managerfound = $partnerfound = false;
+            $managerfound = $partnerfound = $areafound = false;
             if ($managers) {
                 foreach ($project->managers() as $manager) {
                     if (in_array($manager->id, $managers)) {
@@ -41,7 +47,16 @@ class SearchController extends Controller
             } else {
                 $partnerfound = true;
             }
-            if ($managerfound && $partnerfound) {
+            if ($areas) {
+                foreach ($project->areas as $area) {
+                    if (in_array($area->id, $areas)) {
+                        $areafound = true;
+                    }
+                }
+            } else {
+                $areafound = true;
+            }
+            if ($managerfound && $partnerfound && $areafound) {
                 $html .= '<div class="col my-3">' . view('project.project_list', ['project' => $project])->render() . '</div>';
             } else {
                 unset($projects[$key]);
@@ -54,7 +69,8 @@ class SearchController extends Controller
 
         $projectmanagers = $this->extractManagers($projects);
         $projectpartners = $this->extractPartners($projects);
-        return ['html' => $html, 'managers' => $projectmanagers, 'partners' => $projectpartners];
+        $programareas = $this->extractAreas($projects);
+        return ['html' => $html, 'managers' => $projectmanagers, 'partners' => $projectpartners, 'areas' => $programareas];
     }
 
     public function find(Request $request)
@@ -86,5 +102,17 @@ class SearchController extends Controller
             }
         }
         return $partners;
+    }
+
+    public function extractAreas($projects): array {
+        $areas = array();
+        foreach ($projects as $project) {
+            foreach ($project->areas as $area) {
+                if (!key_exists($area->id, $areas)) {
+                    $areas[$area->id] = $area->name;
+                }
+            }
+        }
+        return $areas;
     }
 }

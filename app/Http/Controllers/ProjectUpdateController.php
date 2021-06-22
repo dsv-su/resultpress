@@ -13,6 +13,7 @@ use App\Output;
 use App\OutputUpdate;
 use App\Project;
 use App\ProjectHistory;
+use App\ProjectReminder;
 use App\ProjectUpdate;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -199,6 +200,15 @@ class ProjectUpdateController extends Controller
             $a = 0;
         }
         return view('project.activity_form', ['activity' => $a, 'index' => $index])->render();
+    }
+
+    public function showReminderCreateForm($r) {
+        if ($r) {
+            $r = ProjectReminder::findorfail($r);
+        } else {
+            $r = 0;
+        }
+        return view('project.reminder_form', ['reminder' => $r])->render();
     }
 
     public function showOutcomeUpdateForm($outcome, $ou) {

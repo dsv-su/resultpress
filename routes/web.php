@@ -46,6 +46,7 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::get('/project/{project}/archive', 'ProjectController@archive')->name('project_archive');
     Route::get('/project/{project}/unarchive', 'ProjectController@unarchive')->name('project_unarchive');
     Route::get('/outcome_update/{outcome}/{outcome_update}', 'ProjectUpdateController@showOutcomeUpdateForm')->name('outcome_update_form');
+    Route::get('/reminder/{reminder}', 'ProjectUpdateController@showReminderCreateForm')->name('reminder_create_form');
     Route::post('/store_file', 'FileController@store')->name('store_file');
     Route::post('/complete_activity', 'ProjectController@completeActivity')->name('complete_activity');
     //Program Areas

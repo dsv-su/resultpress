@@ -8,7 +8,7 @@
 @endif
 
 <!-- Search box section -->
-<div class="container align-self-center">
+<div class="container align-self-center my-4">
     <form class="form-inline form-main-search d-flex justify-content-between"
           id="header-main-search-form" name="header-main-search-form"
           action="/search" method="GET" data-search="/s%C3%B6k"

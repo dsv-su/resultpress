@@ -4,7 +4,8 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left d-flex align-items-center">
-                <h2>Program Areas</h2><i class="fas fa-info-circle ml-1" data-toggle="modal" data-target="#programAreas"></i>
+                <h2>Program Areas</h2><i class="fas fa-info-circle ml-1" data-toggle="modal"
+                                         data-target="#programAreas"></i>
             </div>
             @if (session('status'))
                 <div class="alert alert-success">
@@ -15,15 +16,17 @@
         </div>
     </div>
     @foreach($programareas as $programarea)
-    <div class="card my-3">
-        <div class="card-header">
-            {{$programarea->name}}
+        <div class="card my-3">
+            <div class="card-header">
+                {{$programarea->name}}
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{$programarea->description}}</p>
+                @can('project-edit')
+                    <a href="{{route('programarea_edit', $programarea->id)}}" class="btn btn-outline-primary">Edit</a>
+                @endcan
+            </div>
         </div>
-        <div class="card-body">
-            <p class="card-text">{{$programarea->description}}</p>
-            <a href="{{route('programarea_edit', $programarea->id)}}" class="btn btn-outline-primary">Edit</a>
-        </div>
-    </div>
     @endforeach
     <!-- The Modal -->
     <div class="modal" id="programAreas">
@@ -38,10 +41,13 @@
 
                 <!-- Modal body -->
                 <div class="modal-body">
-                    Each project should be associated to at least one program area. Program areas need to be able to have their own outputs and outcomes, which should be aggregated from related projects.
+                    Each project should be associated to at least one program area. Program areas need to be able to
+                    have their own outputs and outcomes, which should be aggregated from related projects.
                     <br>
-                    A project can connect to one or several program areas (not mandatory). Spider/administrator users have a filter in the project list page.
-                    Program area names and descriptions can be edited. Each program area can have their own outputs and outcomes - this is not yet implemented.
+                    A project can connect to one or several program areas (not mandatory). Spider/administrator users
+                    have a filter in the project list page.
+                    Program area names and descriptions can be edited. Each program area can have their own outputs and
+                    outcomes - this is not yet implemented.
                 </div>
 
                 <!-- Modal footer -->

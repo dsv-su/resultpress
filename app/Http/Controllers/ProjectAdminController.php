@@ -61,6 +61,11 @@ class ProjectAdminController extends Controller
      */
     public function store(Request $request)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $request->project_id . '-edit')) {
+                abort(401);
+            }
+        }
         $owner = new ProjectOwner();
         $owner->project_id = $request->project_id;
         $owner->user_id = $request->add_user_id;
@@ -87,11 +92,15 @@ class ProjectAdminController extends Controller
      */
     public function edit(int $id)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $id . '-edit')) {
+                abort(401);
+            }
+        }
         $users = User::all();
         $partners = ProjectPartner::where('project_id', $id)->pluck('partner_id')->toArray();
         $project = Project::with('project_owner.user')->find($id);
         $old_users = ProjectOwner::where('project_id', $id)->pluck('user_id')->toArray();
-
 
         return view('projectadmin.edit', compact('project', 'users', 'old_users', 'partners'));
     }
@@ -105,55 +114,53 @@ class ProjectAdminController extends Controller
      */
     public function update(Request $request, int $id)
     {
-
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $id . '-edit')) {
+                abort(401);
+            }
+        }
         $project_owners = ProjectOwner::where('project_id', $id)->get();
         $project_partners = ProjectPartner::where('project_id', $id)->get();
         //Erase existing owners
-        foreach($project_owners as $project_owner)
-        {
+        foreach ($project_owners as $project_owner) {
             $owner = ProjectOwner::find($project_owner->id);
             $user = User::find($owner->user_id);
-            $user->revokePermissionTo('project-'.$id.'-list');
-            $user->revokePermissionTo('project-'.$id.'-edit');
-            $user->revokePermissionTo('project-'.$id.'-update');
-            $user->revokePermissionTo('project-'.$id.'-delete');
+            $user->revokePermissionTo('project-' . $id . '-list');
+            $user->revokePermissionTo('project-' . $id . '-edit');
+            $user->revokePermissionTo('project-' . $id . '-update');
+            $user->revokePermissionTo('project-' . $id . '-delete');
             $owner->delete();
         }
         //Store new managers
-       foreach ($request->user_id as $owner)
-        {
+        foreach ($request->user_id as $owner) {
             $new_owner = new ProjectOwner();
             $new_owner->project_id = $id;
             $new_owner->user_id = $owner;
             $new_owner->save();
             //Give specific project permissions to user
             $user = User::find($owner);
-            $user->givePermissionTo('project-'.$id.'-list', 'project-'.$id.'-edit', 'project-'.$id.'-update', 'project-'.$id.'-delete');
+            $user->givePermissionTo('project-' . $id . '-list', 'project-' . $id . '-edit', 'project-' . $id . '-update', 'project-' . $id . '-delete');
         }
-       //Erase existing partners
-        if($project_partners)
-        {
-            foreach($project_partners as $project_partner)
-            {
+        //Erase existing partners
+        if ($project_partners) {
+            foreach ($project_partners as $project_partner) {
                 $partner = ProjectPartner::find($project_partner->id);
                 $user = User::find($partner->partner_id);
-                $user->revokePermissionTo('project-'.$id.'-list');
-                $user->revokePermissionTo('project-'.$id.'-update');
+                $user->revokePermissionTo('project-' . $id . '-list');
+                $user->revokePermissionTo('project-' . $id . '-update');
                 $partner->delete();
             }
         }
         //Store new partners
-        if($request->partner_id)
-        {
-            foreach ($request->partner_id as $partner)
-            {
+        if ($request->partner_id) {
+            foreach ($request->partner_id as $partner) {
                 $new_partner = new ProjectPartner();
                 $new_partner->project_id = $id;
                 $new_partner->partner_id = $partner;
                 $new_partner->save();
                 //Give specific project permissions to partner
                 $user = User::find($partner);
-                $user->givePermissionTo('project-'.$id.'-list', 'project-'.$id.'-update');
+                $user->givePermissionTo('project-' . $id . '-list', 'project-' . $id . '-update');
             }
         }
 

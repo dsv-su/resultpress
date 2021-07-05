@@ -65,6 +65,11 @@ class ProjectUpdateController extends Controller
      */
     public function show(ProjectUpdate $project_update)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project_update->project_id . '-list')) {
+                abort(401);
+            }
+        }
         $project_update->index = $this->get_update_index($project_update);
 
         return view('projectupdate.show', [
@@ -124,6 +129,11 @@ class ProjectUpdateController extends Controller
      */
     public function review(ProjectUpdate $project_update)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project_update->project_id . '-update')) {
+                abort(401);
+            }
+        }
         // Calculate things
         $activityupdates = ActivityUpdate::where('project_update_id', $project_update->id)
             ->join('activities', 'activity_id', '=', 'activities.id')
@@ -319,6 +329,9 @@ class ProjectUpdateController extends Controller
      */
     public function update(ProjectUpdate $project_update, Request $request)
     {
+        if (!$project_update->editable()) {
+            return abort(401);
+        }
         $status = '';
         if ($request->input('approve')) {
             $status = 'approved';
@@ -386,6 +399,11 @@ class ProjectUpdateController extends Controller
      */
     public function destroy(ProjectUpdate $project_update)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project_update->project_id . '-delete')) {
+                abort(401);
+            }
+        }
         // Delete associated updates
         ActivityUpdate::where('project_update_id', $project_update->id)->delete();
         OutputUpdate::where('project_update_id', $project_update->id)->delete();

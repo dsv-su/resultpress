@@ -244,25 +244,29 @@ class ProjectController extends Controller
         array_unshift($links, $currentLink); // Putting it in the beginning of links array
         session(['links' => $links]); // Saving links array to the session
 
-
-        return view('project.form', [
-            'project' => $project,
-            'activities' => $project->activities,
-            'outputs' => $project->submitted_outputs(),
-            'project_areas' => $project->project_area,
-            'areas' => Area::all(),
-            'old_pa' => $project->project_area->pluck('area_id')->toArray(),
-            'users' => User::all(),
-            'old_users' => ProjectOwner::where('project_id', $project->id)->pluck('user_id')->toArray(),
-            'partners' => ProjectPartner::where('project_id', $project->id)->pluck('partner_id')->toArray(),
-            'project_reminders' => ProjectReminder::where('project_id', $project->id)->get(),
-            'invites' => Invite::where('project_id', $project->id)->get(),
-            'organisations' => Organisation::all()
-            /*'managers' => User::whereHas('project_owner', function ($query) use($project) {
-                            return $query->where('project_id', $project->id);
-                            })->get()*/
-        ]);
-
+        if ($user = Auth::user()) {
+            if ($user->hasRole(['Administrator']) || !$project->id || $user->hasPermissionTo('project-' . $project->id . '-edit')) {
+                return view('project.form', [
+                    'project' => $project,
+                    'activities' => $project->activities,
+                    'outputs' => $project->submitted_outputs(),
+                    'project_areas' => $project->project_area,
+                    'areas' => Area::all(),
+                    'old_pa' => $project->project_area->pluck('area_id')->toArray(),
+                    'users' => User::all(),
+                    'old_users' => ProjectOwner::where('project_id', $project->id)->pluck('user_id')->toArray(),
+                    'partners' => ProjectPartner::where('project_id', $project->id)->pluck('partner_id')->toArray(),
+                    'project_reminders' => ProjectReminder::where('project_id', $project->id)->get(),
+                    'invites' => Invite::where('project_id', $project->id)->get(),
+                    'organisations' => Organisation::all()
+                    /*'managers' => User::whereHas('project_owner', function ($query) use($project) {
+                                    return $query->where('project_id', $project->id);
+                                    })->get()*/
+                ]);
+            } else {
+                abort(401);
+            }
+        }
     }
 
     /**
@@ -274,6 +278,12 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
+                abort(401);
+            }
+        }
+
         request()->validate([
             'project_name' => 'required',
             'user_id' => 'required',
@@ -523,11 +533,21 @@ class ProjectController extends Controller
 
     public function write_update(Project $project)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-update')) {
+                abort(401);
+            }
+        }
         return view('project.update', ['project' => $project]);
     }
 
     public function save_update(Project $project, Request $request)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-update')) {
+                abort(401);
+            }
+        }
         $projectupdate = ProjectUpdate::firstOrNew(['id' => request('project_update_id') ?? 0]);
         $projectupdate->project_id = $project->id;
         $projectupdate->summary = request('project_update_summary') ?? null;
@@ -719,6 +739,11 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-delete')) {
+                abort(401);
+            }
+        }
         //Find associated owners
         $owners = ProjectOwner::where('project_id', $project->id)->pluck('user_id');
         //Revoke owners permissions
@@ -770,6 +795,11 @@ class ProjectController extends Controller
 
     public function archive(Project $project)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
+                abort(401);
+            }
+        }
         $project->archived = true;
         $project->update();
         return redirect()->route('project_show', $project);
@@ -777,6 +807,11 @@ class ProjectController extends Controller
 
     public function unarchive(Project $project)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
+                abort(401);
+            }
+        }
         $project->archived = false;
         $project->update();
         return redirect()->route('project_show', $project);
@@ -798,6 +833,11 @@ class ProjectController extends Controller
      */
     public function history(Project $project)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
+                abort(401);
+            }
+        }
         $data = array();
         foreach ($project->histories as $index => $history) {
             $data[$index]['created'] = $history->created_at->format('d/m/Y');
@@ -821,7 +861,7 @@ class ProjectController extends Controller
                                     $item->old_partner_id = $previous->$key[$i]->partner_id;
                                     $data[$index]['modified'][$key][] = $item;
                                 }
-                            } elseif ($key == 'areas'){
+                            } elseif ($key == 'areas') {
                                 foreach ($m as $i => $item) {
                                     $item->old_name = $previous->$key[$i]->name;
                                     $item->old_description = $previous->$key[$i]->description;

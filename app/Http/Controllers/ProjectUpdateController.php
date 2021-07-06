@@ -67,7 +67,7 @@ class ProjectUpdateController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project_update->project_id . '-list')) {
-                abort(401);
+                abort(403);
             }
         }
         $project_update->index = $this->get_update_index($project_update);
@@ -131,7 +131,10 @@ class ProjectUpdateController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project_update->project_id . '-update')) {
-                abort(401);
+                abort(403);
+            }
+            if ($user->hasRole(['Partner']) && $project_update->status != 'submitted') {
+                abort(403);
             }
         }
         // Calculate things
@@ -299,7 +302,7 @@ class ProjectUpdateController extends Controller
     {
         // We only let to edit draft updates, or we're super users
         if (!$project_update->editable()) {
-            return abort(401);
+            abort(403);
         }
         $project = Project::find($project_update->project_id);
         $activityupdates = ActivityUpdate::where('project_update_id', $project_update->id)
@@ -329,9 +332,6 @@ class ProjectUpdateController extends Controller
      */
     public function update(ProjectUpdate $project_update, Request $request)
     {
-        if (!$project_update->editable()) {
-            return abort(401);
-        }
         $status = '';
         if ($request->input('approve')) {
             $status = 'approved';
@@ -351,8 +351,8 @@ class ProjectUpdateController extends Controller
                 ->log('ProjectUpdateRejected');
         }
 
-        $project_update->internal_comment = request('internal_comment') ?? null;
-        $project_update->partner_comment = request('partner_comment') ?? null;
+        $project_update->internal_comment = request('internal_comment') ?? $project_update->internal_comment;
+        $project_update->partner_comment = request('partner_comment') ?? $project_update->partner_comment;
 
         if ($status) {
             $project_update->status = $status;
@@ -401,7 +401,7 @@ class ProjectUpdateController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project_update->project_id . '-delete')) {
-                abort(401);
+                abort(403);
             }
         }
         // Delete associated updates

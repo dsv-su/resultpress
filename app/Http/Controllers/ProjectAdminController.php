@@ -63,7 +63,7 @@ class ProjectAdminController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $request->project_id . '-edit')) {
-                abort(401);
+                abort(403);
             }
         }
         $owner = new ProjectOwner();
@@ -94,7 +94,7 @@ class ProjectAdminController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $id . '-edit')) {
-                abort(401);
+                abort(403);
             }
         }
         $users = User::all();
@@ -116,7 +116,7 @@ class ProjectAdminController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $id . '-edit')) {
-                abort(401);
+                abort(403);
             }
         }
         $project_owners = ProjectOwner::where('project_id', $id)->get();

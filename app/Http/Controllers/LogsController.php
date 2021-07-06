@@ -11,7 +11,7 @@ class LogsController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator'])) {
-                abort(401);
+                abort(403);
             }
         }
         $activity = Activity::all();

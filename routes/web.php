@@ -42,7 +42,6 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::get('/project/{project}/updates', 'ProjectUpdateController@index')->name('projectupdate_index');
     Route::put('/project/{project}/update', 'ProjectController@save_update')->name('project_save_update');
     Route::put('/project/{project}', 'ProjectController@update')->name('project_update');
-    Route::get('/project/{project}/delete', 'ProjectController@destroy')->name('project_delete');
     Route::get('/project/{project}/archive', 'ProjectController@archive')->name('project_archive');
     Route::get('/project/{project}/unarchive', 'ProjectController@unarchive')->name('project_unarchive');
     Route::get('/outcome_update/{outcome}/{outcome_update}', 'ProjectUpdateController@showOutcomeUpdateForm')->name('outcome_update_form');

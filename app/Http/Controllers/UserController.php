@@ -183,7 +183,7 @@ class UserController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
-                abort(401);
+                abort(403);
             }
         }
         $organisations = Organisation::all();
@@ -230,7 +230,7 @@ class UserController extends Controller
     {
         if ($invite = Invite::where('token', $token)->first())
             return view('auth.register', ['invite' => $invite]);
-        else abort(401);
+        else abort(403);
     }
 
     public function remove_invite(Invite $invite): RedirectResponse

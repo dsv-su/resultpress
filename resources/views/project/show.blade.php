@@ -3,27 +3,29 @@
 @section('content')
     <div class="row justify-content-between">
         <div class="col-6"><h4>{{ $project->name }}</h4></div>
-        <div class="col-sm-auto d-flex align-items-center">
-            @if($project->status() == 'planned')
-                <span class="badge badge-light font-100">Planned</span>
-            @elseif($project->status() == 'inprogress')
-                <span class="badge badge-warning font-100">In progress</span>
-            @elseif($project->status() == 'delayedhigh')
-                <span class="badge badge-danger font-100">Delayed Major</span>
-            @elseif($project->status() == 'delayednormal')
-                <span class="badge badge-danger font-100">Delayed</span>
-            @elseif($project->status() == 'pendingreview')
-                <span class="badge badge-primary font-100">Pending review</span>
-            @elseif($project->status() == 'completed')
-                <span class="badge badge-success font-100">Completed</span>
-            @elseif($project->status() == 'archived')
-                <span class="badge badge-secondary font-100">Archived</span>
-            @elseif($project->status() == 'onhold')
-                <span class="badge badge-secondary font-100">On hold</span>
-            @elseif($project->status() == 'terminated')
-                <span class="badge badge-secondary font-100">Terminated</span>
-            @endif
-        </div>
+        @if (Auth::user()->hasRole(['Spider', 'Administrator']))
+            <div class="col-sm-auto d-flex align-items-center">
+                @if($project->status() == 'planned')
+                    <span class="badge badge-light font-100">Planned</span>
+                @elseif($project->status() == 'inprogress')
+                    <span class="badge badge-warning font-100">In progress</span>
+                @elseif($project->status() == 'delayedhigh')
+                    <span class="badge badge-danger font-100">Delayed Major</span>
+                @elseif($project->status() == 'delayednormal')
+                    <span class="badge badge-danger font-100">Delayed</span>
+                @elseif($project->status() == 'pendingreview')
+                    <span class="badge badge-primary font-100">Pending review</span>
+                @elseif($project->status() == 'completed')
+                    <span class="badge badge-success font-100">Completed</span>
+                @elseif($project->status() == 'archived')
+                    <span class="badge badge-secondary font-100">Archived</span>
+                @elseif($project->status() == 'onhold')
+                    <span class="badge badge-secondary font-100">On hold</span>
+                @elseif($project->status() == 'terminated')
+                    <span class="badge badge-secondary font-100">Terminated</span>
+                @endif
+            </div>
+        @endif
     </div>
 
     <p><a href="{{ url()->previous() }}">Return back</a></p>
@@ -63,9 +65,12 @@
         @endif
         <div class="row my-1">
             <div class="col-sm font-weight-bold">Budget:</div>
-            <div class="col-sm"><span
+            <div class="col-sm">
+                @if (Auth::user()->hasRole(['Spider', 'Administrator']))<span
                         @if ($project->moneyspent > $project->budget) class="badge badge-danger font-100" @endif> {{$project->moneyspent ?? 0}} {{$project->getCurrencySymbol()}}
-                    / {{$project->budget ?? 0}} {{$project->getCurrencySymbol()}}</span></div>
+                / {{$project->budget ?? 0}} {{$project->getCurrencySymbol()}}</span>
+                @else {{$project->budget ?? 0}} {{$project->getCurrencySymbol()}}
+                @endif</div>
         </div>
         <div class="row my-1">
             <div class="col-sm font-weight-bold">Deadlines:</div>
@@ -83,7 +88,7 @@
         </div>
     </div>
 
-    @if($project->pending_updates()->count())
+    @if($project->pending_updates()->count() && Auth::user()->hasRole(['Spider', 'Administrator']))
         <h5 class="my-4">Pending updates</h5>
         <div class="alert alert-info" role="alert">
             @foreach ($project->pending_updates()->all() as $index => $pu)
@@ -117,11 +122,11 @@
                     <div class="card-header bg-white" id="heading-activity-{{$a->id}}">
                         <div class="row">
                             <div class="col-auto pl-1">
-                                 <span class="btn cursor-default px-0 text-left">
-                                     {{$a->title}} @if ($a->priority=='high') <span data-toggle="tooltip"
-                                                                                    title="High priority"><i
-                                                 class="fas fa-arrow-alt-circle-up text-danger"></i></span> @endif
-                                 </span>
+                             <span class="btn cursor-default px-0 text-left">
+                                 {{$a->title}} @if ($a->priority=='high') <span data-toggle="tooltip"
+                                                                                title="High priority"><i
+                                             class="fas fa-arrow-alt-circle-up text-danger"></i></span> @endif
+                             </span>
                             </div>
                             @if ($a->comments)
                                 <div class="col-auto d-flex py-2 px-1 align-items-center"><span
@@ -132,28 +137,30 @@
                                             aria-controls="collapseactivity-{{$a->id}}"
                                             class="badge badge-light font-100">{{count($a->comments)}} @if (count($a->comments) > 1)
                                             updates @else update @endif</span></div> @endif
-                            <div class="col-auto d-flex py-2 px-1 align-items-center">
-                                <span class="badge font-100 @if ($a->moneyspent > $a->budget) badge-danger @else badge-info @endif">
-                                    {{$a->moneyspent ?? 0}} {{$project->getCurrencySymbol()}} / {{ceil($a->budget) ?? 0}} {{$project->getCurrencySymbol()}}
-                                </span>
-                            </div>
-                            <div class="col-auto d-flex py-2 px-1 align-items-center">
-                                @if($a->status() == 'planned')
-                                    <span class="badge badge-light font-100">Planned</span>
-                                @elseif($a->status() == 'inprogress')
-                                    <span class="badge badge-warning font-100">In progress</span>
-                                @elseif($a->status() == 'delayednormal')
-                                    <span class="badge badge-danger font-100">Delayed Normal</span>
-                                @elseif($a->status() == 'delayedhigh')
-                                    <span class="badge badge-danger font-100">Delayed Major</span>
-                                @elseif($a->status() == 'pendingreview')
-                                    <span class="badge badge-info font-100">Pending review</span>
-                                @elseif($a->status() == 'completed')
-                                    <span class="badge badge-success font-100">Completed</span>
-                                @elseif($a->status() == 'cancelled')
-                                    <span class="badge badge-info font-100">Cancelled</span>
-                                @endif
-                            </div>
+                            @if (Auth::user()->hasRole(['Spider', 'Administrator']))
+                                <div class="col-auto d-flex py-2 px-1 align-items-center">
+                                    <span class="badge font-100 @if ($a->moneyspent > $a->budget) badge-danger @else badge-info @endif">
+                                        {{$a->moneyspent ?? 0}} {{$project->getCurrencySymbol()}} / {{ceil($a->budget) ?? 0}} {{$project->getCurrencySymbol()}}
+                                    </span>
+                                </div>
+                                <div class="col-auto d-flex py-2 px-1 align-items-center">
+                                    @if($a->status() == 'planned')
+                                        <span class="badge badge-light font-100">Planned</span>
+                                    @elseif($a->status() == 'inprogress')
+                                        <span class="badge badge-warning font-100">In progress</span>
+                                    @elseif($a->status() == 'delayednormal')
+                                        <span class="badge badge-danger font-100">Delayed Normal</span>
+                                    @elseif($a->status() == 'delayedhigh')
+                                        <span class="badge badge-danger font-100">Delayed Major</span>
+                                    @elseif($a->status() == 'pendingreview')
+                                        <span class="badge badge-info font-100">Pending review</span>
+                                    @elseif($a->status() == 'completed')
+                                        <span class="badge badge-success font-100">Completed</span>
+                                    @elseif($a->status() == 'cancelled')
+                                        <span class="badge badge-info font-100">Cancelled</span>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                     </div>
 
@@ -194,10 +201,11 @@
             @foreach ($outputs as $o)
                 <div class="row my-1">
                     <div class="col">
-                    <span>{{$o->indicator}}<span
-                                class="badge ml-2 font-100 @if($o->valuestatus == 1) badge-info @elseif($o->valuestatus == 2) badge-warning @elseif($o->valuestatus == 3) badge-success @else badge-light @endif">{{$o->valuesum}} @if ($o->status == 'custom')
-                                (unplanned) @else / {{$o->target}} @endif
-                        </span></span>
+                    <span>{{$o->indicator}}
+                        @if (Auth::user()->hasRole(['Spider', 'Administrator']))
+                            <span class="badge ml-2 font-100 @if($o->valuestatus == 1) badge-info @elseif($o->valuestatus == 2) badge-warning @elseif($o->valuestatus == 3) badge-success @else badge-light @endif">{{$o->valuesum}} @if ($o->status == 'custom')
+                                    (unplanned) @else / {{$o->target}} @endif </span>
+                        @else <span class="badge ml-2 font-100 badge-info">{{$o->valuesum}}</span> @endif</span>
                     </div>
                 </div>
             @endforeach

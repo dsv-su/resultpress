@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        @if(isset($review) && $review)
+        @if(isset($review) && $review && Auth::user()->hasRole(['Spider', 'Administrator']))
             <div class="form-group row mb-0">
                 <label for="activity_info[]"
                        class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Info</label>

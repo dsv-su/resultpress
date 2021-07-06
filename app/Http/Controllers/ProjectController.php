@@ -264,7 +264,7 @@ class ProjectController extends Controller
                                     })->get()*/
                 ]);
             } else {
-                abort(401);
+                abort(403);
             }
         }
     }
@@ -280,7 +280,7 @@ class ProjectController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
-                abort(401);
+                abort(403);
             }
         }
 
@@ -535,7 +535,7 @@ class ProjectController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-update')) {
-                abort(401);
+                abort(403);
             }
         }
         return view('project.update', ['project' => $project]);
@@ -545,7 +545,7 @@ class ProjectController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-update')) {
-                abort(401);
+                abort(403);
             }
         }
         $projectupdate = ProjectUpdate::firstOrNew(['id' => request('project_update_id') ?? 0]);
@@ -741,7 +741,7 @@ class ProjectController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-delete')) {
-                abort(401);
+                abort(403);
             }
         }
         //Find associated owners
@@ -797,7 +797,7 @@ class ProjectController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
-                abort(401);
+                abort(403);
             }
         }
         $project->archived = true;
@@ -809,7 +809,7 @@ class ProjectController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
-                abort(401);
+                abort(403);
             }
         }
         $project->archived = false;
@@ -835,7 +835,7 @@ class ProjectController extends Controller
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
-                abort(401);
+                abort(403);
             }
         }
         $data = array();

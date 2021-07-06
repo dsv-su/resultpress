@@ -10,7 +10,7 @@ class LogsController extends Controller
     public function index()
     {
         if ($user = Auth::user()) {
-            if (!$user->hasRole(['Administrator'])) {
+            if (!$user->hasRole(['Administrator', 'Spider'])) {
                 abort(403);
             }
         }

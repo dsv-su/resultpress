@@ -58,7 +58,7 @@
             name: 'autocomplete-items',
             display: function (item) {
                 if (item.type === 'project') {
-                    return 'Project: ' + item.name;
+                    return item.name;
                 }
             },
             templates: {
@@ -70,7 +70,7 @@
                 ],
                 suggestion: function (data) {
                     if (data.type === 'project') {
-                        return '<li><a class="d-block w-100" href="/project/' + data.id + '">Project: ' + data.name + '</a></li>';
+                        return '<li><a class="d-block w-100" href="/project/' + data.id + '">' + data.name + '</a></li>';
                     }
                 }
             }

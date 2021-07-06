@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left d-flex align-items-center">
-                <h2>Program Areas</h2><i class="fas fa-info-circle ml-1" data-toggle="modal"
+                <h3>Program Areas</h3><i class="fas fa-info-circle ml-1" data-toggle="modal"
                                          data-target="#programAreas"></i>
             </div>
             @if (session('status'))
@@ -12,7 +12,6 @@
                     {{ session('status') }}
                 </div>
             @endif
-            <br>
         </div>
     </div>
     @foreach($programareas as $programarea)

@@ -21,7 +21,7 @@
                 <ul class="list-group">
                     @foreach($organisations as $spiderorg)
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div class="image-parent" style="background-color: orangered">
+                        <div class="image-parent" style="max-width:200px;">
                             <img src="{{$spiderorg->logo}}" class="img-fluid" alt="spider">
                         </div>
                         <span>&nbsp;&nbsp;&nbsp;</span>

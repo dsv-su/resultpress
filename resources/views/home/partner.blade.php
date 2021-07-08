@@ -3,7 +3,7 @@
 @section('content')
     <h3 class="mx-3">Projects <span data-toggle="tooltip"
                                     title="These are the projects in which you have been registered as a project partner"><i
-                    class="fa fa-dashboard fa-1x"></i></span></h3>
+                    class="fas fa-info-circle fa-1x"></i></span></h3>
     <div class="col">
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane show active" role="tabpanel" aria-labelledby="owned-tab" id="owned">

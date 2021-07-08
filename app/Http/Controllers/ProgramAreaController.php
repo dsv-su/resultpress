@@ -81,7 +81,7 @@ class ProgramAreaController extends Controller
                 return view('programareas.edit', compact('area'));
             }
         }
-        abort(401);
+        abort(403);
     }
 
     /**
@@ -102,7 +102,7 @@ class ProgramAreaController extends Controller
                 return redirect()->route('programareas');
             }
         }
-        abort(401);
+        abort(403);
     }
 
     /**

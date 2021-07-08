@@ -21,7 +21,7 @@
                             <label for="activities_list" class="form-group-header">Details</label>
                             <span data-toggle="tooltip"
                                   title="Here you add basic information about the project"><i
-                                        class="fa fa-dashboard fa-1x"></i></span>
+                                        class="fas fa-info-circle fa-1x"></i></span>
                             <div class="form-row mb-2 row">
                                 <label for="project_name" class="col-sm-3 col-form-label-sm">Name</label>
                                 <div class="px-1 col-sm-9">
@@ -101,7 +101,7 @@
                                 <label for="project_cumulative" class="col-auto col-sm-3 col-form-label-sm">Cumulative
                                     updates <span data-toggle="tooltip"
                                                   title="Each activity update will build on the previous one"><i
-                                                class="fa fa-dashboard fa-1x"></i></span></label>
+                                                class="fas fa-info-circle fa-1x"></i></span></label>
                                 <div class="col-auto">
                                     <select name="project_cumulative" class="form-control form-control-sm">
                                         <option value="1" @if($project->cumulative) selected="selected" @endif>Yes
@@ -118,7 +118,7 @@
                             <label for="deadlines" class="form-group-header pl-2 pr-0">Deadlines</label>
                             <span data-toggle="tooltip"
                                   title="Each deadline will trigger an email reminder when the date is reached"><i
-                                        class="fa fa-dashboard fa-1x"></i></span>
+                                        class="fas fa-info-circle fa-1x"></i></span>
                             <div class="d-flex flex-wrap" id="reminders_list">
                                 @foreach($project_reminders as $thisproject)
                                     <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
@@ -136,7 +136,7 @@
                             <label for="activities_list" class="form-group-header pl-2 pr-0">Activities</label>
                             <span data-toggle="tooltip"
                                   title="Here you add project activities information and reporting templates"><i
-                                        class="fa fa-dashboard fa-1x"></i></span>
+                                        class="fas fa-info-circle fa-1x"></i></span>
                             <div class="d-flex flex-wrap" id="activities_list">
                                 @foreach ($activities as $activity)
                                     <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
@@ -152,7 +152,7 @@
                                     <label for="outputs_table" class="form-group-header">Outputs</label>
                                     <span data-toggle="tooltip"
                                           title="Here you add project outputs and targets"><i
-                                                class="fa fa-dashboard fa-1x"></i></span>
+                                                class="fas fa-info-circle fa-1x"></i></span>
                                     <div class="card bg-light m-auto"
                                          @if($outputs->isEmpty()) style="display: none;" @endif>
                                         <div class="card-body p-1">
@@ -204,7 +204,7 @@
                                     <label for="outcomes_table" class="form-group-header">Outcomes</label>
                                     <span data-toggle="tooltip"
                                           title="Here you add project outcomes"><i
-                                                class="fa fa-dashboard fa-1x"></i></span>
+                                                class="fas fa-info-circle fa-1x"></i></span>
                                     <div class="card bg-light m-auto"
                                          @if($project->outcomes->isEmpty()) style="display: none;" @endif>
                                         <div class="card-body p-1">
@@ -247,7 +247,7 @@
                                     <label for="users" class="form-group-header">Users</label>
                                     <span data-toggle="tooltip"
                                           title="Users and permissions associated with this project"><i
-                                                class="fa fa-dashboard fa-1x"></i></span>
+                                                class="fas fa-info-circle fa-1x"></i></span>
                                     <div class="card bg-light m-auto">
                                         <div class="form-row row mx-1">
                                             <label class="col-form-label">Managers:</label>
@@ -280,7 +280,7 @@
                                 <div class="form-group">
                                     <label for="invites" class="form-group-header">Active Invites</label>
                                     <span data-toggle="tooltip" title="Sent invites are listed here"><i
-                                                class="fa fa-dashboard fa-1x"></i></span>
+                                                class="fas fa-info-circle fa-1x"></i></span>
                                     @include('project.invite_form')
                                 </div>
                             </div>

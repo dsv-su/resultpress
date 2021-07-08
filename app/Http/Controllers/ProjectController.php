@@ -245,7 +245,7 @@ class ProjectController extends Controller
         session(['links' => $links]); // Saving links array to the session
 
         if ($user = Auth::user()) {
-            if ($user->hasRole(['Administrator']) || !$project->id || $user->hasPermissionTo('project-' . $project->id . '-edit')) {
+            if ($user->hasPermissionTo('project-create') || ($project->id && $user->hasPermissionTo('project-' . $project->id . '-edit'))) {
                 return view('project.form', [
                     'project' => $project,
                     'activities' => $project->activities,

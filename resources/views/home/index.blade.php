@@ -32,19 +32,19 @@
                 <a class="nav-link active" id="owned-tab" data-toggle="tab" role="tab" href="#owned"
                    aria-controls="owned">Owned Projects <span data-toggle="tooltip"
                                                               title="These are the projects for which you are registered as a project manager"><i
-                                class="fa fa-dashboard fa-1x"></i></span></a>
+                                class="fas fa-info-circle fa-1x"></i></span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="area-tab" data-toggle="tab" role="tab" aria-controls="area" href="#area">Program
                     Area Projects <span data-toggle="tooltip"
                                         title="These are the projects you have chosen to follow sorted by Program area"><i
-                                class="fa fa-dashboard fa-1x"></i></span></a>
+                                class="fas fa-info-circle fa-1x"></i></span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="other-tab" data-toggle="tab" role="tab" aria-controls="other" href="#other">Other
                     Projects <span data-toggle="tooltip"
                                    title="These are the projects you have chosen to follow that are not organized in a Program are"><i
-                                class="fa fa-dashboard fa-1x"></i></span></a>
+                                class="fas fa-info-circle fa-1x"></i></span></a>
             </li>
         </ul>
 

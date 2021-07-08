@@ -29,15 +29,13 @@
                 <div class="col-md-6">
                     <div class="row">
                         Manager:&nbsp; @foreach($project->project_owner->all() as $k => $project_owner)
-                            <span class="font-weight-light">{{$project_owner->user->name}}@if ($k+1<count($project->project_owner->all()))
-                                    ,&nbsp;@endif</span>
+                            <span class="font-weight-light">{{$project_owner->user->name}}@if ($k+1<count($project->project_owner->all())),&nbsp;@endif</span>
                         @endforeach
                     </div>
                     <div class="row">
                         Area:&nbsp;@if($project->project_area)
                             @foreach($project->areas as $k => $area)
-                                <span class="font-weight-light">{{$area->name}}@if ($k+1<count($project->areas)),
-                                    &nbsp;@endif</span>
+                                <span class="font-weight-light">{{$area->name}}@if ($k+1<count($project->areas)),&nbsp;@endif</span>
                             @endforeach
                         @endif
                     </div>

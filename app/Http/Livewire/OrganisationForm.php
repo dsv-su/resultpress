@@ -172,7 +172,7 @@ class OrganisationForm extends Component
     public function saveOrg() {
 
         $validatedData = $this->validate();
-        $this->filename = $this->logo->store('/logo', 'public');
+        $this->filename = $this->logo->store('./logo', 'public');
         Organisation::updateOrCreate(['org' => $this->org],[
             'address' => $this->address,
             'website' => $this->website,

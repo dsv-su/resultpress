@@ -430,7 +430,8 @@ div.wrapper {
     padding: .3rem 0 .3rem 1.8rem;
     cursor: pointer;
     display: block;
-    width: 100%
+    width: 100%;
+    font-weight: 300;
 }
 
 #header-main-search-form .search_autocomplete li.active,
@@ -438,10 +439,11 @@ div.wrapper {
     background: #eef9fa;
 }
 
+#header-main-search-form .search_autocomplete li a,
 #header-main-search-form .search_autocomplete li.active a,
 #header-main-search-form .search_autocomplete li:hover a,
 #header-main-search-form .search_autocomplete li.tt-cursor a {
-    color: inherit;
+    color: #212529;
     text-decoration: none;
 }
 

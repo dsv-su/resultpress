@@ -42,7 +42,7 @@
                         <ul class="list-group my-3">
                             <li class="list-group-item text-muted">Program Areas <span data-toggle="tooltip"
                                                                                        title="Summary of projects sorted by Program Areas"><i
-                                            class="fa fa-dashboard fa-1x"></i></span>
+                                            class="fas fa-info-circle fa-1x"></i></span>
                             </li>
                             @foreach($programareas as $area)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -58,19 +58,19 @@
                                 <a class="nav-link active" data-toggle="tab" href="#owned">Owned Projects <span
                                             data-toggle="tooltip"
                                             title="These are the projects for which you are registered as a project manager"><i
-                                                class="fa fa-dashboard fa-1x"></i></span></a>
+                                                class="fas fa-info-circle fa-1x"></i></span></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#programareas">Program Area Projects
                                     <span data-toggle="tooltip"
                                           title="Here you can select the projects you want to follow, sorted by Program area"><i
-                                                class="fa fa-dashboard fa-1x"></i></span></a>
+                                                class="fas fa-info-circle fa-1x"></i></span></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#other">Other Projects <span
                                             data-toggle="tooltip"
                                             title="Here you can select the projects you want to follow that are not organized in a Program area"><i
-                                                class="fa fa-dashboard fa-1x"></i></span></a>
+                                                class="fas fa-info-circle fa-1x"></i></span></a>
                             </li>
                         </ul>
 

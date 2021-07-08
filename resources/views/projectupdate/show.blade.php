@@ -46,7 +46,7 @@
                                 <td class="w-75">{{$ou->indicator}}</td>
                                 <td class="w-25">{{$ou->value}}</td>
                             </tr>
-                            @if($review && ($ou->contributionstring || $ou->totalstring))
+                            @if($review && ($ou->contributionstring || $ou->totalstring) && Auth::user()->hasRole(['Spider', 'Administrator']))
                                 <tr class="update">
                                     <td colspan=2>
                                         <table class="table mb-2">
@@ -130,29 +130,35 @@
             @csrf
             <div class="form-group">
                 @if (Auth::user()->hasRole(['Partner']))
-                    <div class="form-row my-2">
-                        <label for="partner_comment" class="form-group-header mt-4">Partner's comment</label>
-                        <textarea rows=4 placeholder="Partner's comment"
-                                  class="form-control form-control-sm @error('partner_comment') is-danger @enderror"
-                                  name="partner_comment">{{ old('partner_comment', empty($project_update) ? '' : $project_update->partner_comment) }}</textarea>
-                        @error('partner_comment')
-                        <div class="text-danger">{{ $errors->first('partner_comment') }}</div>
-                        @enderror
-                    </div>
+                    <label for="partner_comment" class="form-group-header mt-4">Partner's comment</label>
+                    <textarea rows=4 placeholder="Partner's comment"
+                              class="form-control form-control-sm @error('partner_comment') is-danger @enderror"
+                              name="partner_comment">{{ old('partner_comment', empty($project_update) ? '' : $project_update->partner_comment) }}</textarea>
+                    @error('partner_comment')
+                    <div class="text-danger">{{ $errors->first('partner_comment') }}</div>
+                    @enderror
                 @endif
                 @if (Auth::user()->hasRole(['Spider']))
-                    <div class="form-row my-2">
-                        <label for="internal_comment" class="form-group-header mt-4">Spider's internal comment</label>
-                        <textarea rows=4 placeholder="Spider's internal comment"
-                                  class="form-control form-control-sm @error('internal_comment') is-danger @enderror"
-                                  name="internal_comment">{{ old('internal_comment', empty($project_update) ? '' : $project_update->internal_comment) }}</textarea>
-                        @error('internal_comment')
-                        <div class="text-danger">{{ $errors->first('internal_comment') }}</div>
-                        @enderror
-                    </div>
+                    @if ($project_update->partner_comment)
+                        <label class="form-group-header mt-4">Partner's comment</label>
+                        <table class="table table-striped table-bordered">
+                            <tr>
+                                <td>{{$project_update->partner_comment}}</td>
+                            </tr>
+                        </table>
+                    @endif
+
+                    <label for="internal_comment" class="form-group-header mt-4">Spider's internal comment</label>
+                    <textarea rows=4 placeholder="Spider's internal comment"
+                              class="form-control form-control-sm @error('internal_comment') is-danger @enderror"
+                              name="internal_comment">{{ old('internal_comment', empty($project_update) ? '' : $project_update->internal_comment) }}</textarea>
+                    @error('internal_comment')
+                    <div class="text-danger">{{ $errors->first('internal_comment') }}</div>
+                    @enderror
+
                 @endif
-                @can('project-create')
-                    <div class="form-row my-2">
+                @can("project-$project_update->project_id-update")
+                    <div class="my-3">
                         @if ($project_update->status == 'submitted' && Auth::user()->hasRole(['Spider', 'Administrator']))
                             <input class="btn btn-danger btn-lg mr-2" name="reject" value="Return for revision"
                                    type="submit">
@@ -173,7 +179,7 @@
                     </tr>
                 </table>
             @endif
-            @if ($project_update->internal_comment)
+            @if ($project_update->internal_comment && Auth::user()->hasRole(['Spider']))
                 <label class="form-group-header mt-4">Spider's internal comment</label>
                 <table class="table table-striped table-bordered">
                     <tr>

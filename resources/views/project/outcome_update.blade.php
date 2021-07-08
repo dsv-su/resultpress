@@ -5,7 +5,7 @@
                 <input type="hidden" name="outcome_update_id[]"
                        value="@if ($outcome_update) {{$outcome_update->id}} @else 0 @endif">
                 <span class="px-0 btn cursor-default text-left">{{$outcome->name}}</span>
-                @if (isset($show) && $show)
+                @if (isset($show) && $show && Auth::user()->hasRole(['Spider', 'Administrator']))
                     @if($outcome->completed())
                         <span class="badge badge-success">Completed on {{$outcome->completed()->format('d/m/Y')}}</span>
                     @else
@@ -22,7 +22,7 @@
         <div class="card-body">
             <div>
                 <label for="summary" class="col-form-label">Completion description:</label>
-                @if ($outcome_update) {{$outcome_update->summary}} @endif
+                @if ($outcome_update) {!!$outcome_update->summary!!} @endif
                 <br/>
                 <!--<label for="summary" class="col-form-label">Outputs status:</label>-->
                 @foreach(json_decode($outcome_update->outputs, true) as $output)
@@ -64,7 +64,7 @@
                         description:</label>
                 </div>
                 <div class="col-sm">
-                                <textarea class="form-control" id="outcome_summary[]" name="outcome_summary[]"
+                                <textarea class="form-control collapsed mediumEditor" id="outcome_summary[]" name="outcome_summary[]"
                                           placeholder="Describe the outcome completion summary">@if($outcome_update) {{$outcome_update->summary}} @endif</textarea>
                 </div>
             </div>
@@ -92,3 +92,6 @@
         });
     </script>
 @endif
+<script>
+    var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Summary", hideOnClick: true}});
+</script>

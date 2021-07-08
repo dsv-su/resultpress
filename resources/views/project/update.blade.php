@@ -157,6 +157,7 @@
 
             <div class="form-group">
                 <label for="attachments" class="form-group-header mt-4">Attachments</label>
+                <p>Note: attach SPIDER budget reporting template to all reports.</p>
                 <div class="alert" id="message" style="display: none"></div>
                 <div>
                     <div id="attachments">

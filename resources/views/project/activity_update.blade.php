@@ -43,7 +43,7 @@
                             <span class="badge badge-warning font-100">Completed</span>
                         @endif
                     @else
-                        <select class="custom-select" name="activity_state[]" id="activity_state[]">
+                        <select class="custom-select font-14" name="activity_state[]" id="activity_state[]">
                             <option value="0" selected>Propose state change</option>
                             <option value="cancelled" @if ($au && $au->state=='cancelled') selected @endif>Cancelled
                             </option>
@@ -57,7 +57,7 @@
 
         <div class="form-group row mb-0">
             <label for="activity_template[]"
-                   class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Template
+                   class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Additional information
                 <i class="fas fa-chevron-right collapseEditor"></i></label>
             <div class="col-8 col-sm-9 px-1">
                 @if (isset($show) && $show)
@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        @if(isset($review) && $review)
+        @if(isset($review) && $review && Auth::user()->hasRole(['Spider', 'Administrator']))
             <div class="form-group row mb-0">
                 <label for="activity_info[]"
                        class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Info</label>

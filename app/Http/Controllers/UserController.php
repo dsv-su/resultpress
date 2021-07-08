@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Invite;
+use App\Mail\PartnerInvite;
 use App\Notifications\InviteNotification;
 use App\Organisation;
 use App\Project;
@@ -11,16 +12,15 @@ use DB;
 use Hash;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -34,7 +34,7 @@ class UserController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return Application|Factory|Response|View
+     * @return Application|Factory|View
      */
 
     public function index(Request $request)
@@ -47,7 +47,7 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Application|Factory|Response|View
+     * @return Application|Factory|View
      */
     public function create()
     {
@@ -62,7 +62,7 @@ class UserController extends Controller
      * @return RedirectResponse
      * @throws ValidationException
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $this->validate($request, [
             'name' => 'required',
@@ -71,8 +71,7 @@ class UserController extends Controller
             'roles' => 'required'
         ]);
         $input = $request->all();
-        if(empty($input['password']))
-        {
+        if (empty($input['password'])) {
             $salt = Str::random(8);
             $input['password'] = Hash::make($salt);
         } else $input['password'] = Hash::make($input['password']);
@@ -117,7 +116,7 @@ class UserController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return Application|Factory|Response|View
+     * @return Application|Factory|View
      */
     public function show(int $id)
     {
@@ -130,7 +129,7 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $id
-     * @return Application|Factory|Response|View
+     * @return Application|Factory|View
      */
     public function edit(int $id)
     {
@@ -150,7 +149,7 @@ class UserController extends Controller
      * @return RedirectResponse
      * @throws ValidationException
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
         $this->validate($request, [
             'name' => 'required',
@@ -173,7 +172,7 @@ class UserController extends Controller
      * @param int $id
      * @return RedirectResponse
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         User::find($id)->delete();
         return redirect()->route('users.index')
@@ -182,6 +181,11 @@ class UserController extends Controller
 
     public function invite_view(Project $project)
     {
+        if ($user = Auth::user()) {
+            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
+                abort(403);
+            }
+        }
         $organisations = Organisation::all();
         return view('projectadmin.invite', compact('project', 'organisations'));
     }
@@ -217,7 +221,7 @@ class UserController extends Controller
 
             'registration', now()->addMinutes(480), ['token' => $token]
         );
-        Mail::to($request->input('email'))->send(new \App\Mail\PartnerInvite($url, $request->email));
+        Mail::to($request->input('email'))->send(new PartnerInvite($url, $request->email));
         return redirect(session('links')[1]);
         //return redirect('/users')->with('success', 'The Invite has been sent successfully');
     }
@@ -226,10 +230,10 @@ class UserController extends Controller
     {
         if ($invite = Invite::where('token', $token)->first())
             return view('auth.register', ['invite' => $invite]);
-        else abort(401);
+        else abort(403);
     }
 
-    public function remove_invite(Invite $invite)
+    public function remove_invite(Invite $invite): RedirectResponse
     {
         $invite->delete();
         return back();

@@ -75,8 +75,13 @@ class ProgramAreaController extends Controller
      */
     public function edit($id)
     {
-        $area = Area::find($id);
-        return view('programareas.edit', compact('area'));
+        if ($user = Auth::user()) {
+            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
+                $area = Area::find($id);
+                return view('programareas.edit', compact('area'));
+            }
+        }
+        abort(403);
     }
 
     /**
@@ -88,11 +93,16 @@ class ProgramAreaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $area = Area::find($id);
-        $area->name = $request->name;
-        $area->description = $request->description;
-        $area->save();
-        return redirect()->route('programareas');
+        if ($user = Auth::user()) {
+            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
+                $area = Area::find($id);
+                $area->name = $request->name;
+                $area->description = $request->description;
+                $area->save();
+                return redirect()->route('programareas');
+            }
+        }
+        abort(403);
     }
 
     /**

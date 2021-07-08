@@ -42,8 +42,10 @@
                     @endforeach
                 </td>
                 <td>
+                    @can("project-$project->id-edit")
                     <a class="btn btn-outline-primary" href="{{ route('projectadmin.edit',$project->id) }}">Edit</a>
                     <a class="btn btn-outline-success float-right" href="{{route('invite_view', $project)}}">Invite</a>
+                    @endcan
                 </td>
             </tr>
         @endforeach

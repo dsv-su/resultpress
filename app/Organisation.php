@@ -9,7 +9,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class Organisation extends Model
 {
     use HasFactory, LogsActivity;
-    protected $fillable = ['org', 'address', 'website', 'phone', 'contact_project', 'contact_finance'];
+    protected $fillable = ['org', 'address', 'website', 'phone', 'contact_project', 'contact_finance', 'logo'];
 
     /**
      * The users that belong to the organisation.

@@ -22,7 +22,7 @@
                     @foreach($organisations as $spiderorg)
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="image-parent" style="background-color: orangered">
-                            <img src="{{asset('/images/org.png')}}" class="img-fluid" alt="spider">
+                            <img src="{{$spiderorg->logo}}" class="img-fluid" alt="spider">
                         </div>
                         <span>&nbsp;&nbsp;&nbsp;</span>
                         <a href="#" wire:click="editOrg({{$spiderorg->id}})" class="d-block w-100">{{$spiderorg->org}}</a>
@@ -98,7 +98,16 @@
                         @error('contact_finance') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
+                <!-- Placeholder logo -->
 
+                <div class="form-group mb-1 row">
+                    <label for="org" class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Logo</label>
+                    <div class="col-8 col-sm-4 px-1">
+
+                        <input type="file" wire:model="logo" class="form-control form-control-sm">
+                        @error('contact_project') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -107,7 +116,6 @@
             <button wire:click="saveOrg" class="inline-flex justify-center py-2 px-4 btn btn-outline-primary">Save</button>
         </div>
     </form>
-
 
 
 

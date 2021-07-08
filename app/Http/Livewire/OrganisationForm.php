@@ -11,9 +11,12 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use App\Organisation;
 use Spatie\Permission\Models\Role;
+use Livewire\WithFileUploads;
 
 class OrganisationForm extends Component
 {
+    use WithFileUploads;
+
     public $org, $address, $website, $phone, $contact_project, $contact_finance;
     public $searchTerm;
     public $currentPage = 1;
@@ -24,6 +27,7 @@ class OrganisationForm extends Component
     public $new_roles = [];
     public $linkuseractive;
     public $users, $luser;
+    public $logo, $filename;
 
     protected $rules = [
         'org' => 'required',
@@ -168,13 +172,14 @@ class OrganisationForm extends Component
     public function saveOrg() {
 
         $validatedData = $this->validate();
-
+        $this->filename = $this->logo->store('/logo', 'public');
         Organisation::updateOrCreate(['org' => $this->org],[
             'address' => $this->address,
             'website' => $this->website,
             'phone' => $this->phone,
             'contact_project' => $this->contact_project,
             'contact_finance' => $this->contact_finance,
+            'logo' =>  $this->filename,
         ]);
 
     }

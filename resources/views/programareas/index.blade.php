@@ -20,7 +20,7 @@
                 {{$programarea->name}}
             </div>
             <div class="card-body">
-                <p class="card-text">{{$programarea->description}}</p>
+                <p class="card-text">{!!$programarea->description!!}</p>
                 <a href="{{route('programarea_show', $programarea->id)}}" title="Show projects" class="btn btn-outline-primary">Show projects</a>
                 @can('project-edit')
                     <a href="{{route('programarea_edit', $programarea->id)}}" title="Edit program area" class="btn btn-outline-secondary">Edit</a>

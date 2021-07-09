@@ -144,7 +144,7 @@ class ProjectController extends Controller
                             $puindex = $index + 1;
                         }
                     }
-                    $comments[$puindex] = $au->comment;
+                    $comments[$puindex] = ['comments' => $au->comment, 'pu' => $au->project_update_id];
                 }
             } elseif (!$activityupdates->isEmpty()) {
                 $comments[] = $activityupdates->last()->comment;

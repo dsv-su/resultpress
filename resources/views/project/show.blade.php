@@ -33,9 +33,9 @@
 
     <p>{!!$project->description!!}</p>
 
-    <div class="my-3 col-md-6 card bg-light p-2">
+    <div class="my-3 col card bg-light p-2">
         <div class="row my-1">
-            <div class="col-sm font-weight-bold">Project area(s):</div>
+            <div class="col-sm col-md-3 font-weight-bold">Project area(s):</div>
             <div class="col-sm">
                 @if (!$project->areas->isEmpty())
                     @foreach($project->areas as $k => $area)
@@ -46,25 +46,25 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-sm font-weight-bold">Project period:</div>
+            <div class="col-sm col-md-3 font-weight-bold">Project period:</div>
             <div class="col-sm">{{$project->dates}}</div>
         </div>
         <div class="row my-1">
-            <div class="col-sm font-weight-bold">Project activities range:</div>
+            <div class="col-sm col-md-3 font-weight-bold">Project activities range:</div>
             <div class="col-sm">{{$project->projectstart}} — {{$project->projectend}}</div>
         </div>
         <div class="row my-1">
-            <div class="col-sm font-weight-bold">Approved updates:</div>
+            <div class="col-sm col-md-3 font-weight-bold">Approved updates:</div>
             <div class="col-sm">{{$project->updatesnumber}}</div>
         </div>
         @if ($project->recentupdate)
             <div class="row my-1">
-                <div class="col-sm font-weight-bold">Most recent approved update:</div>
+                <div class="col-sm col-md-3 font-weight-bold">Most recent approved update:</div>
                 <div class="col-sm">{{$project->recentupdate}}</div>
             </div>
         @endif
         <div class="row my-1">
-            <div class="col-sm font-weight-bold">Budget:</div>
+            <div class="col-sm col-md-3 font-weight-bold">Budget:</div>
             <div class="col-sm">
                 @if (Auth::user()->hasRole(['Spider', 'Administrator']))<span
                         @if ($project->moneyspent > $project->budget) class="badge badge-danger font-100" @endif> {{$project->moneyspent ?? 0}} {{$project->getCurrencySymbol()}}
@@ -73,7 +73,7 @@
                 @endif</div>
         </div>
         <div class="row my-1">
-            <div class="col-sm font-weight-bold">Deadlines:</div>
+            <div class="col-sm col-md-3 font-weight-bold">Deadlines:</div>
             @if (!$deadlines->isEmpty())
                 <div class="col-sm">
                     @foreach($deadlines as $deadline)
@@ -148,7 +148,7 @@
                                     @elseif($a->status() == 'inprogress')
                                         <span class="badge badge-warning font-100">In progress</span>
                                     @elseif($a->status() == 'delayednormal')
-                                        <span class="badge badge-danger font-100">Delayed Normal</span>
+                                        <span class="badge badge-danger font-100">Delayed</span>
                                     @elseif($a->status() == 'delayedhigh')
                                         <span class="badge badge-danger font-100">Delayed Major</span>
                                     @elseif($a->status() == 'pendingreview')
@@ -156,7 +156,7 @@
                                     @elseif($a->status() == 'completed')
                                         <span class="badge badge-success font-100">Completed</span>
                                     @elseif($a->status() == 'cancelled')
-                                        <span class="badge badge-info font-100">Cancelled</span>
+                                        <span class="badge badge-dark font-100">Cancelled</span>
                                     @endif
                                 </div>
                             @endif
@@ -168,9 +168,9 @@
                              aria-labelledby="headin-activity-{{$a->id}}"
                              data-parent="#activities">
                             <div class="card-body">
-                                @foreach ($a->comments as $puindex => $comment)
+                                @foreach ($a->comments as $puindex => $arr)
                                     @if (!$project->cumulative) <p>
-                                        <b>Update {{$puindex}}</b>: @endif {!! $comment !!}</p>
+                                        <b><a href="/project/update/{{$arr['pu']}}">Update {{$puindex}}</a></b>: @endif {!! $arr['comments'] !!}</p>
                                     @endforeach
                             </div>
                         </div>@endif

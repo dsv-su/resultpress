@@ -182,7 +182,8 @@ class Project extends Model
         }
     }
 
-    public function wrapJson()
+    public
+    function wrapJson()
     {
         foreach ($this->outputs as $i => $o) {
             if (!$o->status) {
@@ -251,12 +252,14 @@ class Project extends Model
         return false;
     }
 
-    public function getLinkAttribute(): string
+    public
+    function getLinkAttribute(): string
     {
         return $this->attributes['link'] = URL::to('/') . '/project/' . $this->id;
     }
 
-    public function getTypeAttribute(): string
+    public
+    function getTypeAttribute(): string
     {
         return 'project';
     }

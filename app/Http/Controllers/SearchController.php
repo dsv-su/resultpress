@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Project;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SearchController extends Controller
 {
@@ -14,6 +15,11 @@ class SearchController extends Controller
             $projects = Project::search($q, null, true, true)->get();
         } else {
             $projects = Project::all();
+        }
+        foreach ($projects as $key=>$project) {
+            if (!Auth::user()->hasPermissionTo("project-$project->id-update")) {
+                unset($projects[$key]);
+            }
         }
         $projectmanagers = $this->extractManagers($projects);
         $projectpartners = $this->extractPartners($projects);
@@ -34,6 +40,9 @@ class SearchController extends Controller
         $statuses =  request('status') ? explode(',', request('status')) : null;
 
         foreach ($projects as $key => $project) {
+            if (!Auth::user()->hasPermissionTo("project-$project->id-update")) {
+                continue;
+            }
             $managerfound = $partnerfound = $areafound = $organisationfound = $statusfound = false;
             if ($managers) {
                 foreach ($project->managers() as $manager) {

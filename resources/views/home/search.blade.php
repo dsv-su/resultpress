@@ -37,32 +37,34 @@
                             <option value="{{$id}}">{{$org}}</option>
                         @endforeach
                     </select>
-                    <select name="status" @if (empty($statuses)) disabled
-                            @endif class="form-control mx-1 selectpicker"
-                            data-none-selected-text="Status" multiple style="width: 400px">
-                        @foreach($statuses as $status)
-                            <option value="{{$status}}">
-                                @if($status == 'planned')
-                                    Planned
-                                @elseif($status == 'inprogress')
-                                   In progress
-                                @elseif($status == 'delayedhigh')
-                                    Delayed
-                                @elseif($status == 'delayednormal')
-                                    Delayed
-                                @elseif($status == 'pendingreview')
-                                   Pending review
-                                @elseif($status == 'completed')
-                                    Completed
-                                @elseif($status == 'archived')
-                                   Archived
-                                @elseif($status == 'onhold')
-                                    On hold
-                                @elseif($status == 'terminated')
-                                   Terminated
-                                @endif</option>
-                        @endforeach
-                    </select>
+                    @if (Auth::user()->hasRole(['Spider', 'Administrator']))
+                        <select name="status" @if (empty($statuses)) disabled
+                                @endif class="form-control mx-1 selectpicker"
+                                data-none-selected-text="Status" multiple style="width: 400px">
+                            @foreach($statuses as $status)
+                                <option value="{{$status}}">
+                                    @if($status == 'planned')
+                                        Planned
+                                    @elseif($status == 'inprogress')
+                                        In progress
+                                    @elseif($status == 'delayedhigh')
+                                        Delayed
+                                    @elseif($status == 'delayednormal')
+                                        Delayed
+                                    @elseif($status == 'pendingreview')
+                                        Pending review
+                                    @elseif($status == 'completed')
+                                        Completed
+                                    @elseif($status == 'archived')
+                                        Archived
+                                    @elseif($status == 'onhold')
+                                        On hold
+                                    @elseif($status == 'terminated')
+                                        Terminated
+                                    @endif</option>
+                            @endforeach
+                        </select>
+                    @endif
                     <meta name="csrf-token" content="{{ csrf_token() }}">
                 </form>
             @endif
@@ -90,7 +92,9 @@
             formData.append("manager", $('select[name="manager"]').val());
             formData.append("area", $('select[name="area"]').val());
             formData.append("organisation", $('select[name="organisation"]').val());
-            formData.append("status", $('select[name="status"]').val());
+            if ($('select[name="status"]').length) {
+                formData.append("status", $('select[name="sstatus"]').val());
+            }
             $.ajax({
                 type: 'POST',
                 url: "/{{ Request::path()}}",
@@ -129,7 +133,7 @@
                         }
                     });
                     $('select[name="status"] option').each(function () {
-                        if ($.inArray($(this).val(),data['status'])) {
+                        if ($.inArray($(this).val(), data['status'])) {
                             $(this).prop('disabled', false);
                         } else {
                             $(this).prop('disabled', true);

@@ -9,15 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class SearchController extends Controller
 {
-    public function search($q, Request $request = null)
+    public function search($q = null, Request $request = null)
     {
-        if ($q) {
-            $projects = Project::search($q, null, true, true)->get();
-        } else {
-            $projects = Project::all();
-        }
-        foreach ($projects as $key=>$project) {
-            if (!Auth::user()->hasPermissionTo("project-$project->id-update")) {
+        $projects = $q ? Project::search($q, null, true, true)->get() : Project::all();
+        foreach ($projects as $key => $project) {
+            if (!Auth::user()->hasPermissionTo("project-$project->id-list")) {
                 unset($projects[$key]);
             }
         }
@@ -29,18 +25,18 @@ class SearchController extends Controller
         return view('home.search', compact('projects', 'q', 'projectpartners', 'projectmanagers', 'programareas', 'organisations', 'statuses'));
     }
 
-    public function filterSearch($q, Request $request)
+    public function filterSearch($q = null, Request $request)
     {
         $html = '';
-        $projects = Project::search($q, null, true, true)->get();
+        $projects = $q ? Project::search($q, null, true, true)->get() : Project::all();
         $managers = request('manager') ? explode(',', request('manager')) : null;
         $partners = request('partner') ? explode(',', request('partner')) : null;
         $areas = request('area') ? explode(',', request('area')) : null;
         $organisations = request('organisation') ? explode(',', request('organisation')) : null;
-        $statuses =  request('status') ? explode(',', request('status')) : null;
+        $statuses = request('status') ? explode(',', request('status')) : null;
 
         foreach ($projects as $key => $project) {
-            if (!Auth::user()->hasPermissionTo("project-$project->id-update")) {
+            if (!Auth::user()->hasPermissionTo("project-$project->id-list")) {
                 continue;
             }
             $managerfound = $partnerfound = $areafound = $organisationfound = $statusfound = false;

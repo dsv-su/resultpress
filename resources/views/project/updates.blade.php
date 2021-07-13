@@ -6,6 +6,7 @@
     <div class="container">
         <p><a href="{{ route('project_show', $project->id) }}">Back to project page</a></p>
         @foreach ($project->project_updates()->get() as $index => $pu)
+            @if (($pu->status == 'approved') || (Auth::user()->id == $pu->user_id && $pu->status != 'approved'))
             <div class="card my-3">
                 <div class="card-body">
                     <div class="container">
@@ -48,6 +49,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         @endforeach
         <a class="btn btn-primary" href="/project/{{$project->id}}/update" role="button">Write a new update</a>
     </div>

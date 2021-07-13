@@ -3,12 +3,13 @@
 
     @include('layouts.partials.searchbox')
 
-    <h3 class="">Search results</h3>
+    <h3 class="container">Projects</h3>
     <div class="container px-0">
         @if(count($projects) > 0)
             @if (isset($projectmanagers) || isset($projectpartners) || isset($programareas) || isset($organisations) || isset($statuses))
                 <form class="form-inline mx-3">
                     <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
+                    
                     <select name="manager" @if (empty($projectmanagers)) disabled
                             @endif class="form-control mx-1 selectpicker"
                             data-none-selected-text="Manager" multiple style="width: 400px">
@@ -93,7 +94,7 @@
             formData.append("area", $('select[name="area"]').val());
             formData.append("organisation", $('select[name="organisation"]').val());
             if ($('select[name="status"]').length) {
-                formData.append("status", $('select[name="sstatus"]').val());
+                formData.append("status", $('select[name="status"]').val());
             }
             $.ajax({
                 type: 'POST',
@@ -132,8 +133,8 @@
                             $(this).prop('disabled', true);
                         }
                     });
-                    $('select[name="status"] option').each(function () {
-                        if ($.inArray($(this).val(), data['status'])) {
+                    $('select[name="status"] option').each(function () {s
+                        if (data['statuses'].includes($(this).val())) {
                             $(this).prop('disabled', false);
                         } else {
                             $(this).prop('disabled', true);

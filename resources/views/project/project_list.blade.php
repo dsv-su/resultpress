@@ -30,7 +30,7 @@
                     @if ($project->project_owner->count()>0)
                         <div class="row">
                             @if ($project->project_owner->count()>1) Managers: @else Manager: @endif
-                            &nbsp; @foreach($project->project_owner->all() as $k => $project_owner)
+                            @foreach($project->project_owner->all() as $k => $project_owner)
                                 <span class="font-weight-light">{{$project_owner->user->name}}@if ($k+1<$project->project_owner->count())
                                         ,&nbsp;@endif</span>
                             @endforeach

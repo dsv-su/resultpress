@@ -83,7 +83,7 @@ class ProjectController extends Controller
                 return view('home.partner', ['projects' => $projects, 'user' => $user], $data);
             }
 
-        } elseif (Auth::check()) return abort(403);
+        } elseif (Auth::check()) abort(403);
 
         return redirect()->route('partner-login');
     }
@@ -100,7 +100,7 @@ class ProjectController extends Controller
                 $projects = Project::with('project_owner.user', 'project_area.area')->whereIn('id', $id)->latest()->get();
                 return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas]);
             }
-        } elseif (Auth::check()) return abort(403);
+        } elseif (Auth::check()) abort(403);
         else return redirect()->route('partner-login');
     }
 

@@ -17,6 +17,7 @@ class SearchController extends Controller
                 unset($projects[$key]);
             }
         }
+        $projects = $this->filter($projects, array('owned'));
         $projectmanagers = $this->extractManagers($projects);
         $projectpartners = $this->extractPartners($projects);
         $programareas = $this->extractAreas($projects);
@@ -28,15 +29,23 @@ class SearchController extends Controller
     public function filterSearch($q = null, Request $request)
     {
         $html = '';
+        $user = Auth::user();
         $projects = $q ? Project::search($q, null, true, true)->get() : Project::all();
         $managers = request('manager') ? explode(',', request('manager')) : null;
         $partners = request('partner') ? explode(',', request('partner')) : null;
         $areas = request('area') ? explode(',', request('area')) : null;
         $organisations = request('organisation') ? explode(',', request('organisation')) : null;
         $statuses = request('status') ? explode(',', request('status')) : null;
+        $filter = request('my') ? explode(',', request('my')) : array();
+
+        // Prefilter presets
+        if ($filter) {
+            $projects = $this->filter($projects, $filter);
+        }
 
         foreach ($projects as $key => $project) {
-            if (!Auth::user()->hasPermissionTo("project-$project->id-list")) {
+            if (!$user->hasPermissionTo("project-$project->id-list")) {
+                unset($projects[$key]);
                 continue;
             }
             $managerfound = $partnerfound = $areafound = $organisationfound = $statusfound = false;
@@ -63,6 +72,9 @@ class SearchController extends Controller
                     if (in_array($area->id, $areas)) {
                         $areafound = true;
                     }
+                }
+                if (in_array('noarea', $areas) && $project->areas->isEmpty()) {
+                    $areafound = true;
                 }
             } else {
                 $areafound = true;
@@ -104,12 +116,44 @@ class SearchController extends Controller
         return ['html' => $html, 'managers' => $projectmanagers, 'partners' => $projectpartners, 'areas' => $programareas, 'organisations' => $organisations, 'statuses' => $statuses];
     }
 
-    public function find(Request $request)
+    public
+    function find(Request $request)
     {
         return Project::search($request->get('query'), null, true, true)->get();
     }
 
-    public function extractManagers($projects): array
+    public function filter($projects, $filter)
+    {
+        foreach ($projects as $key => $project) {
+            $ok = false;
+            $user = Auth::user();
+            if (in_array('owned', $filter)) {
+                if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
+                    foreach ($project->managers() as $manager) {
+                        if ($manager->id == $user->id) {
+                            $ok = true;
+                        }
+                    }
+                } elseif ($user->hasRole(['Partner'])) {
+                    foreach ($project->partners() as $partner) {
+                        if ($partner->id == $user->id) {
+                            $ok = true;
+                        }
+                    }
+                }
+            }
+            if (in_array('followed', $filter) && in_array($project->id, json_decode($user->follow_projects))) {
+                $ok = true;
+            }
+            if (!$ok) {
+                unset($projects[$key]);
+            }
+        }
+        return $projects;
+    }
+
+    public
+    function extractManagers($projects): array
     {
         $managers = array();
         foreach ($projects as $project) {
@@ -122,7 +166,8 @@ class SearchController extends Controller
         return $managers;
     }
 
-    public function extractPartners($projects): array
+    public
+    function extractPartners($projects): array
     {
         $partners = array();
         foreach ($projects as $project) {
@@ -135,9 +180,10 @@ class SearchController extends Controller
         return $partners;
     }
 
-    public function extractAreas($projects): array
+    public
+    function extractAreas($projects): array
     {
-        $areas = array();
+        $areas = array('noarea' => 'Not specified');
         foreach ($projects as $project) {
             foreach ($project->areas as $area) {
                 if (!key_exists($area->id, $areas)) {
@@ -148,7 +194,8 @@ class SearchController extends Controller
         return $areas;
     }
 
-    public function extractOrgs($projects): array
+    public
+    function extractOrgs($projects): array
     {
         $organisations = array();
         foreach ($this->extractPartners($projects) as $id => $name) {
@@ -162,7 +209,8 @@ class SearchController extends Controller
         return $organisations;
     }
 
-    public function extractStatuses($projects): array
+    public
+    function extractStatuses($projects): array
     {
         $statuses = array();
         foreach ($projects as $project) {

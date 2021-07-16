@@ -63,7 +63,7 @@ class ProjectController extends Controller
          *   This is the first page the user is routed to. It shows the three sections if the user is a spider or administrator.
          *  If the user is a Partner it shows the projects the user is assigned (invited) to
          ****/
-
+        return redirect()->route('search');
         $data['program_areas'] = Area::all();
 
         if ($user = Auth::user()) {

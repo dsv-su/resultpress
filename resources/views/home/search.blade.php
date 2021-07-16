@@ -8,31 +8,37 @@
         @if(count($projects) > 0)
             @if (isset($projectmanagers) || isset($projectpartners) || isset($programareas) || isset($organisations) || isset($statuses))
                 <form class="form-inline mx-3">
-                    <label class="col-form-label mr-1 font-weight-light">Filter by: </label>
-                    
+                    <label class="mb-2 col-form-label mr-1 font-weight-light">Filter by: </label>
+                    <select name="my" class="mb-2 form-control mx-1 selectpicker"
+                            data-none-selected-text="All Projects" multiple style="width: 400px">
+                        <option value="owned" selected>My projects</option>
+                        @if (Auth::user()->hasRole(['Administrator', 'Program administrator', 'Spider']))
+                            <option value="followed">Followed projects</option>
+                        @endif
+                    </select>
                     <select name="manager" @if (empty($projectmanagers)) disabled
-                            @endif class="form-control mx-1 selectpicker"
+                            @endif class="mb-2 form-control mx-1 selectpicker"
                             data-none-selected-text="Manager" multiple style="width: 400px">
                         @foreach($projectmanagers as $id => $name)
                             <option value="{{$id}}">{{$name}}</option>
                         @endforeach
                     </select>
                     <select name="partner" @if (empty($projectpartners)) disabled
-                            @endif class="form-control mx-1 selectpicker"
+                            @endif class="mb-2 form-control mx-1 selectpicker"
                             data-none-selected-text="Partner" multiple style="width: 400px">
                         @foreach($projectpartners as $id => $name)
                             <option value="{{$id}}">{{$name}}</option>
                         @endforeach
                     </select>
                     <select name="area" @if (empty($programareas)) disabled
-                            @endif class="form-control mx-1 selectpicker"
+                            @endif class="mb-2 form-control mx-1 selectpicker"
                             data-none-selected-text="Area" multiple style="width: 400px">
                         @foreach($programareas as $id => $name)
                             <option value="{{$id}}">{{$name}}</option>
                         @endforeach
                     </select>
                     <select name="organisation" @if (empty($organisations)) disabled
-                            @endif class="form-control mx-1 selectpicker"
+                            @endif class="mb-2 form-control mx-1 selectpicker"
                             data-none-selected-text="Organisation" multiple style="width: 400px">
                         @foreach($organisations as $id => $org)
                             <option value="{{$id}}">{{$org}}</option>
@@ -40,7 +46,7 @@
                     </select>
                     @if (Auth::user()->hasRole(['Spider', 'Administrator']))
                         <select name="status" @if (empty($statuses)) disabled
-                                @endif class="form-control mx-1 selectpicker"
+                                @endif class="mb-2 form-control mx-1 selectpicker"
                                 data-none-selected-text="Status" multiple style="width: 400px">
                             @foreach($statuses as $status)
                                 <option value="{{$status}}">
@@ -66,6 +72,9 @@
                             @endforeach
                         </select>
                     @endif
+                    <button class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');
+">Clear selection
+                    </button>
                     <meta name="csrf-token" content="{{ csrf_token() }}">
                 </form>
             @endif
@@ -77,7 +86,6 @@
                     </div>
                 @endforeach
             </div>
-
         @endif
     </div><!-- /.container -->
 
@@ -96,6 +104,7 @@
             if ($('select[name="status"]').length) {
                 formData.append("status", $('select[name="status"]').val());
             }
+            formData.append("my", $('select[name="my"]').val());
             $.ajax({
                 type: 'POST',
                 url: "/{{ Request::path()}}",
@@ -133,7 +142,7 @@
                             $(this).prop('disabled', true);
                         }
                     });
-                    $('select[name="status"] option').each(function () {s
+                    $('select[name="status"] option').each(function () {
                         if (data['statuses'].includes($(this).val())) {
                             $(this).prop('disabled', false);
                         } else {

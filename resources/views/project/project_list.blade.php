@@ -28,32 +28,24 @@
             <div class="row">
                 <div class="col-md-6">
                     @if ($project->project_owner->count()>0)
-                        <div class="row">
-                            @if ($project->project_owner->count()>1) Managers: @else Manager: @endif
-                            @foreach($project->project_owner->all() as $k => $project_owner)
-                                <span class="font-weight-light">{{$project_owner->user->name}}@if ($k+1<$project->project_owner->count())
-                                        ,&nbsp;@endif</span>
-                            @endforeach
-                        </div>
+                        <div class="row"><span>
+                            @if ($project->project_owner->count()>1) Managers:@else Manager:@endif
+                            <span class="font-weight-light">
+                            {{implode(', ', array_map(function($o) {return $o->user->name;}, $project->project_owner->all()))}}
+                            </span>
+                        </span></div>
                     @endif
                     @if (!$project->partners()->isEmpty())
-                        <div class="row">
-                            @if (count($project->partners())>1) Partners: @else Partner: @endif
-                            &nbsp; @foreach($project->partners() as $k => $partner)
-                                <span class="font-weight-light">{{$partner->name}}@if ($k+1<count($project->partners()))
-                                        ,&nbsp;@endif</span>
-                            @endforeach
-                        </div>
+                        <div class="row"><span>
+                                @if (count($project->partners())>1) Partners:@else Partner:@endif
+                                <span class="font-weight-light">{{implode(', ', array_column($project->partners()->toArray(), 'name'))}}</span>
+                            </span></div>
                     @endif
                     @if (!$project->areas->isEmpty())
-                        <div class="row">
-                            @if (count($project->areas)>1) Areas: @else Area: @endif &nbsp;@if($project->project_area)
-                                @foreach($project->areas as $k => $area)
-                                    <span class="font-weight-light">{{$area->name}}@if ($k+1<count($project->areas)),
-                                        &nbsp;@endif</span>
-                                @endforeach
-                            @endif
-                        </div>
+                        <div class="row"><span>
+                                @if (count($project->areas)>1) Areas:@else Area:@endif
+                                    <span class="font-weight-light">{{implode(', ', array_column($project->areas->toArray(), 'name'))}}</span>
+                        </span></div>
                     @endif
                 </div>
                 <div class="col-md-6">

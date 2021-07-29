@@ -13,11 +13,11 @@ class SearchController extends Controller
     {
         $projects = $q ? Project::search($q, null, true, true)->get() : Project::all();
         foreach ($projects as $key => $project) {
-            if (!Auth::user()->hasPermissionTo("project-$project->id-list")) {
+            if (!Auth::user()->hasPermissionTo("project-$project->id-list") && !Auth::user()->hasPermissionTo('project-list')) {
                 unset($projects[$key]);
             }
         }
-        $projects = $this->filter($projects, array('owned'));
+        //$projects = $this->filter($projects, array('owned'));
         $projectmanagers = $this->extractManagers($projects);
         $projectpartners = $this->extractPartners($projects);
         $programareas = $this->extractAreas($projects);
@@ -26,7 +26,7 @@ class SearchController extends Controller
         return view('home.search', compact('projects', 'q', 'projectpartners', 'projectmanagers', 'programareas', 'organisations', 'statuses'));
     }
 
-    public function filterSearch($q = null, Request $request)
+    public function filterSearch($q = null, Request $request): array
     {
         $html = '';
         $user = Auth::user();

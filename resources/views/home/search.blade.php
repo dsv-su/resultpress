@@ -11,7 +11,7 @@
                     <label class="mb-2 col-form-label mr-1 font-weight-light">Filter by: </label>
                     <select name="my" class="mb-2 form-control mx-1 selectpicker"
                             data-none-selected-text="All Projects" multiple style="width: 400px">
-                        <option value="owned" selected>My projects</option>
+                        <option value="owned">My projects</option>
                         @if (Auth::user()->hasRole(['Administrator', 'Program administrator', 'Spider']))
                             <option value="followed">Followed projects</option>
                         @endif
@@ -86,6 +86,8 @@
                     </div>
                 @endforeach
             </div>
+        @else
+            <p class="col my-3 font-weight-light">No projects found</p>
         @endif
     </div><!-- /.container -->
 

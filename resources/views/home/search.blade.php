@@ -18,14 +18,14 @@
                     </select>
                     <select name="manager" @if (empty($projectmanagers)) disabled
                             @endif class="mb-2 form-control mx-1 selectpicker"
-                            data-none-selected-text="Manager" multiple style="width: 400px">
+                            data-none-selected-text="Manager" data-live-search="true" multiple style="width: 400px">
                         @foreach($projectmanagers as $id => $name)
                             <option value="{{$id}}">{{$name}}</option>
                         @endforeach
                     </select>
                     <select name="partner" @if (empty($projectpartners)) disabled
                             @endif class="mb-2 form-control mx-1 selectpicker"
-                            data-none-selected-text="Partner" multiple style="width: 400px">
+                            data-none-selected-text="Partner" data-live-search="true" multiple style="width: 400px">
                         @foreach($projectpartners as $id => $name)
                             <option value="{{$id}}">{{$name}}</option>
                         @endforeach
@@ -39,7 +39,7 @@
                     </select>
                     <select name="organisation" @if (empty($organisations)) disabled
                             @endif class="mb-2 form-control mx-1 selectpicker"
-                            data-none-selected-text="Organisation" multiple style="width: 400px">
+                            data-none-selected-text="Organisation" data-live-search="true" multiple style="width: 400px">
                         @foreach($organisations as $id => $org)
                             <option value="{{$id}}">{{$org}}</option>
                         @endforeach
@@ -72,7 +72,7 @@
                             @endforeach
                         </select>
                     @endif
-                    <button class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');
+                    <button type="button" class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');
 ">Clear selection
                     </button>
                     <meta name="csrf-token" content="{{ csrf_token() }}">

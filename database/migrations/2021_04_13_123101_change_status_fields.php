@@ -22,9 +22,6 @@ class ChangeStatusFields extends Migration
         Schema::table('projects', function (Blueprint $table) {
             $table->dropColumn('status');
         });
-        Schema::table('activities', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
     }
 
     /**

@@ -63,7 +63,7 @@ class ProjectController extends Controller
          *   This is the first page the user is routed to. It shows the three sections if the user is a spider or administrator.
          *  If the user is a Partner it shows the projects the user is assigned (invited) to
          ****/
-
+        return redirect()->route('search');
         $data['program_areas'] = Area::all();
 
         if ($user = Auth::user()) {
@@ -83,7 +83,7 @@ class ProjectController extends Controller
                 return view('home.partner', ['projects' => $projects, 'user' => $user], $data);
             }
 
-        } elseif (Auth::check()) return abort(403);
+        } elseif (Auth::check()) abort(403);
 
         return redirect()->route('partner-login');
     }
@@ -100,7 +100,7 @@ class ProjectController extends Controller
                 $projects = Project::with('project_owner.user', 'project_area.area')->whereIn('id', $id)->latest()->get();
                 return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas]);
             }
-        } elseif (Auth::check()) return abort(403);
+        } elseif (Auth::check()) abort(403);
         else return redirect()->route('partner-login');
     }
 
@@ -144,7 +144,7 @@ class ProjectController extends Controller
                             $puindex = $index + 1;
                         }
                     }
-                    $comments[$puindex] = $au->comment;
+                    $comments[$puindex] = ['comments' => $au->comment, 'pu' => $au->project_update_id];
                 }
             } elseif (!$activityupdates->isEmpty()) {
                 $comments[] = $activityupdates->last()->comment;

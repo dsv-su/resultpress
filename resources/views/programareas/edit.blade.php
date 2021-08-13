@@ -34,7 +34,10 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Description:</strong>
-                    <input class="form-control"  name="description" type="textarea" placeholder="Description" value="{{ old('description', empty($area) ? '' : $area->description) }}">
+                    <textarea name="description" id="description"
+                              placeholder="Description"
+                              class="mediumEditor form-control">
+                            {{ old('description', empty($area) ? '' : $area->description) }}</textarea>
                 </div>
             </div>
 
@@ -43,4 +46,9 @@
             </div>
         </div>
     </form>
+
+    <script>
+        var editor = new MediumEditor('.mediumEditor#description', {placeholder: {text: "Area description"}});
+    </script>
+
 @endsection

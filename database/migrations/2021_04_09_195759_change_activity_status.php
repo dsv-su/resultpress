@@ -14,7 +14,7 @@ class ChangeActivityStatus extends Migration
     public function up()
     {
         Schema::table('activity_updates', function (Blueprint $table) {
-            $table->renameColumn('completed', 'status');
+            $table->boolean('status');
         });
     }
 

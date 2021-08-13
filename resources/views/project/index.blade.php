@@ -3,6 +3,7 @@
 @section('content')
     @include('layouts.partials.searchbox')
     <!-- Filter bar -->
+
     @can('project-create')
         <nav class="navbar navbar-light">
             <div class="dropdown">

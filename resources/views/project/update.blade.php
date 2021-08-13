@@ -28,7 +28,6 @@
                 templates are based on the most recent update, including drafts).
             </div>
         @endif
-
         <div class="form-group">
             <label for="dates" class="form-group-header">Dates covered</label>
             <div class="col col-sm-5 col-md-3 px-1">
@@ -36,7 +35,7 @@
                        class="form-control form-control-sm"
                        placeholder="Date" size="1"
                        @if (!empty($project_update)) value="{{$project_update->start->format('d/m/Y')}} - {{($project_update->end ? $project_update->end->format('d/m/Y') : $project_update->start->format('d/m/Y'))}}"
-                       @else value="" @endif
+                       @else value="{{$project->project_updates->sortBy('end')->last(function ($pu) {return $pu->end;})->end->addDay()->format('d/m/Y')}} - {{Carbon\Carbon::now()->format('d/m/Y')}}" @endif
                        required>
             </div>
         </div>

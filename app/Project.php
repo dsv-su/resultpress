@@ -252,6 +252,11 @@ class Project extends Model
         return false;
     }
 
+    public function getNextProjectUpdateDate() {
+        $lastprojectupdate = $this->project_updates->sortBy('end')->last(function ($pu) {return $pu->end;});
+        return $lastprojectupdate ? $lastprojectupdate->end->addDay()->format('d/m/Y') : Carbon::now()->format('d/m/Y');
+    }
+
     public
     function getLinkAttribute(): string
     {

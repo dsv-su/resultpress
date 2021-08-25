@@ -6,7 +6,7 @@
     <h3 class="container">Projects</h3>
     <div class="container px-0">
         @if(count($projects) > 0)
-            @if (isset($projectmanagers) || isset($projectpartners) || isset($programareas) || isset($organisations) || isset($statuses))
+            @if (isset($projectmanagers) || isset($projectpartners) || isset($programareas) || isset($organisations) || isset($statuses) || isset($years))
                 <form class="form-inline mx-3">
                     <label class="mb-2 col-form-label mr-1 font-weight-light">Filter by: </label>
                     <select name="my" class="mb-2 form-control mx-1 selectpicker"
@@ -39,9 +39,17 @@
                     </select>
                     <select name="organisation" @if (empty($organisations)) disabled
                             @endif class="mb-2 form-control mx-1 selectpicker"
-                            data-none-selected-text="Organisation" data-live-search="true" multiple style="width: 400px">
+                            data-none-selected-text="Organisation" data-live-search="true" multiple
+                            style="width: 400px">
                         @foreach($organisations as $id => $org)
                             <option value="{{$id}}">{{$org}}</option>
+                        @endforeach
+                    </select>
+                    <select name="year" @if (empty($years)) disabled
+                            @endif class="mb-2 form-control mx-1 selectpicker"
+                            data-none-selected-text="Year" data-live-search="true" multiple style="width: 400px">
+                        @foreach($years as $year)
+                            <option value="{{$year}}">{{$year}}</option>
                         @endforeach
                     </select>
                     @if (Auth::user()->hasRole(['Spider', 'Administrator']))
@@ -72,8 +80,9 @@
                             @endforeach
                         </select>
                     @endif
-                    <button type="button" class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');
-">Clear selection
+                    <button type="button" title='Clear selection' data-toggle="tooltip"
+                            class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');
+"><i class="fas fa-times"></i>
                     </button>
                     <meta name="csrf-token" content="{{ csrf_token() }}">
                 </form>
@@ -103,6 +112,7 @@
             formData.append("manager", $('select[name="manager"]').val());
             formData.append("area", $('select[name="area"]').val());
             formData.append("organisation", $('select[name="organisation"]').val());
+            formData.append("year", $('select[name="year"]').val());
             if ($('select[name="status"]').length) {
                 formData.append("status", $('select[name="status"]').val());
             }
@@ -139,6 +149,15 @@
                     });
                     $('select[name="organisation"] option').each(function () {
                         if (data['organisations'][$(this).val()]) {
+                            $(this).prop('disabled', false);
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                    $('select[name="year"] option').each(function () {
+                        console.log(data['years']);
+                        console.log($(this).val());
+                        if (data['years'].includes(parseInt($(this).val()))) {
                             $(this).prop('disabled', false);
                         } else {
                             $(this).prop('disabled', true);

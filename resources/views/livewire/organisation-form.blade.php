@@ -43,6 +43,7 @@
 
     <form wire:submit.prevent="submit" method=POST">
         <h4>Organisation</h4>
+        <p>Enter a the Name, Address and a Logo of the organisation. Other attributes are optional or can be added later.</p>
         <div class="card bg-light m-auto">
             <div class="card-body pb-1">
                 <!-- org -->
@@ -105,7 +106,7 @@
                     <div class="col-8 col-sm-4 px-1">
 
                         <input type="file" wire:model="logo" class="form-control form-control-sm">
-                        @error('contact_project') <span class="text-danger">{{ $message }}</span> @enderror
+                        @error('logo') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
 

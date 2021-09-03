@@ -32,10 +32,7 @@ class OrganisationForm extends Component
     protected $rules = [
         'org' => 'required',
         'address' => 'required',
-        //'website' => 'required',
-        //'phone' => 'required',
-        //'contact_project' => 'required',
-        //'contact_finance' => 'required',
+        'logo' => 'required',
     ];
 
     public function mount()
@@ -172,6 +169,7 @@ class OrganisationForm extends Component
     public function saveOrg() {
 
         $validatedData = $this->validate();
+
         $this->filename = $this->logo->store('/logo', 'public');
         Organisation::updateOrCreate(['org' => $this->org],[
             'address' => $this->address,

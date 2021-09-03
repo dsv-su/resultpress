@@ -222,7 +222,7 @@ class UserController extends Controller
             'registration', now()->addMinutes(480), ['token' => $token]
         );
         Mail::to($request->input('email'))->send(new PartnerInvite($url, $request->email));
-        return redirect(session('links')[1]);
+        return redirect(session('links')[0]);
         //return redirect('/users')->with('success', 'The Invite has been sent successfully');
     }
 

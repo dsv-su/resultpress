@@ -238,11 +238,12 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        //Session
+        //Storing path in Session
         $links = session()->has('links') ? session('links') : [];
-        $currentLink = request()->path(); // Getting current URI like 'category/books/'
+        $currentLink = request()->path(); // Getting current URI like 'project/id/edit'
         array_unshift($links, $currentLink); // Putting it in the beginning of links array
         session(['links' => $links]); // Saving links array to the session
+
 
         if ($user = Auth::user()) {
             if ($user->hasPermissionTo('project-create') || ($project->id && $user->hasPermissionTo('project-' . $project->id . '-edit'))) {

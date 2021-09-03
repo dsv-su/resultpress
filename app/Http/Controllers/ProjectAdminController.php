@@ -30,6 +30,12 @@ class ProjectAdminController extends Controller
      */
     public function index(Request $request)
     {
+        //Storing path in Session
+        $links = session()->has('links') ? session('links') : [];
+        $currentLink = request()->path(); // Getting current URI like 'project/id/edit'
+        array_unshift($links, $currentLink); // Putting it in the beginning of links array
+        session(['links' => $links]); // Saving links array to the session
+
         if (Auth::user()->hasRole('Administrator')) {
             $data = Project::with('project_owner.user')->orderBy('id', 'DESC')->get();
         } else {

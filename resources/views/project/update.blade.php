@@ -35,7 +35,8 @@
                        class="form-control form-control-sm"
                        placeholder="Date" size="1"
                        @if (!empty($project_update)) value="{{$project_update->start->format('d/m/Y')}} - {{($project_update->end ? $project_update->end->format('d/m/Y') : $project_update->start->format('d/m/Y'))}}"
-                       @else value="{{$project->project_updates->sortBy('end')->last(function ($pu) {return $pu->end;})->end->addDay()->format('d/m/Y')}} - {{Carbon\Carbon::now()->format('d/m/Y')}}" @endif
+                       @elseif ($project->project_updates->count()) value="{{$project->getNextProjectUpdateDate()}} - {{Carbon\Carbon::now()->format('d/m/Y')}}"
+                       @else value="{{Carbon\Carbon::now()->format('d/m/Y')}}" @endif
                        required>
             </div>
         </div>

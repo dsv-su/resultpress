@@ -5,8 +5,8 @@
     <h3 class="mx-3">{{ $project->name }}: updates</h3>
     <div class="container">
         <p><a href="{{ route('project_show', $project->id) }}">Back to project page</a></p>
-        @foreach ($project->project_updates()->get() as $index => $pu)
-            @if (($pu->status == 'approved') || (Auth::user()->id == $pu->user_id && $pu->status != 'approved'))
+        @foreach ($project->project_updates as $index => $pu)
+            @if (($pu->status == 'approved') || (Auth::user()->id == $pu->user_id && $pu->status != 'approved') || Auth::user()->hasRole(['Spider', 'Administrator']))
             <div class="card my-3">
                 <div class="card-body">
                     <div class="container">

@@ -23,7 +23,8 @@ class SearchController extends Controller
         $programareas = $this->extractAreas($projects);
         $organisations = $this->extractOrgs($projects);
         $statuses = $this->extractStatuses($projects);
-        return view('home.search', compact('projects', 'q', 'projectpartners', 'projectmanagers', 'programareas', 'organisations', 'statuses'));
+        $years = $this->extractYears($projects);
+        return view('home.search', compact('projects', 'q', 'projectpartners', 'projectmanagers', 'programareas', 'organisations', 'statuses', 'years'));
     }
 
     public function filterSearch($q = null, Request $request): array
@@ -36,6 +37,7 @@ class SearchController extends Controller
         $areas = request('area') ? explode(',', request('area')) : null;
         $organisations = request('organisation') ? explode(',', request('organisation')) : null;
         $statuses = request('status') ? explode(',', request('status')) : null;
+        $years = request('year') ? explode(',', request('year')) : null;
         $filter = request('my') ? explode(',', request('my')) : array();
 
         // Prefilter presets
@@ -48,7 +50,7 @@ class SearchController extends Controller
                 unset($projects[$key]);
                 continue;
             }
-            $managerfound = $partnerfound = $areafound = $organisationfound = $statusfound = false;
+            $managerfound = $partnerfound = $areafound = $organisationfound = $yearfound = $statusfound = false;
             if ($managers) {
                 foreach ($project->managers() as $manager) {
                     if (in_array($manager->id, $managers)) {
@@ -90,6 +92,15 @@ class SearchController extends Controller
             } else {
                 $organisationfound = true;
             }
+            if ($years) {
+                foreach ($years as $year) {
+                    if ($project->start->year <= $year && $project->end->year >= $year) {
+                        $yearfound = true;
+                    }
+                }
+            } else {
+                $yearfound = true;
+            }
             if ($statuses) {
                 if (in_array($project->status(), $statuses)) {
                     $statusfound = true;
@@ -97,7 +108,7 @@ class SearchController extends Controller
             } else {
                 $statusfound = true;
             }
-            if ($managerfound && $partnerfound && $areafound && $organisationfound && $statusfound) {
+            if ($managerfound && $partnerfound && $areafound && $organisationfound && $statusfound && $yearfound) {
                 $html .= '<div class="col my-3">' . view('project.project_list', ['project' => $project])->render() . '</div>';
             } else {
                 unset($projects[$key]);
@@ -113,7 +124,16 @@ class SearchController extends Controller
         $programareas = $this->extractAreas($projects);
         $organisations = $this->extractOrgs($projects);
         $statuses = $this->extractStatuses($projects);
-        return ['html' => $html, 'managers' => $projectmanagers, 'partners' => $projectpartners, 'areas' => $programareas, 'organisations' => $organisations, 'statuses' => $statuses];
+        $years = $this->extractYears($projects);
+        return [
+            'html' => $html,
+            'managers' => $projectmanagers,
+            'partners' => $projectpartners,
+            'areas' => $programareas,
+            'organisations' => $organisations,
+            'statuses' => $statuses,
+            'years' => $years
+        ];
     }
 
     public
@@ -219,5 +239,20 @@ class SearchController extends Controller
             }
         }
         return $statuses;
+    }
+
+    public function extractYears($projects): array
+    {
+        $end = 0;
+        $start = 9999;
+        foreach ($projects as $project) {
+            if ($project->start->year < $start) {
+                $start = $project->start->year;
+            }
+            if ($project->end->year > $end) {
+                $end = $project->end->year;
+            }
+        }
+        return range($start, $end);
     }
 }

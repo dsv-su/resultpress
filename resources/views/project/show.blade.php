@@ -180,7 +180,7 @@
     @else The project has no activities.
     @endif
 
-    <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
+    <h5 class="mb-2 mt-4">Outcomes</h5>
     <div id="outcomes">
         @if (!$project->outcomes->isEmpty())
             @foreach($project->outcomes as $outcome)

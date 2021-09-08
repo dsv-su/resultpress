@@ -253,7 +253,7 @@
                                             <label class="col-form-label">Managers:</label>
                                             <div class="col px-1 d-flex align-items-center">
                                                 <select name="user_id[]" class="custom-select" id="managers"
-                                                        multiple="multiple">
+                                                        multiple="multiple" required>
                                                     @foreach($users as $user)
                                                         <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
                                                     @endforeach

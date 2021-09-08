@@ -155,8 +155,6 @@
                         }
                     });
                     $('select[name="year"] option').each(function () {
-                        console.log(data['years']);
-                        console.log($(this).val());
                         if (data['years'].includes(parseInt($(this).val()))) {
                             $(this).prop('disabled', false);
                         } else {

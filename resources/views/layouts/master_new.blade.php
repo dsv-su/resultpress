@@ -17,8 +17,7 @@
         <div class="clear">
         </div>
     </div>
-
+    @include('layouts.partials.footer-scripts')
 </div>
 </body>
-@include('layouts.partials.footer-scripts')
 </html>

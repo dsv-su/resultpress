@@ -17,10 +17,9 @@
         <div class="clear">
         </div>
     </div>
-
+    @include('layouts.partials.footer-scripts')
 </div>
 <!-- Livewire -->
 @livewireScripts
 </body>
-@include('layouts.partials.footer-scripts')
 </html>

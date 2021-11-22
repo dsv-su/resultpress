@@ -17,7 +17,6 @@ use App\ProjectReminder;
 use App\ProjectUpdate;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -197,7 +196,8 @@ class ProjectUpdateController extends Controller
     }
 
 
-    public function showActivityUpdateForm($a, $au) {
+    public function showActivityUpdateForm($a, $au)
+    {
         if ($au) {
             $au = ActivityUpdate::findorfail($au);
         } else {
@@ -206,7 +206,8 @@ class ProjectUpdateController extends Controller
         return view('project.activity_update', ['a' => Activity::findorfail($a), 'au' => $au])->render();
     }
 
-    public function showActivityCreateForm($a, $index) {
+    public function showActivityCreateForm($a, $index)
+    {
         if ($a) {
             $a = Activity::findorfail($a);
         } else {
@@ -215,7 +216,8 @@ class ProjectUpdateController extends Controller
         return view('project.activity_form', ['activity' => $a, 'index' => $index])->render();
     }
 
-    public function showReminderCreateForm($r) {
+    public function showReminderCreateForm($r)
+    {
         if ($r) {
             $r = ProjectReminder::findorfail($r);
         } else {
@@ -224,7 +226,8 @@ class ProjectUpdateController extends Controller
         return view('project.reminder_form', ['reminder' => $r])->render();
     }
 
-    public function showOutcomeUpdateForm($outcome, $ou) {
+    public function showOutcomeUpdateForm($outcome, $ou)
+    {
         if ($ou) {
             $ou = OutcomeUpdate::findorfail($ou);
         } else {
@@ -353,6 +356,7 @@ class ProjectUpdateController extends Controller
 
         $project_update->internal_comment = request('internal_comment') ?? $project_update->internal_comment;
         $project_update->partner_comment = request('partner_comment') ?? $project_update->partner_comment;
+        $project_update->reviewer_comment = request('reviewer_comment') ?? $project_update->reviewer_comment;
 
         if ($status) {
             $project_update->status = $status;

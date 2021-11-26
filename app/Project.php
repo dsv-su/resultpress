@@ -60,6 +60,14 @@ class Project extends Model
         });
     }
 
+    public function aggregated_outputs(): Collection
+    {
+        return $this->outputs()->get()->filter(function ($output) {
+            return $output->status == 'aggregated';
+        });
+    }
+
+
     public function drafts($pu = null): bool
     {
         if ($pu) {

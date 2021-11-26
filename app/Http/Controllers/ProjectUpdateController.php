@@ -70,6 +70,18 @@ class ProjectUpdateController extends Controller
             }
         }
         $project_update->index = $this->get_update_index($project_update);
+        $outputupdates = OutputUpdate::where('project_update_id', $project_update->id)
+            ->join('outputs', 'output_id', '=', 'outputs.id')
+            ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
+            ->get();
+
+        foreach ($outputupdates as $ou) {
+            $aggregated = [];
+            foreach ($ou->getAggregated() as $o) {
+                $aggregated[] = $o->indicator;
+            }
+            $ou->aggregated = $aggregated;
+        }
 
         return view('projectupdate.show', [
             'project_update' => $project_update,
@@ -80,10 +92,7 @@ class ProjectUpdateController extends Controller
                 ->join('activities', 'activity_id', '=', 'activities.id')
                 ->select('activity_updates.*', 'activities.title')
                 ->get(),
-            'output_updates' => OutputUpdate::where('project_update_id', $project_update->id)
-                ->join('outputs', 'output_id', '=', 'outputs.id')
-                ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
-                ->get(),
+            'output_updates' => $outputupdates,
             'files' => $this->get_files($project_update),
             'review' => false
         ]);
@@ -146,8 +155,15 @@ class ProjectUpdateController extends Controller
             ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
             ->get();
 
-        $project_update->index = $this->get_update_index($project_update);
+        foreach ($outputupdates as $ou) {
+            $aggregated = [];
+            foreach ($ou->getAggregated() as $o) {
+               $aggregated[] = $o->indicator;
+            }
+            $ou->aggregated = $aggregated;
+        }
 
+        $project_update->index = $this->get_update_index($project_update);
         $activityupdates = $this->calculateActivities($activityupdates);
         $outputupdates = $this->calculateOutputs($outputupdates);
 

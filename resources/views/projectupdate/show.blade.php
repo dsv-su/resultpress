@@ -46,17 +46,19 @@
                                 <td class="w-75">{{$ou->indicator}}</td>
                                 <td class="w-25">{{$ou->value}}</td>
                             </tr>
+                        @foreach($ou->aggregated as $a)
+                        <tr class="update">
+                            <td colspan="2" class="px-1">
+                                <span class="badge badge-warning font-100 my-1">Contributes to {{$a}} output</span>
+                            </td>
+                        </tr>
+                            @endforeach
                             @if($review && ($ou->contributionstring || $ou->totalstring) && Auth::user()->hasRole(['Spider', 'Administrator']))
                                 <tr class="update">
-                                    <td colspan=2>
-                                        <table class="table mb-2">
-                                            <tr>
-                                                <td class="derived">
-                                                    @if ($ou->contributionstring){{$ou->contributionstring}}<br/>@endif
-                                                    @if ($ou->totalstring){{$ou->totalstring}}@endif
-                                                </td>
-                                            </tr>
-                                        </table>
+                                    <td colspan=2 class="px-1">
+                                        <span class="badge badge-info font-100 text-left my-1">
+                                            @if ($ou->contributionstring){{$ou->contributionstring}}<br/>@endif
+                                            @if ($ou->totalstring){{$ou->totalstring}}@endif</span>
                                     </td>
                                 </tr>
                             @endif

@@ -196,6 +196,28 @@ class ProjectController extends Controller
             }
         }
 
+        $aggregated_outpus = $project->aggregated_outputs();
+        foreach ($aggregated_outpus as $ao) {
+            $os = json_decode($ao->target);
+            $valuesum = 0;
+            $target = 0;
+            foreach ($os as $o) {
+                $o = $outputs->first(function($item) use ($o) {
+                    return $item->id == $o;
+                });
+                $valuesum += $o->valuesum;
+                $target += $o->target;
+            }
+            $ao->target = $target;
+            $ao->valuesum = $valuesum;
+            if ($valuesum >= $target) {
+                $ao->valuestatus = 3;
+            } elseif ($valuesum == 0) {
+                $ao->valuestatus = 2;
+            } else {
+                $ao->valuestatus = 1;
+            }
+        }
         foreach ($project->outcomes as $outcome) {
             if (!$outcome->outputs) {
                 $outcome->outputs = json_encode(array());
@@ -212,7 +234,7 @@ class ProjectController extends Controller
 
         $projectDeadlines = ProjectReminder::where('project_id', $project->id)->get();
 
-        return view('project.show', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs, 'deadlines' => $projectDeadlines]);
+        return view('project.show', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs, 'deadlines' => $projectDeadlines, 'aggregated_outputs' => $aggregated_outpus]);
     }
 
     public function project_dates(Project $project)
@@ -244,13 +266,13 @@ class ProjectController extends Controller
         array_unshift($links, $currentLink); // Putting it in the beginning of links array
         session(['links' => $links]); // Saving links array to the session
 
-
         if ($user = Auth::user()) {
             if ($user->hasPermissionTo('project-create') || ($project->id && $user->hasPermissionTo('project-' . $project->id . '-edit'))) {
                 return view('project.form', [
                     'project' => $project,
                     'activities' => $project->activities,
                     'outputs' => $project->submitted_outputs(),
+                    'aggregated_outputs' => $project->aggregated_outputs(),
                     'project_areas' => $project->project_area,
                     'areas' => Area::all(),
                     'old_pa' => $project->project_area->pluck('area_id')->toArray(),
@@ -366,6 +388,7 @@ class ProjectController extends Controller
         //Outputs
         $output_array['id'] = request('output_id') ?? null;
         $output_array['indicator'] = request('output_indicator');
+        $output_array['status'] = request('output_status') ?? null;
         $output_array['target'] = request('output_target');
         //Outcomes
         $outcome_array['id'] = request('outcome_id') ?? null;
@@ -421,9 +444,11 @@ class ProjectController extends Controller
             foreach ($output_array['id'] as $key => $id) {
                 $data = array();
                 $data['indicator'] = $output_array['indicator'][$key];
-                $data['target'] = $output_array['target'][$key];
+                $data['status'] = $output_array['status'][$key];
+                $data['target'] = $output_array['status'][$key] == 'aggregated' ? json_encode($output_array['target'][$id]): $output_array['target'][$key];
+                $data['status'] = $output_array['status'][$key];
                 $data['project_id'] = $project->id;
-                if ($id) {
+                if ($id && $id < 1637934025084) {
                     Output::where('id', $id)->update($data);
                     //Log output update
                     activity()
@@ -431,7 +456,6 @@ class ProjectController extends Controller
                         ->performedOn(Output::find($id))
                         ->log('OutputUpdate');
                 } else {
-                    $data['status'] = 'default';
                     $newoutput = Output::create($data);
                     //Log new output
                     activity()

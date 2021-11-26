@@ -170,7 +170,8 @@
                             <div class="card-body">
                                 @foreach ($a->comments as $puindex => $arr)
                                     @if (!$project->cumulative) <p>
-                                        <b><a href="/project/update/{{$arr['pu']}}">Update {{$puindex}}</a></b>: @endif {!! $arr['comments'] !!}</p>
+                                        <b><a href="/project/update/{{$arr['pu']}}">Update {{$puindex}}</a></b>: @endif {!! $arr['comments'] !!}
+                                    </p>
                                     @endforeach
                             </div>
                         </div>@endif
@@ -193,7 +194,6 @@
         @endif
     </div>
 
-
     <h5 class="mt-4">Outputs</h5>
     @if (!$outputs->isEmpty())
         <div class="col p-2">
@@ -205,6 +205,16 @@
                             <span class="badge ml-2 font-100 @if($o->valuestatus == 1) badge-info @elseif($o->valuestatus == 2) badge-warning @elseif($o->valuestatus == 3) badge-success @else badge-light @endif">{{$o->valuesum}} @if ($o->status == 'custom')
                                     (unplanned) @else / {{$o->target}} @endif </span>
                         @else <span class="badge ml-2 font-100 badge-info">{{$o->valuesum}}</span> @endif</span>
+                    </div>
+                </div>
+            @endforeach
+            @foreach ($aggregated_outputs as $ao)
+                <div class="row my-1">
+                    <div class="col">
+                    <span>{{$ao->indicator}}
+                        @if (Auth::user()->hasRole(['Spider', 'Administrator']))
+                            <span class="badge ml-2 font-100 @if($ao->valuestatus == 1) badge-info @elseif($ao->valuestatus == 2) badge-warning @elseif($ao->valuestatus == 3) badge-success @else badge-light @endif">{{$ao->valuesum}} / {{$ao->target}} </span>
+                        @else <span class="badge ml-2 font-100 badge-info">{{$ao->valuesum}}</span> @endif</span><span class="badge badge-light ml-2 font-100">Aggregated</span>
                     </div>
                 </div>
             @endforeach

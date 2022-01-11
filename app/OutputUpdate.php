@@ -18,4 +18,19 @@ class OutputUpdate extends Model
     {
         return $this->belongsTo(ProjectUpdate::class);
     }
+
+    public function getAggregated() {
+        if ($this->output->target != 'aggregated') {
+            $output_id = $this->output->id;
+            $return = [];
+            foreach ($this->output->project->aggregated_outputs() as $ao) {
+                $ids = json_decode($ao->target);
+                if (in_array($output_id, $ids)) {
+                    $return[] = $ao;
+                }
+            }
+            return $return ?? null;
+        }
+        return false;
+    }
 }

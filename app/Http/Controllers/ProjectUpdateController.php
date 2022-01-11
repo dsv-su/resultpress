@@ -17,7 +17,6 @@ use App\ProjectReminder;
 use App\ProjectUpdate;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -71,6 +70,18 @@ class ProjectUpdateController extends Controller
             }
         }
         $project_update->index = $this->get_update_index($project_update);
+        $outputupdates = OutputUpdate::where('project_update_id', $project_update->id)
+            ->join('outputs', 'output_id', '=', 'outputs.id')
+            ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
+            ->get();
+
+        foreach ($outputupdates as $ou) {
+            $aggregated = [];
+            foreach ($ou->getAggregated() as $o) {
+                $aggregated[] = $o->indicator;
+            }
+            $ou->aggregated = $aggregated;
+        }
 
         return view('projectupdate.show', [
             'project_update' => $project_update,
@@ -81,10 +92,7 @@ class ProjectUpdateController extends Controller
                 ->join('activities', 'activity_id', '=', 'activities.id')
                 ->select('activity_updates.*', 'activities.title')
                 ->get(),
-            'output_updates' => OutputUpdate::where('project_update_id', $project_update->id)
-                ->join('outputs', 'output_id', '=', 'outputs.id')
-                ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
-                ->get(),
+            'output_updates' => $outputupdates,
             'files' => $this->get_files($project_update),
             'review' => false
         ]);
@@ -147,8 +155,15 @@ class ProjectUpdateController extends Controller
             ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
             ->get();
 
-        $project_update->index = $this->get_update_index($project_update);
+        foreach ($outputupdates as $ou) {
+            $aggregated = [];
+            foreach ($ou->getAggregated() as $o) {
+               $aggregated[] = $o->indicator;
+            }
+            $ou->aggregated = $aggregated;
+        }
 
+        $project_update->index = $this->get_update_index($project_update);
         $activityupdates = $this->calculateActivities($activityupdates);
         $outputupdates = $this->calculateOutputs($outputupdates);
 
@@ -197,7 +212,8 @@ class ProjectUpdateController extends Controller
     }
 
 
-    public function showActivityUpdateForm($a, $au) {
+    public function showActivityUpdateForm($a, $au)
+    {
         if ($au) {
             $au = ActivityUpdate::findorfail($au);
         } else {
@@ -206,7 +222,8 @@ class ProjectUpdateController extends Controller
         return view('project.activity_update', ['a' => Activity::findorfail($a), 'au' => $au])->render();
     }
 
-    public function showActivityCreateForm($a, $index) {
+    public function showActivityCreateForm($a, $index)
+    {
         if ($a) {
             $a = Activity::findorfail($a);
         } else {
@@ -215,7 +232,8 @@ class ProjectUpdateController extends Controller
         return view('project.activity_form', ['activity' => $a, 'index' => $index])->render();
     }
 
-    public function showReminderCreateForm($r) {
+    public function showReminderCreateForm($r)
+    {
         if ($r) {
             $r = ProjectReminder::findorfail($r);
         } else {
@@ -224,7 +242,8 @@ class ProjectUpdateController extends Controller
         return view('project.reminder_form', ['reminder' => $r])->render();
     }
 
-    public function showOutcomeUpdateForm($outcome, $ou) {
+    public function showOutcomeUpdateForm($outcome, $ou)
+    {
         if ($ou) {
             $ou = OutcomeUpdate::findorfail($ou);
         } else {
@@ -353,6 +372,7 @@ class ProjectUpdateController extends Controller
 
         $project_update->internal_comment = request('internal_comment') ?? $project_update->internal_comment;
         $project_update->partner_comment = request('partner_comment') ?? $project_update->partner_comment;
+        $project_update->reviewer_comment = request('reviewer_comment') ?? $project_update->reviewer_comment;
 
         if ($status) {
             $project_update->status = $status;

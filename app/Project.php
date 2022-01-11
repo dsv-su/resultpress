@@ -60,6 +60,14 @@ class Project extends Model
         });
     }
 
+    public function aggregated_outputs(): Collection
+    {
+        return $this->outputs()->get()->filter(function ($output) {
+            return $output->status == 'aggregated';
+        });
+    }
+
+
     public function drafts($pu = null): bool
     {
         if ($pu) {
@@ -172,11 +180,11 @@ class Project extends Model
             // Pending
             return 'planned';
         }
-        if ($this->start->lte(Carbon::now()) && $this->end->gte(Carbon::now())) {
+        if ($this->start->lte(Carbon::now()) && (!$this->end || $this->end->gte(Carbon::now()))) {
             // In progress
             return 'inprogress';
         }
-        if (($this->end->lte(Carbon::now())) && ($this->activities()->count() == $completed)) {
+        if ($this->end && $this->end->lte(Carbon::now()) && $this->activities()->count() == $completed) {
             // Finished
             return 'completed';
         }
@@ -252,8 +260,11 @@ class Project extends Model
         return false;
     }
 
-    public function getNextProjectUpdateDate() {
-        $lastprojectupdate = $this->project_updates->sortBy('end')->last(function ($pu) {return $pu->end;});
+    public function getNextProjectUpdateDate()
+    {
+        $lastprojectupdate = $this->project_updates->sortBy('end')->last(function ($pu) {
+            return $pu->end;
+        });
         return $lastprojectupdate ? $lastprojectupdate->end->addDay()->format('d/m/Y') : Carbon::now()->format('d/m/Y');
     }
 

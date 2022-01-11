@@ -168,6 +168,8 @@
                                                     <tr>
                                                         <td class="w-75"><input type="hidden" name="output_id[]"
                                                                                 value="{{$output->id}}">
+                                                            <input type="hidden" name="output_status[]"
+                                                                   value="{{$output->status}}">
                                                             <input type="text"
                                                                    name="output_indicator[]"
                                                                    value="{{$output->indicator}}"
@@ -196,6 +198,68 @@
                                 </div>
                                 <button type="button" name="add_outputs"
                                         class="btn btn-outline-secondary btn-sm add-outputs mx-2">Add
+                                    Output <i class="fas fa-plus"></i></button>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col my-2 px-2" style="min-width: 16rem;">
+                                    <label for="aggregated_outputs_table" class="form-group-header">Aggregated
+                                        outputs</label>
+                                    <span data-toggle="tooltip"
+                                          title="Here you add aggregated outputs and targets. Notice that in case you added new outputs, you need to save the project first in order to be able to aggregate them."><i
+                                                class="fas fa-info-circle fa-1x"></i></span>
+                                    <div class="card bg-light m-auto"
+                                         @if($aggregated_outputs->isEmpty()) style="display: none;" @endif>
+                                        <div class="card-body p-1">
+                                            <table class="table table-sm table-borderless mb-0"
+                                                   id="aggregated_outputs_table">
+                                                <thead>
+                                                <th scope="row">Output</th>
+                                                <th scope="row">Aggregation</th>
+                                                <th></th>
+                                                </thead>
+                                                <!-- Here comes a foreach to show the outputs -->
+
+                                                @foreach ($aggregated_outputs as $aggregated_output)
+                                                    <tr>
+                                                        <td class="w-25 align-middle"><input type="hidden"
+                                                                                             name="output_id[]"
+                                                                                             value="{{$aggregated_output->id}}">
+                                                            <input type="hidden" name="output_status[]"
+                                                                   value="aggregated">
+                                                            <input type="text"
+                                                                   name="output_indicator[]"
+                                                                   value="{{$aggregated_output->indicator}}"
+                                                                   placeholder="Output name" required
+                                                                   maxlength="255"
+                                                                   data-target="tooltip"
+                                                                   data-trigger="manual"
+                                                                   title="Maximum length is 255 chars"
+                                                                   class="form-control form-control-sm">
+                                                        </td>
+                                                        <td class="w-75">
+                                                            <select name="output_target[{{$aggregated_output->id}}][]"
+                                                                    class="output_multiselect custom-select form-control-sm"
+                                                                    multiple="multiple" required>
+                                                                @foreach($outputs as $output)
+                                                                    <option value="{{$output->id}}" {{in_array($output->id, json_decode($aggregated_output->target)) ? 'selected':''}}>{{$output->indicator}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td class="align-middle">
+                                                            <button type="button" name="remove"
+                                                                    class="btn btn-outline-danger btn-sm remove"><i
+                                                                        class="far fa-trash-alt"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" name="add_aggregated_outputs"
+                                        class="btn btn-outline-secondary btn-sm add-aggregated-outputs mx-2">Add
+                                    Aggregated
                                     Output <i class="fas fa-plus"></i></button>
                             </div>
 
@@ -308,6 +372,11 @@
                             li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
                         }
                     });
+                    $('.output_multiselect').multiselect({
+                        templates: {
+                            li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
+                        }
+                    });
 
                     var editor = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Activity template"}});
                     var editor = new MediumEditor('.mediumEditor#project_description', {placeholder: {text: "Describe the project"}});
@@ -368,6 +437,7 @@
                             let html = '';
                             html += '<tr>';
                             html += '<input type="hidden" name="output_id[]" value=0>';
+                            html += '<input type="hidden" name="output_status[]" value="default">';
                             html += '<td class="w-75"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></td>';
                             html += '<td class="w-25"><input type="text" name="output_target[]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this output"><i class="far fa-trash-alt"></i></button></td></tr>';
@@ -386,6 +456,38 @@
                                 }
                             });
                         });
+
+                        $(document).on('click', '.add-aggregated-outputs', function () {
+                            $('#aggregated_outputs_table').closest('.card').show();
+                            let html = '';
+                            let timestamp = Date.now();
+                            html += '<tr>';
+                            html += '<input type="hidden" name="output_id[]" value=' + timestamp + '>';
+                            html += '<input type="hidden" name="output_status[]" value="aggregated">';
+                            html += '<td class="w-25 align-middle"><input type="text" name="output_indicator[]" class="form-control form-control-sm" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></td>';
+                            html += '<td class="w-75"><select name="output_target[' + timestamp + '][]" class="custom-select form-control-sm output_multiselect" multiple="multiple" required> @foreach($outputs as $output) <option value="{{$output->id}}">{{$output->indicator}}</option>@endforeach </select></td>';
+                            html += '<td class="align-middle"><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this output"><i class="far fa-trash-alt"></i></button></td></tr>';
+                            $('#aggregated_outputs_table').append(html);
+                            $(function () {
+                                $('[data-toggle="tooltip"]').tooltip()
+                            })
+                            $('input[name="output_indicator[]"]').focusout(function () {
+                                $(this).tooltip('hide');
+                            });
+                            $('input[name="output_indicator[]"]').on('keyup', function () {
+                                if (this.value.length > 250) {
+                                    $(this).tooltip('show');
+                                } else {
+                                    $(this).tooltip('hide');
+                                }
+                            });
+                            $('.output_multiselect').multiselect({
+                                templates: {
+                                    li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
+                                }
+                            });
+                        });
+
                         $(document).on('click', '#activities_list .remove', function () {
                             $(this).tooltip('hide');
                             $(this).closest('.col-lg-6').remove();
@@ -399,6 +501,9 @@
                             }*/
                             if ($('tr', $('#outputs_table')).length < 2) {
                                 $('#outputs_table').closest('.card').hide();
+                            }
+                            if ($('tr', $('#aggregated_outputs_table')).length < 2) {
+                                $('#aggregated_outputs_table').closest('.card').hide();
                             }
                             if ($('tr', $('#outcomes_table')).length < 2) {
                                 $('#outcomes_table').closest('.card').hide();

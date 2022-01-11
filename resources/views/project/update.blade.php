@@ -112,7 +112,7 @@
                             Add Output
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @foreach ($project->outputs as $output)
+                            @foreach ($project->submitted_outputs() as $output)
                                 <a class="dropdown-item add-output" href="#" id="{{$output->id}}"
                                    @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status == 'draft') style="display: none;" @endif>{{$output->indicator}}</a>
                             @endforeach

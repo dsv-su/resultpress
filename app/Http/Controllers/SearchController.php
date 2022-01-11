@@ -249,7 +249,7 @@ class SearchController extends Controller
             if ($project->start->year < $start) {
                 $start = $project->start->year;
             }
-            if ($project->end->year > $end) {
+            if ($project->end && $project->end->year > $end) {
                 $end = $project->end->year;
             }
         }

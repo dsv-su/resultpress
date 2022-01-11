@@ -46,17 +46,19 @@
                                 <td class="w-75">{{$ou->indicator}}</td>
                                 <td class="w-25">{{$ou->value}}</td>
                             </tr>
+                        @foreach($ou->aggregated as $a)
+                        <tr class="update">
+                            <td colspan="2" class="px-1">
+                                <span class="badge badge-warning font-100 my-1">Contributes to {{$a}} output</span>
+                            </td>
+                        </tr>
+                            @endforeach
                             @if($review && ($ou->contributionstring || $ou->totalstring) && Auth::user()->hasRole(['Spider', 'Administrator']))
                                 <tr class="update">
-                                    <td colspan=2>
-                                        <table class="table mb-2">
-                                            <tr>
-                                                <td class="derived">
-                                                    @if ($ou->contributionstring){{$ou->contributionstring}}<br/>@endif
-                                                    @if ($ou->totalstring){{$ou->totalstring}}@endif
-                                                </td>
-                                            </tr>
-                                        </table>
+                                    <td colspan=2 class="px-1">
+                                        <span class="badge badge-info font-100 text-left my-1">
+                                            @if ($ou->contributionstring){{$ou->contributionstring}}<br/>@endif
+                                            @if ($ou->totalstring){{$ou->totalstring}}@endif</span>
                                     </td>
                                 </tr>
                             @endif
@@ -148,6 +150,14 @@
                         </table>
                     @endif
 
+                    <label for="reviewer_comment" class="form-group-header mt-4">Reviewer comment</label>
+                    <textarea rows=4 placeholder="Reviewer feedback to the project update author" required
+                              class="form-control form-control-sm @error('reviewer_comment') is-danger @enderror"
+                              name="reviewer_comment">{{ old('reviewer_comment', empty($project_update) ? '' : $project_update->reviewer_comment) }}</textarea>
+                    @error('reviewer_comment')
+                    <div class="text-danger">{{ $errors->first('reviewer_comment') }}</div>
+                    @enderror
+
                     <label for="internal_comment" class="form-group-header mt-4">Spider's internal comment</label>
                     <textarea rows=4 placeholder="Spider's internal comment"
                               class="form-control form-control-sm @error('internal_comment') is-danger @enderror"
@@ -176,6 +186,14 @@
                 <table class="table table-striped table-bordered">
                     <tr>
                         <td>{{$project_update->partner_comment}}</td>
+                    </tr>
+                </table>
+            @endif
+            @if ($project_update->reviewer_comment && Auth::user()->hasRole(['Spider', 'Partner']))
+                <label class="form-group-header mt-4">Reviewer comment</label>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <td>{{$project_update->reviewer_comment}}</td>
                     </tr>
                 </table>
             @endif

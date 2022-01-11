@@ -11,7 +11,7 @@ class ProjectUpdate extends Model
 {
 
     protected $dates = ['start', 'end', 'created_at'];
-    protected $fillable = ['project_id', 'summary', 'comment', 'status', 'start', 'end', 'state', 'reviewer_comment', 'internal_comment'];
+    protected $fillable = ['project_id', 'summary', 'comment', 'status', 'start', 'end', 'state', 'reviewer_comment', 'internal_comment', 'reviewer_comment'];
 
     public function project(): BelongsTo
     {

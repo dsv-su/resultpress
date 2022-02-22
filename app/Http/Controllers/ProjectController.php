@@ -147,7 +147,7 @@ class ProjectController extends Controller
                     $comments[$puindex] = ['comments' => $au->comment, 'pu' => $au->project_update_id];
                 }
             } elseif (!$activityupdates->isEmpty()) {
-                $comments[] = $activityupdates->last()->comment;
+                $comments[] = ['comments' => $activityupdates->last()->comment];
             }
 
             foreach ($activityupdates as $au) {

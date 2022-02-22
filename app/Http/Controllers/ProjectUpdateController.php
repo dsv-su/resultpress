@@ -17,12 +17,12 @@ use App\ProjectReminder;
 use App\ProjectUpdate;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
 
 class ProjectUpdateController extends Controller
 {
@@ -30,7 +30,7 @@ class ProjectUpdateController extends Controller
      * Display a listing of the resource.
      *
      * @param Project $project
-     * @return Application|Factory|Response|View
+     * @return Application|Factory|View
      */
     public function index(Project $project)
     {
@@ -60,7 +60,7 @@ class ProjectUpdateController extends Controller
      * Display the specified resource.
      *
      * @param ProjectUpdate $project_update
-     * @return Application|Factory|Response|View
+     * @return Application|Factory|View
      */
     public function show(ProjectUpdate $project_update)
     {
@@ -70,18 +70,7 @@ class ProjectUpdateController extends Controller
             }
         }
         $project_update->index = $this->get_update_index($project_update);
-        $outputupdates = OutputUpdate::where('project_update_id', $project_update->id)
-            ->join('outputs', 'output_id', '=', 'outputs.id')
-            ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
-            ->get();
-
-        foreach ($outputupdates as $ou) {
-            $aggregated = [];
-            foreach ($ou->getAggregated() as $o) {
-                $aggregated[] = $o->indicator;
-            }
-            $ou->aggregated = $aggregated;
-        }
+        $outputupdates = $this->getOutputupdates($project_update);
 
         return view('projectupdate.show', [
             'project_update' => $project_update,
@@ -118,7 +107,7 @@ class ProjectUpdateController extends Controller
      * @param ProjectUpdate $project_update
      * @return File|null
      */
-    public function get_files(ProjectUpdate $project_update)
+    public function get_files(ProjectUpdate $project_update): ?File
     {
         // Grab files
         $files = File::where('filearea', 'project_update')->where('itemid', $project_update->id)->get() ?? null;
@@ -133,7 +122,7 @@ class ProjectUpdateController extends Controller
      * Show the form for reviewing the specified resource.
      *
      * @param ProjectUpdate $project_update
-     * @return Application|Factory|Response|View
+     * @return Application|Factory|View
      */
     public function review(ProjectUpdate $project_update)
     {
@@ -150,18 +139,7 @@ class ProjectUpdateController extends Controller
             ->join('activities', 'activity_id', '=', 'activities.id')
             ->select('activity_updates.*', 'activities.title')
             ->get();
-        $outputupdates = OutputUpdate::where('project_update_id', $project_update->id)
-            ->join('outputs', 'output_id', '=', 'outputs.id')
-            ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
-            ->get();
-
-        foreach ($outputupdates as $ou) {
-            $aggregated = [];
-            foreach ($ou->getAggregated() as $o) {
-               $aggregated[] = $o->indicator;
-            }
-            $ou->aggregated = $aggregated;
-        }
+        $outputupdates = $this->getOutputupdates($project_update);
 
         $project_update->index = $this->get_update_index($project_update);
         $activityupdates = $this->calculateActivities($activityupdates);
@@ -185,7 +163,7 @@ class ProjectUpdateController extends Controller
      * @param $outputupdates
      * @return Response
      */
-    public function calculateOutputs($outputupdates)
+    public function calculateOutputs($outputupdates): Response
     {
         foreach ($outputupdates as $ou) {
             $contributionstring = '';
@@ -212,7 +190,7 @@ class ProjectUpdateController extends Controller
     }
 
 
-    public function showActivityUpdateForm($a, $au)
+    public function showActivityUpdateForm($a, $au): string
     {
         if ($au) {
             $au = ActivityUpdate::findorfail($au);
@@ -222,7 +200,7 @@ class ProjectUpdateController extends Controller
         return view('project.activity_update', ['a' => Activity::findorfail($a), 'au' => $au])->render();
     }
 
-    public function showActivityCreateForm($a, $index)
+    public function showActivityCreateForm($a, $index): string
     {
         if ($a) {
             $a = Activity::findorfail($a);
@@ -232,7 +210,7 @@ class ProjectUpdateController extends Controller
         return view('project.activity_form', ['activity' => $a, 'index' => $index])->render();
     }
 
-    public function showReminderCreateForm($r)
+    public function showReminderCreateForm($r): string
     {
         if ($r) {
             $r = ProjectReminder::findorfail($r);
@@ -242,7 +220,7 @@ class ProjectUpdateController extends Controller
         return view('project.reminder_form', ['reminder' => $r])->render();
     }
 
-    public function showOutcomeUpdateForm($outcome, $ou)
+    public function showOutcomeUpdateForm($outcome, $ou): string
     {
         if ($ou) {
             $ou = OutcomeUpdate::findorfail($ou);
@@ -253,12 +231,12 @@ class ProjectUpdateController extends Controller
     }
 
     /**
-     * Calculates budget and timing based on activities data.
+     * Calculates budget and timing based on activities' data.
      *
      * @param $activityupdates
      * @return Response
      */
-    public function calculateActivities($activityupdates)
+    public function calculateActivities($activityupdates): Response
     {
         foreach ($activityupdates as $au) {
             $deadlinestring = 'Activity ';
@@ -315,11 +293,11 @@ class ProjectUpdateController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param ProjectUpdate $project_update
-     * @return Application|Factory|View|void
+     * @return Application|Factory|View
      */
     public function edit(ProjectUpdate $project_update)
     {
-        // We only let to edit draft updates, or we're super users
+        // We only let to edit draft updates, or we're superusers
         if (!$project_update->editable()) {
             abort(403);
         }
@@ -349,7 +327,7 @@ class ProjectUpdateController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update(ProjectUpdate $project_update, Request $request)
+    public function update(ProjectUpdate $project_update, Request $request): RedirectResponse
     {
         $status = '';
         if ($request->input('approve')) {
@@ -417,7 +395,7 @@ class ProjectUpdateController extends Controller
      * @return RedirectResponse
      * @throws \Exception
      */
-    public function destroy(ProjectUpdate $project_update)
+    public function destroy(ProjectUpdate $project_update): RedirectResponse
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project_update->project_id . '-delete')) {
@@ -429,5 +407,26 @@ class ProjectUpdateController extends Controller
         OutputUpdate::where('project_update_id', $project_update->id)->delete();
         $project_update->delete();
         return redirect()->route('projectupdate_index', $project_update->project);
+    }
+
+    /**
+     * @param ProjectUpdate $project_update
+     * @return mixed
+     */
+    public function getOutputupdates(ProjectUpdate $project_update)
+    {
+        $outputupdates = OutputUpdate::where('project_update_id', $project_update->id)
+            ->join('outputs', 'output_id', '=', 'outputs.id')
+            ->select('output_updates.*', 'outputs.indicator', 'outputs.target')
+            ->get();
+
+        foreach ($outputupdates as $ou) {
+            $aggregated = [];
+            foreach ($ou->getAggregated() as $o) {
+                $aggregated[] = $o->indicator;
+            }
+            $ou->aggregated = $aggregated;
+        }
+        return $outputupdates;
     }
 }

@@ -89,7 +89,8 @@ class OrganisationForm extends Component
 
     public function remove($id)
     {
-        $partner = UserOrganisation::where('user_id', $id)->delete();
+        //Remove association and trigger a delete event
+        $partner = UserOrganisation::where('user_id', $id)->first()->delete();
         //Refresh
         $this->firstname = [];
         $this->partner_email = [];

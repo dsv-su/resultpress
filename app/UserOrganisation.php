@@ -10,4 +10,6 @@ class UserOrganisation extends Model
 {
     use HasFactory, LogsActivity;
     protected $fillable = ['user_id', 'organisation_id'];
+    protected static $logFillable = true;
+
 }

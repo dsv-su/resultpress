@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'follow_projects', 'setting'
     ];
 
     /**
@@ -39,9 +39,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected static $logAttributes = [
-        'name', 'email',
-    ];
+    protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
     /*public function project()

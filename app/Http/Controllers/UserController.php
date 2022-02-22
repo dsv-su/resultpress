@@ -219,7 +219,7 @@ class UserController extends Controller
 
         $url = URL::temporarySignedRoute(
 
-            'registration', now()->addMinutes(480), ['token' => $token]
+            'registration', now()->addMinutes(4320), ['token' => $token]
         );
         Mail::to($request->input('email'))->send(new PartnerInvite($url, $request->email));
         return redirect(session('links')[0]);

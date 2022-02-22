@@ -10,6 +10,7 @@ class Organisation extends Model
 {
     use HasFactory, LogsActivity;
     protected $fillable = ['org', 'address', 'website', 'phone', 'contact_project', 'contact_finance', 'logo'];
+    protected static $logFillable = true;
 
     /**
      * The users that belong to the organisation.

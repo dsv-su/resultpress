@@ -103,11 +103,14 @@ class ProjectUpdateController extends Controller
         return $index;
     }
 
+    /*
+     * @param ProjectUpdate $project_update
+     */
     /**
      * @param ProjectUpdate $project_update
-     * @return File|null
+     * @return null
      */
-    public function get_files(ProjectUpdate $project_update): ?File
+    public function get_files(ProjectUpdate $project_update)
     {
         // Grab files
         $files = File::where('filearea', 'project_update')->where('itemid', $project_update->id)->get() ?? null;

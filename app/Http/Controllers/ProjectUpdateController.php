@@ -166,7 +166,7 @@ class ProjectUpdateController extends Controller
      * @param $outputupdates
      * @return Response
      */
-    public function calculateOutputs($outputupdates): Response
+    public function calculateOutputs($outputupdates)
     {
         foreach ($outputupdates as $ou) {
             $contributionstring = '';
@@ -239,7 +239,7 @@ class ProjectUpdateController extends Controller
      * @param $activityupdates
      * @return Response
      */
-    public function calculateActivities($activityupdates): Response
+    public function calculateActivities($activityupdates)
     {
         foreach ($activityupdates as $au) {
             $deadlinestring = 'Activity ';

@@ -815,6 +815,16 @@ class ProjectController extends Controller
         //Delete project belongs to project area
         ProjectArea::where('project_id', $project->id)->delete();
 
+        //Project Histories
+        ProjectHistory::where('project_id', $project->id)->delete();
+
+        //Outcomes
+        OutcomeUpdate::where('project_update_id', $project->id)->delete();
+        Outcome::where('project_id', $project->id)->delete();
+
+        //Project Reminders
+        ProjectReminder::where('project_id', $project->id)->delete();
+
         // Delete project
         $project->delete();
         return redirect()->route('project_home');

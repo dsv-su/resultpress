@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\URL;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
+use App\Scopes\ObjectType;
 
 class Project extends Model
 {
@@ -20,7 +21,7 @@ class Project extends Model
     use SearchableTrait;
 
     //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
-    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state'];
+    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state', 'object_type', 'object_id'];
     protected $dates = ['start', 'end'];
     //protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id'];  -->refactored<--
     protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state'];
@@ -273,6 +274,26 @@ class Project extends Model
         return 'project';
     }
 
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new ObjectType);
 }
 
+    /**
+     * Scope a query to only include projects of a given type.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  mixed                                 $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfType($query, $type = 'project')
+    {
+        return $query->where('object_type', $type);
+    }
 
+}

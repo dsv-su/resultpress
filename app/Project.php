@@ -6,7 +6,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\URL;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -33,11 +36,26 @@ class Project extends Model
 
     protected $appends = ['link', 'type'];
 
+    /**
+     * Get the reminders for the project.
+     * 
+     * @return HasMany
+     */
+    public function reminders()
+    {
+        return $this->hasMany(ProjectReminder::class);
+    }
+
     public function activities(): HasMany
     {
         return $this->hasMany(Activity::class);
     }
 
+    /**
+     * Get the project's outputs.
+     * 
+     * @return HasMany
+     */
     public function outputs(): HasMany
     {
         return $this->hasMany(Output::class);
@@ -55,16 +73,20 @@ class Project extends Model
 
     public function submitted_outputs(): Collection
     {
-        return $this->outputs()->get()->filter(function ($output) {
+        return $this->outputs()->get()->filter(
+            function ($output) {
             return $output->status == 'custom' || $output->status == 'default';
-        });
+            }
+        );
     }
 
     public function aggregated_outputs(): Collection
     {
-        return $this->outputs()->get()->filter(function ($output) {
+        return $this->outputs()->get()->filter(
+            function ($output) {
             return $output->status == 'aggregated';
-        });
+            }
+        );
     }
 
 
@@ -86,9 +108,9 @@ class Project extends Model
         return $this->project_updates()->where('status', 'submitted')->get();
     }
 
-    public function project_area(): HasMany
+    public function project_area(): BelongsToMany
     {
-        return $this->hasMany(ProjectArea::class);
+        return $this->BelongsToMany(Area::class, 'project_areas', 'project_id', 'area_id');
     }
 
     public function managers(): Collection

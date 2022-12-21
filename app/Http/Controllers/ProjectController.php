@@ -33,6 +33,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Swaggest\JsonDiff\Exception;
 use Swaggest\JsonDiff\JsonDiff;
+use App\Notifications\ProjectAccepted;
+use App\Notifications\ProjectRejected;
+use App\Notifications\ProjectChangeAccepted;
+use App\Notifications\ProjectChangeRejected;
 
 class ProjectController extends Controller
 {
@@ -363,7 +367,7 @@ class ProjectController extends Controller
             function ($output) use ($project) {
                 $output['target'] = $output['status'] == 'aggregated' ? json_encode([$output['target']]): $output['target'];
                 $project->outputs()->updateOrCreate(['id' => $output['id'] ?? null], $output);
-            }
+        }
         );
         $project->outputs()->whereIn('id', $outputs_to_remove)->delete(); // Delete outputs.
 
@@ -385,16 +389,16 @@ class ProjectController extends Controller
 
         //Store new managers
         if ($request->user_id) {
-        //Erase existing owners
-        foreach ($project_owners as $project_owner) {
-            $owner = ProjectOwner::find($project_owner->id);
-            $user = User::find($owner->user_id);
-            $user->revokePermissionTo('project-' . $project->id . '-list');
-            $user->revokePermissionTo('project-' . $project->id . '-edit');
-            $user->revokePermissionTo('project-' . $project->id . '-update');
-            $user->revokePermissionTo('project-' . $project->id . '-delete');
-            $owner->delete();
-        }
+                //Erase existing owners
+                foreach ($project_owners as $project_owner) {
+                    $owner = ProjectOwner::find($project_owner->id);
+                    $user = User::find($owner->user_id);
+                    $user->revokePermissionTo('project-' . $project->id . '-list');
+                    $user->revokePermissionTo('project-' . $project->id . '-edit');
+                    $user->revokePermissionTo('project-' . $project->id . '-update');
+                    $user->revokePermissionTo('project-' . $project->id . '-delete');
+                    $owner->delete();
+                }
             foreach ($request->user_id as $owner) {
                 $new_owner = new ProjectOwner();
                 $new_owner->project_id = $project->id;
@@ -408,16 +412,16 @@ class ProjectController extends Controller
 
         //Store new partners
         if ($request->partner_id) {
-        //Erase existing partners
-        if ($project_partners) {
-            foreach ($project_partners as $project_partner) {
-                $partner = ProjectPartner::find($project_partner->id);
-                $user = User::find($partner->partner_id);
-                $user->revokePermissionTo('project-' . $project->id . '-list');
-                $user->revokePermissionTo('project-' . $project->id . '-update');
-                $partner->delete();
-            }
-        }
+                    //Erase existing partners
+                    if ($project_partners) {
+                        foreach ($project_partners as $project_partner) {
+                            $partner = ProjectPartner::find($project_partner->id);
+                            $user = User::find($partner->partner_id);
+                            $user->revokePermissionTo('project-' . $project->id . '-list');
+                            $user->revokePermissionTo('project-' . $project->id . '-update');
+                            $partner->delete();
+                        }
+                    }
             foreach ($request->partner_id as $partner) {
                 $new_partner = new ProjectPartner();
                 $new_partner->project_id = $project->id;
@@ -452,6 +456,80 @@ class ProjectController extends Controller
         }
 
         return redirect()->route('project_show', $project);
+    }
+
+    public function accept(Project $project)
+    {
+        if ( !Auth::check() || !Auth::user()->hasRole(['Administrator', 'Spider']) || !Auth::user()->hasPermissionTo('project-' . $project->id . '-update')) {
+            abort(403);
+        }
+        if ($project->object_type == 'project') {
+            abort( response('Request error', 400) );
+        }
+
+        if ($project->object_type == 'project_change_request') {
+            $mainProject = $project->main ?? Project::find($project->object_id);
+            $mainProject->object_type = 'project_history';
+            $mainProject->object_id = $project->id;
+            $mainProject->save();
+            $project->object_type = 'project';
+            $project->object_id = null;
+            $project->save();
+            $project->refresh();
+            $project->project_partner->each(function ($partner) use ($project) {
+                $partner->user->notify(new ProjectChangeAccepted($project));
+            });
+
+        } elseif ($project->object_type == 'project_add_request') {
+            $project->object_type = 'project';
+            $project->save();
+            $project->refresh();
+            $project->project_partner->each(function ($partner) use ($project) {
+                $partner->user->notify(new ProjectAccepted($project));
+            });
+
+        } else {
+            abort( response('Request error', 400) );
+        }
+
+        $project->comments()->create([
+            'user_id' => Auth::user()->id,
+            'body' => sprintf('Project accepted by %s at %s and a notification has been sent to the partners.', Auth::user()->name, Carbon::now()->format('d-m-Y H:i:s')),
+        ]);
+
+        return redirect()->route('project_show', $project)->with('success', 'Project accepted and a notification has been sent to the partners.');
+
+    }
+
+    public function reject(Project $project)
+    {
+        if ( !Auth::check() || !Auth::user()->hasRole(['Administrator', 'Spider']) || !Auth::user()->hasPermissionTo('project-' . $project->id . '-update')) {
+            abort(403);
+        }
+        if ($project->object_type == 'project') {
+            abort( response('Request error', 400) );
+        }
+
+        if ($project->object_type == 'project_change_request') {
+            $project->project_partner->each(function ($partner) use ($project) {
+                $partner->user->notify(new ProjectChangeRejected($project));
+            });
+
+        } elseif ($project->object_type == 'project_add_request') {
+            $project->project_partner->each(function ($partner) use ($project) {
+                $partner->user->notify(new ProjectRejected($project));
+            });
+        } else {
+            abort( response('Request error', 400) );
+        }
+
+        $project->comments()->create([
+            'user_id' => Auth::user()->id,
+            'body' => sprintf('Project rejected by %s at %s and a notification has been sent to the partners.', Auth::user()->name, Carbon::now()->format('d-m-Y H:i:s')),
+        ]);
+
+        return redirect()->route('project_show', $project)->with('success', 'Project rejected and a notification has been sent to the partners.');
+
     }
 
     public function write_update(Project $project)

@@ -23,6 +23,7 @@ use App\ProjectReminder;
 use App\ProjectUpdate;
 use App\Services\ACLHandler;
 use App\User;
+use App\Http\Requests\UpdateProjectRequest;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;

@@ -134,6 +134,16 @@ class Project extends Model
         return $this->belongsToMany(Area::class, 'project_areas');
     }
 
+    public function change_request(): HasOne
+    {
+        return $this->HasOne(self::class, 'object_id')->withoutGlobalScope(ObjectType::class)->where('object_type', 'project_change_request');
+    }
+
+    public function main(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'object_id')->withoutGlobalScope(ObjectType::class)->where('object_type', 'project');
+    }
+
     public function getCurrencySymbol(): string
     {
         switch ($this->currency) {
@@ -186,6 +196,13 @@ class Project extends Model
             if ($a->status() == 'completed') {
                 $completed++;
             }
+        }
+        if($this->object_type == 'project_change_request') {
+            return 'pendingreview';
+        }
+
+        if ($this->object_type == 'project_add_request') {
+            return 'pendingreview';
         }
 
         if ($delayedhigh) {

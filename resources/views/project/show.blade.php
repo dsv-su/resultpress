@@ -244,6 +244,8 @@
     @else The project has no outputs.
     @endif
 
+    @livewire('comments', ['project' => $project, 'comments' => $project->comments])
+
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()

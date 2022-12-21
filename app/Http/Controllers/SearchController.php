@@ -40,6 +40,10 @@ class SearchController extends Controller
         $years = request('year') ? explode(',', request('year')) : null;
         $filter = request('my') ? explode(',', request('my')) : array();
 
+        if (in_array('requested', $filter)) {
+            $projects = Project::withoutGlobalScopes()->OfType('project_add_request')->get();
+        }
+
         // Prefilter presets
         if ($filter) {
             $projects = $this->filter($projects, $filter);
@@ -147,7 +151,7 @@ class SearchController extends Controller
         foreach ($projects as $key => $project) {
             $ok = false;
             $user = Auth::user();
-            if (in_array('owned', $filter)) {
+            if (in_array('owned', $filter) || in_array('requested', $filter)) {
                 if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
                     foreach ($project->managers() as $manager) {
                         if ($manager->id == $user->id) {
@@ -166,7 +170,7 @@ class SearchController extends Controller
                 $ok = true;
             }
             if (!$ok) {
-                unset($projects[$key]);
+               unset($projects[$key]);
             }
         }
         return $projects;

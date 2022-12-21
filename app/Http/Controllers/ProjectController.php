@@ -198,11 +198,11 @@ class ProjectController extends Controller
         }
 
         $aggregated_outpus = $project->aggregated_outputs();
-        foreach ($aggregated_outpus as $ao) {
+        foreach ($aggregated_outpus ?? [] as $ao) {
             $os = json_decode($ao->target);
             $valuesum = 0;
             $target = 0;
-            foreach ($os as $o) {
+            foreach ($os ?? [] as $o) {
                 $o = $outputs->first(function($item) use ($o) {
                     return $item->id == $o;
                 });
@@ -274,9 +274,9 @@ class ProjectController extends Controller
                     'activities' => $project->activities,
                     'outputs' => $project->submitted_outputs(),
                     'aggregated_outputs' => $project->aggregated_outputs(),
-                    'project_areas' => $project->project_area,
+                    'project_areas' => $project->areas()->get(),
                     'areas' => Area::all(),
-                    'old_pa' => $project->project_area->pluck('area_id')->toArray(),
+                    'old_pa' => $project->areas()->get()->pluck('id')->toArray(),
                     'users' => User::all(),
                     'old_users' => ProjectOwner::where('project_id', $project->id)->pluck('user_id')->toArray(),
                     'partners' => ProjectPartner::where('project_id', $project->id)->pluck('partner_id')->toArray(),

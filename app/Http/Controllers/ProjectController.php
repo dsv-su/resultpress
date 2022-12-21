@@ -303,205 +303,88 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        if ($user = Auth::user()) {
-            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
-                abort(403);
-            }
+        // if request not valid, redirect back to form with errors
+        if (!$request->validated()) {
+            return redirect()->back()->withErrors($request->errors());
         }
 
-        request()->validate([
-            'project_name' => 'required',
-            'user_id' => 'required',
-        ]);
-        $project->name = request('project_name');
-        $project->description = request('project_description');
-        $project->start = Carbon::createFromFormat('d-m-Y', request('project_start') ?? null)->format('Y-m-d');
-        if (request('project_end')) {
-            $project->end = Carbon::createFromFormat('d-m-Y', request('project_end'))->format('Y-m-d');
+        // Add or Update project.
+        if ($request->has('new_project')) {
+            $project = new Project(['name' => $request->name]);
+            if (Auth::user()->hasRole('Partner')) {
+                $project->object_type = 'project_add_request';
         }
-        $project->currency = request('project_currency') ?? null;
-        $project->cumulative = request('project_cumulative');
-        $id = $project->save();
-
-        //Update Program Area
-        foreach (ProjectArea::where('project_id', $project->id)->get() as $old_pa) {
-            ProjectArea::find($old_pa->id)->delete();
-        }
-        if (request('project_area')) {
-            foreach (request('project_area') as $project_area) {
-                $new_pa = new ProjectArea();
-                if ($project->id) {
-                    $new_pa->project_id = $project->id;
-                } else {
-                    $new_pa->project_id = $id;
-                }
-                $new_pa->area_id = $project_area;
-                $new_pa->save();
-            }
-        }
-
-        //Set project reminders
-        if (count($request->project_reminder ?? []) > 0) {
-            foreach ($request->project_reminder as $key => $reminder) {
-                ProjectReminder::where('project_id', $project->id)->delete();
-            }
-            foreach ($request->project_reminder as $key => $reminder) {
-                ProjectReminder::updateOrCreate([
-                    'project_id' => $project->id,
-                    'set' => Carbon::createFromFormat('d-m-Y', $request->project_reminder_date[$key])->format('Y-m-d')
-                ],
-                    [
-                        'name' => $request->project_reminder_name[$key],
-                        'reminder' => $request->project_reminder[$key],
-                        'reminder_due_days' => $request->project_reminder_due_days[$key]
-                    ]);
-            }
-        }
-
-
-        //Create permissions for a new project
-        if (request('new_project') == 1) {
-            //Adds the logged in user as project owner
-            $owner = new ProjectOwner();
-            $owner->project_id = $project->id;
-            $owner->user_id = Auth::id() ?? 1;
-            $owner->save();
-
-            //Logged in user can Read, Edit and Delete project
-            $user = Auth::user();
-            $acl = new ACLHandler($project, $user);
+            $project->save();
+            $project->project_owner()->create(['user_id' => Auth::id() ?? 1]);
+            $acl = new ACLHandler($project, Auth::user());
             $acl->setNewProjectPermissions();
         }
 
-        //Activities
-        //Request from form --> this should later be refactored
-        $activity_array['id'] = request('activity_id') ?? null;
-        $activity_array['name'] = request('activity_name');
-        $activity_array['description'] = request('activity_description') ?? null;
-        $activity_array['template'] = request('activity_template') ?? null;
-        $activity_array['start'] = request('activity_start');
-        $activity_array['end'] = request('activity_end');
-        $activity_array['name'] = request('activity_name');
-        $activity_array['budget'] = request('activity_budget');
-        $activity_array['priority'] = request('activity_priority');
-        //Email reminder
-        //$activity_array['reminder'] = request('activity_reminder');
-        //$activity_array['reminder_due_days'] = request('activity_reminder_due_days');
-        //Outputs
-        $output_array['id'] = request('output_id') ?? null;
-        $output_array['indicator'] = request('output_indicator');
-        $output_array['status'] = request('output_status') ?? null;
-        $output_array['target'] = request('output_target');
-        //Outcomes
-        $outcome_array['id'] = request('outcome_id') ?? null;
-        $outcome_array['name'] = request('outcome_name');
-
-        //Remove deleted activities
-        foreach (Activity::where('project_id', $project->id)->get() as $a) {
-            if (!$activity_array['id'] || !in_array($a->id, $activity_array['id'])) {
-                Activity::findOrFail($a->id)->delete();
-            }
+        if (Auth::user()->hasRole('Partner') && $project->object_type == 'project') {
+            $original_project = $project;
+            $project = $project->replicate();
+            $project->object_id = $original_project->id;
+            $project->object_type = 'project_change_request';
+            $project->save();
+            $project->project_owner()->create(['user_id' => Auth::id() ?? 1]);
+            $acl = new ACLHandler($project, Auth::user());
+            $acl->setNewProjectPermissions();
         }
 
-        if (!empty($activity_array['id'])) {
-            foreach ($activity_array['id'] as $key => $id) {
-                $data = array();
-                $data['title'] = $activity_array['name'][$key];
-                $data['description'] = $activity_array['description'][$key];
-                $data['template'] = $activity_array['template'][$key];
-                //Transform dates from datepicker into the right format before saving to database
-                $data['start'] = Carbon::createFromFormat('d-m-Y', $activity_array['start'][$key])->format('Y-m-d');
-                $data['end'] = Carbon::createFromFormat('d-m-Y', $activity_array['end'][$key])->format('Y-m-d');
-                $data['budget'] = $activity_array['budget'][$key];
-                //$data['reminder'] = $activity_array['reminder'][$key];
-                //$data['reminder_due_days'] = $activity_array['reminder_due_days'][$key];
-                $data['project_id'] = $project->id;
-                $data['priority'] = $activity_array['priority'][$key];
-                if ($id) {
-                    Activity::where('id', $id)->update($data);
-                    //Log activity update
-                    activity()
-                        ->causedBy(Auth::user())
-                        ->performedOn(Activity::find($id))
-                        ->log('ActivityUpdate');
-                } else {
-                    $newactivity = Activity::create($data);
-                    //Log new activity
-                    activity()
-                        ->causedBy(Auth::user())
-                        ->performedOn(Activity::find($newactivity->id))
-                        ->log('NewActivity');
+
+        $project->update($request->all());
+
+        $project->project_area()->sync($request->input('project_area', []));
+
+        // Managing project reminders
+        $reminders = $request->collect('reminders'); // Get reminders from request
+        $reminders_to_remove = $project->reminders->pluck('id')->diff($reminders->pluck('id')); // Get reminders to remove
+        $reminders->each(
+            function ($reminder) use ($project) {
+                $project->reminders()->updateOrCreate( ['id' => $reminder['id'] ?? null], $reminder);
+            }
+        );
+        $project->reminders()->whereIn('id', $reminders_to_remove)->delete(); // Delete reminders to remove
+
+        // Manage activities
+        $activities = $request->collect('activities'); // Get all activities from the request and remove duplicates and null values.
+        $activities_to_remove = $project->activities->pluck('id')->diff($activities->pluck('id')); // Get all activities that are not in the request and remove them from the project.
+        $activities->each(
+            function ($activity) use ($project) {
+                $project->activities()->updateOrCreate(['id' => $activity['id'] ?? null], $activity);
                 }
-            }
-        }
+        );
+        $project->activities()->whereIn('id', $activities_to_remove)->delete(); // Delete activities.
 
-        // Remove deleted outputs
-        foreach ($project->submitted_outputs() as $o) {
-            if (!$output_array['id'] || !in_array($o->id, $output_array['id'])) {
-                Output::findOrFail($o->id)->delete();
+        // Manage outputs
+        $outputs = $request->collect('outputs'); // Get all outputs from the request.
+        $outputs_to_remove = $project->outputs->pluck('id')->diff($outputs->pluck('id')); // Get all outputs that are not in the request.
+        $outputs->each(
+            function ($output) use ($project) {
+                $output['target'] = $output['status'] == 'aggregated' ? json_encode([$output['target']]): $output['target'];
+                $project->outputs()->updateOrCreate(['id' => $output['id'] ?? null], $output);
             }
-        }
+        );
+        $project->outputs()->whereIn('id', $outputs_to_remove)->delete(); // Delete outputs.
 
-        if (!empty($output_array['id'])) {
-            foreach ($output_array['id'] as $key => $id) {
-                $data = array();
-                $data['indicator'] = $output_array['indicator'][$key];
-                $data['status'] = $output_array['status'][$key];
-                $data['target'] = $output_array['status'][$key] == 'aggregated' ? json_encode($output_array['target'][$id]): $output_array['target'][$key];
-                $data['status'] = $output_array['status'][$key];
-                $data['project_id'] = $project->id;
-                if ($id && $id < 1637934025084) {
-                    Output::where('id', $id)->update($data);
-                    //Log output update
-                    activity()
-                        ->causedBy(Auth::user())
-                        ->performedOn(Output::find($id))
-                        ->log('OutputUpdate');
-                } else {
-                    $newoutput = Output::create($data);
-                    //Log new output
-                    activity()
-                        ->causedBy(Auth::user())
-                        ->performedOn(Output::find($newoutput->id))
-                        ->log('NewOutput');
-                }
-            }
-        }
 
-        // Remove deleted outcomes
-        foreach ($project->outcomes as $o) {
-            if (!$outcome_array['id'] || !in_array($o->id, $outcome_array['id'])) {
-                Outcome::findOrFail($o->id)->delete();
-            }
+        // Manage outcomes
+        $outcomes = $request->collect('outcomes'); // Get all outcomes from the request.
+        $outcomes_to_remove = $project->outcomes->pluck('id')->diff($outcomes->pluck('id')); // Get all outcomes that are not in the request.
+        $outcomes->each(
+            function ($outcome) use ($project) {
+                $outcome['user_id'] = Auth::id();
+                $project->outcomes()->updateOrCreate(['id' => $outcome['id'] ?? null], $outcome);
         }
-
-        if (!empty($outcome_array['id'])) {
-            foreach ($outcome_array['id'] as $key => $id) {
-                $data = array();
-                $data['name'] = $outcome_array['name'][$key];
-                $data['project_id'] = $project->id;
-                $data['user_id'] = Auth::user()->id;
-                if ($id) {
-                    Outcome::where('id', $id)->update($data);
-                    //Log outcome update
-                    activity()
-                        ->causedBy(Auth::user())
-                        ->performedOn(Outcome::find($id))
-                        ->log('OutcomeUpdate');
-                } else {
-                    $newoutcome = Outcome::create($data);
-                    //Log new outcome
-                    activity()
-                        ->causedBy(Auth::user())
-                        ->performedOn(Outcome::find($newoutcome->id))
-                        ->log('NewOutcome');
-                }
-            }
-        }
+        );
+        $project->outcomes()->whereIn('id', $outcomes_to_remove)->delete(); // Delete outcomes.
 
         // Update Project managers and partners
         $project_owners = ProjectOwner::where('project_id', $project->id)->get();
         $project_partners = ProjectPartner::where('project_id', $project->id)->get();
+
+        //Store new managers
+        if ($request->user_id) {
         //Erase existing owners
         foreach ($project_owners as $project_owner) {
             $owner = ProjectOwner::find($project_owner->id);
@@ -512,9 +395,6 @@ class ProjectController extends Controller
             $user->revokePermissionTo('project-' . $project->id . '-delete');
             $owner->delete();
         }
-
-        //Store new managers
-        if ($request->user_id) {
             foreach ($request->user_id as $owner) {
                 $new_owner = new ProjectOwner();
                 $new_owner->project_id = $project->id;
@@ -525,6 +405,9 @@ class ProjectController extends Controller
                 $user->givePermissionTo('project-' . $project->id . '-list', 'project-' . $project->id . '-edit', 'project-' . $project->id . '-update', 'project-' . $project->id . '-delete');
             }
         }
+
+        //Store new partners
+        if ($request->partner_id) {
         //Erase existing partners
         if ($project_partners) {
             foreach ($project_partners as $project_partner) {
@@ -535,8 +418,6 @@ class ProjectController extends Controller
                 $partner->delete();
             }
         }
-        //Store new partners
-        if ($request->partner_id) {
             foreach ($request->partner_id as $partner) {
                 $new_partner = new ProjectPartner();
                 $new_partner->project_id = $project->id;
@@ -544,9 +425,22 @@ class ProjectController extends Controller
                 $new_partner->save();
                 //Give specific project permissions to partner
                 $user = User::find($partner);
-                $user->givePermissionTo('project-' . $project->id . '-list', 'project-' . $project->id . '-update');
+                $user->givePermissionTo('project-' . $project->id . '-list', 'project-' . $project->id . '-update', 'project-' . $project->id . '-edit');
             }
         }
+        // If user logged in as partner, give him permission to edit project
+        if (Auth::user()->hasRole('Partner')) {
+            if ($project->project_owner()->count() == 0) {
+                $project->project_owner()->create(['user_id' => 1]);
+            }
+            $new_partner = new ProjectPartner();
+            $new_partner->project_id = $project->id;
+            $new_partner->partner_id = Auth::user()->id;
+            $new_partner->save();
+            Auth::user()->givePermissionTo('project-' . $project->id . '-list', 'project-' . $project->id . '-update', 'project-' . $project->id . '-edit');
+        }
+
+
         $project->refresh();
         // Save to history
         $history = new ProjectHistory();

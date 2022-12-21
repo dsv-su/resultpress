@@ -76,7 +76,7 @@ class Project extends Model
     {
         return $this->outputs()->get()->filter(
             function ($output) {
-            return $output->status == 'custom' || $output->status == 'default';
+                return $output->status == 'custom' || $output->status == 'default';
             }
         );
     }
@@ -85,7 +85,7 @@ class Project extends Model
     {
         return $this->outputs()->get()->filter(
             function ($output) {
-            return $output->status == 'aggregated';
+                return $output->status == 'aggregated';
             }
         );
     }
@@ -144,17 +144,26 @@ class Project extends Model
         return $this->belongsTo(self::class, 'object_id')->withoutGlobalScope(ObjectType::class)->where('object_type', 'project');
     }
 
+    /**
+     * Get the comments for the project.
+     */
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+
     public function getCurrencySymbol(): string
     {
         switch ($this->currency) {
-            case "USD":
-                return '$';
-            case "EUR":
-                return '€';
-            case "GBP";
-                return '£';
-            default:
-                return 'kr';
+        case "USD":
+            return '$';
+        case "EUR":
+            return '€';
+        case "GBP";
+            return '£';
+        default:
+            return 'kr';
         }
     }
 
@@ -248,18 +257,18 @@ class Project extends Model
             $pu->activity_updates->makeHidden(['updated_at', 'created_at']);
             $pu->outcome_updates->makeHidden(['updated_at', 'created_at']);
             $pu->output_updates->makeHidden(['updated_at', 'created_at']);
-            }
+        }
         $this->areas->makeHidden(['updated_at', 'created_at', 'pivot']);
         $this->project_owner->makeHidden(['updated_at', 'created_at', 'id']);
         $this->project_owner->each(
             function ($po) {
-            $po->name = User::find($po->user_id)->name;
+                $po->name = User::find($po->user_id)->name;
             }
         );
         $this->project_partner->makeHidden(['updated_at', 'created_at', 'id']);
         $this->project_partner->each(
             function ($p) {
-            $p->name = User::find($p->partner_id)->name;
+                $p->name = User::find($p->partner_id)->name;
             }
         );
 
@@ -275,7 +284,7 @@ class Project extends Model
     {
         $lastprojectupdate = $this->project_updates->sortBy('end')->last(
             function ($pu) {
-            return $pu->end;
+                return $pu->end;
             }
         );
         return $lastprojectupdate ? $lastprojectupdate->end->addDay()->format('d/m/Y') : Carbon::now()->format('d/m/Y');
@@ -299,7 +308,7 @@ class Project extends Model
     protected static function booted()
     {
         static::addGlobalScope(new ObjectType);
-}
+    }
 
     /**
      * Scope a query to only include projects of a given type.

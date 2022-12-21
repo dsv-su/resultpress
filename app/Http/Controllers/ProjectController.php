@@ -296,11 +296,12 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @param UpdateProjectRequest $request
      * @param Project $project
      *
      * @return RedirectResponse
      */
-    public function update(Request $request, Project $project)
+    public function update(UpdateProjectRequest $request, Project $project)
     {
         if ($user = Auth::user()) {
             if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {

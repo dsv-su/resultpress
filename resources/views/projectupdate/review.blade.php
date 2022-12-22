@@ -27,7 +27,7 @@
                     @elseif($au->status == 3)
                         <td class="status done">Done</td>
                     @endif
-                    <td>{{$au->comment}}</td>
+                    <td>{!!$au->comment!!}</td>
                     <td>{{$au->money}}</td>
                     <td>{{$au->date->format('d/m/Y')}}</td>
                 </tr>
@@ -44,7 +44,7 @@
             </thead>
             @foreach($output_updates as $ou)
                 <tr>
-                    <td>{{$ou->indicator}}</td>
+                    <td>{!!$ou->indicator!!}</td>
                     <td>{{$ou->value}}</td>
                 </tr>
             @endforeach

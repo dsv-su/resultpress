@@ -182,15 +182,9 @@
                                                                                 value="{{$output->id}}">
                                                             <input type="hidden" name="outputs[{{$output->id}}][status]"
                                                                    value="{{$output->status}}">
-                                                            <input type="text"
-                                                                   name="outputs[{{$output->id}}][indicator]"
-                                                                   value="{{$output->indicator}}"
-                                                                   placeholder="Output name" required
-                                                                   maxlength="255"
-                                                                   data-target="tooltip"
-                                                                   data-trigger="manual"
-                                                                   title="Maximum length is 255 chars"
-                                                                   class="form-control form-control-sm">
+                                                            <textarea name="outputs[{{$output->id}}][indicator]"
+                                                                      data-placeholder="Output name" required
+                                                                      class="generalMediumEditor form-control form-control-sm">{{$output->indicator}}</textarea>
                                                         </td>
                                                         <td class="w-25"><input type="text" name="outputs[{{$output->id}}][target]"
                                                                                 class="form-control form-control-sm"
@@ -297,11 +291,8 @@
                                                                                  value="{{$outcome->id}}">
                                                             <textarea type="text"
                                                                    name="outcomes[{{$outcome->id}}][name]"
-                                                                   value="{{$outcome->name}}"
-                                                                   placeholder="Outcome name" required
-                                                                   class="form-control mediumEditor form-control-sm">
-                                                                   {{$outcome->name}}
-                                                            </textarea>
+                                                                   data-placeholder="Outcome name" required
+                                                                   class="generalMediumEditor form-control">{{$outcome->name}}</textarea>
                                                         </td>
                                                         <td>
                                                             <button type="button" name="remove"
@@ -394,9 +385,11 @@
                             li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
                         }
                     });
+                    $('.generalMediumEditor, .mediumEditor').css('min-height', '60px').css('height', 'auto');
 
-                    var editor = new MediumEditor('.mediumEditor#activity_template', {placeholder: {text: "Activity template"}});
+                    var editor = new MediumEditor('.mediumEditor[id*="activities"]', {placeholder: {text: "Activity template"}});
                     var editor = new MediumEditor('.mediumEditor#description', {placeholder: {text: "Describe the project"}});
+                    var generalEditor = new MediumEditor('.generalMediumEditor');
 
                     $(document).ready(function () {
                         $(document).on('click', '.collapseEditor', function () {

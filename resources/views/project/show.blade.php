@@ -222,7 +222,7 @@
             @foreach ($outputs as $o)
                 <div class="row my-1">
                     <div class="col">
-                    <span>{{$o->indicator}}
+                    <span class="d-flex">{!! $o->indicator !!}
                         @if (Auth::user()->hasRole(['Spider', 'Administrator']))
                             <span class="badge ml-2 font-100 @if($o->valuestatus == 1) badge-info @elseif($o->valuestatus == 2) badge-warning @elseif($o->valuestatus == 3) badge-success @else badge-light @endif">{{$o->valuesum}} @if ($o->status == 'custom')
                                     (unplanned) @else / {{$o->target}} @endif </span>

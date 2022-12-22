@@ -4,7 +4,7 @@
             <h5 class="mb-0">
                 <input type="hidden" name="outcome_update_id[]"
                        value="@if ($outcome_update) {{$outcome_update->id}} @else 0 @endif">
-                <span class="px-0 btn cursor-default text-left">{{$outcome->name}}</span>
+                <span class="px-0 btn cursor-default text-left">{!!$outcome->name!!}</span>
                 @if (isset($show) && $show && Auth::user()->hasRole(['Spider', 'Administrator']))
                     @if($outcome->completed())
                         <span class="badge badge-success">Completed on {{$outcome->completed()->format('d/m/Y')}}</span>
@@ -28,7 +28,7 @@
                 @foreach(json_decode($outcome_update->outputs, true) as $output)
                     <div class="row my-1">
                         <div class="col">
-                        <span>{{\App\Output::find($output)->indicator}}
+                        <span class="d-flex">{!!\App\Output::find($output)->indicator!!}
                             <span class="badge ml-2 badge-light font-100">{{$outcome_update->calculateOutputValue($output)}}</span>
                         </span>
                         </div>
@@ -52,7 +52,7 @@
                             class="custom-select"
                             multiple="multiple" required>
                         @foreach($outcome->project->outputs as $output)
-                            <option value="{{$output->id}}" {{$outcome_update && $outcome_update->outputs && in_array($output->id, json_decode($outcome_update->outputs, true)) ? 'selected':''}}>{{$output->indicator}}</option>
+                            <option value="{{$output->id}}" {{$outcome_update && $outcome_update->outputs && in_array($output->id, json_decode($outcome_update->outputs, true)) ? 'selected':''}}>{!!$output->indicator!!}</option>
                         @endforeach
                     </select>
                 </div>
@@ -60,12 +60,11 @@
 
             <div class="form-group row">
                 <div class="col-auto col-sm-4 col-md-3">
-                    <label for="outcome_summary[]" class="col-form-label">Completion
-                        description:</label>
+                    <label for="outcome_summary[]" class="col-form-label">Completion description:</label>
                 </div>
                 <div class="col-sm">
                                 <textarea class="form-control collapsed mediumEditor" id="outcome_summary[]" name="outcome_summary[]"
-                                          placeholder="Describe the outcome completion summary">@if($outcome_update) {{$outcome_update->summary}} @endif</textarea>
+                                          placeholder="Describe the outcome completion summary">@if($outcome_update) {!!$outcome_update->summary!!} @endif</textarea>
                 </div>
             </div>
         </div>

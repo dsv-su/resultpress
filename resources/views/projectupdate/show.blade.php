@@ -43,7 +43,7 @@
                         </thead>
                         @foreach($output_updates as $ou)
                             <tr>
-                                <td class="w-75">{{$ou->indicator}}</td>
+                                <td class="w-75">{!!$ou->indicator!!}</td>
                                 <td class="w-25">{{$ou->value}}</td>
                             </tr>
                         @foreach($ou->aggregated as $a)

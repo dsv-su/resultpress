@@ -83,8 +83,7 @@
             <div class="col-8 col-sm-9 px-1">
                 <textarea name="activities[{{$key}}][template]" id="activities[{{$key}}][template]"
                           placeholder="Activity description template"
-                          class="form-control form-control-sm mediumEditor collapsed">
-                            @if ($activity){{$activity->template}}@endif</textarea>
+                          class="form-control form-control-sm mediumEditor collapsed">@if ($activity){{$activity->template}}@endif</textarea>
             </div>
         </div>
         <div class="form-group row mb-0">

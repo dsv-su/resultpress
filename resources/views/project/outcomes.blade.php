@@ -60,7 +60,7 @@
                                             class="custom-select"
                                             multiple="multiple" required>
                                         @foreach($project->outputs as $output)
-                                            <option value="{{$output->id}}" {{ old('output_id') == $output->id || ($outcome->outputs && in_array($output->id, json_decode($outcome->outputs, true))) ? 'selected':''}}>{{$output->indicator}}</option>
+                                            <option value="{{$output->id}}" {{ old('output_id') == $output->id || ($outcome->outputs && in_array($output->id, json_decode($outcome->outputs, true))) ? 'selected':''}}>{!!$output->indicator!!}</option>
                                         @endforeach
                                     </select>
                                 </div>

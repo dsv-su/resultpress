@@ -6,10 +6,14 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\URL;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
+use App\Scopes\ObjectType;
 
 class Project extends Model
 {
@@ -17,7 +21,7 @@ class Project extends Model
     use SearchableTrait;
 
     //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
-    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state'];
+    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state', 'object_type', 'object_id'];
     protected $dates = ['start', 'end'];
     //protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id'];  -->refactored<--
     protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state'];
@@ -33,11 +37,26 @@ class Project extends Model
 
     protected $appends = ['link', 'type'];
 
+    /**
+     * Get the reminders for the project.
+     * 
+     * @return HasMany
+     */
+    public function reminders()
+    {
+        return $this->hasMany(ProjectReminder::class);
+    }
+
     public function activities(): HasMany
     {
         return $this->hasMany(Activity::class);
     }
 
+    /**
+     * Get the project's outputs.
+     * 
+     * @return HasMany
+     */
     public function outputs(): HasMany
     {
         return $this->hasMany(Output::class);
@@ -55,16 +74,20 @@ class Project extends Model
 
     public function submitted_outputs(): Collection
     {
-        return $this->outputs()->get()->filter(function ($output) {
-            return $output->status == 'custom' || $output->status == 'default';
-        });
+        return $this->outputs()->get()->filter(
+            function ($output) {
+                return $output->status == 'custom' || $output->status == 'default';
+            }
+        );
     }
 
     public function aggregated_outputs(): Collection
     {
-        return $this->outputs()->get()->filter(function ($output) {
-            return $output->status == 'aggregated';
-        });
+        return $this->outputs()->get()->filter(
+            function ($output) {
+                return $output->status == 'aggregated';
+            }
+        );
     }
 
 
@@ -86,9 +109,9 @@ class Project extends Model
         return $this->project_updates()->where('status', 'submitted')->get();
     }
 
-    public function project_area(): HasMany
+    public function project_area(): BelongsToMany
     {
-        return $this->hasMany(ProjectArea::class);
+        return $this->BelongsToMany(Area::class, 'project_areas', 'project_id', 'area_id');
     }
 
     public function managers(): Collection
@@ -111,17 +134,36 @@ class Project extends Model
         return $this->belongsToMany(Area::class, 'project_areas');
     }
 
+    public function change_request(): HasOne
+    {
+        return $this->HasOne(self::class, 'object_id')->withoutGlobalScope(ObjectType::class)->where('object_type', 'project_change_request');
+    }
+
+    public function main(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'object_id')->withoutGlobalScope(ObjectType::class)->where('object_type', 'project');
+    }
+
+    /**
+     * Get the comments for the project.
+     */
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+
     public function getCurrencySymbol(): string
     {
         switch ($this->currency) {
-            case "USD":
-                return '$';
-            case "EUR":
-                return '€';
-            case "GBP";
-                return '£';
-            default:
-                return 'kr';
+        case "USD":
+            return '$';
+        case "EUR":
+            return '€';
+        case "GBP";
+            return '£';
+        default:
+            return 'kr';
         }
     }
 
@@ -164,6 +206,13 @@ class Project extends Model
                 $completed++;
             }
         }
+        if($this->object_type == 'project_change_request') {
+            return 'pendingreview';
+        }
+
+        if ($this->object_type == 'project_add_request') {
+            return 'pendingreview';
+        }
 
         if ($delayedhigh) {
             // Delayed
@@ -190,68 +239,39 @@ class Project extends Model
         }
     }
 
-    public
-    function wrapJson()
+    public function wrapJson()
     {
         foreach ($this->outputs as $i => $o) {
             if (!$o->status) {
                 $this->outputs->forget($i);
             }
-            $o->makeHidden('updated_at');
-            $o->makeHidden('created_at');
-            $o->makeHidden('project_id');
         }
-        foreach ($this->activities as $a) {
-            $a->makeHidden('updated_at');
-            $a->makeHidden('created_at');
-            $a->makeHidden('project_id');
-            $a->makeHidden('deleted_at');
-        }
-        foreach ($this->outcomes as $o) {
-            $o->makeHidden('updated_at');
-            $o->makeHidden('created_at');
-            $o->makeHidden('user_id');
-            $o->makeHidden('project_id');
-        }
+        $this->makeHidden(['updated_at', 'created_at', 'type', 'link']);
+        $this->outputs->makeHidden(['updated_at', 'created_at', 'project_id']);
+        $this->activities->makeHidden(['updated_at', 'created_at', 'project_id', 'deleted_at']);
+        $this->outcomes->makeHidden(['updated_at', 'created_at', 'project_id', 'user_id']);
+        $this->project_updates->makeHidden(['updated_at', 'created_at', 'project_id']);
         foreach ($this->project_updates as $pu) {
-            $pu->makeHidden('project_id');
-            $pu->makeHidden('updated_at');
-            $pu->makeHidden('created_at');
             $pu->user = User::find($pu->user_id)->name;
-            foreach ($pu->activity_updates as $au) {
-                $au->makeHidden('updated_at');
-                $au->makeHidden('created_at');
+            $pu->makeHidden(['updated_at', 'created_at', 'project_id']);
+            $pu->activity_updates->makeHidden(['updated_at', 'created_at']);
+            $pu->outcome_updates->makeHidden(['updated_at', 'created_at']);
+            $pu->output_updates->makeHidden(['updated_at', 'created_at']);
+        }
+        $this->areas->makeHidden(['updated_at', 'created_at', 'pivot']);
+        $this->project_owner->makeHidden(['updated_at', 'created_at', 'id']);
+        $this->project_owner->each(
+            function ($po) {
+                $po->name = User::find($po->user_id)->name;
             }
-            foreach ($pu->outcome_updates as $ou) {
-                $ou->makeHidden('updated_at');
-                $ou->makeHidden('created_at');
+        );
+        $this->project_partner->makeHidden(['updated_at', 'created_at', 'id']);
+        $this->project_partner->each(
+            function ($p) {
+                $p->name = User::find($p->partner_id)->name;
             }
-            foreach ($pu->output_updates as $ou) {
-                $ou->makeHidden('updated_at');
-                $ou->makeHidden('created_at');
-            }
-        }
-        foreach ($this->areas as $a) {
-            $a->makeHidden('updated_at');
-            $a->makeHidden('created_at');
-            $a->makeHidden('pivot');
-        }
-        foreach ($this->project_owner as $po) {
-            $po->makeHidden('updated_at');
-            $po->makeHidden('created_at');
-            $po->makeHidden('id');
-            $po->name = User::find($po->user_id)->name;
-        }
-        foreach ($this->project_partner as $p) {
-            $p->makeHidden('updated_at');
-            $p->makeHidden('created_at');
-            $p->makeHidden('id');
-            $p->name = USer::find($p->partner_id)->name;
-        }
-        $this->makeHidden('updated_at');
-        $this->makeHidden('created_at');
-        $this->makeHidden('type');
-        $this->makeHidden('link');
+        );
+
         $json = $this->toJson(JSON_PRETTY_PRINT);
         $previous = $this->histories()->orderBy('id', 'desc')->first()->data ?? null;
         if ($json != $previous) {
@@ -262,24 +282,44 @@ class Project extends Model
 
     public function getNextProjectUpdateDate()
     {
-        $lastprojectupdate = $this->project_updates->sortBy('end')->last(function ($pu) {
-            return $pu->end;
-        });
+        $lastprojectupdate = $this->project_updates->sortBy('end')->last(
+            function ($pu) {
+                return $pu->end;
+            }
+        );
         return $lastprojectupdate ? $lastprojectupdate->end->addDay()->format('d/m/Y') : Carbon::now()->format('d/m/Y');
     }
 
-    public
-    function getLinkAttribute(): string
+    public function getLinkAttribute(): string
     {
         return $this->attributes['link'] = URL::to('/') . '/project/' . $this->id;
     }
 
-    public
-    function getTypeAttribute(): string
+    public function getTypeAttribute(): string
     {
         return 'project';
     }
 
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new ObjectType);
+    }
+
+    /**
+     * Scope a query to only include projects of a given type.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  mixed                                 $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfType($query, $type = 'project')
+    {
+        return $query->where('object_type', $type);
+    }
+
 }
-
-

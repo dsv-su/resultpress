@@ -1,6 +1,20 @@
 :root {
     --input-padding-x: 1.5rem;
-    --input-padding-y: .75rem;
+    --input-padding-y: 0.75rem;
+}
+body {
+    background-color: floralwhite;
+}
+.spider-logo {
+    max-width: 10rem;
+    margin-top: 3rem;
+}
+
+#main-h1 {
+    color: #9e0372;
+    font-weight: bold;
+    font-size: 3rem;
+    margin-bottom: 3rem;
 }
 
 .card-signin {
@@ -26,7 +40,7 @@
 .form-signin .btn {
     font-size: 80%;
     border-radius: 5rem;
-    letter-spacing: .1rem;
+    letter-spacing: 0.1rem;
     font-weight: bold;
     padding: 1rem;
     transition: all 0.2s;
@@ -42,12 +56,12 @@
     border-radius: 2rem;
 }
 
-.form-label-group>input,
-.form-label-group>label {
+.form-label-group > input,
+.form-label-group > label {
     padding: var(--input-padding-y) var(--input-padding-x);
 }
 
-.form-label-group>label {
+.form-label-group > label {
     position: absolute;
     top: 0;
     left: 0;
@@ -58,8 +72,8 @@
     line-height: 1.5;
     color: #495057;
     border: 1px solid transparent;
-    border-radius: .25rem;
-    transition: all .1s ease-in-out;
+    border-radius: 0.25rem;
+    transition: all 0.1s ease-in-out;
 }
 
 .form-label-group input::-webkit-input-placeholder {
@@ -87,19 +101,18 @@
     padding-bottom: calc(var(--input-padding-y) / 3);
 }
 
-.form-label-group input:not(:placeholder-shown)~label {
+.form-label-group input:not(:placeholder-shown) ~ label {
     padding-top: calc(var(--input-padding-y) / 3);
     padding-bottom: calc(var(--input-padding-y) / 3);
     font-size: 12px;
     color: #777;
 }
 
-
 /* Fallback for Edge
 -------------------------------------------------- */
 
 @supports (-ms-ime-align: auto) {
-    .form-label-group>label {
+    .form-label-group > label {
         display: none;
     }
     .form-label-group input::-ms-input-placeholder {
@@ -110,9 +123,8 @@
 /* Fallback for IE
 -------------------------------------------------- */
 
-@media all and (-ms-high-contrast: none),
-(-ms-high-contrast: active) {
-    .form-label-group>label {
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .form-label-group > label {
         display: none;
     }
     .form-label-group input:-ms-input-placeholder {

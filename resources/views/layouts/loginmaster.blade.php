@@ -8,9 +8,6 @@
 <body>
 <div id="container" class="wrapper">
     <a class="accessibility-link" accesskey="s" href="#content-top" title="Skip navigation"></a>
-    <div id="top-links">&nbsp;</div>
-    @include('layouts.partials.header')
-
     <div id="contents">
         <a class="accessibility-link"></a>
         @yield('content')

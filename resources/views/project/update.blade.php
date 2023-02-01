@@ -114,7 +114,7 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             @foreach ($project->submitted_outputs() as $output)
                                 <a class="dropdown-item add-output" href="#" id="{{$output->id}}"
-                                   @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status == 'draft') style="display: none;" @endif>{!!$output->indicator!!}</a>
+                                   @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status == 'draft') style="display: none;" @endif>{{$output->indicator}}</a>
                             @endforeach
                             <a class="dropdown-item add-output" href="#" id="0">Add a new output</a>
                         </div>
@@ -145,7 +145,7 @@
                                 @foreach ($project->outcomes as $outcome)
                                     <a class="dropdown-item add-outcome" href="#"
                                        id="{{$outcome->id}}"
-                                       @if ((!empty($project_update->outcome_updates) && $project_update->outcome_updates->keyBy('outcome_id')->get($outcome->id)) || !$outcome->outcome_updates->isEmpty()) style="display: none;" @endif>{!!$outcome->name!!}</a>
+                                       @if ((!empty($project_update->outcome_updates) && $project_update->outcome_updates->keyBy('outcome_id')->get($outcome->id)) || !$outcome->outcome_updates->isEmpty()) style="display: none;" @endif>{{$outcome->name}}</a>
                                 @endforeach
                             </div>
                         </div>
@@ -217,7 +217,6 @@
 
     <script>
         $(document).ready(function () {
-            $('.generalMediumEditor, .mediumEditor').css('min-height', '60px').css('height', 'auto !important');
             if ($('#project_state').val() == 0) {
                 $("#project_update_summary").prop('required', false);
             } else {

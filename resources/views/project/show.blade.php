@@ -28,28 +28,6 @@
         @endif
     </div>
 
-    @if($errors->any())
-        <div class="form-row">
-            <div class="col">
-                @foreach($errors->all() as $error)
-                    <div class="alert alert-danger" role="alert">
-                        {{$error}}
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
-
-    @if(session()->has('success'))
-        <div class="form-row">
-            <div class="col">
-                <div class="alert alert-success" role="alert">
-                    {{ session()->get('success') }}
-                </div>
-            </div>
-        </div>
-    @endif
-
     <p><a href="{{ url()->previous() }}">Return back</a></p>
     <p>@include('project.action_links')</p>
 
@@ -222,7 +200,7 @@
             @foreach ($outputs as $o)
                 <div class="row my-1">
                     <div class="col">
-                    <span class="d-flex">{!! $o->indicator !!}
+                    <span>{{$o->indicator}}
                         @if (Auth::user()->hasRole(['Spider', 'Administrator']))
                             <span class="badge ml-2 font-100 @if($o->valuestatus == 1) badge-info @elseif($o->valuestatus == 2) badge-warning @elseif($o->valuestatus == 3) badge-success @else badge-light @endif">{{$o->valuesum}} @if ($o->status == 'custom')
                                     (unplanned) @else / {{$o->target}} @endif </span>
@@ -243,8 +221,6 @@
         </div>
     @else The project has no outputs.
     @endif
-
-    @livewire('comments', ['project' => $project, 'comments' => $project->comments])
 
     <script>
         $(function () {

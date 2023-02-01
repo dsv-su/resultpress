@@ -41,7 +41,7 @@ class HomeController extends Controller
 
                 $data['user'] = User::find(auth()->user()->id);
 
-                $data['areas'] = Area::with('projects.project_owner.user')->get();
+                $data['areas'] = Area::with('project_area.project.project_owner.user')->get();
 
                 $data['otherprojects'] = Project::doesntHave('project_area')->get();
 

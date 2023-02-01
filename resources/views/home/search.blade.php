@@ -15,7 +15,6 @@
                         @if (Auth::user()->hasRole(['Administrator', 'Program administrator', 'Spider']))
                             <option value="followed">Followed projects</option>
                         @endif
-                        <option value="requested">Requested Projects</option>
                     </select>
                     <select name="manager" @if (empty($projectmanagers)) disabled
                             @endif class="mb-2 form-control mx-1 selectpicker"

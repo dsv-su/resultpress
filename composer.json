@@ -24,7 +24,7 @@
     "spatie/laravel-permission": "^3.17",
     "spatie/laravel-searchable": "^1.9",
     "swaggest/json-diff": "^3.8",
-    "uabookstores/laravel-shibboleth": "3.4"
+    "uabookstores/laravel-shibboleth": "^3.3"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^2.7",

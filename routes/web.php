@@ -41,8 +41,6 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::get('/project/{project}/update', 'ProjectController@write_update')->name('project_write_update');
     Route::get('/project/{project}/updates', 'ProjectUpdateController@index')->name('projectupdate_index');
     Route::put('/project/{project}/update', 'ProjectController@save_update')->name('project_save_update');
-    Route::get('/project/{project}/accept', 'ProjectController@accept')->name('project_accept');
-    Route::get('/project/{project}/reject', 'ProjectController@reject')->name('project_reject');
     Route::put('/project/{project}', 'ProjectController@update')->name('project_update');
     Route::get('/project/{project}/archive', 'ProjectController@archive')->name('project_archive');
     Route::get('/project/{project}/unarchive', 'ProjectController@unarchive')->name('project_unarchive');

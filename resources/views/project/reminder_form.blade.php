@@ -1,27 +1,21 @@
-@php
-    $key = Str::random(10);
-@endphp
 <div class="card bg-light m-auto">
     <div class="card-body pb-1">
         <div class="form-group mb-2 row">
-            @if ($reminder)
-            <input type="hidden" name="reminders[{{$key}}][id]" value="{{$reminder->id}}">
-            @endif
-            <label for="reminders[{{$key}}][name]"
+            <label for="project_reminder[]"
                    class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label>
             <div class="col-8 col-sm-9 px-1">
                 <input class="form-control form-control-sm w-100"
-                       name="reminders[{{$key}}][name]"
+                       name="project_reminder_name[]"
                        type="text" placeholder="Name"
-                       value="{{ old('reminders[$key][name]', empty($reminder->name) ? '' : $reminder->name) }}">
+                       value="{{ old('project_reminder_name', empty($reminder->name) ? '' : $reminder->name) }}">
             </div>
         </div>
         <div class="form-group mb-2 row">
-            <label for="reminders[{{$key}}][reminder]"
+            <label for="project_reminder[]"
                    class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Email
                 reminder</label>
             <div class="col-8 col-sm-2 px-1">
-                <select name="reminders[{{$key}}][reminder]"
+                <select name="project_reminder[]"
                         class="form-control form-control-sm">
                         <option value="1" @if ($reminder && $reminder->reminder) selected="selected" @endif>Yes</option>
                         <option value="0" @if (!$reminder || !$reminder->reminder) selected="selected" @endif>No</option>
@@ -29,21 +23,21 @@
             </div>
         </div>
         <div class="form-group mb-2 row">
-            <label for="reminders[{{$key}}][set]"
+            <label for="project_reminder_due_days[]"
                    class="col-4 col-sm-3 col-form-label-sm text-right">Deadline</label>
             <div class="col-8 col-sm-auto px-1">
-                <input type="text" name="reminders[{{$key}}][set]"
-                       id="reminders[{{$key}}][set]"
+                <input type="text" name="project_reminder_date[]"
+                       id="project_reminder_date"
                        placeholder="Deadline Date"
-                       value="{{ old('reminders[$key][set]', empty($reminder->set) ? '' : $reminder->set->format('d-m-Y')) }}"
+                       value="{{ old('project_reminder_date', empty($reminder->set) ? '' : $reminder->set->format('d-m-Y')) }}"
                        class="form-control form-control-sm datepicker" required>
 
             </div>
-            <label for="reminders[{{$key}}][reminder_due_days]"
+            <label for="project_reminder_due_days[]"
                    class="col-4 col-sm-auto col-form-label-sm text-right pr-1">Days
                 before</label>
             <div class="col-8 col-sm-1 px-1">
-                <input type="number" name="reminders[{{$key}}][reminder_due_days]"
+                <input type="number" name="project_reminder_due_days[]"
                        @if ($reminder) value="{{ $reminder->reminder_due_days}}" @else value="0" @endif
                         placeholder="0"
                        class="form-control form-control-sm form-inline"

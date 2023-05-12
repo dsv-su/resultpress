@@ -340,17 +340,23 @@ tr.update > td {
 
 .medium-editor-element.expanded {
     height: 100%;
+    min-height: 80px !important;
     overflow: visible;
 }
 
 .medium-editor-element.collapsed {
-    height: 29px !important;
+    min-height: 80px !important;
     overflow: hidden;
+}
+
+[name="project_update_summary"] {
+    min-height: 200px !important;
 }
 
 .collapseEditor {
     margin-left: 6px;
     cursor: pointer;
+    display: none;
 }
 
 select[name="activity_reminder[]"] {

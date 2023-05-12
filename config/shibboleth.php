@@ -76,11 +76,11 @@ return [
     'entitlement' => $system_config['global']['authorization'],
 
     'user' => [
-        'name' => env('SHIBB_NAME', 'displayName'),
-        'first_name' => env('SHIBB_FNAME', 'givenName'),
-        'last_name' => env('SHIBB_LNAME', 'sn'),
-        'email' => env('SHIBB_EMAIL', 'mail'),
-        'emplid' => env('SHIBB_EMPLID', 'eppn'),
+        'name' => env('SHIBB_NAME', 'Shib-cn'),
+        'first_name' => env('SHIBB_FNAME', 'Shib-givenName'),
+        'last_name' => env('SHIBB_LNAME', 'Shib-sn'),
+        'email' => env('SHIBB_EMAIL', 'Shib-mail'),
+        'emplid' => env('SHIBB_EMPLID', 'Shib-emplId'),
     ],
 
     //The user model field (from the user array above) that should be used for authentication

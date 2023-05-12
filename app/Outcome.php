@@ -26,10 +26,9 @@ class Outcome extends Model
     }
 
     public function completed() {
-        foreach ($this->outcome_updates as $ou) {
-            if ($ou->completed_on && $ou->project_update->status == 'approved') {
-                return $ou->completed_on;
-            }
+        $latest_update = $this->outcome_updates->sortBy('created_at', SORT_REGULAR, true)->first();
+        if($latest_update && $latest_update->project_update->status == 'approved' && $latest_update->completed_on) {
+            return $latest_update->completed_on;
         }
         return false;
     }

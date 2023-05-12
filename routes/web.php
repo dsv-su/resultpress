@@ -21,7 +21,7 @@ if (class_exists(AuthHandler::class))
 Route::get($login, 'SystemController@login')->name('login');
 
 Route::middleware('auth', 'entitlements')->group(function () {
-    Route::get('/', 'ProjectController@home')->name('home');
+    Route::get('/', 'HomeController@index')->name('home');
     Route::get('/projects', 'ProjectController@index')->name('project_home');
     Route::get('/shibboleth', 'ProjectController@shibboleth')->name('shibboleth');
     Route::get('/project/create', 'ProjectController@edit')->name('project_create');
@@ -36,6 +36,8 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::put('/project/update/{project_update}/review', 'ProjectUpdateController@update')->name('projectupdate_update');
     Route::get('/project/{project}', 'ProjectController@show')->name('project_show');
     Route::get('/project/{project}/delete', 'ProjectController@destroy')->name('project_delete');
+    Route::get('/project/{project}/archive', 'ProjectController@archive')->name('project_archive');
+    Route::get('/project/{project}/unarchive', 'ProjectController@unarchive')->name('project_unarchive');
     Route::get('/project/{project}/edit', 'ProjectController@edit')->name('project_edit');
     Route::get('/project/{project}/history', 'ProjectController@history')->name('project_history');
     Route::get('/project/{project}/update', 'ProjectController@write_update')->name('project_write_update');

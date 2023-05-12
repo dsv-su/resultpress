@@ -58,7 +58,7 @@
         <div class="form-group row mb-0">
             <label for="activity_template[]"
                    class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Additional information
-                <i class="fas fa-chevron-right collapseEditor"></i></label>
+                <i class="fas fa-chevron-right collapseEditor hidden"></i></label>
             <div class="col-8 col-sm-9 px-1">
                 @if (isset($show) && $show)
                     <textarea name="activity_comment[]"

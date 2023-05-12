@@ -42,23 +42,117 @@
         </div>
 
         <div class="form-group">
-            <label for="aus_list" class="form-group-header">Covered activities</label>
+            <label for="project_update_summary" class="form-group-header mt-4">Summary</label>
+            <textarea rows="4"
+                      class="form-control form-control-sm mediumEditor @error('project_update_summary') is-danger @enderror"
+                      name="project_update_summary" id="project_update_summary"
+            >{{ old('project_description', empty($project_update) ? '' : $project_update->summary) }}</textarea>
+            @error('project_description')
+            <div class="text-danger">
+                {{ $errors->first('project_update_summary') }}
+            </div>@enderror
+        </div>
+
+        <div class="form-group">
+            <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
+            @if (!$project->outcomes->isEmpty())
+                <div id="outcomes">
+                    @if (!empty($project_update->outcome_updates))
+                        @foreach($project_update->outcome_updates as $ou)
+                            <div class="card mb-3">
+                                @include('project.outcome_update', ['outcome' => $ou->outcome, 'outcome_update' => $ou])
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+                <div class="col-md-8 col-lg my-2 px-0" style="min-width: 16rem;">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutcomes"
+                                data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            Select outcomes to update
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            @foreach ($project->outcomes as $outcome)
+                                <a class="dropdown-item add-outcome" href="#"
+                                   id="{{$outcome->id}}"
+                                   @if ((!empty($project_update->outcome_updates) && $project_update->outcome_updates->keyBy('outcome_id')->get($outcome->id)) || !$outcome->outcome_updates->isEmpty()) style="" @endif>{!!$outcome->name!!}</a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @else
+                <p>The project has no outcomes added</p>
+            @endif
+        </div>
+
+        <div class="form-group">
+            <label for="outputs_table" class="form-group-header mt-4">Outputs</label>
+            <div class="col-md-8 col-lg-6 my-2 px-0" style="min-width: 16rem;">
+                <div class="card bg-light m-auto"
+                     @if (empty($ous) || $ous->isEmpty()) style="display: none;" @endif>
+                    <div class="card-body p-1">
+                        <table class="table table-sm table-borderless mb-0" id="outputs_table">
+                            <thead>
+                            <th>Output</th>
+                            <th>Value</th>
+                            <th></th>
+                            </thead>
+                            @if (!empty($ous))
+                                @foreach($ous as $ou)
+                                    <tr>
+                                        <input type="hidden" name="output_update_id[]" value="{{$ou->id}}">
+                                        <td class="w-75"><input type="hidden" id="output" name="output_id[]"
+                                                                value="{{$ou->output_id}}">{{$ou->indicator}}</td>
+                                        <td class="w-25"><input type="number" name="output_value[]"
+                                                                class="form-control form-control-sm"
+                                                                size="3" required value="{{$ou->value}}"></td>
+                                        <td>
+                                            <button type="button" name="remove" id="{{$ou->output_id}}"
+                                                    class="btn btn-outline-danger btn-sm remove"><i
+                                                        class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </table>
+                    </div>
+                </div>
+                <div class="dropdown mt-2">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutputs"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        Select outputs to update
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        @foreach ($project->submitted_outputs() as $output)
+                            <a class="dropdown-item add-output" href="#" id="{{$output->id}}"
+                               @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status == 'draft') style="display: none;" @endif>{!!$output->indicator!!}</a>
+                        @endforeach
+                        <a class="dropdown-item add-output" href="#" id="0">Add a new output</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aus_list" class="form-group-header mt-4">Covered activities</label>
             @if (!$project->activities->isEmpty())
                 <div class="d-flex flex-wrap" id="aus_list">
                     @if (!empty($aus))
                         @foreach($aus as $au)
-                            <div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;">
+                            <div class="col-lg-6 my-2 px-0" style="min-width: 16rem; max-width: 40rem;">
                                 @include('project.activity_update', ['a' => $au->activity, 'au' => $au])
                             </div>
                         @endforeach
                     @endif
                 </div>
 
-                <div class="col-lg-6 my-2 px-2 dropdown">
+                <div class="col-lg-6 my-2 px-0 dropdown">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addActivities"
                             data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
-                        Add Activity
+                        Select activities to update
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         @foreach ($project->activities as $activity)
@@ -72,88 +166,6 @@
             @else
                 <p>The project has no activities added</p>
             @endif
-
-            <div class="form-group">
-                <label for="outputs_table" class="form-group-header mt-4">Affected outputs</label>
-                <div class="col-md-8 col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                    <div class="card bg-light m-auto"
-                         @if (empty($ous) || $ous->isEmpty()) style="display: none;" @endif>
-                        <div class="card-body p-1">
-                            <table class="table table-sm table-borderless mb-0" id="outputs_table">
-                                <thead>
-                                <th>Output</th>
-                                <th>Value</th>
-                                <th></th>
-                                </thead>
-                                @if (!empty($ous))
-                                    @foreach($ous as $ou)
-                                        <tr>
-                                            <input type="hidden" name="output_update_id[]" value="{{$ou->id}}">
-                                            <td class="w-75"><input type="hidden" id="output" name="output_id[]"
-                                                                    value="{{$ou->output_id}}">{{$ou->indicator}}</td>
-                                            <td class="w-25"><input type="number" name="output_value[]"
-                                                                    class="form-control form-control-sm"
-                                                                    size="3" required value="{{$ou->value}}"></td>
-                                            <td>
-                                                <button type="button" name="remove" id="{{$ou->output_id}}"
-                                                        class="btn btn-outline-danger btn-sm remove"><i
-                                                            class="fas fa-trash-alt"></i></button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-                            </table>
-                        </div>
-                    </div>
-                    <div class="dropdown mt-2">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutputs"
-                                data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                            Add Output
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @foreach ($project->submitted_outputs() as $output)
-                                <a class="dropdown-item add-output" href="#" id="{{$output->id}}"
-                                   @if ((!empty($ous) && $ous->keyBy('output_id')->get($output->id)) || $output->status == 'draft') style="display: none;" @endif>{!!$output->indicator!!}</a>
-                            @endforeach
-                            <a class="dropdown-item add-output" href="#" id="0">Add a new output</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
-                @if (!$project->outcomes->isEmpty())
-                    <div id="outcomes">
-                        @if (!empty($project_update->outcome_updates))
-                            @foreach($project_update->outcome_updates as $ou)
-                                <div class="card mb-3">
-                                    @include('project.outcome_update', ['outcome' => $ou->outcome, 'outcome_update' => $ou])
-                                </div>
-                            @endforeach
-                        @endif
-                    </div>
-                    <div class="col-md-8 col-lg my-2 px-2" style="min-width: 16rem;">
-                        <div class="dropdown">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="addOutcomes"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
-                                Add Outcome
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                @foreach ($project->outcomes as $outcome)
-                                    <a class="dropdown-item add-outcome" href="#"
-                                       id="{{$outcome->id}}"
-                                       @if ((!empty($project_update->outcome_updates) && $project_update->outcome_updates->keyBy('outcome_id')->get($outcome->id)) || !$outcome->outcome_updates->isEmpty()) style="display: none;" @endif>{!!$outcome->name!!}</a>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                @else
-                    <p>The project has no outcomes added</p>
-                @endif
-            </div>
 
             <div class="form-group">
                 <label for="attachments" class="form-group-header mt-4">Attachments</label>
@@ -192,26 +204,14 @@
                 </div>
             @endif
 
-            <div class="form-group">
-                <label for="project_update_summary" class="form-group-header mt-4">Summary</label>
-                <textarea rows="4"
-                          class="form-control form-control-sm mediumEditor @error('project_update_summary') is-danger @enderror"
-                          name="project_update_summary" id="project_update_summary"
-                >{{ old('project_description', empty($project_update) ? '' : $project_update->summary) }}</textarea>
-                @error('project_description')
-                <div class="text-danger">
-                    {{ $errors->first('project_update_summary') }}
-                </div>@enderror
-            </div>
-
             @if (empty($project_update) || $project_update->status == 'draft')
-                <input class="btn btn-lg btn-secondary" role="button" name="draft" value="Save as draft" type="submit">
+                <input class="btn btn-lg btn-secondary mt-5" role="button" name="draft" value="Save as draft" type="submit">
             @endif
             @if (!empty($project_update) && $project_update->status == 'draft')
-                <input class="btn btn-lg btn-danger" role="button" name="delete" value="Delete this draft"
+                <input class="btn btn-lg btn-danger mt-5" role="button" name="delete" value="Delete this draft"
                        type="submit">
             @endif
-            <input class="btn btn-lg btn-success" role="button" name="submit" value="Submit" type="submit">
+            <input class="btn btn-lg btn-success mt-5" role="button" name="submit" value="Submit" type="submit">
         </div>
     </form>
 

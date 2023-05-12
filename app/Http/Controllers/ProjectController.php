@@ -37,6 +37,9 @@ use App\Notifications\ProjectAccepted;
 use App\Notifications\ProjectRejected;
 use App\Notifications\ProjectChangeAccepted;
 use App\Notifications\ProjectChangeRejected;
+use App\Notifications\ProjectChangeRequest;
+use App\Notifications\NewProjectRequest;
+use App\Notifications\ProjectUpdated;
 
 class ProjectController extends Controller
 {
@@ -68,7 +71,6 @@ class ProjectController extends Controller
          *   This is the first page the user is routed to. It shows the three sections if the user is a spider or administrator.
          *  If the user is a Partner it shows the projects the user is assigned (invited) to
          ****/
-        return redirect()->route('search');
         $data['program_areas'] = Area::all();
 
         if ($user = Auth::user()) {
@@ -270,10 +272,15 @@ class ProjectController extends Controller
         $currentLink = request()->path(); // Getting current URI like 'project/id/edit'
         array_unshift($links, $currentLink); // Putting it in the beginning of links array
         session(['links' => $links]); // Saving links array to the session
+        $formView = 'project.form';
+
+        if($project->object_type === 'project_change_request') {
+            $formView = 'project.change_request_form';
+        }
 
         if ($user = Auth::user()) {
             if ($user->hasPermissionTo('project-create') || ($project->id && $user->hasPermissionTo('project-' . $project->id . '-edit'))) {
-                return view('project.form', [
+                return view($formView, [
                     'project' => $project,
                     'activities' => $project->activities,
                     'outputs' => $project->submitted_outputs(),
@@ -286,7 +293,7 @@ class ProjectController extends Controller
                     'partners' => ProjectPartner::where('project_id', $project->id)->pluck('partner_id')->toArray(),
                     'project_reminders' => ProjectReminder::where('project_id', $project->id)->get(),
                     'invites' => Invite::where('project_id', $project->id)->get(),
-                    'organisations' => Organisation::all()
+                    'organisations' => Organisation::all(),
                     /*'managers' => User::whereHas('project_owner', function ($query) use($project) {
                                     return $query->where('project_id', $project->id);
                                     })->get()*/
@@ -312,15 +319,24 @@ class ProjectController extends Controller
             return redirect()->back()->withErrors($request->errors());
         }
 
+        $notifications = [
+            'new_project' => false,
+            'change_request' => false,
+            'project_updated' => false,
+        ];
+
         // Add or Update project.
         if ($request->has('new_project')) {
+            $current_user = Auth::id();
             $project = new Project(['name' => $request->name]);
             if (Auth::user()->hasRole('Partner')) {
                 $project->object_type = 'project_add_request';
-        }
+                $notifications['new_project'] = true;
+                $current_user = 1;
+            }
             $project->save();
-            $project->project_owner()->create(['user_id' => Auth::id() ?? 1]);
-            $acl = new ACLHandler($project, Auth::user());
+            $project->project_owner()->create(['user_id' => $current_user ?? 1]);
+            $acl = new ACLHandler($project, User::find($current_user));
             $acl->setNewProjectPermissions();
         }
 
@@ -330,9 +346,19 @@ class ProjectController extends Controller
             $project->object_id = $original_project->id;
             $project->object_type = 'project_change_request';
             $project->save();
-            $project->project_owner()->create(['user_id' => Auth::id() ?? 1]);
+            // $project->project_owner()->create(['user_id' => Auth::id() ?? 1]);
             $acl = new ACLHandler($project, Auth::user());
             $acl->setNewProjectPermissions();
+            // TODO: we still need to set permissions here, but we need to do it in a way that doesn't duplicate the permissions
+            $notifications['change_request'] = true;
+        }
+
+        if (Auth::user()->hasRole('Partner') && $project->object_type == 'project_change_request') {
+            $notifications['change_request'] = true;
+        }
+
+        if (in_array($project->object_type, ['project_add_request'])) {
+            $notifications['project_updated'] = true;
         }
 
 
@@ -437,7 +463,7 @@ class ProjectController extends Controller
             if ($project->project_owner()->count() == 0) {
                 $project->project_owner()->create(['user_id' => 1]);
             }
-            $new_partner = new ProjectPartner();
+            $new_partner = ProjectPartner::firstOrNew(['project_id' => $project->id, 'partner_id' => Auth::user()->id]);
             $new_partner->project_id = $project->id;
             $new_partner->partner_id = Auth::user()->id;
             $new_partner->save();
@@ -453,6 +479,39 @@ class ProjectController extends Controller
         $history->data = $project->wrapJson();
         if ($history->data) {
             $history->save();
+        }
+
+        $admins = User::role(['Administrator', 'Program administrator'])->get();
+
+        if ($notifications['new_project']) {
+            $admins->each(function ($admin) use ($project) {
+                $admin->notify(new NewProjectRequest($project));
+            });
+            $project->project_partner->each(function ($partner) use ($project) {
+                $partner->user->notify(new NewProjectRequest($project));
+            });
+        }
+        if ($notifications['change_request']) {
+            if ( $project->project_owner->isEmpty() || ($project->project_owner()->count() == 1 && $project->project_owner->pluck('user.id')->first() == 1) ) {
+                $admins->each(function ($admin) use ($project) {
+                    $admin->notify(new ProjectChangeRequest($project, $admin));
+                });
+            } else {
+                $project->project_owner->each(function ($owner) use ($project) {
+                    $owner->user->notify(new ProjectChangeRequest($project));
+                });
+            }
+            $project->project_partner->each(function ($partner) use ($project) {
+                $partner->user->notify(new ProjectChangeRequest($project));
+            });
+        }
+        if ($notifications['project_updated']) {
+            $project->project_owner->each(function ($owner) use ($project) {
+                $owner->user->notify(new ProjectUpdated($project));
+            });
+            $project->project_partner->each(function ($partner) use ($project) {
+                $partner->user->notify(new ProjectUpdated($project));
+            });
         }
 
         return redirect()->route('project_show', $project);
@@ -624,6 +683,7 @@ class ProjectController extends Controller
         $outcome_update_array['outcome_update_id'] = request('outcome_update_id');
         $outcome_update_array['outcome_outputs'] = request('outcome_outputs');
         $outcome_update_array['outcome_summary'] = request('outcome_summary');
+        $outcome_update_array['outcome_completion'] = request('outcome_completion');
 
         // Remove deleted activity updates
         foreach ($projectupdate->outcome_updates()->get() as $ou) {
@@ -638,7 +698,7 @@ class ProjectController extends Controller
                 $ou->outcome_id = Outcome::findOrFail($id)->id;
                 $ou->outputs = $outcome_update_array['outcome_outputs'][$key];
                 $ou->summary = $outcome_update_array['outcome_summary'][$key];
-                $ou->completed_on = Carbon::now();
+                $ou->completed_on = $outcome_update_array['outcome_completion'][$key] ? Carbon::now() : null;
                 $ou->project_update_id = $projectupdate_id;
                 $ou->save();
                 activity()
@@ -807,11 +867,11 @@ class ProjectController extends Controller
     public function archive(Project $project)
     {
         if ($user = Auth::user()) {
-            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
+            if (!$user->hasRole(['Spider', 'Administrator', 'Program administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
                 abort(403);
             }
         }
-        $project->archived = true;
+        $project->object_type = 'project_archive';
         $project->update();
         return redirect()->route('project_show', $project);
     }
@@ -819,11 +879,11 @@ class ProjectController extends Controller
     public function unarchive(Project $project)
     {
         if ($user = Auth::user()) {
-            if (!$user->hasRole(['Administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
+            if (!$user->hasRole(['Spider', 'Administrator', 'Program administrator']) && !$user->hasPermissionTo('project-' . $project->id . '-edit')) {
                 abort(403);
             }
         }
-        $project->archived = false;
+        $project->object_type = 'project';
         $project->update();
         return redirect()->route('project_show', $project);
     }

@@ -322,4 +322,68 @@ class Project extends Model
         return $query->where('object_type', $type);
     }
 
+    public function getHistory( $attribute = 'name', $id = null)
+    {
+        $history = $this->histories()->orderBy('id', 'desc')->skip(1)->first();
+        if ($history) {
+            $data = json_decode($history->data ?? '{}', true);
+            $data = collect($data);
+            if($attribute == 'areas' && is_array($data->get($attribute)) && ! empty($data->get($attribute))) {
+                $historyIds = array_column($data->get($attribute), 'id');
+                $currentIds = array_column($this->$attribute->toArray(), 'id');
+                $changedIds = array_diff($historyIds, $currentIds);
+                $oldValues = array_column($data->get($attribute), 'name');
+                if (! empty($changedIds) ) {
+                    return 'Previous: ' . implode(', ', $oldValues);
+                }
+            }
+            if(is_string($data->get($attribute)) && $data->get($attribute) !== $this->$attribute) {
+                return 'Previous: ' . $data->get($attribute);
+            }
+        }
+        return null;
+    }
+
+    public function getSuggestedChanges( $attribute = 'name', $id = null ){
+        $attributesTypes = [
+            'basic' => [
+                'name',
+                'description',
+                'start',
+                'end',
+            ],
+            'selections' => [
+                'areas',
+                'project_owner',
+                'project_partner',
+                'currency',
+                'cumulative',
+            ],
+            'subitems' => [
+                'activities',
+                'deadlines',
+                'outcomes',
+                'outputs',
+            ],
+        ];
+        $objectType = $this->object_type;
+        if($objectType === 'project_change_request'){
+            $originalProject = $this->main;
+            if($originalProject){
+                if(in_array($attribute, $attributesTypes['basic']) && is_string($this->$attribute) && $this->$attribute !== $originalProject->$attribute) {
+                    return 'Previous: ' . $originalProject->$attribute;
+                }
+                if(in_array($attribute, $attributesTypes['subitems'])){
+                    if($id === null){
+                        // What has been deleted?
+                        $originalNames = $originalProject->$attribute->pluck('title');
+                        $currentNames = $this->$attribute->pluck('title');
+                        $deletedNames = $originalNames->whereNotIn('title', $currentNames);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 }

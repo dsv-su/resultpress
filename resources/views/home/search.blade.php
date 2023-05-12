@@ -3,63 +3,51 @@
 
     @include('layouts.partials.searchbox')
 
-    <h3 class="container">Projects</h3>
+    <h3 class="container">
+        Projects</h3>
     <div class="container px-0">
-        @if(count($projects) > 0)
+        @if (count($projects) > 0)
             @if (isset($projectmanagers) || isset($projectpartners) || isset($programareas) || isset($organisations) || isset($statuses) || isset($years))
                 <form class="form-inline mx-3">
                     <label class="mb-2 col-form-label mr-1 font-weight-light">Filter by: </label>
-                    <select name="my" class="mb-2 form-control mx-1 selectpicker"
-                            data-none-selected-text="All Projects" multiple style="width: 400px">
+                    <select name="my" class="mb-2 form-control mx-1 selectpicker" data-none-selected-text="All Projects" multiple style="width: 400px">
                         <option value="owned">My projects</option>
                         @if (Auth::user()->hasRole(['Administrator', 'Program administrator', 'Spider']))
+                            <option value="archived">Archived Projects</option>
                             <option value="followed">Followed projects</option>
                         @endif
                         <option value="requested">Requested Projects</option>
                     </select>
-                    <select name="manager" @if (empty($projectmanagers)) disabled
-                            @endif class="mb-2 form-control mx-1 selectpicker"
-                            data-none-selected-text="Manager" data-live-search="true" multiple style="width: 400px">
-                        @foreach($projectmanagers as $id => $name)
-                            <option value="{{$id}}">{{$name}}</option>
+                    <select name="manager" @if (empty($projectmanagers)) disabled @endif class="mb-2 form-control mx-1 selectpicker" data-none-selected-text="Manager" data-live-search="true" multiple style="width: 400px">
+                        @foreach ($projectmanagers as $id => $name)
+                            <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
-                    <select name="partner" @if (empty($projectpartners)) disabled
-                            @endif class="mb-2 form-control mx-1 selectpicker"
-                            data-none-selected-text="Partner" data-live-search="true" multiple style="width: 400px">
-                        @foreach($projectpartners as $id => $name)
-                            <option value="{{$id}}">{{$name}}</option>
+                    <select name="partner" @if (empty($projectpartners)) disabled @endif class="mb-2 form-control mx-1 selectpicker" data-none-selected-text="Partner" data-live-search="true" multiple style="width: 400px">
+                        @foreach ($projectpartners as $id => $name)
+                            <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
-                    <select name="area" @if (empty($programareas)) disabled
-                            @endif class="mb-2 form-control mx-1 selectpicker"
-                            data-none-selected-text="Area" multiple style="width: 400px">
-                        @foreach($programareas as $id => $name)
-                            <option value="{{$id}}">{{$name}}</option>
+                    <select name="area" @if (empty($programareas)) disabled @endif class="mb-2 form-control mx-1 selectpicker" data-none-selected-text="Area" multiple style="width: 400px">
+                        @foreach ($programareas as $id => $name)
+                            <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
-                    <select name="organisation" @if (empty($organisations)) disabled
-                            @endif class="mb-2 form-control mx-1 selectpicker"
-                            data-none-selected-text="Organisation" data-live-search="true" multiple
-                            style="width: 400px">
-                        @foreach($organisations as $id => $org)
-                            <option value="{{$id}}">{{$org}}</option>
+                    <select name="organisation" @if (empty($organisations)) disabled @endif class="mb-2 form-control mx-1 selectpicker" data-none-selected-text="Organisation" data-live-search="true" multiple style="width: 400px">
+                        @foreach ($organisations as $id => $org)
+                            <option value="{{ $id }}">{{ $org }}</option>
                         @endforeach
                     </select>
-                    <select name="year" @if (empty($years)) disabled
-                            @endif class="mb-2 form-control mx-1 selectpicker"
-                            data-none-selected-text="Year" data-live-search="true" multiple style="width: 400px">
-                        @foreach($years as $year)
-                            <option value="{{$year}}">{{$year}}</option>
+                    <select name="year" @if (empty($years)) disabled @endif class="mb-2 form-control mx-1 selectpicker" data-none-selected-text="Year" data-live-search="true" multiple style="width: 400px">
+                        @foreach ($years as $year)
+                            <option value="{{ $year }}">{{ $year }}</option>
                         @endforeach
                     </select>
                     @if (Auth::user()->hasRole(['Spider', 'Administrator']))
-                        <select name="status" @if (empty($statuses)) disabled
-                                @endif class="mb-2 form-control mx-1 selectpicker"
-                                data-none-selected-text="Status" multiple style="width: 400px">
-                            @foreach($statuses as $status)
-                                <option value="{{$status}}">
-                                    @if($status == 'planned')
+                        <select name="status" @if (empty($statuses)) disabled @endif class="mb-2 form-control mx-1 selectpicker" data-none-selected-text="Status" multiple style="width: 400px">
+                            @foreach ($statuses as $status)
+                                <option value="{{ $status }}">
+                                    @if ($status == 'planned')
                                         Planned
                                     @elseif($status == 'inprogress')
                                         In progress
@@ -77,12 +65,12 @@
                                         On hold
                                     @elseif($status == 'terminated')
                                         Terminated
-                                    @endif</option>
+                                    @endif
+                                </option>
                             @endforeach
                         </select>
                     @endif
-                    <button type="button" title='Clear selection' data-toggle="tooltip"
-                            class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');
+                    <button type="button" title='Clear selection' data-toggle="tooltip" class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');
 "><i class="fas fa-times"></i>
                     </button>
                     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -102,7 +90,7 @@
     </div><!-- /.container -->
 
     <script>
-        $(document).on('change', 'select', function (e) {
+        $(document).on('change', 'select', function(e) {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -120,49 +108,49 @@
             formData.append("my", $('select[name="my"]').val());
             $.ajax({
                 type: 'POST',
-                url: "/{{ Request::path()}}",
+                url: "/{{ Request::path() }}",
                 data: formData,
                 cache: false,
                 contentType: false,
                 processData: false,
                 success: (data) => {
                     $('#projects').html(data['html']);
-                    $('select[name="partner"] option').each(function () {
+                    $('select[name="partner"] option').each(function() {
                         if (data['partners'][$(this).val()]) {
                             $(this).prop('disabled', false);
                         } else {
                             $(this).prop('disabled', true);
                         }
                     });
-                    $('select[name="manager"] option').each(function () {
+                    $('select[name="manager"] option').each(function() {
                         if (data['managers'][$(this).val()]) {
                             $(this).prop('disabled', false);
                         } else {
                             $(this).prop('disabled', true);
                         }
                     });
-                    $('select[name="area"] option').each(function () {
+                    $('select[name="area"] option').each(function() {
                         if (data['areas'][$(this).val()]) {
                             $(this).prop('disabled', false);
                         } else {
                             $(this).prop('disabled', true);
                         }
                     });
-                    $('select[name="organisation"] option').each(function () {
+                    $('select[name="organisation"] option').each(function() {
                         if (data['organisations'][$(this).val()]) {
                             $(this).prop('disabled', false);
                         } else {
                             $(this).prop('disabled', true);
                         }
                     });
-                    $('select[name="year"] option').each(function () {
+                    $('select[name="year"] option').each(function() {
                         if (data['years'].includes(parseInt($(this).val()))) {
                             $(this).prop('disabled', false);
                         } else {
                             $(this).prop('disabled', true);
                         }
                     });
-                    $('select[name="status"] option').each(function () {
+                    $('select[name="status"] option').each(function() {
                         if (data['statuses'].includes($(this).val())) {
                             $(this).prop('disabled', false);
                         } else {
@@ -171,7 +159,7 @@
                     });
                     $('.selectpicker').selectpicker('refresh');
                 },
-                error: function (data) {
+                error: function(data) {
                     alert('There was an error.');
                     console.log(data);
                 }

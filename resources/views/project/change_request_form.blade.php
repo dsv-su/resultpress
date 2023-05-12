@@ -42,7 +42,6 @@
                                            placeholder="Project title"
                                            required
                                            value="{{ old('name', empty($project) ? '' : $project->name) }}">
-                                           <span>{{ $project->getHistory('name') }}</span>
                                            <span>{{ $project->getSuggestedChanges('name') }}</span>
                                     @error('name')
                                     <div class="text-danger">{{ $errors->first('name') }}</div>
@@ -63,7 +62,6 @@
                                     </div>@enderror
                                 </div>
                                 <label class="col-sm-3 col-form-label-sm"></label>
-                                <div class="col-sm-9 px-1">{{ strip_tags($project->getHistory('description')) }}</div>
                                 <div class="col-sm-9 px-1">{{ strip_tags($project->getSuggestedChanges('description')) }}</div>
                             </div>
                             <div class="form-row mb-2 row">
@@ -75,8 +73,6 @@
                                             <option value="{{$pa->id}}" {{ old('pa_id') == $pa->id || in_array($pa->id, $old_pa) ? 'selected':''}}>{{$pa->name}}</option>
                                         @endforeach
                                     </select>
-
-                                    <span>{{ $project->getHistory('areas') }}</span>
                                 </div>
                             </div>
                             <div class="form-row mb-2 row">
@@ -152,6 +148,7 @@
                         <!-- end email reminders -->
 
                         <div class="form-group">
+                            <div>{{ $project->getSuggestedChanges('activities') }}</div>
                             <label for="activities_list" class="form-group-header pl-2 pr-0">Activities</label>
                             <span data-toggle="tooltip"
                                   title="Here you add project activities information and reporting templates"><i
@@ -446,9 +443,7 @@
 
                         $(document).on('click', '.add-activities', function () {
                             $('#activities_list').append('<div class="col-lg-6 my-2 px-2" style="min-width: 16rem; max-width: 40rem;"></div>');
-                            $('#activities_list div.col-lg-6:last-child').load('/a/0/0', function(){
-                                var generalEditor = new MediumEditor('.mediumEditor');
-                            });
+                            $('#activities_list div.col-lg-6:last-child').load('/a/0/0');
                         });
 
                         $(document).on('click', '.add-outputs', function () {
@@ -457,17 +452,12 @@
                             let timestamp = Date.now();
                             html += '<tr>';
                             html += '<input type="hidden" name="outputs['+timestamp+'][status]" value="default">';
-                            html += '<td class="w-75"><input type="text" name="outputs['+timestamp+'][indicator]" class="form-control form-control-sm MediumEditor" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></td>';
+                            html += '<td class="w-75"><input type="text" name="outputs['+timestamp+'][indicator]" class="form-control form-control-sm" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></td>';
                             html += '<td class="w-25"><input type="text" name="outputs['+timestamp+'][target]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this output"><i class="far fa-trash-alt"></i></button></td></tr>';
-                            $('#outputs_table').append(html).ready(function () {
-                                setTimeout(() => {
-                                    var generalEditor = new MediumEditor('.MediumEditor');
-                                    alert('done');
-                                }, 1000);
-                            });
+                            $('#outputs_table').append(html);
                             $(function () {
-                                $('[data-toggle="tooltip"]').tooltip();
+                                $('[data-toggle="tooltip"]').tooltip()
                             })
                             $('input[name="outputs['+timestamp+'][indicator]"]').focusout(function () {
                                 $(this).tooltip('hide');
@@ -537,11 +527,10 @@
                             let html = '';
                             let timestamp = Date.now();
                             html += '<tr>';
-                            html += '<td class="w-100"><input type="text" name="outcomes['+timestamp+'][name]" class="form-control form-control-sm outcomesMediumEditor" placeholder="Outcome name" required></td>';
+                            html += '<td class="w-100"><input type="text" name="outcomes['+timestamp+'][name]" class="form-control form-control-sm" placeholder="Outcome name" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this outcome"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outcomes_table').append(html);
                             $(function () {
-                                var outcomesMediumEditor = new MediumEditor('.outcomesMediumEditor');
                                 $('[data-toggle="tooltip"]').tooltip();
                             })
                         });

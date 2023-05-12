@@ -54,6 +54,9 @@ class ProjectUpdate extends Model
     public function getIndex(): int
     {
         $i = 1;
+        if (! $this->project) {
+            return 0;
+        }
         foreach ($this->project->project_updates as $pu) {
             if ($this->id == $pu->id) {
                 return $i;

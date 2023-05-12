@@ -31,11 +31,13 @@ class HomeController extends Controller
     public function index()
     {
         if ($user = Auth::user()) {
-            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
+            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider', 'Partner'])) {
                 //Summary of project/programareas
                 $data['programareas'] = DB::table('areas')
                     ->join('project_areas', 'areas.id', '=', 'project_areas.area_id')
+                    ->join('projects', 'project_areas.project_id', '=', 'projects.id')
                     ->select('areas.name', DB::raw('project_areas.area_id, count(*) as count'))
+                    ->where('projects.object_type', '=', 'project')
                     ->groupby('project_areas.area_id', 'areas.name')
                     ->get();
 

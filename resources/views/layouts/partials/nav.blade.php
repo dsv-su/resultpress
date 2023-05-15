@@ -22,15 +22,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('search') }}">Projects</a>
             </li>
-
+            @can('view-areas')
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('programareas') }}">Program Areas</a>
             </li>
-            @if (Auth::user()->hasRole(['Spider', 'Administrator']))
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('logs') }}">Logs</a>
-                </li>
-            @endif
+            @endcan
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('partner-logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

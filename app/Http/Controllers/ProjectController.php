@@ -288,7 +288,12 @@ class ProjectController extends Controller
                     'project_areas' => $project->areas()->get(),
                     'areas' => Area::all(),
                     'old_pa' => $project->areas()->get()->pluck('id')->toArray(),
-                    'users' => User::all(),
+                    'users' => User::whereDoesntHave('roles', function ($query) {
+                        return $query->where('name', 'partner');
+                    })->orderBy('name', 'asc')->get(),
+                    'partnerusers' => User::whereHas('roles', function ($query) {
+                        return $query->where('name', 'partner');
+                    })->orderBy('name', 'asc')->get(),
                     'old_users' => ProjectOwner::where('project_id', $project->id)->pluck('user_id')->toArray(),
                     'partners' => ProjectPartner::where('project_id', $project->id)->pluck('partner_id')->toArray(),
                     'project_reminders' => ProjectReminder::where('project_id', $project->id)->get(),
@@ -482,9 +487,15 @@ class ProjectController extends Controller
         }
 
         $admins = User::role(['Administrator', 'Program administrator'])->get();
+        $areasIds = $project->areas->pluck('id')->toArray();
+        $areasUsers = User::whereHas('areas', function ($query) use ($areasIds) {
+            $query->whereIn('areas.id', $areasIds);
+        })->get();
+
+        $usersToNotify = empty($areasUsers) ? $admins : $areasUsers;
 
         if ($notifications['new_project']) {
-            $admins->each(function ($admin) use ($project) {
+            $usersToNotify->each(function ($admin) use ($project) {
                 $admin->notify(new NewProjectRequest($project));
             });
             $project->project_partner->each(function ($partner) use ($project) {
@@ -493,7 +504,7 @@ class ProjectController extends Controller
         }
         if ($notifications['change_request']) {
             if ( $project->project_owner->isEmpty() || ($project->project_owner()->count() == 1 && $project->project_owner->pluck('user.id')->first() == 1) ) {
-                $admins->each(function ($admin) use ($project) {
+                $usersToNotify->each(function ($admin) use ($project) {
                     $admin->notify(new ProjectChangeRequest($project, $admin));
                 });
             } else {

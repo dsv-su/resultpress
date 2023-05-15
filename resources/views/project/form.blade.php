@@ -332,7 +332,7 @@
                                                     <select name="user_id[]" class="custom-select" id="managers"
                                                             multiple="multiple" required>
                                                         @foreach($users as $user)
-                                                            <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
+                                                            <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->fullViewName}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -342,8 +342,8 @@
                                                 <div class="col px-1 d-flex align-items-center">
                                                     <select name="partner_id[]" class="custom-select" id="partners"
                                                             multiple="multiple">
-                                                        @foreach($users as $user)
-                                                            <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>
+                                                        @foreach($partnerusers as $user)
+                                                            <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->fullViewName}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>

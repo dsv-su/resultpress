@@ -6,6 +6,7 @@ use App\Area;
 use App\Project;
 use App\ProjectArea;
 use App\ProjectPartner;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -77,8 +78,16 @@ class ProgramAreaController extends Controller
     {
         if ($user = Auth::user()) {
             if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
-                $area = Area::find($id);
-                return view('programareas.edit', compact('area'));
+
+                $users = User::whereDoesntHave('roles', function ($query) {
+                    $query->where('name', 'Partner');
+                })->orderBy('name')->get();
+
+                $area = Area::findOrfail($id);
+
+                $areaUsers = $area->users->pluck('id')->toArray();
+
+                return view('programareas.edit', compact('area', 'users', 'areaUsers'));
             }
         }
         abort(403);
@@ -95,9 +104,10 @@ class ProgramAreaController extends Controller
     {
         if ($user = Auth::user()) {
             if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
-                $area = Area::find($id);
+                $area = Area::findOrfail($id);
                 $area->name = $request->name;
                 $area->description = $request->description;
+                $area->users()->sync($request->user_id);
                 $area->save();
                 return redirect()->route('programareas');
             }

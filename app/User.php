@@ -39,6 +39,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['fullviewname'];
+
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
@@ -68,6 +70,27 @@ class User extends Authenticatable
     public function organisations()
     {
         return $this->belongsToMany(Organisation::class, 'user_organisations');
+    }
+
+    /**
+     * Get all of the areas for the user.
+     */
+    public function areas()
+    {
+        return $this->belongsToMany(Area::class, 'area_user');
+    }
+
+    public function getFullviewnameAttribute()
+    {   
+        $organisations = '';
+        if(!empty($this->organisations)) {
+            $organisations = ' - ' . $this->organisations->pluck('org')->implode(', ');
+        }
+        $roles = '';
+        if(!empty($this->roles)) {
+            $roles = ' - ' . $this->roles->pluck('name')->implode(', ');
+        }
+        return $this->name . $organisations . $roles;
     }
 
 

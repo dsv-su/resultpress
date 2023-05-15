@@ -19,6 +19,9 @@ class ProgramAreaController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->hasPermissionTo('view-areas')) {
+            return redirect()->route('home')->withErrors(['You do not have permission to view this page.']);
+        }
         $programareas = Area::all();
         return view('programareas.index', compact('programareas'));
     }

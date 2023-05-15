@@ -1,7 +1,7 @@
 <!-- Start Top Bar -->
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{{ route('home') }}">ResultPress</a>
+    {{-- <a class="navbar-brand" href="{{ route('home') }}">ResultPress</a> --}}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -9,23 +9,23 @@
         <ul class="navbar-nav">
             <li class="nav-item">
                 @if (Auth::user()->setting == null)
-                    <a class="nav-link" href="{{ route('profile') }}">Dashbord<span class="badge badge-primary" style="z-index:15;position:relative; left: 0; top:-10px">1</span></a>
+                    <a class="nav-link" href="{{ route('profile') }}">Dashboard<span class="badge badge-primary" style="z-index:15;position:relative; left: 0; top:-10px">1</span></a>
                 @else
-                    <a class="nav-link" href="{{ route('profile') }}">Dashbord</a>
+                    <a class="nav-link" href="{{ route('profile') }}">Dashboard</a>
                 @endif
             </li>
             @can('project-create')
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('project_create') }}">Add</a>
+                    <a class="nav-link" href="{{ route('project_create') }}">Add a project</a>
                 </li>
             @endcan
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('search') }}">Projects</a>
+                <a class="nav-link" href="{{ route('search') }}">Filter projects</a>
             </li>
             @can('view-areas')
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('programareas') }}">Program Areas</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('programareas') }}">Program Areas</a>
+                </li>
             @endcan
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('partner-logout') }}" onclick="event.preventDefault();
@@ -37,9 +37,9 @@
                     @csrf
                 </form>
             </li>
-            @can('project-create')
+            @if (Auth::user()->hasRole('Administrator'))
                 <li><a class="nav-link" href="{{ route('admin') }}">Admin</a></li>
-            @endcan
+            @endif
         </ul>
     </div>
 </nav>

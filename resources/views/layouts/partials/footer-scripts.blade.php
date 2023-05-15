@@ -21,6 +21,13 @@
         });
     });
     $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $('.project-permission').toggle();
+        $('.projects-permissions').click(function(e) {
+            e.preventDefault();
+            $('.project-permission').toggle();
+            return false;
+        });
     })
 </script>

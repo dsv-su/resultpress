@@ -340,6 +340,7 @@ tr.update > td {
 
 .medium-editor-element {
     min-height: 80px !important;
+    height: 100% !important;
 }
 
 .medium-editor-element.expanded {

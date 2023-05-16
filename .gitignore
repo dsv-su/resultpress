@@ -28,3 +28,6 @@ _ide_helper_models.php
 id_rsa
 id_rsa.pub
 *~
+ssh
+docker-compose.yml
+bin

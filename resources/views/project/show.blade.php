@@ -104,7 +104,7 @@
             @if (!$deadlines->isEmpty())
                 <div class="col-sm">
                     @foreach ($deadlines as $deadline)
-                        <p>{{ $deadline->name }}: <span class="badge badge-secondary">{{ $deadline->set->format('m/d/Y') }}
+                        <p>{!! strip_tags($deadline->name) !!}: <span class="badge badge-secondary">{{ $deadline->set->format('m/d/Y') }}
                                 @if ($deadline->reminder == true)
                                     <i class="far fa-bell ml-1"></i>
                                 @endif

@@ -280,6 +280,27 @@ class ProjectController extends Controller
 
         if ($user = Auth::user()) {
             if ($user->hasPermissionTo('project-create') || ($project->id && $user->hasPermissionTo('project-' . $project->id . '-edit'))) {
+
+                if(!$project->id){
+                    $impactReminder = new ProjectReminder(
+                        [
+                            'type' => 'impact',
+                            'name' => 'This is a reminder to report on the impact of your project or initiative, please follow the link below to view the project',
+                            'set' => $project->end ? $project->end->addMonths(24) : Carbon::now()->addMonths(24),
+                            'reminder' => 1,
+                        ]
+                    );
+                } else {
+                    $impactReminder = ProjectReminder::firstOrCreate(
+                        ['project_id' => $project->id, 'type' => 'impact'],
+                        [
+                            'name' => 'This is a reminder to report on the impact of your project or initiative, please follow the link below to view the project',
+                            'set' => $project->end ? $project->end->addMonths(24) : Carbon::now()->addMonths(24),
+                            'reminder' => 1,
+                        ]
+                    );
+                }
+
                 return view($formView, [
                     'project' => $project,
                     'activities' => $project->activities,
@@ -296,7 +317,8 @@ class ProjectController extends Controller
                     })->orderBy('name', 'asc')->get(),
                     'old_users' => ProjectOwner::where('project_id', $project->id)->pluck('user_id')->toArray(),
                     'partners' => ProjectPartner::where('project_id', $project->id)->pluck('partner_id')->toArray(),
-                    'project_reminders' => ProjectReminder::where('project_id', $project->id)->get(),
+                    'project_reminders' => $project->reminders()->get(),
+                    'impact_reminder' => $impactReminder ?? null,
                     'invites' => Invite::where('project_id', $project->id)->get(),
                     'organisations' => Organisation::all(),
                     /*'managers' => User::whereHas('project_owner', function ($query) use($project) {

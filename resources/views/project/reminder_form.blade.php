@@ -1,5 +1,5 @@
 @php
-    $key = Str::random(10);
+    $key = $reminder->id ?? Str::random(10);
 @endphp
 <div class="card bg-light m-auto">
     <div class="card-body pb-1">
@@ -10,10 +10,9 @@
             <label for="reminders[{{$key}}][name]"
                    class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label>
             <div class="col-8 col-sm-9 px-1">
-                <input class="form-control form-control-sm w-100"
-                       name="reminders[{{$key}}][name]"
-                       type="text" placeholder="Name"
-                       value="{{ old('reminders[$key][name]', empty($reminder->name) ? '' : $reminder->name) }}">
+                <textarea class="form-control form-control-sm w-100 generalMediumEditor" data-disable-toolbar="true" name="reminders[{{$key}}][name]" id="reminders[{{$key}}][name]" placeholder="Name">
+                    {{ old('reminders[$key][name]', empty($reminder->name) ? '' : $reminder->name) }}
+                </textarea>
             </div>
         </div>
         <div class="form-group mb-2 row">
@@ -36,12 +35,14 @@
                        id="reminders[{{$key}}][set]"
                        placeholder="Deadline Date"
                        value="{{ old('reminders[$key][set]', empty($reminder->set) ? '' : $reminder->set->format('d-m-Y')) }}"
-                       class="form-control form-control-sm datepicker" required>
+                       class="form-control form-control-sm datepicker {{$reminder->type}}-date" required>
 
             </div>
+        </div>
+
+        <div class="form-group mb-2 row">
             <label for="reminders[{{$key}}][reminder_due_days]"
-                   class="col-4 col-sm-auto col-form-label-sm text-right pr-1">Days
-                before</label>
+                   class="col-4 col-sm-3 col-form-label-sm text-right">Days before</label>
             <div class="col-8 col-sm-1 px-1">
                 <input type="number" name="reminders[{{$key}}][reminder_due_days]"
                        @if ($reminder) value="{{ $reminder->reminder_due_days}}" @else value="0" @endif

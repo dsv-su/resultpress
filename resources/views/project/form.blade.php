@@ -139,6 +139,11 @@
                                   title="Each deadline will trigger an email reminder when the date is reached"><i
                                         class="fas fa-info-circle fa-1x"></i></span>
                             <div class="d-flex flex-wrap" id="reminders_list">
+                                @if ($impact_reminder && ! in_array($impact_reminder->id, $project_reminders->pluck('id')->toArray()))
+                                    <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
+                                        @include('project.reminder_form', ['reminder' => $impact_reminder])
+                                    </div>
+                                @endif
                                 @foreach($project_reminders as $thisproject)
                                     <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
                                         @include('project.reminder_form', ['reminder' => $thisproject])
@@ -557,6 +562,15 @@
                                 $(this).text($('#currency option:selected').text());
                             });
                         });
+
+                        $('#end').on('change', function (e) {
+                            let end = new Date($(this).datepicker("getDate"));
+                            end.setMonth(end.getMonth() + 24);
+                            $('.impact-date').each(function () {
+                                $(this).datepicker("setDate", end);
+                            });
+                        });
+
                         $("form").submit(function () {
                             if (!$('#project_area').val()) {
                                 alert('Please select a project area');

@@ -128,10 +128,10 @@
                         by {{ $pu->user->name }}
                     </div>
                     <!--
-                            <div class="col-auto px-1 d-flex align-items-center">
-                                <span class="badge badge-warning mx-2 font-100">Pending approval</span>
-                            </div>
-                            -->
+                                <div class="col-auto px-1 d-flex align-items-center">
+                                    <span class="badge badge-warning mx-2 font-100">Pending approval</span>
+                                </div>
+                                -->
                     <div class="col-auto px-1">
                         <a href="/project/update/{{ $pu->id }}" class="btn btn-outline-secondary btn-sm">Show
                             <i class="fas fa-info-circle"></i></a>
@@ -226,35 +226,68 @@
 
     <h5 class="mt-4">Outputs</h5>
     @if (!$outputs->isEmpty())
-        <div class="col p-2">
-            @foreach ($outputs as $o)
-                <div class="row my-1">
-                    <div class="col">
-                        <span class="d-flex">{!! $o->indicator !!}
-                            @if (Auth::user()->hasRole(['Spider', 'Administrator']))
-                                <span class="badge ml-2 font-100 @if ($o->valuestatus == 1) badge-info @elseif($o->valuestatus == 2) badge-warning @elseif($o->valuestatus == 3) badge-success @else badge-light @endif">{{ $o->valuesum }} @if ($o->status == 'custom')
-                                        (unplanned)
-                                    @else
-                                        / {{ $o->target }}
-                                    @endif </span>
-                            @else
-                                <span class="badge ml-2 font-100 badge-info">{{ $o->valuesum }}</span>
+        <div class="accordion" id="outputs">
+            @foreach ($outputs as $index => $output)
+                <div class="card">
+                    <div class="card-header bg-white" id="heading-output-{{ $output->id }}">
+                        <div class="row">
+                            <div class="col-auto pl-1">
+                                <span class="btn cursor-default px-0 text-left">
+                                    {!! strip_tags($output->indicator) !!}
+                                </span>
+                            </div>
+                            @if ($output->output_updates)
+                                <div class="col-auto d-flex py-2 px-1 align-items-center"><span data-toggle="collapse" data-target="#collapse-output-{{ $output->id }}" aria-expanded="false" role="button" aria-controls="collapseoutput-{{ $output->id }}" class="badge badge-light font-100">{{ count($output->output_updates) }} @if (count($output->output_updates) > 1)
+                                            updates
+                                        @else
+                                            update
+                                        @endif
+                                    </span>
+                                </div>
                             @endif
-                        </span>
+                            <div class="col-auto d-flex py-2 px-1 align-items-center">
+                                @if (Auth::user()->hasRole(['Spider', 'Administrator']))
+                                    <span class="badge ml-2 font-100 @if ($output->valuestatus == 1) badge-info @elseif($output->valuestatus == 2) badge-warning @elseif($output->valuestatus == 3) badge-success @else badge-light @endif">
+                                        @if ($output->valuesum == 1 && $output->valuesum == $output->target)
+                                            Completed
+                                        @else
+                                            {{ $output->valuesum }} 
+                                            @if ($output->status == 'custom')
+                                                (unplanned)
+                                            @else
+                                                / {{ $output->target }}
+                                            @endif 
+                                        @endif
+                                    </span>
+                                @else
+                                    <span class="badge ml-2 font-100 badge-info">{{ $output->valuesum }}</span>
+                                @endif
+                            </div>
+                        </div>
                     </div>
-                </div>
-            @endforeach
-            @foreach ($aggregated_outputs as $ao)
-                <div class="row my-1">
-                    <div class="col">
-                        <span>{{ $ao->indicator }}
-                            @if (Auth::user()->hasRole(['Spider', 'Administrator']))
-                                <span class="badge ml-2 font-100 @if ($ao->valuestatus == 1) badge-info @elseif($ao->valuestatus == 2) badge-warning @elseif($ao->valuestatus == 3) badge-success @else badge-light @endif">{{ $ao->valuesum }} / {{ $ao->target }} </span>
-                            @else
-                                <span class="badge ml-2 font-100 badge-info">{{ $ao->valuesum }}</span>
-                            @endif
-                        </span><span class="badge badge-light ml-2 font-100">Aggregated</span>
-                    </div>
+
+                    @if ($output->output_updates)
+                        <div id="collapse-output-{{ $output->id }}" class="collapse" aria-labelledby="headin-output-{{ $output->id }}" data-parent="#outputs">
+                            <div class="card-body">
+                                @foreach ($output->output_updates as $puindex => $arr)
+                                    <p>
+                                        <b><a href="/project/update/{{ $arr['project_update_id'] }}">Update {{ $puindex + 1 }}</a></b>:
+                                        {!! $arr['progress'] !!}
+                                    </p>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    @if ($output->latest_update)
+                        <div class="card-body">
+                            <p>
+                                <b><span>Latest update</span></b>:
+                                {!! $arr['progress'] !!}
+                            </p>
+                        </div>
+                    @endif
+
                 </div>
             @endforeach
         </div>

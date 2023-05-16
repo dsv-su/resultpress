@@ -29,5 +29,6 @@ class AddAreaPermissions extends Migration
     {
         DB::delete("DELETE FROM permissions WHERE name = 'view-areas'");
         DB::delete("DELETE FROM permissions WHERE name = 'edit-areas'");
+        DB::delete("DELETE FROM permissions WHERE name = 'system-admin'");
     }
 }

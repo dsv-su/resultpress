@@ -48,12 +48,27 @@
         </div>
     </div>
     <div class="card my-3">
-    <div class="card-header">
-        Logs
+        <div class="card-header">
+            Logs
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">View logs</h5>
+            <a href="{{ route('logs') }}" class="btn btn-outline-primary">Logs</a>
+        </div>
     </div>
-    <div class="card-body">
-        <h5 class="card-title">View logs</h5>
-        <a href="{{ route('logs') }}" class="btn btn-outline-primary">Logs</a>
-    </div>
+    <div class="card my-3">
+        <div class="card-header">
+            Update system logo
+        </div>
+        <div class="card-body">
+            <form action="{{ route('systemUploadLogo') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="form-group">
+                    <label for="logo">Select file:</label>
+                    <input type="file" class="form-control-file" id="logo" name="logo">
+                </div>
+                <button type="submit" class="btn btn-primary">Upload & save</button>
+            </form>
+        </div>
     </div>
 @endsection

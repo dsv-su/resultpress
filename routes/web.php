@@ -67,6 +67,9 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::resource('users','UserController');
     Route::resource('organisation', 'OrganisationController');
 
+    // Upload logo
+    Route::post('/systemUploadLogo', 'SettingsController@updateLogo')->name('systemUploadLogo');
+
     Route::post('/user/invite', 'UserController@process_invites')->name('process_invite');
     Route::get('/user/invite/{project}', 'UserController@invite_view')->name('invite_view');
     Route::get('/user/remove_invite/{invite}', 'UserController@remove_invite')->name('invite_remove');

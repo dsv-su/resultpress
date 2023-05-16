@@ -53,7 +53,7 @@
                     </div>
                     <div class="col-md-9 my-3 my-md-0">
                         <ul class="nav nav-tabs nav-justified">
-                            @can('view-areas')
+                            @can('admin-list')
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#owned">Owned Projects <span data-toggle="tooltip" title="These are the projects for which you are registered as a project manager"><i class="fas fa-info-circle fa-1x"></i></span></a>
                             </li>
@@ -72,7 +72,7 @@
                             @endif
                         </ul>
                         <div class="tab-content">
-                            @can('view-areas')
+                            @can('system-admin')
                             <div class="tab-pane active" id="owned">
                                 <ul class="list-group list-group-flush">
                                     @foreach ($user->projects as $project)

@@ -729,6 +729,7 @@ class ProjectController extends Controller
         $output_update_array['output_id'] = request('output_id');
         $output_update_array['output_update_id'] = request('output_update_id');
         $output_update_array['value'] = request('output_value');
+        $output_update_array['progress'] = request('output_progress');
 
         // Remove deleted output updates
         foreach ($projectupdate->output_updates()->get() as $ou) {
@@ -743,6 +744,7 @@ class ProjectController extends Controller
                     // Create new output since it's an unexpected one
                     $data = array();
                     $data['indicator'] = $output_update_array['output_id'][$key];
+                    $data['progress'] = $output_update_array['progress'][$key];
                     $data['target'] = 0;
                     $data['project_id'] = $project->id;
                     if ($status == 'approved') {
@@ -754,6 +756,7 @@ class ProjectController extends Controller
                 $output = Output::findOrFail($id);
                 $outputupdate->output_id = $output->id;
                 $outputupdate->value = $output_update_array['value'][$key];
+                $outputupdate->progress = $output_update_array['progress'][$key];
                 $outputupdate->project_update_id = $projectupdate_id;
                 // Log update for submitted OutputUpdate --> Added outputs should be i draft (TODO)
                 if ($status == 'submitted') {

@@ -57,6 +57,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(ProjectUpdate::class);
     }
+
     /**
      * Get all of the projects for the user.
      */
@@ -64,6 +65,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Project::class, 'project_owners');
     }
+
+    /**
+     * Get all of the projects for the user (Partner).
+     */
+    public function partner_projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_partners', 'partner_id', 'project_id');
+    }
+
     /**
      * Get all of the prganisations for the user.
      */

@@ -47,4 +47,13 @@
             <a href="{{ route('roles.index') }}" class="btn btn-outline-primary">Manage</a>
         </div>
     </div>
+    <div class="card my-3">
+    <div class="card-header">
+        Logs
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">View logs</h5>
+        <a href="{{ route('logs') }}" class="btn btn-outline-primary">Logs</a>
+    </div>
+    </div>
 @endsection

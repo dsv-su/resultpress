@@ -457,14 +457,11 @@
                             let timestamp = Date.now();
                             html += '<tr>';
                             html += '<input type="hidden" name="outputs['+timestamp+'][status]" value="default">';
-                            html += '<td class="w-75"><input type="text" name="outputs['+timestamp+'][indicator]" class="form-control form-control-sm MediumEditor" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></td>';
+                            html += '<td class="w-75"><textarea name="outputs['+timestamp+'][indicator]" class="MediumEditor form-control form-control-sm" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></textarea></td>';
                             html += '<td class="w-25"><input type="text" name="outputs['+timestamp+'][target]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this output"><i class="far fa-trash-alt"></i></button></td></tr>';
-                            $('#outputs_table').append(html).ready(function () {
-                                setTimeout(() => {
-                                    var generalEditor = new MediumEditor('.MediumEditor');
-                                    alert('done');
-                                }, 1000);
+                            $('#outputs_table').append(html).ready(function (e) {
+                                var generalEditor = new MediumEditor('.MediumEditor');
                             });
                             $(function () {
                                 $('[data-toggle="tooltip"]').tooltip();

@@ -5,7 +5,7 @@
 
 @if (Auth::user()->hasRole('Partner'))
         @can('project-' . $project->id . '-edit')
-            <a href="/project/{{ $project->change_request->id ?? $project->id.'/edit' }}" title="Edit this project" class="{{ $btnClass }}"><span class="{{ $spanClass }}">{{ $project->object_type == 'project' ? $project->change_request ? 'Edit change request' : 'Add change request' : 'Edit' }}</span><i class="far fa-edit ml-sm-1"></i></a>
+            <a href="/project/{{ $project->change_request->id ?? $project->id.'/edit' }}" title="Edit this project" class="{{ $btnClass }}"><span class="{{ $spanClass }}">{{ $project->object_type == 'project' ? $project->change_request ? 'Edit requested change' : 'Suggest a project change' : 'Edit' }}</span><i class="far fa-edit ml-sm-1"></i></a>
 
             <a href="/project/{{ $project->id }}/history" title="Changes history" class="{{ $btnClass }}"><span class="{{ $spanClass }}">History </span><i class="fas fa-history ml-sm-1"></i></a>
         @endcan

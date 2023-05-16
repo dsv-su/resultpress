@@ -347,6 +347,11 @@ tr.update > td {
     background-color: orange;
 }
 
+.medium-editor-element {
+    min-height: 80px !important;
+    height: 100% !important;
+}
+
 .medium-editor-element.expanded {
     height: 100%;
     min-height: 80px !important;

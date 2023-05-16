@@ -38,6 +38,7 @@
                             <label for="avatar" class="form-label">Upload a different photo</label>
                             <input id="avatar" name="profile" class="form-control form-control-sm border-0 file-upload" type="file">
                         </div>
+                        @can('view-areas')
                         <ul class="list-group my-3">
                             <li class="list-group-item text-muted">Program Areas <span data-toggle="tooltip" title="Summary of projects sorted by Program Areas"><i class="fas fa-info-circle fa-1x"></i></span>
                             </li>
@@ -48,9 +49,11 @@
                                 </li>
                             @endforeach
                         </ul>
+                        @endcan
                     </div>
                     <div class="col-md-9 my-3 my-md-0">
                         <ul class="nav nav-tabs nav-justified">
+                            @can('system-admin')
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#owned">Owned Projects <span data-toggle="tooltip" title="These are the projects for which you are registered as a project manager"><i class="fas fa-info-circle fa-1x"></i></span></a>
                             </li>
@@ -61,9 +64,15 @@
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#other">Other Projects <span data-toggle="tooltip" title="Here you can select the projects you want to follow that are not organized in a Program area"><i class="fas fa-info-circle fa-1x"></i></span></a>
                             </li>
+                            @endcan
+                            @if(Auth::user()->hasRole('Partner'))
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#owned">Assigned Projects <span data-toggle="tooltip" title="These are the projects for which you are registered for this partner"><i class="fas fa-info-circle fa-1x"></i></span></a>
+                            </li>
+                            @endif
                         </ul>
-
                         <div class="tab-content">
+                            @can('system-admin')
                             <div class="tab-pane active" id="owned">
                                 <ul class="list-group list-group-flush">
                                     @foreach ($user->projects as $project)
@@ -74,7 +83,6 @@
                                     @endforeach
                                 </ul>
                             </div>
-
                             <div class="tab-pane" id="programareas">
                                 <!-- Form -->
                                 <ul class="list-group list-group-flush">
@@ -117,6 +125,20 @@
                                     @endforeach
                                 </ul>
                             </div>
+                            @endcan
+                            @if (auth()->user()->hasRole('Partner'))
+                            <div class="tab-pane active" id="owned">
+                                <ul class="list-group list-group-flush">
+                                    @foreach ($user->partner_projects as $project)
+                                        <li class="list-group-item">
+                                            <a href="{{ route('project_show', ['project' => $project->id]) }}">{{ $project->name }}</a>
+                                            @include('home.budges')
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+                            
                         </div>
                         <!--/tab-pane-->
                     </div>

@@ -11,14 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\URL;
-use Nicolaslopezj\Searchable\SearchableTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Scopes\ObjectType;
 
 class Project extends Model
 {
     use LogsActivity;
-    use SearchableTrait;
 
     //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
     protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state', 'object_type', 'object_id'];
@@ -27,13 +25,6 @@ class Project extends Model
     protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state'];
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
-
-    protected $searchable = [
-        'columns' => [
-            'name' => 10,
-            'description' => 5
-        ]
-    ];
 
     protected $appends = ['link', 'type'];
 

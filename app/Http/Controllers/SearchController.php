@@ -10,8 +10,13 @@ use Illuminate\Support\Facades\Auth;
 class SearchController extends Controller
 {
     public function search($q = null, Request $request = null)
-    {
-        $projects = $q ? Project::search($q, null, true, true)->get() : Project::all();
+    { 
+        $projects = $q ? 
+            Project::where('name', 'like', '%' . $q . '%')
+            ->orWhere('description', 'like', '%' . $q . '%')
+            ->get() :
+            Project::all();
+
         foreach ($projects as $key => $project) {
             if (!Auth::user()->hasPermissionTo("project-$project->id-list") && !Auth::user()->hasPermissionTo('project-list')) {
                 unset($projects[$key]);

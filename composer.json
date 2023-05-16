@@ -20,7 +20,6 @@
     "laravel/tinker": "^2.0",
     "laravel/ui": "^3.0",
     "livewire/livewire": "^2.4",
-    "nicolaslopezj/searchable": "^1.13",
     "spatie/laravel-activitylog": "^3.14",
     "spatie/laravel-permission": "^3.17",
     "spatie/laravel-searchable": "^1.9",

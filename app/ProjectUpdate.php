@@ -6,12 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class ProjectUpdate extends Model
 {
 
     protected $dates = ['start', 'end', 'created_at'];
     protected $fillable = ['project_id', 'summary', 'comment', 'status', 'start', 'end', 'state', 'reviewer_comment', 'internal_comment', 'reviewer_comment'];
+
+    /**
+     * Get the comments for the project.
+     */
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 
     public function project(): BelongsTo
     {

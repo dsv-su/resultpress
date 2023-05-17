@@ -295,7 +295,7 @@
         The project has no outputs.
     @endif
 
-    @livewire('comments', ['project' => $project, 'comments' => $project->comments])
+    @livewire('comments', ['project' => $project, 'comments' => $project->comments, 'commentable_type' => 'App\Project', 'commentable_id' => $project->id])
 
     <script>
         $(function() {

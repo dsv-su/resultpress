@@ -1,12 +1,24 @@
 @extends('layouts.master')
 @section('content')
-
-    <div class="form-row">
-        <div class="col">
-            <h4>Project administration: @empty($project->id) Add a new project @else
-                    Update {{$project->name}} @endempty</h4>
-        </div>
-    </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('search') }}">Projects</a></li>
+            @if (!empty($project->main->id))
+                <li class="breadcrumb-item"><a href="{{ route('project_show', $project->main->id) }}">{{ $project->main->name }}</a></li>
+            @endif
+            @if (!empty($project->id))
+                <li class="breadcrumb-item active" aria-current="page">Suggestion: <a href="{{ route('project_show', $project->id) }}">{{ $project->name }}</a></li>
+            @endif
+            {{-- <li class="breadcrumb-item active" aria-current="page">
+                @if ($project->object_type == 'project_change_request')
+                    Edit your suggstions
+                @else
+                    Edit your suggstions
+                @endif
+            </li> --}}
+        </ol>
+    </nav>
 
     @if($errors->any())
         <div class="form-row">
@@ -329,7 +341,7 @@
                                                     <select name="user_id[]" class="custom-select" id="managers"
                                                             multiple="multiple" required>
                                                         @foreach($users as $user)
-                                                            <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->name}}</option>
+                                                            <option value="{{$user->id}}" {{ old('user_id') == $user->id || in_array($user->id, $old_users) ? 'selected':''}}>{{$user->fullViewName}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -339,8 +351,8 @@
                                                 <div class="col px-1 d-flex align-items-center">
                                                     <select name="partner_id[]" class="custom-select" id="partners"
                                                             multiple="multiple">
-                                                        @foreach($users as $user)
-                                                            <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->name}}</option>
+                                                        @foreach($partnerusers as $user)
+                                                            <option value="{{$user->id}}" {{ old('partner_id') == $user->id || in_array($user->id, $partners) ? 'selected':''}}>{{$user->fullViewName}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>

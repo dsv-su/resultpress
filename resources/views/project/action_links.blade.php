@@ -20,7 +20,7 @@
         <a href="/project/{{ $project->id }}/history" title="Changes history" class="{{ $btnClass }}"><span class="{{ $spanClass }}">History </span><i class="fas fa-history ml-sm-1"></i></a>
         
         @if(in_array($project->object_type, ['project_add_request', 'project_change_request']))
-            <a href="/project/{{ $project->id }}/reject" title="Reject this project" class="btn btn-outline-danger btn-sm mb-1 ml-2 float-right" onclick="return confirm('Are you sure you want to reject this project?');"><span class="{{ $spanClass }}">Reject </span><i class="far fa-window-close ml-sm-1"></i></a>
+            <a href="/project/{{ $project->id }}/reject" title="Reject this project" class="btn btn-outline-danger btn-sm mb-1 ml-2 float-right" onclick="return confirm('Are you sure you want to reject this project?');"><span class="{{ $spanClass }}">Return for revision </span><i class="far fa-window-close ml-sm-1"></i></a>
             <a href="/project/{{ $project->id }}/accept" title="Write an update" class="{{ $btnClass }} ml-4 float-right"><span class="{{ $spanClass }}">Accept</span><i class="fas fa-check-square ml-sm-1"></i></a>
         @endif
     @endcan

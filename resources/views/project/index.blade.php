@@ -1,6 +1,15 @@
 @extends('layouts.master')
 
 @section('content')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('programareas') }}">Areas</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('programarea_show', ['id' => $area->id]) }}">{{ $area->name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Projects</li>
+        </ol>
+    </nav>
+
     @include('layouts.partials.searchbox')
     <!-- Filter bar -->
 
@@ -9,7 +18,7 @@
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Switch project area
+                    Select project area
                 </button>
                 <div class="dropdown-menu">
                     @foreach($program_areas as $program_area)

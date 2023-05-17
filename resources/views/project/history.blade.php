@@ -1,8 +1,15 @@
 @extends('layouts.master')
 
 @section('content')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('project_show', $project->id) }}">{{ $project->name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">History</li>
+        </ol>
+    </nav>
     <div class="row justify-content-between">
-        <div class="col-6"><h4>{{ $project->name }}</h4></div>
+        <div class="col-6"></div>
         <div class="col-sm-auto d-flex align-items-center">
             @if($project->status() == 'planned')
                 <span class="badge badge-light font-100">Planned</span>
@@ -26,7 +33,6 @@
         </div>
     </div>
 
-    <p><a href="{{ url()->previous() }}">Return back</a></p>
     <p>@include('project.action_links')</p>
 
     @foreach($history as $i => $data)

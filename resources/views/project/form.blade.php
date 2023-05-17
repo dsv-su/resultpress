@@ -1,12 +1,20 @@
 @extends('layouts.master')
 @section('content')
-
-    <div class="form-row">
-        <div class="col">
-            <h4>Project administration: @empty($project->id) Add a new project @else
-                    Update {{$project->name}} @endempty</h4>
-        </div>
-    </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            @if (!empty($project->id))
+                <li class="breadcrumb-item"><a href="{{ route('project_show', $project->id) }}">{{ $project->name }}</a></li>
+            @endif
+            <li class="breadcrumb-item active" aria-current="page">
+                @if (empty($project->id))
+                    Add a new project
+                @else
+                    Edit
+                @endif
+            </li>
+        </ol>
+    </nav>
 
     @if($errors->any())
         <div class="form-row">

@@ -66,9 +66,9 @@
                                 @endif
                             </div>
                         </div>
+                        <hr>
                     @endif
                 @endif
-                <hr>
             @endforeach
             @if ($comments->count() == 0)
                 <div class="alert alert-info">

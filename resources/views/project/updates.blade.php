@@ -1,10 +1,14 @@
 @extends('layouts.master')
 
 @section('content')
-
-    <h3 class="mx-3">{{ $project->name }}: updates</h3>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('project_show', $project->id) }}">{{ $project->name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Updates</li>
+        </ol>
+    </nav>
     <div class="container">
-        <p><a href="{{ route('project_show', $project->id) }}">Back to project page</a></p>
         @foreach ($project->project_updates as $index => $pu)
             @if (($pu->status == 'approved') || (Auth::user()->id == $pu->user_id && $pu->status != 'approved') || Auth::user()->hasRole(['Spider', 'Administrator']))
             <div class="card my-3">

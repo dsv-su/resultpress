@@ -1,27 +1,22 @@
 @extends('layouts.master')
 
 @section('content')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('project_show', $project->id) }}">{{ $project->name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                @if (empty($project_update))
+                    Write an update
+                @else
+                    Edit draft update #{{ $project_update->index }}
+                @endif
+            </li>
+        </ol>
+    </nav>
     <form action="{{ route('project_save_update', $project) }}" method="POST">
         @method('PUT')
         @csrf
-
-        <div class="row d-flex justify-content-between">
-            <div class="col">
-                <h4>{{ $project->name }}: @if (empty($project_update))
-                        write an update
-                    @else
-                        edit draft
-                        update
-                        #{{ $project_update->index }}
-                    @endif
-                </h4>
-            </div>
-            <div class="col-sm-auto d-flex align-items-center">
-                <span class="badge badge-info font-100">{{ Carbon\Carbon::now()->format('d-m-Y') }}</span>
-            </div>
-        </div>
-
-        <p><a href="{{ route('project_show', $project->id) }}">Back to project page</a></p>
 
         @if (!empty($project_update))
             <input type="hidden" value="{{ $project_update->id }}" id="project_update_id" name="project_update_id">
@@ -376,7 +371,7 @@
                 }
                 html += '<td class="">' + target + '</td>';
                 html += '<td class="">' + valuesum + '</td>';
-                if(target == 1) {
+                if (target == 1) {
                     html += '<td class=""><label class="checkbox-inline"><input type="checkbox" name="output_value[]" value="1" class="" > Completed</label></td>';
                 } else {
                     html += '<td class=""><input type="number" name="output_value[]"  class="form-control form-control-sm" placeholder="0" value="0" size="3" required></td>';

@@ -56,16 +56,17 @@ class ProgramAreaController extends Controller
     public function show($id)
     {
         $program_areas = Area::all();
+        $area = Area::findOrfail($id);
         if ($user = Auth::user()) {
             if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
                 $projects = Project::with('project_owner.user', 'areas')->whereHas('project_area', function ($query) use ($id){
                     return $query->where('area_id', '=', $id);})->get();
-                return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas]);
+                return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas, 'area' => $area]);
             } elseif ($user->hasRole(['Partner'])) {
                 $id = ProjectPartner::where('partner_id', $user->id)->pluck('project_id');
                 $projects = Project::with('project_owner.user', 'areas')->whereIn('id', $id)->latest()->get();
 
-                return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas]);
+                return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas, 'area' => $area]);
             }
         } elseif (Auth::check()) return abort(403);
         else return redirect()->route('partner-login');

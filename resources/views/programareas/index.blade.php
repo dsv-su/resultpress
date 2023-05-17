@@ -1,12 +1,15 @@
 @extends('layouts.master')
 
 @section('content')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Areas <i class="fas fa-info-circle ml-1" data-toggle="modal"
+                data-target="#programAreas"></i></li>
+        </ol>
+    </nav>
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="pull-left d-flex align-items-center">
-                <h3>Program Areas</h3><i class="fas fa-info-circle ml-1" data-toggle="modal"
-                                         data-target="#programAreas"></i>
-            </div>
             @if (session('status'))
                 <div class="alert alert-success">
                     {{ session('status') }}

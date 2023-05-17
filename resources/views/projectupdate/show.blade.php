@@ -1,9 +1,24 @@
 @extends('layouts.master')
 
 @section('content')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('project_show', $project->id) }}">{{ $project->name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('projectupdate_index', $project->id) }}">Updates</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                @if (empty($project_update))
+                    write an update
+                @else
+                    edit draft
+                    update
+                    #{{ $project_update->index }}
+                @endif
+            </li>
+        </ol>
+    </nav>
     <div class="row justify-content-between">
         <div class="col-6">
-            <h4>{{ $project->name }}: Update #{{ $project_update->index }} </h4>
         </div>
         <div class="col-sm-auto d-flex align-items-center">
             @if ($project_update->status == 'draft')
@@ -16,7 +31,6 @@
             <span class="badge badge-info ml-2 font-100">{{ $project_update->created_at->format('d/m/Y') }}</span>
         </div>
     </div>
-    <p><a href="{{ route('projectupdate_index', $project_update->project_id) }}">Back to project updates list</a></p>
 
     <label for="dates" class="form-group-header">Dates covered</label>
     <div class="d-flex flex-wrap" id="dates">

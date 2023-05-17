@@ -1,16 +1,15 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Editing {{$area->name}}</h2> 
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-outline-primary" href="{{ route('programareas') }}"> Back</a>
-            </div>
-        </div>
-    </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('programareas') }}">Areas</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('programarea_show', ['id' => $area->id]) }}">{{ $area->name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+        </ol>
+    </nav>
+
     @if (count($errors) > 0)
         <br>
         <div class="alert alert-danger">
@@ -24,7 +23,7 @@
     @endif
     <form action="{{ route('programarea_update', $area->id) }}" method="POST">
         @csrf
-        <div class="row mt-5">
+        <div class="row mt-4">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Name:</strong>

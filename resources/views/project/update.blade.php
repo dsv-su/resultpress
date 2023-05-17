@@ -192,6 +192,16 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                @if (Auth::user()->hasRole(['Spider', 'Administrator']))
+                    <label for="internal_comment" class="form-group-header mt-4">Spider's internal comment</label>
+                    <textarea rows=4 placeholder="Spider's internal comment" class="form-control form-control-sm @error('internal_comment') is-danger @enderror" name="internal_comment">{{ old('internal_comment', empty($project_update) ? '' : $project_update->internal_comment) }}</textarea>
+                    @error('internal_comment')
+                        <div class="text-danger">{{ $errors->first('internal_comment') }}</div>
+                    @enderror
+                @endif
+            </div>
+
             @if (Auth::user()->hasRole(['Spider', 'Administrator']))
                 <div class="form-group">
                     <label for="project_state" class="form-group-header mt-4">Project state</label>

@@ -171,7 +171,7 @@
                         <div class="text-danger">{{ $errors->first('partner_comment') }}</div>
                     @enderror
                 @endif
-                @if (Auth::user()->hasRole(['Spider']))
+                @if (Auth::user()->hasRole(['Spider', 'Administrator']))
                     @if ($project_update->partner_comment)
                         <label class="form-group-header mt-4">Partner's comment</label>
                         <table class="table table-striped table-bordered">

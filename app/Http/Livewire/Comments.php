@@ -22,45 +22,41 @@ class Comments extends Component
     {
         $this->commentable_type = $commentable_type;
         $this->commentable_id = $commentable_id;
-        $this->comments = $commentable_type::find($commentable_id)->comments;
+        $this->comments = $commentable_type::withoutGlobalScopes()->find($commentable_id)->comments;
     }
 
-    public function addComment()
+    public function addComment($visible = true)
     {
-        $object = $this->commentable_type::find($this->commentable_id);
-        
-        if(auth()->user()->hasRole('Partner')) {
-            $this->visible = true;
-        } else {
-            $this->visible = false;
-        }
+        $object = $this->commentable_type::withoutGlobalScopes()->find($this->commentable_id);
 
         $validated = $this->validate([
             'comment' => 'required|max:255',
-            'visible' => 'required',
         ]);
 
         $comment = Comment::create([
             'body' => $this->comment,
             'meta' => [ 'ip' => request()->ip(), 'user_agent' => request()->userAgent() ],
-            'visible' => $this->visible,
+            'visible' => $visible,
             'user_id' => auth()->id(),
             'commentable_id' => $this->commentable_id,
             'commentable_type' => $this->commentable_type,
         ]);
 
         if ($this->commentable_type == Project::class) {
-            $object->project_partner->each(function ($partner) use ($comment, $object) {
-                $partner->user->notify(new NewComment($comment, $object));
-            });
-    
+            if ($visible) {
+                $object->project_partner->each(function ($partner) use ($comment, $object) {
+                    $partner->user->notify(new NewComment($comment, $object));
+                });
+            }
             $object->project_owner->each(function ($owner) use ($comment, $object) {
                 $owner->user->notify(new NewComment($comment, $object));
             });
         } else if ($this->commentable_type == ProjectUpdate::class) {
-            $object->project->project_partner->each(function ($partner) use ($comment, $object) {
-                $partner->user->notify(new NewComment($comment, $object->project));
-            });
+            if ($visible) {
+                $object->project->project_partner->each(function ($partner) use ($comment, $object) {
+                    $partner->user->notify(new NewComment($comment, $object->project));
+                });
+            }
     
             $object->project->project_owner->each(function ($owner) use ($comment, $object) {
                 $owner->user->notify(new NewComment($comment, $object->project));
@@ -107,7 +103,7 @@ class Comments extends Component
 
         $this->editingCommentId = null;
         $this->editingCommentBody = null;
-        $this->visible = true;
+        $this->visible = null;
         // Flash a message, add comment id to session.
         session()->flash('message', sprintf('Comment %s successfully updated.', $comment->id));
     }
@@ -116,7 +112,7 @@ class Comments extends Component
     {
         $this->editingCommentId = null;
         $this->editingCommentBody = null;
-        $this->visible = true;
+        $this->visible = null;
     }
 
     public function resetErrors()

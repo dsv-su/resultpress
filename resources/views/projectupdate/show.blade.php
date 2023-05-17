@@ -158,8 +158,8 @@
     @if ($project_update->status == 'draft')
         <a href="/project/update/{{ $project_update->id }}/edit" role="button" class="btn btn-primary">Edit</a>
     @endif
-
-    @if ($review)
+    {{-- TODO: Change the date before deploying to production --}}
+    @if ($project_update->project->created_at <= date('Y-m-d H:i:s', strtotime('2023-05-16')) && $review)
         <form action="{{ route('projectupdate_update', $project_update) }}" method="POST">
             @method('PUT')
             @csrf
@@ -205,7 +205,7 @@
             </div>
         </form>
     @else
-        @if ($project_update->partner_comment || $project_update->internal_comment)
+        @if ($project_update->project->created_at <= date('Y-m-d H:i:s', strtotime('2023-05-16')) && ($project_update->partner_comment || $project_update->internal_comment))
             @if ($project_update->partner_comment)
                 <label class="form-group-header mt-4">Partner's comment</label>
                 <table class="table table-striped table-bordered">
@@ -232,8 +232,9 @@
             @endif
         @endif
     @endif
-
-    @livewire('comments', ['projectUpdate' => $project_update, 'comments' => $project_update->comments, 'commentable_type' => 'App\ProjectUpdate', 'commentable_id' => $project_update->id])
+    @if ($project_update->project->created_at >= date('Y-m-d H:i:s', strtotime('2023-05-16')))
+        @livewire('comments', ['projectUpdate' => $project_update, 'comments' => $project_update->comments, 'commentable_type' => 'App\ProjectUpdate', 'commentable_id' => $project_update->id])
+    @endif
     <script>
         $(document).ready(function() {
             //var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}, toolbar: false, disableEditing: true});

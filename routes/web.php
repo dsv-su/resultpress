@@ -74,9 +74,9 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::get('/user/invite/{project}', 'UserController@invite_view')->name('invite_view');
     Route::get('/user/remove_invite/{invite}', 'UserController@remove_invite')->name('invite_remove');
 
-    //Search
+    //Search 
     Route::get('/search/{q?}', 'SearchController@search')->name('search');
-    Route::post('/search/{q?}', 'SearchController@filterSearch')->name('filter_search');
+    Route::post('/search', 'SearchController@filterSearch')->name('filter_search');
     Route::get('/find', 'SearchController@find')->name('find');
 
     //Profile

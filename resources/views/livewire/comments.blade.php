@@ -1,7 +1,7 @@
 <div class="mt-3">
     <div class="card">
         <div class="card-header">
-            <h3>Comments</h3>
+            <label class="form-group-header">Comments</label>
         </div>
         <div class="card-body">
             @foreach ($comments as $comment)
@@ -37,11 +37,12 @@
                     </div>
                 @else
                     @if (Auth::user()->hasRole('Partner') && $comment->visible == 0)
-                        <div class="alert alert-info">
+                        {{-- Show internal comments indication for the partner
+                            <div class="alert alert-info">
                             Internal Comment
-                        </div>
+                        </div> --}}
                     @else
-                        <div class="media p-2 @if (!$comment->user->hasRole('Partner')) pl-5 border-left @endif @if (!$comment->visible) alert-warning @else bg-light @endif rounded-lg">
+                        <div class="media p-2 @if (!$comment->user->hasRole('Partner')) alert-info @endif @if (!$comment->visible) alert-dark @else  @endif rounded-lg">
                             {{-- <img src="@if ($comment->user->avatar) {{ asset('storage/' . $comment->user->avatar) }} @else https://bootdey.com/img/Content/avatar/avatar1.png @endif" alt="user" width="50" class="rounded-circle"> --}}
                             <div style="background-image: url(@if ($comment->user->avatar) {{ asset('storage/' . $comment->user->avatar) }} @else https://bootdey.com/img/Content/avatar/avatar1.png @endif);" class="user-avatar-circle"></div>
                             <div class="media-body d-flex flex-row justify-content-between">
@@ -74,21 +75,9 @@
                     No comments yet.
                 </div>
             @endif
-            <div class="form-group row">
+            <div class="form-group row mb-0">
                 <div class="col-md-12">
                     <textarea wire:model="comment" class="form-control" rows="3" placeholder="Add a comment"></textarea>
-                </div>
-
-                <div class="col-md-12">
-                    @if (!Auth::user()->hasRole('Partner'))
-                        <label class="radio-inline">
-                            <input type="radio" wire:model="visible" value="1" checked required> Public
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" wire:model="visible" value="0" checked required> Internal
-                        </label>
-                    @endif
-                    <button wire:click="addComment" class="btn btn-primary btn-sm mt-2">Add Comment</button>
                 </div>
                 <div class="col-md-12 mt-3">
                     @if ($errors->any())
@@ -110,6 +99,16 @@
                             {{ session('message') }}
                         </div>
                     @endif
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">
+                    @if (!Auth::user()->hasRole('Partner'))
+                        <button wire:click="addComment(false)" class="btn btn-secondary btn-sm mt-2 ">Add Internal Comment</button>
+                    @endif
+                </div>
+                <div class="col-md-6 text-right">
+                    <button wire:click="addComment(true)" class="btn btn-primary btn-sm mt-2 ">Add Comment</button>
                 </div>
             </div>
         </div>

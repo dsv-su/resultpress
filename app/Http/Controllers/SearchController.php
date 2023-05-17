@@ -32,11 +32,16 @@ class SearchController extends Controller
         return view('home.search', compact('projects', 'q', 'projectpartners', 'projectmanagers', 'programareas', 'organisations', 'statuses', 'years'));
     }
 
-    public function filterSearch($q = null, Request $request): array
+    public function filterSearch(Request $request): array
     {
+        $q = $request->q ?? null;
         $html = '';
         $user = Auth::user();
-        $projects = $q ? Project::search($q, null, true, true)->get() : Project::all();
+        $projects = $q ? 
+            Project::where('name', 'like', '%' . $q . '%')
+                ->orWhere('description', 'like', '%' . $q . '%')
+                ->get() : 
+            Project::all();
         $managers = request('manager') ? explode(',', request('manager')) : null;
         $partners = request('partner') ? explode(',', request('partner')) : null;
         $areas = request('area') ? explode(',', request('area')) : null;

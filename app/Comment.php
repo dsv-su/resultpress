@@ -19,6 +19,7 @@ class Comment extends Model
      */
     protected $casts = [
         'meta' => 'array',
+        'visible' => 'boolean',
     ];
 
     /**
@@ -26,7 +27,7 @@ class Comment extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'role_id', 'body', 'meta', 'commentable_id', 'commentable_type'];
+    protected $fillable = ['user_id', 'role_id', 'body', 'meta', 'visible', 'commentable_id', 'commentable_type'];
 
     /**
      * Morph to the commentable model.

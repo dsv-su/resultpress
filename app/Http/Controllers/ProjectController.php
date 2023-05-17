@@ -645,6 +645,7 @@ class ProjectController extends Controller
         $projectupdate->project_id = $project->id;
         $projectupdate->summary = request('project_update_summary') ?? null;
         $projectupdate->state = request('project_state') ?? null;
+        $projectupdate->internal_comment = request('internal_comment') ?? null;
         $dates = explode(' - ', request('dates'));
         $projectupdate->start = Carbon::createFromFormat('d/m/Y', $dates[0]);
         $projectupdate->end = Carbon::createFromFormat('d/m/Y', $dates[1]);

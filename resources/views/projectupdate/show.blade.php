@@ -171,7 +171,7 @@
                         <div class="text-danger">{{ $errors->first('partner_comment') }}</div>
                     @enderror
                 @endif
-                @if (Auth::user()->hasRole(['Spider']))
+                @if (Auth::user()->hasRole(['Spider', 'Administrator']))
                     @if ($project_update->partner_comment)
                         <label class="form-group-header mt-4">Partner's comment</label>
                         <table class="table table-striped table-bordered">
@@ -233,6 +233,7 @@
         @endif
     @endif
 
+    @livewire('comments', ['projectUpdate' => $project_update, 'comments' => $project_update->comments, 'commentable_type' => 'App\ProjectUpdate', 'commentable_id' => $project_update->id])
     <script>
         $(document).ready(function() {
             //var editor = new MediumEditor('.mediumEditor', {placeholder: {text: "Description"}, toolbar: false, disableEditing: true});

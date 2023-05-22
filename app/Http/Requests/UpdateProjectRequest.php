@@ -32,7 +32,7 @@ class UpdateProjectRequest extends FormRequest
             'name' => 'required|min:10',
             'description' => 'required|min:15',
             'activities.*.title' => 'required|min:4',
-            'activities.*.description' => 'required|min:4',
+            // 'activities.*.description' => 'required|min:4',
             'activities.*.start' => 'required|date',
             'activities.*.end' => 'required|date',
             'activities.*.budget' => 'required|numeric',

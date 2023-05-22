@@ -20,7 +20,7 @@
     @endif
                     -->
         </div>
-        <div class="row my-3">
+        <div class="my-3">
             <form action="{{ route('profile_store', $user->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row">

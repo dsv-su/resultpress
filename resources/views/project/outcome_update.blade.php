@@ -25,7 +25,7 @@
                         @foreach ($outcome->outcome_updates as $puindex => $arr)
                             <div class="@if ($puindex > 0) mt-5 @endif">
                                 <b><a class="mb-2" href="/project/update/{{ $arr['project_update_id'] }}">Update {{ $puindex + 1 }}</a></b>:
-                                <h6 class="mt-2">Description:</h6>
+                                <h6 class="mt-2">Progress:</h6>
                                 {!! $arr['summary'] !!}
                                 <h6>Connected outputs:</h6>
                                 @foreach (json_decode($arr['outputs'], true) as $output)
@@ -56,8 +56,12 @@
                         $short_summary = \Illuminate\Support\Str::words($outcome_update->summary, 60, $end = '');
                         $long_summary = str_replace($short_summary, '', $outcome_update->summary);
                     @endphp
-                    <div data-toggle="collapse" data-target="#testid{!! $outcome_update->id !!}" aria-controls="#testid{!! $outcome_update->id !!}">{!! $short_summary !!} <b>more...</b></div>
-                    <div class="collapse" id="testid{!! $outcome_update->id !!}">{!! $long_summary !!}</div>
+                    <div data-toggle="collapse" data-target="#hidden-long-text{!! $outcome_update->id !!}" aria-controls="#hidden-long-text{!! $outcome_update->id !!}">{!! $short_summary !!} 
+                        @if (!empty($long_summary))
+                            <span role='button' class="badge badge-light font-100">more...</span>
+                        @endif
+                    </div>
+                    <div class="collapse" id="hidden-long-text{!! $outcome_update->id !!}">{!! $long_summary !!}</div>
                 @endif
                 <br />
                 <label for="summary" class="col-form-label font-weight-bold font-italic">Connected outputs:</label>
@@ -93,26 +97,28 @@
 
             <div class="form-group row">
                 <div class="col-auto col-sm-4 col-md-3">
-                    <label for="outcome_summary[]" class="col-form-label">Description:</label>
+                    <label for="outcome_summary[]" class="col-form-label">Progress:</label>
                 </div>
                 <div class="col-sm">
                     <textarea class="form-control collapsed mediumEditor" id="outcome_summary[]" name="outcome_summary[]" placeholder="Describe the outcome completion summary">
-@if ($outcome_update)
-{!! $outcome_update->summary !!}
-@endif
-</textarea>
+                        @if ($outcome_update)
+                        {!! $outcome_update->summary !!}
+                        @endif
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-auto col-sm-4 col-md-3">
+                    <label for="outcome_completion[]" class="col-form-label">Completed?</label>
+                </div>
+                <div class="col-sm">
+                    <label class="col-form-label"><input type="radio" name="outcome_completion[]" value="1"> Yes</label>
+                    <label class="col-form-label ml-3"><input type="radio" name="outcome_completion[]" value="0" checked> No</label>
                 </div>
             </div>
         </div>
-        <div class="form-group row">
-            <div class="col-auto col-sm-4 col-md-3">
-                <label for="outcome_completion[]" class="col-form-label">Completed?</label>
-            </div>
-            <div class="col-sm">
-                <input type="radio" name="outcome_completion[]" value="1"> Yes
-                <input type="radio" name="outcome_completion[]" value="0" checked> No
-            </div>
-        </div>
+
         <div class="form-group row mb-0 mx-0">
             <a name="remove" id="{{ $outcome->id }}" class="btn btn-outline-danger btn-sm remove ml-auto mt-1"><i class="far fa-trash-alt"></i></a>
         </div>

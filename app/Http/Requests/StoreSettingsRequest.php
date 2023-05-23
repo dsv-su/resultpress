@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Settings;
 
 class StoreSettingsRequest extends FormRequest
 {
@@ -24,7 +26,8 @@ class StoreSettingsRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|unique:settings,name',
+            'type' => 'required|in:'.implode(',', array_keys(Settings::getFieldTypes())),
         ];
     }
 }

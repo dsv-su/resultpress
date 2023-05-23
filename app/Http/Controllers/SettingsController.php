@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSettingsRequest;
 use App\Http\Requests\UpdateSettingsRequest;
 use App\Settings;
+use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {
@@ -15,7 +16,8 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        //
+        $settings = Settings::all();
+        return view('settings.index', compact('settings'));
     }
 
     /**
@@ -25,7 +27,9 @@ class SettingsController extends Controller
      */
     public function create()
     {
-        //
+        // Get field type enum values
+        $fieldTypes = Settings::getFieldTypes();
+        return view('settings.create', compact('fieldTypes'));
     }
 
     /**
@@ -36,7 +40,8 @@ class SettingsController extends Controller
      */
     public function store(StoreSettingsRequest $request)
     {
-        //
+        Settings::create($request->validated());
+        return redirect()->route('settings.edit', ['setting' => $request->name])->with('success', 'Setting created successfully');
     }
 
     /**
@@ -53,12 +58,15 @@ class SettingsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param string $setting
      * @param  \App\Settings  $settings
      * @return \Illuminate\Http\Response
      */
-    public function edit(Settings $settings)
+    public function edit($setting, Settings $settings)
     {
-        //
+        $setting = Settings::where('name', $setting)->firstOrFail();
+        $fieldTypes = Settings::getFieldTypes();
+        return view('settings.edit', compact('setting', 'fieldTypes'));
     }
 
     /**
@@ -70,7 +78,20 @@ class SettingsController extends Controller
      */
     public function update(UpdateSettingsRequest $request, Settings $settings)
     {
-        //
+        $setting = Settings::where('name', $request->name)->firstOrFail();
+        // Upload file if it exists
+        if($request->hasFile('value')){
+            $fileName = $request->name . '-' . time() . '-' . $request->value->getClientOriginalName();
+            $file = $request->file('value')->storeAs('settings', $fileName, 'public');
+            $setting->value = $file;
+        }
+        else{
+            $setting->value = $request->value;
+        }
+        $setting->type = $request->type;
+        $setting->save();
+        
+        return redirect()->route('settings.edit', ['setting' => $request->name])->with('success', 'Setting updated successfully');
     }
 
     /**

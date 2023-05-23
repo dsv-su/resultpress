@@ -12,11 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\URL;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 use App\Scopes\ObjectType;
 
 class Project extends Model
 {
-    use LogsActivity;
+    use LogsActivity, HasSlug;
 
     //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
     protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state', 'object_type', 'object_id'];
@@ -27,6 +29,18 @@ class Project extends Model
     protected static $logOnlyDirty = true;
 
     protected $appends = ['link', 'type'];
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug')
+            ->slugsShouldBeNoLongerThan(50)
+            ->doNotGenerateSlugsOnUpdate();
+    }
 
     /**
      * Get the reminders for the project.

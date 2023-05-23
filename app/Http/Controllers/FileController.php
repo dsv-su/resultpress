@@ -17,17 +17,17 @@ class FileController extends Controller
             $html = '';
             $ids = array();
 
-            $path = 'public/attachments/' . $request->project_id;
-            Storage::makeDirectory($path);
-
             foreach ($files as $file) {
                 $file_name = $file->getClientOriginalName();
+
+                $path = 'attachments/' . $request->project_id;
+                $finalPath = $file->storeAs($path, $file_name, 'public');
 
                 $saved_file = new File();
                 $saved_file->name = $file_name;
                 $saved_file->filearea = 'project_update';
                 $saved_file->itemid = 0;
-                $saved_file->filepath = Storage::putFile($path, $file);
+                $saved_file->filepath = $finalPath;
                 $saved_file->save();
 
                 $url = Storage::url($path . '/' . $file_name);

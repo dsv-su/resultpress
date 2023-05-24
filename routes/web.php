@@ -62,6 +62,7 @@ Route::middleware('auth', 'entitlements')->group(function () {
     //Admin User/Role management
     Route::get('/admin', 'AdminController@index')->name('admin');
     //Administrator routes
+    Route::resource('settings', SettingsController::class);
     Route::resource('projectadmin','ProjectAdminController');
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');

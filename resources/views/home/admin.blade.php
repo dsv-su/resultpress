@@ -49,6 +49,16 @@
     </div>
     <div class="card my-3">
         <div class="card-header">
+            Settings
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Manage Settings</h5>
+            {{-- <p class="card-text">System settings, messages, </p> --}}
+            <a href="{{ route('settings.index') }}" class="btn btn-outline-primary">Manage</a>
+        </div>
+    </div>
+    <div class="card my-3">
+        <div class="card-header">
             Logs
         </div>
         <div class="card-body">

@@ -94,6 +94,7 @@
                                            placeholder="Start date"
                                            value="{{ old('start', empty($project->start) ? '' : $project->start->format('d-m-Y'))}}"
                                            class="form-control form-control-sm datepicker" required>
+                                           <span>{{ $project->getSuggestedChanges('start') }}</span>
                                 </div>
                             </div>
                             <div class="form-row mb-2 row">
@@ -102,6 +103,7 @@
                                     <input type="text" name="end" id="end" placeholder="End date"
                                            value="{{ old('end', empty($project->end) ? '' : $project->end->format('d-m-Y'))}}"
                                            class="form-control form-control-sm datepicker">
+                                           <span>{{ $project->getSuggestedChanges('end') }}</span>
                                 </div>
                             </div>
 
@@ -149,7 +151,7 @@
                             <div class="d-flex flex-wrap" id="reminders_list">
                                 @foreach($project_reminders as $thisproject)
                                     <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                        @include('project.reminder_form', ['reminder' => $thisproject])
+                                        @include('project.reminder_form', ['reminder' => $thisproject, 'project' => $project])
                                     </div>
                                 @endforeach
                             </div>
@@ -160,15 +162,25 @@
                         <!-- end email reminders -->
 
                         <div class="form-group">
-                            <div>{{ $project->getSuggestedChanges('activities') }}</div>
                             <label for="activities_list" class="form-group-header pl-2 pr-0">Activities</label>
                             <span data-toggle="tooltip"
                                   title="Here you add project activities information and reporting templates"><i
                                         class="fas fa-info-circle fa-1x"></i></span>
+
+                            @if ($project->getSuggestedChanges('activities'))
+                                <div class="alert alert-warning">
+                                    <p><strong>Warning!</strong> The following activities have been suggested for removal:</p>
+                                    <ul>
+                                        @foreach ($project->getSuggestedChanges('activities') as $activity)
+                                            <li>{{ $activity->title }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <div class="d-flex flex-wrap" id="activities_list">
                                 @foreach ($activities as $activity)
                                     <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                        @include('project.activity_form', ['activity' => $activity])
+                                        @include('project.activity_form', ['activity' => $activity, 'project' => $project])
                                     </div>
                                 @endforeach
                             </div>
@@ -194,18 +206,24 @@
 
                                                 @foreach ($outputs as $output)
                                                     <tr>
-                                                        <td class="w-75"><input type="hidden" name="outputs[{{$output->id}}][id]"
-                                                                                value="{{$output->id}}">
-                                                            <input type="hidden" name="outputs[{{$output->id}}][status]"
-                                                                   value="{{$output->status}}">
+                                                        <td class="w-75">
+                                                            <input type="hidden" name="outputs[{{$output->id}}][id]" value="{{$output->id}}">
+                                                            <input type="hidden" name="outputs[{{$output->id}}][slug]" value="{{$output->slug}}">
+                                                            <input type="hidden" name="outputs[{{$output->id}}][status]" value="{{$output->status}}">
                                                             <textarea name="outputs[{{$output->id}}][indicator]"
                                                                       data-placeholder="Output name" required
                                                                       class="generalMediumEditor form-control form-control-sm">{{$output->indicator}}</textarea>
+                                                                        @if ($project)
+                                                                            <span my-2>{!! $project->getSuggestedChanges('outputs', $output->slug, 'indicator') !!}</span>
+                                                                        @endif
                                                         </td>
                                                         <td class="w-25"><input type="text" name="outputs[{{$output->id}}][target]"
                                                                                 class="form-control form-control-sm"
                                                                                 placeholder="0"
                                                                                 value="{{$output->target}}" required>
+                                                                                @if ($project)
+                                                                                    <span my-2>{!! $project->getSuggestedChanges('outputs', $output->slug, 'target') !!}</span>
+                                                                                @endif
                                                         </td>
                                                         <td>
                                                             <button type="button" name="remove"
@@ -247,6 +265,8 @@
                                                         <td class="w-25 align-middle"><input type="hidden"
                                                                                              name="outputs[{{$aggregated_output->id}}][id]"
                                                                                              value="{{$aggregated_output->id}}">
+                                                            <input type="hidden" name="outputs[{{$output->id}}][slug]" value="{{$output->slug}}">
+
                                                             <input type="hidden" name="outputs[{{$aggregated_output->id}}][status]"
                                                                    value="aggregated">
                                                             <input type="text"
@@ -258,6 +278,9 @@
                                                                    data-trigger="manual"
                                                                    title="Maximum length is 255 chars"
                                                                    class="form-control form-control-sm">
+                                                                    @if ($project)
+                                                                        <span my-2>{!! $project->getSuggestedChanges('outputs', $aggregated_output->slug, 'indicator') !!}</span>
+                                                                    @endif
                                                         </td>
                                                         <td class="w-75">
                                                             <select name="outputs[{{$aggregated_output->id}}][target]"
@@ -305,10 +328,15 @@
                                                     <tr>
                                                         <td class="w-100"><input type="hidden" name="outcomes[{{$outcome->id}}][id]"
                                                                                  value="{{$outcome->id}}">
+                                                            <input type="hidden" name="outcomes[{{$outcome->id}}][slug]" value="{{$outcome->slug}}">
                                                             <textarea type="text"
                                                                    name="outcomes[{{$outcome->id}}][name]"
                                                                    data-placeholder="Outcome name" required
                                                                    class="generalMediumEditor form-control">{{$outcome->name}}</textarea>
+                                                                    @if ($project)
+                                                                        <span my-2>{!! $project->getSuggestedChanges('outcomes', $outcome->slug, 'name') !!}</span>
+                                                                    @endif
+                                                                   
                                                         </td>
                                                         <td>
                                                             <button type="button" name="remove"

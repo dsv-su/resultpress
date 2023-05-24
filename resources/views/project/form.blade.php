@@ -198,10 +198,10 @@
 
                                                 @foreach ($outputs as $output)
                                                     <tr>
-                                                        <td class="w-75"><input type="hidden" name="outputs[{{$output->id}}][id]"
-                                                                                value="{{$output->id}}">
-                                                            <input type="hidden" name="outputs[{{$output->id}}][status]"
-                                                                   value="{{$output->status}}">
+                                                        <td class="w-75">
+                                                            <input type="hidden" name="outputs[{{$output->id}}][id]" value="{{$output->id}}">
+                                                            <input type="hidden" name="outputs[{{$output->id}}][slug]" value="{{$output->slug}}">
+                                                            <input type="hidden" name="outputs[{{$output->id}}][status]" value="{{$output->status}}">
                                                             <textarea name="outputs[{{$output->id}}][indicator]"
                                                                       data-placeholder="Output name" required
                                                                       class="generalMediumEditor form-control form-control-sm">{{$output->indicator}}</textarea>
@@ -248,11 +248,10 @@
 
                                                 @foreach ($aggregated_outputs as $aggregated_output)
                                                     <tr>
-                                                        <td class="w-25 align-middle"><input type="hidden"
-                                                                                             name="outputs[{{$aggregated_output->id}}][id]"
-                                                                                             value="{{$aggregated_output->id}}">
-                                                            <input type="hidden" name="outputs[{{$aggregated_output->id}}][status]"
-                                                                   value="aggregated">
+                                                        <td class="w-25 align-middle">
+                                                            <input type="hidden" name="outputs[{{$aggregated_output->id}}][id]" value="{{$aggregated_output->id}}">
+                                                            <input type="hidden" name="outputs[{{$aggregated_output->id}}][slug]" value="{{$aggregated_output->slug}}">
+                                                            <input type="hidden" name="outputs[{{$aggregated_output->id}}][status]" value="aggregated">
                                                             <input type="text"
                                                                    name="outputs[{{$aggregated_output->id}}][indicator]"
                                                                    value="{{$aggregated_output->indicator}}"
@@ -307,8 +306,9 @@
                                                 <!-- Here comes a foreach to show the outcomes -->
                                                 @foreach ($project->outcomes as $outcome)
                                                     <tr>
-                                                        <td class="w-100"><input type="hidden" name="outcomes[{{$outcome->id}}][id]"
-                                                                                 value="{{$outcome->id}}">
+                                                        <td class="w-100">
+                                                            <input type="hidden" name="outcomes[{{$outcome->id}}][id]" value="{{$outcome->id}}">
+                                                            <input type="hidden" name="outcomes[{{$outcome->id}}][slug]" value="{{$outcome->slug}}">
                                                             <textarea type="text"
                                                                    name="outcomes[{{$outcome->id}}][name]"
                                                                    data-placeholder="Outcome name" required
@@ -469,8 +469,8 @@
                             let html = '';
                             let timestamp = Date.now();
                             html += '<tr>';
-                            html += '<input type="hidden" name="outputs['+timestamp+'][status]" value="default">';
-                            html += '<td class="w-75"><textarea name="outputs['+timestamp+'][indicator]" class="MediumEditor form-control form-control-sm" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></textarea></td>';
+                            html += '<input type="hidden" data-id="'+timestamp+'" name="outputs['+timestamp+'][status]" value="default">';
+                            html += '<td class="w-75"><textarea name="outputs['+timestamp+'][indicator]" data-id="'+timestamp+'" class="MediumEditor form-control form-control-sm" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></textarea></td>';
                             html += '<td class="w-25"><input type="text" name="outputs['+timestamp+'][target]" class="form-control form-control-sm" placeholder="0" size="3" value="0" required></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this output"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outputs_table').append(html).ready(function (e) {
@@ -495,12 +495,31 @@
                             $('#aggregated_outputs_table').closest('.card').show();
                             let html = '';
                             let timestamp = Date.now();
+                            let outputs = [];
+
+                            $('textarea[name*="outputs"]').each(function(){
+                                let output = {};
+                                output.id = $(this).data('id');
+                                output.indicator = $(this).val();
+                                outputs.push(output);
+                            });
+
+
                             html += '<tr>';
                             html += '<input type="hidden" name="outputs['+timestamp+'][status]" value="aggregated">';
-                            html += '<td class="w-75"><input type="text" name="outputs['+timestamp+'][indicator]" class="form-control form-control-sm" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></td>';
-                            html += '<td class="w-75"><select name="outputs['+timestamp+'][target]" class="custom-select form-control-sm output_multiselect" multiple="multiple" required> @foreach($outputs as $output) <option value="{{$output->id}}">{{$output->indicator}}</option>@endforeach </select></td>';
+                            html += '<td class="w-75"><textarea type="text" name="outputs['+timestamp+'][indicator]" class="form-control form-control-sm" placeholder="Output name" maxlength="255" data-trigger="manual" data-target="tooltip" title="Maximum length is 255 chars" required></textarea></td>';
+                            html += '<td class="w-75"><select name="outputs['+timestamp+'][target]" class="custom-select form-control-sm output_multiselect" multiple="multiple" required> @foreach($outputs as $output) <option value="{{$output->id}}">{!!$output->indicator!!}</option>@endforeach </select></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this output"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#aggregated_outputs_table').append(html);
+
+                            @if (empty($project->id))
+                                outputs.forEach(output => {
+                                    let outputsSelect = $('select[name="outputs['+timestamp+'][target]"]');
+                                    let option = '<option value="'+output.id+'">'+output.indicator+'</option>';
+                                    outputsSelect.append(option);
+                                });
+                            @endif
+
                             $(function () {
                                 $('[data-toggle="tooltip"]').tooltip()
                             })
@@ -547,7 +566,7 @@
                             let html = '';
                             let timestamp = Date.now();
                             html += '<tr>';
-                            html += '<td class="w-100"><input type="text" name="outcomes['+timestamp+'][name]" class="form-control form-control-sm outcomesMediumEditor" placeholder="Outcome name" required></td>';
+                            html += '<td class="w-100"><textarea type="text" name="outcomes['+timestamp+'][name]" class="form-control form-control-sm outcomesMediumEditor" placeholder="Outcome name" required></textarea></td>';
                             html += '<td><button type="button" name="remove" class="btn btn-outline-danger btn-sm remove" data-toggle="tooltip" title="Delete this outcome"><i class="far fa-trash-alt"></i></button></td></tr>';
                             $('#outcomes_table').append(html);
                             $(function () {

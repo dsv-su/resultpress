@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Settings;
 
 class UpdateSettingsRequest extends FormRequest
 {
@@ -25,7 +26,10 @@ class UpdateSettingsRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required',
+            'type' => 'required|in:'.implode(',', array_keys(Settings::getFieldTypes())),
+            'id' => 'required|exists:settings,id',
+            'value' => '',
         ];
     }
 }

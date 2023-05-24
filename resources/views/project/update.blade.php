@@ -14,6 +14,14 @@
             </li>
         </ol>
     </nav>
+
+    @if (App\Settings::where('name', 'project-update-help')->first()->value)
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            {!! App\Settings::where('name', 'project-update-help')->first()->value !!}
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        </div>
+    @endif
+
     <form action="{{ route('project_save_update', $project) }}" method="POST">
         @method('PUT')
         @csrf
@@ -30,7 +38,7 @@
                 templates are based on the most recent update, including drafts).
             </div>
         @endif
-        <div class="form-group">
+        <div class="form-group mt-5">
             <label for="dates" class="form-group-header">Dates covered</label>
             <div class="col col-sm-5 col-md-3 px-1">
                 <input type="text" name="dates" class="form-control form-control-sm" placeholder="Date" size="1"

@@ -3,12 +3,30 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class ProjectReminder extends Model
 {
-    protected $fillable = ['project_id', 'name', 'reminder', 'reminder_due_days', 'set', 'type'];
+    use HasSlug;
+
+    protected $fillable = ['project_id', 'name', 'reminder', 'reminder_due_days', 'set', 'type', 'slug'];
     protected $cast = ['reminder_due_days' => 'integer'];
     protected $dates = ['set'];
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug')
+            ->slugsShouldBeNoLongerThan(50)
+            ->allowDuplicateSlugs()
+            ->skipGenerateWhen(fn () => $this->slug !== null)
+            ->doNotGenerateSlugsOnUpdate();
+    }
 
     /**
      * Get the project that owns the reminder.

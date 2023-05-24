@@ -7,13 +7,29 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Activity extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasSlug;
 
     protected $dates = ['start', 'end'];
-    protected $fillable = ['title', 'template', 'description', 'start', 'end', 'budget', 'project_id', 'priority'];
+    protected $fillable = ['title', 'template', 'description', 'start', 'end', 'budget', 'project_id', 'priority', 'slug'];
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug')
+            ->slugsShouldBeNoLongerThan(50)
+            ->allowDuplicateSlugs()
+            ->skipGenerateWhen(fn () => $this->slug !== null)
+            ->doNotGenerateSlugsOnUpdate();
+    }
 
     public function project(): BelongsTo
     {

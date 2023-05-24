@@ -12,11 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\URL;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 use App\Scopes\ObjectType;
 
 class Project extends Model
 {
-    use LogsActivity;
+    use LogsActivity, HasSlug;
 
     //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
     protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state', 'object_type', 'object_id'];
@@ -27,6 +29,18 @@ class Project extends Model
     protected static $logOnlyDirty = true;
 
     protected $appends = ['link', 'type'];
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug')
+            ->slugsShouldBeNoLongerThan(50)
+            ->doNotGenerateSlugsOnUpdate();
+    }
 
     /**
      * Get the reminders for the project.
@@ -335,7 +349,7 @@ class Project extends Model
         return null;
     }
 
-    public function getSuggestedChanges( $attribute = 'name', $id = null ){
+    public function getSuggestedChanges( $attribute = 'name', $id = null, $field = null ) {
         $attributesTypes = [
             'basic' => [
                 'name',
@@ -352,6 +366,7 @@ class Project extends Model
             ],
             'subitems' => [
                 'activities',
+                'reminders',
                 'deadlines',
                 'outcomes',
                 'outputs',
@@ -361,15 +376,39 @@ class Project extends Model
         if($objectType === 'project_change_request'){
             $originalProject = $this->main;
             if($originalProject){
-                if(in_array($attribute, $attributesTypes['basic']) && is_string($this->$attribute) && $this->$attribute !== $originalProject->$attribute) {
-                    return 'Previous: ' . $originalProject->$attribute;
+                if(in_array($attribute, $attributesTypes['basic']) && (is_string($this->$attribute) || strtotime($this->$attribute)) && $this->$attribute !== $originalProject->$attribute) {
+                    $return = strtotime($originalProject->$attribute) ? Carbon::parse($originalProject->$attribute)->format('Y-m-d') : $originalProject->$attribute;
+                    return 'Previous: ' . $return;
                 }
                 if(in_array($attribute, $attributesTypes['subitems'])){
+                    //$field = $attribute === 'activities' ? 'title' : ($attribute === 'outputs' ? 'indicator' : 'name');
                     if($id === null){
                         // What has been deleted?
-                        $originalNames = $originalProject->$attribute->pluck('title');
-                        $currentNames = $this->$attribute->pluck('title');
-                        $deletedNames = $originalNames->whereNotIn('title', $currentNames);
+                        $originalNames = $originalProject->$attribute->pluck('slug');
+                        $currentNames = $this->$attribute->pluck('slug');
+                        $deletedNames = $originalNames->diff($currentNames);
+                        $deletedModels = $originalProject->$attribute->whereIn('slug', $deletedNames);
+                        if($deletedNames->count() > 0){
+                            return $deletedModels;
+                        }
+                    } else {
+                        // What has been changed?
+                        $originalModel = $originalProject->$attribute->where('slug', $id)->first();
+                        $currentModel = $this->$attribute->where('slug', $id)->first();
+                        if($originalModel && $currentModel){
+                            $isDate = false;
+                            try {
+                                $originalDate = Carbon::createFromFormat('Y-m-d H:i:s', $originalModel->$field)->format('Y-m-d');
+                                $currentData = Carbon::createFromFormat('Y-m-d H:i:s', $currentModel->$field)->format('Y-m-d');
+                                $isDate = true;
+                            } catch (\Throwable $th) {}
+                            if ($isDate && $originalDate !== $currentData) {
+                                return 'Previous: ' . Carbon::parse($originalModel->$field)->format('Y-m-d');
+                            }
+                            if (!$isDate && $originalModel->$field !== $currentModel->$field) {
+                                return 'Previous: ' . $originalModel->$field;
+                            }
+                        }
                     }
                 }
             }

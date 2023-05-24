@@ -5,10 +5,28 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Outcome extends Model
 {
-    protected $fillable = ['name', 'project_id', 'user_id'];
+    use HasSlug;
+
+    protected $fillable = ['name', 'project_id', 'user_id', 'slug'];
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug')
+            ->slugsShouldBeNoLongerThan(50)
+            ->allowDuplicateSlugs()
+            ->skipGenerateWhen(fn () => $this->slug !== null)
+            ->doNotGenerateSlugsOnUpdate();
+    }
 
     public function project(): BelongsTo
     {

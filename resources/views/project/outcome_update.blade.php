@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-auto pl-1">
             <h5 class="mb-0">
-                <input type="hidden" name="outcome_update_id[]" value="@if ($outcome_update) {{ $outcome_update->id }} @else 0 @endif">
+                <input type="hidden" name="outcome_update_id[@if ($outcome) {{ $outcome->id }} @endif]" value="@if ($outcome_update) {{ $outcome_update->id }} @else 0 @endif">
                 <span class="px-0 btn cursor-default text-left">{!! $outcome->name !!}</span>
                 @if (isset($show) && $show)
 
@@ -25,18 +25,20 @@
                         @foreach ($outcome->outcome_updates as $puindex => $arr)
                             <div class="@if ($puindex > 0) mt-5 @endif">
                                 <b><a class="mb-2" href="/project/update/{{ $arr['project_update_id'] }}">Update {{ $puindex + 1 }}</a></b>:
-                                <h6 class="mt-2">Description:</h6>
+                                <h6 class="mt-2">Progress:</h6>
                                 {!! $arr['summary'] !!}
-                                <h6>Connected outputs:</h6>
-                                @foreach (json_decode($arr['outputs'], true) as $output)
-                                    @foreach ($outcome->project->outputs as $out)
-                                        @if ($out->id == $output)
-                                            <ul>
-                                                <li>{!! $out->indicator !!}</li>
-                                            </ul>
-                                        @endif
+                                @if (! is_null($arr['outputs']))
+                                    <h6>Connected outputs:</h6>
+                                    @foreach (json_decode($arr['outputs'], true) as $output)
+                                        @foreach ($outcome->project->outputs as $out)
+                                            @if ($out->id == $output)
+                                                <ul>
+                                                    <li>{!! $out->indicator !!}</li>
+                                                </ul>
+                                            @endif
+                                        @endforeach
                                     @endforeach
-                                @endforeach
+                                @endif
                             </div>
                         @endforeach
                     </div>
@@ -56,8 +58,12 @@
                         $short_summary = \Illuminate\Support\Str::words($outcome_update->summary, 60, $end = '');
                         $long_summary = str_replace($short_summary, '', $outcome_update->summary);
                     @endphp
-                    <div data-toggle="collapse" data-target="#testid{!! $outcome_update->id !!}" aria-controls="#testid{!! $outcome_update->id !!}">{!! $short_summary !!} <b>more...</b></div>
-                    <div class="collapse" id="testid{!! $outcome_update->id !!}">{!! $long_summary !!}</div>
+                    <div data-toggle="collapse" data-target="#hidden-long-text{!! $outcome_update->id !!}" aria-controls="#hidden-long-text{!! $outcome_update->id !!}">{!! $short_summary !!} 
+                        @if (!empty($long_summary))
+                            <span role='button' class="badge badge-light font-100">more...</span>
+                        @endif
+                    </div>
+                    <div class="collapse" id="hidden-long-text{!! $outcome_update->id !!}">{!! $long_summary !!}</div>
                 @endif
                 <br />
                 <label for="summary" class="col-form-label font-weight-bold font-italic">Connected outputs:</label>
@@ -78,12 +84,12 @@
         <div class="p-2">
             <div class="form-group row">
                 <div class="col-auto col-sm-4 col-md-3">
-                    <input name="outcome_id[]" value="{{ $outcome->id }}" hidden>
+                    <input name="outcome_id[{{ $outcome->id }}]" value="{{ $outcome->id }}" hidden>
                     <label for="project_area" class="col-form-labe">Connected outputs:</label>
                 </div>
                 <div class="col-sm">
-                    <input type="hidden" name="outcome_outputs[]" @if ($outcome_update) value="{{ $outcome_update->outputs }}" @endif>
-                    <select id="outcome_outputs_{{ $outcome->id }}" class="custom-select" multiple="multiple" required>
+                    <input type="hidden" name="outcome_outputs[{{ $outcome->id }}]" @if ($outcome_update) value="{{ $outcome_update->outputs }}" @endif>
+                    <select id="outcome_outputs_{{ $outcome->id }}" class="custom-select" multiple="multiple">
                         @foreach ($outcome->project->outputs as $output)
                             <option value="{{ $output->id }}" {{ $outcome_update && $outcome_update->outputs && in_array($output->id, json_decode($outcome_update->outputs, true)) ? 'selected' : '' }}>{!! $output->indicator !!}</option>
                         @endforeach
@@ -93,26 +99,28 @@
 
             <div class="form-group row">
                 <div class="col-auto col-sm-4 col-md-3">
-                    <label for="outcome_summary[]" class="col-form-label">Description:</label>
+                    <label for="outcome_summary[{{ $outcome->id }}]" class="col-form-label">Progress:</label>
                 </div>
                 <div class="col-sm">
-                    <textarea class="form-control collapsed mediumEditor" id="outcome_summary[]" name="outcome_summary[]" placeholder="Describe the outcome completion summary">
-@if ($outcome_update)
-{!! $outcome_update->summary !!}
-@endif
-</textarea>
+                    <textarea class="form-control collapsed mediumEditor" id="outcome_summary[{{ $outcome->id }}]" name="outcome_summary[{{ $outcome->id }}]" placeholder="Describe the outcome completion summary">
+                        @if ($outcome_update)
+                        {!! $outcome_update->summary !!}
+                        @endif
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-auto col-sm-4 col-md-3">
+                    <label for="outcome_completion[{{ $outcome->id }}]" class="col-form-label">Completed?</label>
+                </div>
+                <div class="col-sm">
+                    <label class="col-form-label"><input type="radio" name="outcome_completion[{{ $outcome->id }}]" value="1"> Yes</label>
+                    <label class="col-form-label ml-3"><input type="radio" name="outcome_completion[{{ $outcome->id }}]" value="0" checked> No</label>
                 </div>
             </div>
         </div>
-        <div class="form-group row">
-            <div class="col-auto col-sm-4 col-md-3">
-                <label for="outcome_completion[]" class="col-form-label">Completed?</label>
-            </div>
-            <div class="col-sm">
-                <input type="radio" name="outcome_completion[]" value="1"> Yes
-                <input type="radio" name="outcome_completion[]" value="0" checked> No
-            </div>
-        </div>
+
         <div class="form-group row mb-0 mx-0">
             <a name="remove" id="{{ $outcome->id }}" class="btn btn-outline-danger btn-sm remove ml-auto mt-1"><i class="far fa-trash-alt"></i></a>
         </div>
@@ -128,7 +136,7 @@
                 }
             });
             $('#outcome_outputs_{{ $outcome->id }}').on('change', function() {
-                $(this).closest('div').find('input[name="outcome_outputs[]"]').val(JSON.stringify($(this).val()));
+                $(this).closest('div').find('input[name="outcome_outputs[{{ $outcome->id }}]"]').val(JSON.stringify($(this).val()));
             });
 
         });

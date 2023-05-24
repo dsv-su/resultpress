@@ -10,9 +10,12 @@
             @endif
         </div>
     </div>
-    @if (App\Settings::where('name', 'system-message-login')->first()->value)
+    @php
+        $message = App\Settings::where('name', 'system-message-login')->first();
+    @endphp
+    @if ($message && $message->value && !empty($message->value))
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {{ App\Settings::where('name', 'system-message-login')->first()->value }}
+            {!! $message->value !!}
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         </div>
     @endif

@@ -14,10 +14,12 @@
             </li>
         </ol>
     </nav>
-
-    @if (App\Settings::where('name', 'project-update-help')->first()->value)
+    @php
+        $message = App\Settings::where('name', 'project-update-help')->first();
+    @endphp
+    @if ($message && $message->value && !empty($message->value))
         <div class="alert alert-primary alert-dismissible fade show" role="alert">
-            {!! App\Settings::where('name', 'project-update-help')->first()->value !!}
+            {!! $message->value !!}
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         </div>
     @endif

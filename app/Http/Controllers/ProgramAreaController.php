@@ -33,7 +33,15 @@ class ProgramAreaController extends Controller
      */
     public function create()
     {
-        //
+        if ($user = Auth::user()) {
+            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
+                $users = User::whereDoesntHave('roles', function ($query) {
+                    $query->where('name', 'Partner');
+                })->orderBy('name')->get();
+                return view('programareas.create', compact('users'));
+            }
+        }
+        abort(403);
     }
 
     /**
@@ -44,7 +52,16 @@ class ProgramAreaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(Auth::check() && Auth::user()->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
+            $area = new Area();
+            $area->name = $request->name;
+            $area->description = $request->description;
+            $area->save();
+            $area->users()->sync($request->user_id);
+            return redirect()->route('programareas');
+        } else {
+            return redirect()->withErrors(['You do not have permission to create a program area.']);
+        }
     }
 
     /**
@@ -59,8 +76,9 @@ class ProgramAreaController extends Controller
         $area = Area::findOrfail($id);
         if ($user = Auth::user()) {
             if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
-                $projects = Project::with('project_owner.user', 'areas')->whereHas('project_area', function ($query) use ($id){
-                    return $query->where('area_id', '=', $id);})->get();
+                $projects = Project::with('project_owner.user', 'areas')->whereHas('project_area', function ($query) use ($id) {
+                    return $query->where('area_id', '=', $id);
+                })->get();
                 return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas, 'area' => $area]);
             } elseif ($user->hasRole(['Partner'])) {
                 $id = ProjectPartner::where('partner_id', $user->id)->pluck('project_id');
@@ -127,6 +145,25 @@ class ProgramAreaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(Auth::check() && Auth::user()->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
+            $area = Area::findOrfail($id);   
+            $area->archive = 1;
+            $area->save();     
+            return redirect()->route('programareas');
+        } else {
+            return redirect()->withErrors(['You do not have permission to delete a program area.']);
+        }
+    }
+
+    public function unarchive($id)
+    {
+        if(Auth::check() && Auth::user()->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
+            $area = Area::findOrfail($id);   
+            $area->archive = 0;
+            $area->save();
+            return redirect()->route('programareas');
+        } else {
+            return redirect()->withErrors(['You do not have permission to delete a program area.']);
+        }
     }
 }

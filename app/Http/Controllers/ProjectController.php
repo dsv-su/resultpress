@@ -309,7 +309,7 @@ class ProjectController extends Controller
                     'outputs' => $project->submitted_outputs(),
                     'aggregated_outputs' => $project->aggregated_outputs(),
                     'project_areas' => $project->areas()->get(),
-                    'areas' => Area::all(),
+                    'areas' => Area::whereArchive(false)->get(),
                     'old_pa' => $project->areas()->get()->pluck('id')->toArray(),
                     'users' => User::whereDoesntHave('roles', function ($query) {
                         return $query->where('name', 'partner');

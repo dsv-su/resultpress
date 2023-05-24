@@ -22,7 +22,6 @@
     "spatie/laravel-activitylog": "^3.14",
     "spatie/laravel-permission": "^3.17",
     "spatie/laravel-searchable": "^1.9",
-    "spatie/laravel-sluggable": "^3.4",
     "swaggest/json-diff": "^3.8",
     "uabookstores/laravel-shibboleth": "3.4"
   },
@@ -50,7 +49,8 @@
     },
     "classmap": [
       "database/seeds",
-      "database/factories"
+      "database/factories",
+      "app/Sluggable"
     ]
   },
   "autoload-dev": {

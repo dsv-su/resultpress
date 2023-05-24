@@ -10,7 +10,7 @@ class ProjectReminder extends Model
 {
     use HasSlug;
 
-    protected $fillable = ['project_id', 'name', 'reminder', 'reminder_due_days', 'set', 'type'];
+    protected $fillable = ['project_id', 'name', 'reminder', 'reminder_due_days', 'set', 'type', 'slug'];
     protected $cast = ['reminder_due_days' => 'integer'];
     protected $dates = ['set'];
 
@@ -23,6 +23,8 @@ class ProjectReminder extends Model
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug')
             ->slugsShouldBeNoLongerThan(50)
+            ->allowDuplicateSlugs()
+            ->skipGenerateWhen(fn () => $this->slug !== null)
             ->doNotGenerateSlugsOnUpdate();
     }
 

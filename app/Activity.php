@@ -15,7 +15,7 @@ class Activity extends Model
     use SoftDeletes, HasSlug;
 
     protected $dates = ['start', 'end'];
-    protected $fillable = ['title', 'template', 'description', 'start', 'end', 'budget', 'project_id', 'priority'];
+    protected $fillable = ['title', 'template', 'description', 'start', 'end', 'budget', 'project_id', 'priority', 'slug'];
 
     /**
      * Get the options for generating the slug.
@@ -26,6 +26,8 @@ class Activity extends Model
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug')
             ->slugsShouldBeNoLongerThan(50)
+            ->allowDuplicateSlugs()
+            ->skipGenerateWhen(fn () => $this->slug !== null)
             ->doNotGenerateSlugsOnUpdate();
     }
 

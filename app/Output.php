@@ -11,7 +11,7 @@ class Output extends Model
 {
     use HasSlug;
 
-    protected $fillable = ['indicator', 'status', 'target', 'project_id'];
+    protected $fillable = ['indicator', 'status', 'target', 'project_id', 'slug'];
     protected $appends = ['valuesumnew', 'latest_update'];
 
     /**
@@ -23,6 +23,8 @@ class Output extends Model
             ->generateSlugsFrom('indicator')
             ->saveSlugsTo('slug')
             ->slugsShouldBeNoLongerThan(50)
+            ->allowDuplicateSlugs()
+            ->skipGenerateWhen(fn () => $this->slug !== null)
             ->doNotGenerateSlugsOnUpdate();
     }
 

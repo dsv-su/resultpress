@@ -12,7 +12,7 @@ class Outcome extends Model
 {
     use HasSlug;
 
-    protected $fillable = ['name', 'project_id', 'user_id'];
+    protected $fillable = ['name', 'project_id', 'user_id', 'slug'];
 
     /**
      * Get the options for generating the slug.
@@ -23,6 +23,8 @@ class Outcome extends Model
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug')
             ->slugsShouldBeNoLongerThan(50)
+            ->allowDuplicateSlugs()
+            ->skipGenerateWhen(fn () => $this->slug !== null)
             ->doNotGenerateSlugsOnUpdate();
     }
 

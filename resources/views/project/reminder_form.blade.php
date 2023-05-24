@@ -6,6 +6,7 @@
         <div class="form-group mb-2 row">
             @if ($reminder)
             <input type="hidden" name="reminders[{{$key}}][id]" value="{{$reminder->id}}">
+            <input type="hidden" name="reminders[{{$key}}][slug]" value="{{$reminder->slug}}">
             @endif
             <label for="reminders[{{$key}}][name]"
                    class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label>
@@ -13,6 +14,13 @@
                 <textarea class="form-control form-control-sm w-100 generalMediumEditor" data-disable-toolbar="true" name="reminders[{{$key}}][name]" id="reminders[{{$key}}][name]" placeholder="Name">
                     {{ old('reminders[$key][name]', empty($reminder->name) ? '' : $reminder->name) }}
                 </textarea>
+            </div>
+            <label for="reminders[{{$key}}][name]"
+                   class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right"></label>
+            <div class="col-8 col-sm-9 px-1">
+                @if ($project)
+                    <span my-2>{{ $project->getSuggestedChanges('reminders', $reminder->slug, 'name') }}</span>
+                @endif
             </div>
         </div>
         <div class="form-group mb-2 row">
@@ -36,7 +44,9 @@
                        placeholder="Deadline Date"
                        value="{{ old('reminders[$key][set]', empty($reminder->set) ? '' : $reminder->set->format('d-m-Y')) }}"
                        class="form-control form-control-sm datepicker {{$reminder->type}}-date" required>
-
+                        @if ($project)
+                            <span my-2>{{ $project->getSuggestedChanges('reminders', $reminder->slug, 'set') }}</span>
+                        @endif
             </div>
         </div>
 

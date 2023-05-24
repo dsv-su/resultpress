@@ -349,7 +349,7 @@ class Project extends Model
         return null;
     }
 
-    public function getSuggestedChanges( $attribute = 'name', $id = null ){
+    public function getSuggestedChanges( $attribute = 'name', $id = null, $field = null ) {
         $attributesTypes = [
             'basic' => [
                 'name',
@@ -366,6 +366,7 @@ class Project extends Model
             ],
             'subitems' => [
                 'activities',
+                'reminders',
                 'deadlines',
                 'outcomes',
                 'outputs',
@@ -375,15 +376,39 @@ class Project extends Model
         if($objectType === 'project_change_request'){
             $originalProject = $this->main;
             if($originalProject){
-                if(in_array($attribute, $attributesTypes['basic']) && is_string($this->$attribute) && $this->$attribute !== $originalProject->$attribute) {
-                    return 'Previous: ' . $originalProject->$attribute;
+                if(in_array($attribute, $attributesTypes['basic']) && (is_string($this->$attribute) || strtotime($this->$attribute)) && $this->$attribute !== $originalProject->$attribute) {
+                    $return = strtotime($originalProject->$attribute) ? Carbon::parse($originalProject->$attribute)->format('Y-m-d') : $originalProject->$attribute;
+                    return 'Previous: ' . $return;
                 }
                 if(in_array($attribute, $attributesTypes['subitems'])){
+                    //$field = $attribute === 'activities' ? 'title' : ($attribute === 'outputs' ? 'indicator' : 'name');
                     if($id === null){
                         // What has been deleted?
-                        $originalNames = $originalProject->$attribute->pluck('title');
-                        $currentNames = $this->$attribute->pluck('title');
-                        $deletedNames = $originalNames->whereNotIn('title', $currentNames);
+                        $originalNames = $originalProject->$attribute->pluck('slug');
+                        $currentNames = $this->$attribute->pluck('slug');
+                        $deletedNames = $originalNames->diff($currentNames);
+                        $deletedModels = $originalProject->$attribute->whereIn('slug', $deletedNames);
+                        if($deletedNames->count() > 0){
+                            return $deletedModels;
+                        }
+                    } else {
+                        // What has been changed?
+                        $originalModel = $originalProject->$attribute->where('slug', $id)->first();
+                        $currentModel = $this->$attribute->where('slug', $id)->first();
+                        if($originalModel && $currentModel){
+                            $isDate = false;
+                            try {
+                                $originalDate = Carbon::createFromFormat('Y-m-d H:i:s', $originalModel->$field)->format('Y-m-d');
+                                $currentData = Carbon::createFromFormat('Y-m-d H:i:s', $currentModel->$field)->format('Y-m-d');
+                                $isDate = true;
+                            } catch (\Throwable $th) {}
+                            if ($isDate && $originalDate !== $currentData) {
+                                return 'Previous: ' . Carbon::parse($originalModel->$field)->format('Y-m-d');
+                            }
+                            if (!$isDate && $originalModel->$field !== $currentModel->$field) {
+                                return 'Previous: ' . $originalModel->$field;
+                            }
+                        }
                     }
                 }
             }

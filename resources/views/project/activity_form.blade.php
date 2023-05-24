@@ -1,11 +1,13 @@
 @php
     $key = Str::random(10);
+    $project = $project ?? null;
 @endphp
 <div class="card bg-light m-auto">
     <div class="card-body pb-1">
         <div class="form-group mb-1 row">
             @if ($activity)
             <input type="hidden" name="activities[{{$key}}][id]" value="{{$activity->id}}">
+            <input type="hidden" name="activities[{{$key}}][slug]" value="{{$activity->slug}}">
             @endif
             <label for="activities[{{$key}}][title]"
                    class="col col-sm-3 pl-0 pr-1 col-form-label-sm text-right">Name</label>
@@ -13,6 +15,9 @@
                 <input type="text" name="activities[{{$key}}][title]" placeholder="Name"
                        @if ($activity) value="{{$activity->title}}" @endif required
                        class="form-control form-control-sm">
+                @if ($project)
+                    <span>{{ $project->getSuggestedChanges('activities', $activity->slug, 'title') }}</span>
+                @endif
             </div>
         </div>
         <div class="form-group mb-2 row">
@@ -24,6 +29,10 @@
                                                                   class="form-control form-control-sm"
                                                                   placeholder="Description">@if ($activity) {{$activity->description}} @endif</textarea>
             </div>
+            @if($project)
+                <label class="col-sm-3 col-form-label-sm"></label>
+                <div class="col-sm-9 px-1">{{ strip_tags($project->getSuggestedChanges('activities', $activity->slug, 'description')) }}</div>
+            @endif
         </div>
         <div class="form-group mb-1 row">
             <label for="activities[{{$key}}][start]"
@@ -32,6 +41,9 @@
                 <input type="text" name="activities[{{$key}}][start]" placeholder="Start date"
                        @if ($activity) value="{{$activity->start->format('d-m-Y')}}" @endif required
                        class="form-control form-control-sm datepicker">
+                @if ($project)
+                    <span>{{ $project->getSuggestedChanges('activities', $activity->slug, 'start') }}</span>
+                @endif
             </div>
             <label for="activities[{{$key}}][end]"
                    class="col-4 col-sm-1 pl-0 pl-sm-1 pr-1 col-form-label-sm text-right">End</label>
@@ -39,6 +51,9 @@
                 <input type="text" name="activities[{{$key}}][end]" placeholder="End date"
                        @if ($activity) value="{{$activity->end->format('d-m-Y')}}" @endif required
                        class="form-control form-control-sm datepicker">
+                @if ($project)
+                    <span>{{ $project->getSuggestedChanges('activities', $activity->slug, 'end') }}</span>
+                @endif
             </div>
         </div>
         <div class="form-group mb-2 row">
@@ -56,6 +71,9 @@
                         High
                     </option>
                 </select>
+                @if ($project)
+                    <span>{{ $project->getSuggestedChanges('activities', $activity->slug, 'priority') }}</span>
+                @endif
             </div>
         </div>
 
@@ -72,6 +90,9 @@
                     <div class="input-group-append">
                         <span class="input-group-text currency"></span>
                     </div>
+                    @if ($project)
+                        <span>{{ $project->getSuggestedChanges('activities', $activity->slug, 'budget') }}</span>
+                    @endif
                 </div>
             </div>
         </div>
@@ -85,6 +106,10 @@
                           placeholder="Activity description template"
                           class="form-control form-control-sm mediumEditor collapsed">@if ($activity){{$activity->template}}@endif</textarea>
             </div>
+            @if($project)
+                <label class="col-sm-3 col-form-label-sm"></label>
+                <div class="col-sm-9 px-1">{{ strip_tags($project->getSuggestedChanges('activities', $activity->slug, 'template')) }}</div>
+            @endif
         </div>
         <div class="form-group row mb-0">
             <a name="copy"

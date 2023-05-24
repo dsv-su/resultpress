@@ -100,9 +100,11 @@ class SettingsController extends Controller
      * @param  \App\Settings  $settings
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Settings $settings)
+    public function destroy(Request $request, Settings $settings)
     {
-        //
+        $settings = Settings::where('name', $request->setting)->firstOrFail();
+        $settings->delete();
+        return redirect()->route('settings.index')->with('success', 'Setting deleted successfully');
     }
 
     public function updateLogo(UpdateSettingsRequest $request)

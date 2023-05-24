@@ -38,7 +38,8 @@
                         <form action="{{ route('settings.destroy', $setting->id) }}" method="POST" style="display:inline">
                             @method('DELETE')
                             @csrf
-
+                            <input type="hidden" name="setting" value="{{ $setting->name }}">
+                            <input type="hidden" name="id" value="{{ $setting->id }}">
                             <input class="btn btn-outline-danger"  value="Delete" type="submit">
                         </form>
                     @endcan

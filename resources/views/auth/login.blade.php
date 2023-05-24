@@ -10,7 +10,12 @@
             @endif
         </div>
     </div>
-
+    @if (App\Settings::where('name', 'system-message-login')->first()->value)
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ App\Settings::where('name', 'system-message-login')->first()->value }}
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        </div>
+    @endif
     <div class="row justify-content-end mx-4">
         <div class="float-lg-end">
             <form>
@@ -34,6 +39,7 @@
                 <li>Update progress</li>
                 <li>Receive feedback from SPIDER</li>
             </ul>
+
             <a href="https://spidercenter.org/" target="_blank">
                 <img src={{ asset('images/purple.png') }} alt="Spider" class="spider-logo" />
             </a>

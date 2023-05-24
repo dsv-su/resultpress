@@ -54,6 +54,10 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::post('/complete_activity', 'ProjectController@completeActivity')->name('complete_activity');
     //Program Areas
     Route::get('/programareas', 'ProgramAreaController@index')->name('programareas');
+    Route::get('/programareas/create', 'ProgramAreaController@create')->name('areas.create');
+    Route::post('/programareas/store', 'ProgramAreaController@store')->name('areas.store');
+    Route::delete('/programareas/destroy/{id}', 'ProgramAreaController@destroy')->name('areas.destroy');
+    Route::put('/programareas/unarchive/{id}', 'ProgramAreaController@unarchive')->name('areas.unarchive');
     Route::get('/programareas/{id}', 'ProgramAreaController@show')->name('programarea_show');
     Route::get('/programareas/{id}/edit', 'ProgramAreaController@edit')->name('programarea_edit');
     Route::post('/programareas/{id}/update', 'ProgramAreaController@update')->name('programarea_update');

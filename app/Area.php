@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Area extends Model
 {
-    protected $fillable = ['name', 'description'];
+    protected $casts = [
+        'archive' => 'boolean',
+    ];
+    protected $fillable = ['name', 'description', 'archive'];
 
     public function project_area()
     {

@@ -11,6 +11,8 @@ class PartnerInvite extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $subject = 'You have been invited to join a project';
+
     /**
      * Create a new message instance.
      *

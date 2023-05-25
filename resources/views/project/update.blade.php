@@ -16,12 +16,16 @@
     </nav>
     @php
         $message = App\Settings::where('name', 'project-update-help')->first();
+        $cookie = 'project-update-help';
     @endphp
-    @if ($message && $message->value && !empty($message->value))
+    @if ($message && $message->value && !empty($message->value) && !Session::has($cookie))
         <div class="alert alert-primary alert-dismissible fade show" role="alert">
             {!! $message->value !!}
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         </div>
+        @php
+            Session::put($cookie, true);
+        @endphp
     @endif
 
     <form action="{{ route('project_save_update', $project) }}" method="POST">
@@ -62,7 +66,6 @@
 
         <div class="form-group">
             <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
-            @if (!$project->outcomes->isEmpty())
                 <div id="outcomes">
                     @if (!empty($project_update->outcome_updates))
                         @foreach ($project_update->outcome_updates as $ou)
@@ -81,12 +84,10 @@
                             @foreach ($project->outcomes as $outcome)
                                 <a class="dropdown-item add-outcome" href="#" id="{{ $outcome->id }}" @if ((!empty($project_update->outcome_updates) && $project_update->outcome_updates->keyBy('outcome_id')->get($outcome->id)) || !$outcome->outcome_updates->isEmpty()) style="" @endif>{!! $outcome->name !!}</a>
                             @endforeach
+                                <a class="dropdown-item add-outcome" href="#" id="0">Add a new outcome</a>
                         </div>
                     </div>
                 </div>
-            @else
-                <p>The project has no outcomes added</p>
-            @endif
         </div>
 
         <div class="form-group">
@@ -356,11 +357,23 @@
             $(document).on('click', '.add-outcome', function(e) {
                 e.preventDefault();
                 let id = $(this).attr('id');
-                $('#outcomes').append('<div class="card mb-3" id="ou-' + id + '"></div>');
-                $('#ou-' + id).load('/outcome_update/' + id + '/0');
-                $('#' + id + '.add-outcome').hide();
-                if ($('#addOutcomes').next().children('.add-outcome:visible').length == 0) {
-                    $('#addOutcomes').addClass('disabled');
+                if (parseInt(id) < 1) {
+                    let timestamp = Date.now();
+                    $('#outcomes').append('<div class="mb-3" id="ou-' + timestamp + '"></div>');
+                    $.get('/outcome_update/' + id + '/0', function(data) {
+                        $('#ou-' + timestamp).append(data);
+                        $('#ou-' + timestamp).find('.remove').click(function(e) {
+                            e.preventDefault();
+                            $(this).closest('#ou-' + timestamp).remove();
+                        });
+                    });
+                } else {
+                    $('#outcomes').append('<div class="card mb-3" id="ou-' + id + '"></div>');
+                    $('#ou-' + id).load('/outcome_update/' + id + '/0');
+                    $('#' + id + '.add-outcome').hide();
+                    if ($('#addOutcomes').next().children('.add-outcome:visible').length == 0) {
+                        $('#addOutcomes').addClass('disabled');
+                    }
                 }
             });
 

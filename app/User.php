@@ -39,7 +39,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['fullviewname'];
+    protected $appends = ['fullviewname', 'nameWithOrg'];
 
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
@@ -90,6 +90,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Area::class, 'area_user');
     }
 
+    /**
+     * Get the name with organisation and role for the user.
+     */
     public function getFullviewnameAttribute()
     {   
         $organisations = '';
@@ -101,6 +104,18 @@ class User extends Authenticatable
             $roles = ' - ' . $this->roles->pluck('name')->implode(', ');
         }
         return $this->name . $organisations . $roles;
+    }
+
+    /**
+     * Get name with organisation for the user.
+     */
+    public function getNameWithOrgAttribute()
+    {   
+        $organisations = '';
+        if(!empty($this->organisations)) {
+            $organisations = ' - ' . $this->organisations->pluck('org')->implode(', ');
+        }
+        return $this->name . $organisations;
     }
 
 

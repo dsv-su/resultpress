@@ -38,14 +38,16 @@
                             </span></div>
                     @endif
                     @if (!$project->partners()->isEmpty())
-                        <div class="row"><span>
+                        <div class="row">
+                            <span>
                                 @if (count($project->partners()) > 1)
                                     Partners:
                                 @else
                                     Partner:
                                 @endif
-                                <span class="font-weight-light">{{ implode(', ', array_column($project->partners()->toArray(), 'name')) }}</span>
-                            </span></div>
+                                <span class="font-weight-light">{{ implode(', ', array_column($project->partners()->toArray(), 'nameWithOrg')) }}</span>
+                            </span>
+                        </div>
                     @endif
                     @if (!$project->areas->isEmpty())
                         <div class="row"><span>

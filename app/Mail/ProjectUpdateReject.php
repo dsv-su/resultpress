@@ -11,6 +11,8 @@ class ProjectUpdateReject extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $subject = 'Project Update Retuned For Revision';
+
     /**
      * Create a new message instance.
      *

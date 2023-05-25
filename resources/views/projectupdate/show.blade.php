@@ -17,8 +17,11 @@
             </li>
         </ol>
     </nav>
-    <div class="row justify-content-between">
+    <div class="row justify-content-between mb-5">
         <div class="col-6">
+            @if ($project_update->status == 'draft')
+                <a href="/project/update/{{ $project_update->id }}/edit" role="button" class="btn btn-primary">Edit the update</a>
+            @endif
         </div>
         <div class="col-sm-auto d-flex align-items-center">
             @if ($project_update->status == 'draft')
@@ -169,9 +172,6 @@
         </div>
     @endif
 
-    @if ($project_update->status == 'draft')
-        <a href="/project/update/{{ $project_update->id }}/edit" role="button" class="btn btn-primary">Edit</a>
-    @endif
     {{-- TODO: Change the date before deploying to production --}}
     @if ($review)
         <form action="{{ route('projectupdate_update', $project_update) }}" method="POST">

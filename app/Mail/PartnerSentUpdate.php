@@ -11,6 +11,8 @@ class PartnerSentUpdate extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $subject = 'Project Update Sent';
+
     /**
      * Create a new message instance.
      *

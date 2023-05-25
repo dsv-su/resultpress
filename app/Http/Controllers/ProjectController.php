@@ -720,6 +720,7 @@ class ProjectController extends Controller
         $outcome_update_array['outcome_outputs'] = request('outcome_outputs');
         $outcome_update_array['outcome_summary'] = request('outcome_summary');
         $outcome_update_array['outcome_completion'] = request('outcome_completion');
+        $outcome_update_array['new_outcome_name'] = request('new_outcome_summary');
 
         // Remove deleted activity updates
         foreach ($projectupdate->outcome_updates()->get() as $ou) {
@@ -747,6 +748,22 @@ class ProjectController extends Controller
                         ->performedOn($ou)
                         ->log('OutcomeUpdateApproved');
                 }
+            }
+        }
+
+        if (empty($outcome_update_array['outcome_id']) && !empty($outcome_update_array['outcome_summary']) && !empty($outcome_update_array['new_outcome_name'])) {
+            foreach ($outcome_update_array['new_outcome_name'] as $key => $outcome) {
+                $outcome = Outcome::create([
+                    'name' => $outcome_update_array['new_outcome_name'][$key],
+                    'project_id' => $projectupdate->project_id,
+                    'user_id' => Auth::id(),
+                ]);
+                $outcomeUpdate = OutcomeUpdate::create([
+                    'outcome_id' => $outcome->id,
+                    'summary' => $outcome_update_array['outcome_summary'][$key],
+                    'project_update_id' => $projectupdate_id,
+                    'completed_on' => $outcome_update_array['outcome_completion'][$key] ? Carbon::now() : null,
+                ]);
             }
         }
 
@@ -814,7 +831,9 @@ class ProjectController extends Controller
             }
         }
         // Fire an event
-        event(new PartnerUpdateEvent($projectupdate));
+        if ($projectupdate->status !== 'draft') {
+            event(new PartnerUpdateEvent($projectupdate));
+        }
 
         // Save to history
         if ($status == 'submitted' || $status == 'approved') {

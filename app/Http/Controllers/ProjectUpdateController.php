@@ -230,7 +230,8 @@ class ProjectUpdateController extends Controller
         } else {
             $ou = 0;
         }
-        return view('project.outcome_update', ['outcome' => Outcome::findorfail($outcome), 'outcome_update' => $ou])->render();
+        $outcome = $outcome ? Outcome::findorfail($outcome) : new Outcome();
+        return view('project.outcome_update', ['outcome' => $outcome, 'outcome_update' => $ou])->render();
     }
 
     /**

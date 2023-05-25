@@ -11,6 +11,8 @@ class ProjectUpdateAccept extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $subject = 'Project Update Approved';
+
     /**
      * Create a new message instance.
      *
@@ -32,6 +34,7 @@ class ProjectUpdateAccept extends Mailable
         return $this->view('email.project_update_approved')
                     ->with([
                         'project' => $this->project,
+                        'url' => url('/project/'.$this->project->id),
                     ]);
     }
 }

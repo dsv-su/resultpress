@@ -1,6 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Config;
+use JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +95,18 @@ Route::middleware('auth', 'entitlements')->group(function () {
     //Profile
     Route::get('/home', 'HomeController@index')->name('profile');
     Route::post('/profile/{id}', 'HomeController@store')->name('profile_store');
+
+    // Debug route
+    Route::get('/debug', function (Request $req) {
+        $user = Auth::user();
+        $session = Session::all();
+        $cookies = Cookie::get();
+        $configs = Config::all();
+        $jwtToken = '';//JWTAuth::fromUser($user, []);
+        $token = JWTAuth::getToken();
+        $token2 = JWTAuth::fromUser($user, ['exp' => Carbon::now()->addMinutes(60)->timestamp]);
+        dd($req, $user, $session, $cookies, $configs, $token, $token2, $jwtToken);
+    });
 });
 
 // Local registration route

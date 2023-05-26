@@ -61,7 +61,9 @@
                     @endif
                 </div>
                 <div class="col-md-6">
-                    <div class="row my-2 my-md-0 trimmed-text">Description:&nbsp;<span class="font-weight-light">{!! $project->description !!}</span></div>
+                    @if (!empty($project->summary))
+                        <div class="row my-2 my-md-0 trimmed-text">Summary:&nbsp;<span class="font-weight-light">{!! $project->summary !!}</span></div>
+                    @endif
                 </div>
             </div>
         </div>

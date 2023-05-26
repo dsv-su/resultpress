@@ -55,7 +55,11 @@
     @endif
 
     <p>@include('project.action_links')</p>
+    
+    <h5 class="my-4">Project summary</h5>
+    <p>{!! $project->summary !!}</p>
 
+    <h5 class="my-4">Project description</h5>
     <p>{!! $project->description !!}</p>
 
     <div class="my-3 col card bg-light p-2">

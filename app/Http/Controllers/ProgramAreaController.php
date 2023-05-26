@@ -7,6 +7,7 @@ use App\Project;
 use App\ProjectArea;
 use App\ProjectPartner;
 use App\User;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -56,6 +57,8 @@ class ProgramAreaController extends Controller
             $area = new Area();
             $area->name = $request->name;
             $area->description = $request->description;
+            $area->external_system_title = $request->external_system_title;
+            $area->external_system_link = $request->external_system_link;
             $area->save();
             $area->users()->sync($request->user_id);
             return redirect()->route('programareas');
@@ -70,16 +73,18 @@ class ProgramAreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Session $session)
     {
         $program_areas = Area::all();
         $area = Area::findOrfail($id);
+        $shibboleth_token = $session->get('_token') ?? null;
+
         if ($user = Auth::user()) {
             if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
                 $projects = Project::with('project_owner.user', 'areas')->whereHas('project_area', function ($query) use ($id) {
                     return $query->where('area_id', '=', $id);
                 })->get();
-                return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas, 'area' => $area]);
+                return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas, 'area' => $area, 'token' => $shibboleth_token]);
             } elseif ($user->hasRole(['Partner'])) {
                 $id = ProjectPartner::where('partner_id', $user->id)->pluck('project_id');
                 $projects = Project::with('project_owner.user', 'areas')->whereIn('id', $id)->latest()->get();
@@ -129,6 +134,8 @@ class ProgramAreaController extends Controller
                 $area = Area::findOrfail($id);
                 $area->name = $request->name;
                 $area->description = $request->description;
+                $area->external_system_title = $request->external_system_title;
+                $area->external_system_link = $request->external_system_link;
                 $area->users()->sync($request->user_id);
                 $area->save();
                 return redirect()->route('programareas');

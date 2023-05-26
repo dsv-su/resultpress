@@ -21,7 +21,7 @@ class Project extends Model
     use LogsActivity, HasSlug;
 
     //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
-    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state', 'object_type', 'object_id'];
+    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state', 'object_type', 'object_id', 'summary'];
     protected $dates = ['start', 'end'];
     //protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id'];  -->refactored<--
     protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state'];
@@ -353,6 +353,7 @@ class Project extends Model
         $attributesTypes = [
             'basic' => [
                 'name',
+                'summary',
                 'description',
                 'start',
                 'end',

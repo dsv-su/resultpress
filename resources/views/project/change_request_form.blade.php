@@ -61,6 +61,18 @@
                                 </div>
                             </div>
                             <div class="form-row mb-2 row">
+                                <label for="summary" class="col-sm-3 col-form-label-sm">Summary</label>
+                                <div class="col-sm-9 px-1">
+                                <textarea rows="2" class="form-control mediumEditor form-control-sm @error('summary') is-danger @enderror" name="summary" id="summary">{!! old('summary', empty($project) ? '' : $project->summary) !!}</textarea>
+                                    @error('summary')
+                                    <div class="text-danger">
+                                        {{ $errors->first('summary') }}
+                                    </div>@enderror
+                                </div>
+                                <label class="col-sm-3 col-form-label-sm"></label>
+                                <div class="col-sm-9 px-1">{{ strip_tags($project->getSuggestedChanges('summary')) }}</div>
+                            </div>
+                            <div class="form-row mb-2 row">
                                 <label for="description"
                                        class="col-sm-3 col-form-label-sm">Description</label>
                                 <div class="col-sm-9 px-1">

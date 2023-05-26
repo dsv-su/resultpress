@@ -10,8 +10,7 @@
                 @if (empty($project_update))
                     write an update
                 @else
-                    edit draft
-                    update
+                    Review of update
                     #{{ $project_update->index }}
                 @endif
             </li>

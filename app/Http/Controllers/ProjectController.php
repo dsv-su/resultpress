@@ -40,6 +40,9 @@ use App\Notifications\ProjectChangeRejected;
 use App\Notifications\ProjectChangeRequest;
 use App\Notifications\NewProjectRequest;
 use App\Notifications\ProjectUpdated;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
 
 class ProjectController extends Controller
 {
@@ -53,6 +56,11 @@ class ProjectController extends Controller
         //All spider-users can create projects
         $user->givePermissionTo('project-list');
         $user->givePermissionTo('project-create');
+
+        // Administrator Role can always do everything.
+        $permissions = Permission::where('name', '!=', 'partner')->pluck('name')->all();
+        Role::findByName('Administrator', 'web')->syncPermissions($permissions);
+
         //If user should be redirected to profile setting page
         if ($user->setting == true) {
             return redirect()->intended('/home');

@@ -27,6 +27,10 @@
                     @endforeach
                 </div>
             </div>
+            @if ($area && $token && !empty($area->external_system_link) && !empty($area->external_system_title))
+                <a href="{{ $area->external_system_link }}?token={{ $token }}" class="btn btn-primary" target="_blank">{{ $area->external_system_title }}</a>
+            @endif
+            
         </nav>
         <br>
     @endcan

@@ -41,6 +41,24 @@
         </div>
 
         <div class="row px-3">
+            <label for="external_system_title" class="form-group-header">External System Title</label>
+                <span data-toggle="tooltip" title="The name of external system of DSV. Example: Moodle"><i class="fas fa-info-circle fa-1x ml-1"></i></span>
+        </div>
+
+        <div class="row px-3 d-flex align-items-center">
+            <input class="form-control"  name="external_system_title" type="text" placeholder="External System Title" value="{{ old('external_system_title', empty($area) ? '' : $area->external_system_title) }}">
+        </div>
+
+        <div class="row px-3 mt-4">
+            <label for="external_system_link" class="form-group-header">External System Link</label>
+                <span data-toggle="tooltip" title="Link to external system of DSV, this link will be used to auto-login users to other systems using thier current session."><i class="fas fa-info-circle fa-1x ml-1"></i></span>
+        </div>
+
+        <div class="row px-3 d-flex align-items-center">
+            <input class="form-control"  name="external_system_link" type="text" placeholder="External System Link" value="">
+        </div>
+
+        <div class="row px-3">
             <label for="users" class="form-group-header">Users</label>
                 <span data-toggle="tooltip" title="Users and permissions associated with this program area"><i class="fas fa-info-circle fa-1x ml-1"></i></span>
         </div>

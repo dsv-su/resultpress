@@ -16,18 +16,6 @@
         </ol>
     </nav>
 
-    @if($errors->any())
-        <div class="form-row">
-            <div class="col">
-                @foreach($errors->all() as $error)
-                    <div class="alert alert-danger" role="alert">
-                        {{$error}}
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
-
     @empty($project->id)
         <form action="{{ route('update', $project) }}" method="POST">
             <input name="new_project" value="1" hidden>

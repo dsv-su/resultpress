@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Config;
-use JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\JWTAuth;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use Carbon\Carbon;

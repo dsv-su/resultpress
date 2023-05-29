@@ -59,7 +59,7 @@
                         placeholder="0"
                        class="form-control form-control-sm form-inline"
                        style="width:50px;"
-                       required>
+                       >
             </div>
         </div>
 

@@ -15,7 +15,7 @@
                     @if ($outcome->completed())
                         <span class="badge badge-success">Completed on {{ $outcome->completed()->format('d/m/Y') }}</span>
                     @else
-                        <span class="badge badge-danger">Not completed</span>
+                        <span class="badge badge-secondary">Not completed yet</span>
                     @endif
                 @endif
             </h5>

@@ -148,7 +148,7 @@
                 @if ($project_update->state == 'onhold')
                     <span class="badge badge-info font-100">On hold</span>
                 @elseif ($project_update->state == 'terminated')
-                    <span class="badge badge-info font-100">Terminated</span>
+                    <span class="badge badge-info font-100">Closed</span>
                 @elseif ($project_update->state == 'archived')
                     <span class="badge badge-info font-100">Archived</span>
                 @endif

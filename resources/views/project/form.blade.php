@@ -47,13 +47,16 @@
                             </div>
                             <div class="form-row mb-2 row">
                                 <label for="summary" class="col-sm-3 col-form-label-sm">Summary</label>
-                                <div class="col-sm-9 px-1">
-                                <textarea rows="2" class="form-control text-limit-1000 generalMediumEditor form-control-sm @error('summary') is-danger @enderror" name="summary" id="summary" maxlength="1000" data-maxlength="1000">{!! old('summary', empty($project) ? '' : $project->summary) !!}</textarea>
-                                <div><span class="text-limit-1000-count float-right">1000</span> Remaining characters</div>
+                                <div class="col-sm-9 px-1 py-2">
+                                    <textarea rows="2" class="form-control text-limit-1000 generalMediumEditor form-control-sm @error('summary') is-danger @enderror" name="summary" id="summary" maxlength="1000" data-maxlength="1000">{!! old('summary', empty($project) ? '' : $project->summary) !!}</textarea>
+                                    <div class="font-sm text-muted">
+                                        <span class="text-limit-1000-count float-right">1000</span> Remaining characters
+                                    </div>
                                     @error('summary')
-                                    <div class="text-danger">
-                                        {{ $errors->first('summary') }}
-                                    </div>@enderror
+                                        <div class="text-danger">
+                                            {{ $errors->first('summary') }}
+                                        </div>
+                                    @enderror
                                 </div>
                                 <label class="col-sm-3 col-form-label-sm"></label>
                                 <div class="col-sm-9 px-1">{{ strip_tags($project->getHistory('summary')) }}</div>

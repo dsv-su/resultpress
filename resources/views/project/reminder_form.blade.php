@@ -6,6 +6,7 @@
         <div class="form-group mb-2 row">
             @if ($reminder)
             <input type="hidden" name="reminders[{{$key}}][id]" value="{{$reminder->id}}">
+            <input type="hidden" name="reminders[{{$key}}][type]" value="{{$reminder->type}}">
             <input type="hidden" name="reminders[{{$key}}][slug]" value="{{$reminder->slug}}">
             @endif
             <label for="reminders[{{$key}}][name]"
@@ -18,7 +19,7 @@
             <label for="reminders[{{$key}}][name]"
                    class="col-4 col-sm-3 pl-0 pr-1 col-form-label-sm text-right"></label>
             <div class="col-8 col-sm-9 px-1">
-                @if ($project)
+                @if (isset($project))
                     <span my-2>{{ $project->getSuggestedChanges('reminders', $reminder->slug, 'name') }}</span>
                 @endif
             </div>
@@ -43,8 +44,8 @@
                        id="reminders[{{$key}}][set]"
                        placeholder="Deadline Date"
                        value="{{ old('reminders[$key][set]', empty($reminder->set) ? '' : $reminder->set->format('d-m-Y')) }}"
-                       class="form-control form-control-sm datepicker {{$reminder->type}}-date" required>
-                        @if ($project)
+                       class="form-control form-control-sm datepicker {{$reminder->type ?? ''}}-date" required>
+                        @if (isset($project))
                             <span my-2>{{ $project->getSuggestedChanges('reminders', $reminder->slug, 'set') }}</span>
                         @endif
             </div>
@@ -55,11 +56,11 @@
                    class="col-4 col-sm-3 col-form-label-sm text-right">Days before</label>
             <div class="col-8 col-sm-1 px-1">
                 <input type="number" name="reminders[{{$key}}][reminder_due_days]"
-                       @if ($reminder) value="{{ $reminder->reminder_due_days}}" @else value="0" @endif
+                       @if ($reminder) value="{{ $reminder->reminder_due_days ?? 0 }}" @else value="0" @endif
                         placeholder="0"
                        class="form-control form-control-sm form-inline"
                        style="width:50px;"
-                       required>
+                       >
             </div>
         </div>
 
@@ -82,5 +83,6 @@
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
-        </script>
+        new MediumEditor('.generalMediumEditor');
+    </script>
 @endif

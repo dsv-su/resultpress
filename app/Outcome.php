@@ -43,6 +43,16 @@ class Outcome extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Get published updates
+     */
+    public function publishedUpdates()
+    {
+        return $this->outcome_updates->filter(function ($value, $key) {
+            return $value->project_update->status !== 'draft';
+        });
+    }
+
     public function completed() {
         $latest_update = $this->outcome_updates->sortBy('created_at', SORT_REGULAR, true)->first();
         if($latest_update && $latest_update->project_update->status == 'approved' && $latest_update->completed_on) {

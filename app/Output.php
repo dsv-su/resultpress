@@ -48,6 +48,16 @@ class Output extends Model
         return $this->hasMany(OutputUpdate::class);
     }
 
+    /**
+     * Get published updates.
+     */
+    public function publishedUpdates()
+    {
+        return $this->output_updates->filter(function ($value, $key) {
+            return $value->project_update->status !== 'draft';
+        });
+    }
+
     public function getLatestUpdateAttribute()
     {
         return $this->output_updates()->orderBy('created_at', 'desc')->first();

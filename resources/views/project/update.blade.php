@@ -194,7 +194,7 @@
                     </div>
                     <input type="file" id="files" name="attachments" placeholder="Choose file(s)" multiple>
                     <meta name="csrf-token" content="{{ csrf_token() }}">
-                    <button class="btn btn-secondary" id="laravel-ajax-file-upload" disabled>Upload</button>
+                    <button class="btn btn-secondary" id="laravel-ajax-file-upload" disabled>Click to upload the file</button>
                 </div>
             </div>
 
@@ -215,7 +215,7 @@
                         <select class="custom-select" name="project_state" id="project_state">
                             <option value="0" selected>Propose state change</option>
                             <option value="onhold">On hold</option>
-                            <option value="terminated">Terminated</option>
+                            <option value="terminated">Closed</option>
                             <option value="archived">Archived</option>
                         </select>
                     </div>

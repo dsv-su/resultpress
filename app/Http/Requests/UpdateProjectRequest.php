@@ -36,6 +36,8 @@ class UpdateProjectRequest extends FormRequest
             'activities.*.start' => 'required|date',
             'activities.*.end' => 'required|date',
             'activities.*.budget' => 'required|numeric',
+            'outcomes.*.name' => 'required|min:10|max:370',
+            'outputs.*.indicator' => 'required|min:10|max:370',
         ];
     }
 
@@ -61,6 +63,12 @@ class UpdateProjectRequest extends FormRequest
             'activities.*.end.date' => 'Activity end date must be a valid date',
             'activities.*.budget.required' => 'Activity budget is required',
             'activities.*.budget.numeric' => 'Activity budget must be a number',
+            'outcomes.*.name.required' => 'Outcome name is required',
+            'outcomes.*.name.min' => 'Outcome name must be at least 10 characters',
+            'outcomes.*.name.max' => 'Outcome name must be less than 370 characters',
+            'outputs.*.indicator.required' => 'Output indicator is required',
+            'outputs.*.indicator.min' => 'Output indicator must be at least 10 characters',
+            'outputs.*.indicator.max' => 'Output indicator must be less than 370 characters',
         ];
     }
 

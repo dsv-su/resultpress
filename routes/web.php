@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Config;
-use JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\JWTAuth;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use Carbon\Carbon;
@@ -69,6 +69,10 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::get('/programareas/{id}', 'ProgramAreaController@show')->name('programarea_show');
     Route::get('/programareas/{id}/edit', 'ProgramAreaController@edit')->name('programarea_edit');
     Route::post('/programareas/{id}/update', 'ProgramAreaController@update')->name('programarea_update');
+
+    // Taxonomies
+    Route::resource('taxonomies', TaxonomiesController::class);
+
     //Logging
     Route::get('/logs', 'LogsController@index')->name('logs');
     //Admin User/Role management

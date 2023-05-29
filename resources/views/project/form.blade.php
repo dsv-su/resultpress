@@ -16,18 +16,6 @@
         </ol>
     </nav>
 
-    @if($errors->any())
-        <div class="form-row">
-            <div class="col">
-                @foreach($errors->all() as $error)
-                    <div class="alert alert-danger" role="alert">
-                        {{$error}}
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
-
     @empty($project->id)
         <form action="{{ route('update', $project) }}" method="POST">
             <input name="new_project" value="1" hidden>
@@ -101,6 +89,33 @@
                                     <span>{{ $project->getHistory('areas') }}</span>
                                 </div>
                             </div>
+
+                            <div class="form-row mb-2 row">
+                                <label for="project_category" class="col-sm-3 col-form-label-sm">Project Category</label>
+                                <div class="col-sm-9 px-1">
+                                    <select name="project_category[]" id="project_category" class="custom-select-sm"
+                                            multiple="multiple">
+
+                                        @foreach($categories as $pc)
+                                            <option value="{{$pc->id}}" {{ old('pc_id') == $pc->id || $project_categories->has($pc->slug) ? 'selected':''}}>{{$pc->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row mb-2 row">
+                                <label for="project_region" class="col-sm-3 col-form-label-sm">Project Region</label>
+                                <div class="col-sm-9 px-1">
+                                    <select name="project_region[]" id="project_region" class="custom-select-sm"
+                                            multiple="multiple">
+
+                                        @foreach($regions as $pr)
+                                            <option value="{{$pr->id}}" {{ old('pr_id') == $pr->id || $project_regions->has($pr->slug) ? 'selected':''}}>{{$pr->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="form-row mb-2 row">
                                 <label for="start" class="col-auto col-sm-3 col-form-label-sm">Start</label>
                                 <div class="col-auto">
@@ -447,7 +462,7 @@
                     });
 
                     $(document).ready(function () {
-                        $('#project_area').multiselect({
+                        $('#project_area, #project_category, #project_region').multiselect({
                             buttonWidth: '100%',
                             templates: {
                                 li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'

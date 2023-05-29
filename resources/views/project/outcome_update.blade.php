@@ -19,10 +19,10 @@
                     @endif
                 @endif
             </h5>
-            @if ($outcome->outcome_updates)
+            @if ($outcome->publishedUpdates()->count() > 0)
                 <div id="collapse-outcome-{{ $outcome->id }}" class="collapse" aria-labelledby="headin-outcome-{{ $outcome->id }}" data-parent="#outcomes">
                     <div class="card-body">
-                        @foreach ($outcome->outcome_updates as $puindex => $arr)
+                        @foreach ($outcome->publishedUpdates() as $puindex => $arr)
                             <div class="@if ($puindex > 0) mt-5 @endif">
                                 <b><a class="mb-2" href="/project/update/{{ $arr['project_update_id'] }}">Update {{ $puindex + 1 }}</a></b>:
                                 <h6 class="mt-2">Progress:</h6>
@@ -99,9 +99,9 @@
                 </div>
             @endif
             @php
-                $outcome_update = $outcome_update == 0 ? time() : $outcome_update;
+                $outcome_update = !$outcome_update && $outcome_update == 0 ? time() : $outcome_update;
             @endphp
-            @if (!$outcome || !$outcome->id)
+            @if(empty($outcome))
                 <div class="form-group row">
                     <div class="col-auto col-sm-4 col-md-3">
                         <label for="new_outcome_summary[{{ $outcome->id ?? $outcome_update }}]" class="col-form-label">Outcome name:</label>

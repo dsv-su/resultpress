@@ -78,6 +78,28 @@
             </div>
         </div>
         <div class="row my-1">
+            <div class="col-sm col-md-3 font-weight-bold">Project Category(s):</div>
+            <div class="col-sm">
+                @if ($project->getTerms('category')->count() > 0)
+                    {{ $project->getTerms('category')->pluck('name')->implode(', ') }}
+                @else
+                    Not set
+                @endif
+            </div>
+        </div>
+
+        <div class="row my-1">
+            <div class="col-sm col-md-3 font-weight-bold">Project Region(s):</div>
+            <div class="col-sm">
+                @if ($project->getTerms('region')->count() > 0)
+                    {{ $project->getTerms('region')->pluck('name')->implode(', ') }}
+                @else
+                    Not set
+                @endif
+            </div>
+        </div>
+
+        <div class="row my-1">
             <div class="col-sm col-md-3 font-weight-bold">Project period:</div>
             <div class="col-sm">{{ $project->dates }}</div>
         </div>
@@ -243,8 +265,8 @@
                                     {!! strip_tags($output->indicator) !!}
                                 </span>
                             </div>
-                            @if ($output->output_updates)
-                                <div class="col-auto d-flex py-2 px-1 align-items-center"><span data-toggle="collapse" data-target="#collapse-output-{{ $output->id }}" aria-expanded="false" role="button" aria-controls="collapseoutput-{{ $output->id }}" class="badge badge-light font-100">{{ count($output->output_updates) }} @if (count($output->output_updates) > 1)
+                            @if ($output->publishedUpdates()->count() > 0)
+                                <div class="col-auto d-flex py-2 px-1 align-items-center"><span data-toggle="collapse" data-target="#collapse-output-{{ $output->id }}" aria-expanded="false" role="button" aria-controls="collapseoutput-{{ $output->id }}" class="badge badge-light font-100">{{ $output->publishedUpdates()->count() }} @if ($output->publishedUpdates()->count() > 1)
                                             updates
                                         @else
                                             update
@@ -273,10 +295,10 @@
                         </div>
                     </div>
 
-                    @if ($output->output_updates)
+                    @if ($output->publishedUpdates()->count() > 0)
                         <div id="collapse-output-{{ $output->id }}" class="collapse" aria-labelledby="headin-output-{{ $output->id }}" data-parent="#outputs">
                             <div class="card-body">
-                                @foreach ($output->output_updates as $puindex => $arr)
+                                @foreach ($output->publishedUpdates() as $puindex => $arr)
                                     <p>
                                         <b><a href="/project/update/{{ $arr['project_update_id'] }}">Update {{ $puindex + 1 }}</a></b>:
                                         {!! $arr['progress'] !!}

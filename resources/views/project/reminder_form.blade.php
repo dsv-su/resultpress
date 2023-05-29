@@ -6,6 +6,7 @@
         <div class="form-group mb-2 row">
             @if ($reminder)
             <input type="hidden" name="reminders[{{$key}}][id]" value="{{$reminder->id}}">
+            <input type="hidden" name="reminders[{{$key}}][type]" value="{{$reminder->type}}">
             <input type="hidden" name="reminders[{{$key}}][slug]" value="{{$reminder->slug}}">
             @endif
             <label for="reminders[{{$key}}][name]"
@@ -55,7 +56,7 @@
                    class="col-4 col-sm-3 col-form-label-sm text-right">Days before</label>
             <div class="col-8 col-sm-1 px-1">
                 <input type="number" name="reminders[{{$key}}][reminder_due_days]"
-                       @if ($reminder) value="{{ $reminder->reminder_due_days}}" @else value="0" @endif
+                       @if ($reminder) value="{{ $reminder->reminder_due_days ?? 0 }}" @else value="0" @endif
                         placeholder="0"
                        class="form-control form-control-sm form-inline"
                        style="width:50px;"

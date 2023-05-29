@@ -18,7 +18,7 @@
         @elseif($project->status() == 'onhold')
             <span class="badge badge-secondary font-100">On hold</span>
         @elseif($project->status() == 'terminated')
-            <span class="badge badge-secondary font-100">Terminated</span>
+            <span class="badge badge-secondary font-100">Closed</span>
         @endif
     </div>
     <div class="card-body">

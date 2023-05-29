@@ -64,7 +64,7 @@
                                     @elseif($status == 'onhold')
                                         On hold
                                     @elseif($status == 'terminated')
-                                        Terminated
+                                        Closed
                                     @endif
                                 </option>
                             @endforeach

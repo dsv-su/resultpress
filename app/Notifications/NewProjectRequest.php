@@ -34,7 +34,7 @@ class NewProjectRequest extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -63,6 +63,16 @@ class NewProjectRequest extends Notification
     {
         return [
             //
+        ];
+    }
+
+    public function toDatabase()
+    {
+        return [
+            'project_id' => $this->project->id,
+            'project_name' => $this->project->name,
+            'link' => $this->project->link,
+            'message' => sprintf('A new project suggestion `%s` has been created by %s.', $this->project->name, $this->project->user->name),
         ];
     }
 }

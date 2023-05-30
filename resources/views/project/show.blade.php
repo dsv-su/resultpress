@@ -78,28 +78,6 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-sm col-md-3 font-weight-bold">Project Category(s):</div>
-            <div class="col-sm">
-                @if ($project->getTerms('category')->count() > 0)
-                    {{ $project->getTerms('category')->pluck('name')->implode(', ') }}
-                @else
-                    Not set
-                @endif
-            </div>
-        </div>
-
-        <div class="row my-1">
-            <div class="col-sm col-md-3 font-weight-bold">Project Region(s):</div>
-            <div class="col-sm">
-                @if ($project->getTerms('region')->count() > 0)
-                    {{ $project->getTerms('region')->pluck('name')->implode(', ') }}
-                @else
-                    Not set
-                @endif
-            </div>
-        </div>
-
-        <div class="row my-1">
             <div class="col-sm col-md-3 font-weight-bold">Project period:</div>
             <div class="col-sm">{{ $project->dates }}</div>
         </div>

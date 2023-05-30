@@ -279,18 +279,18 @@
                                 @foreach ($output->publishedUpdates() as $puindex => $arr)
                                     <p>
                                         <b><a href="/project/update/{{ $arr['project_update_id'] }}">Update {{ $puindex + 1 }}</a></b>:
-                                        {!! $arr['progress'] !!}
+                                        {!! $arr['progress'] ?? '' !!}
                                     </p>
                                 @endforeach
                             </div>
                         </div>
                     @endif
 
-                    @if ($output->latest_update)
+                    @if ($output->latest_update && isset($output->latest_update['progress']))
                         <div class="card-body">
                             <p>
                                 <b><span>Latest update</span></b>:
-                                {!! $arr['progress'] !!}
+                                {!! $output->latest_update['progress'] ?? '' !!}
                             </p>
                         </div>
                     @endif

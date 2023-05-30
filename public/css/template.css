@@ -503,3 +503,7 @@ button.multiselect {
     margin: 0 auto;
     border: 1px solid #ccc;
 }
+
+.font-sm {
+    font-size: 0.875rem !important;
+}

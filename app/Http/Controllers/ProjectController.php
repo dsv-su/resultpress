@@ -793,8 +793,8 @@ class ProjectController extends Controller
                 if (!is_numeric($output_update_array['output_id'][$key])) {
                     // Create new output since it's an unexpected one
                     $data = array();
-                    $data['indicator'] = $output_update_array['output_id'][$key];
-                    $data['progress'] = $output_update_array['progress'][$key];
+                    $data['indicator'] = $output_update_array['output_id'][$key] ?? '';
+                    $data['progress'] = $output_update_array['progress'][$key] ?? '';
                     $data['target'] = 0;
                     $data['project_id'] = $project->id;
                     if ($status == 'approved') {
@@ -805,8 +805,8 @@ class ProjectController extends Controller
                 $outputupdate = OutputUpdate::firstOrNew(['id' => $output_update_array['output_update_id'][$key]]);
                 $output = Output::findOrFail($id);
                 $outputupdate->output_id = $output->id;
-                $outputupdate->value = $output_update_array['value'][$key];
-                $outputupdate->progress = $output_update_array['progress'][$key];
+                $outputupdate->value = $output_update_array['value'][$key] ?? '';
+                $outputupdate->progress = $output_update_array['progress'][$key] ?? '';
                 $outputupdate->project_update_id = $projectupdate_id;
                 // Log update for submitted OutputUpdate --> Added outputs should be i draft (TODO)
                 if ($status == 'submitted') {

@@ -10,17 +10,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use \Myerscode\Laravel\Taxonomies\HasTaxonomy;
 use Illuminate\Support\Facades\URL;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use App\Scopes\ObjectType;
-use Myerscode\Laravel\Taxonomies\Taxonomy;
 
 class Project extends Model
 {
-    use LogsActivity, HasSlug, HasTaxonomy;
+    use LogsActivity, HasSlug;
 
     //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
     protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state', 'object_type', 'object_id', 'summary'];
@@ -42,17 +40,6 @@ class Project extends Model
             ->saveSlugsTo('slug')
             ->slugsShouldBeNoLongerThan(50)
             ->doNotGenerateSlugsOnUpdate();
-    }
-
-    public function getTerms( $taxonomy = null )
-    {
-        if ( $taxonomy ) {
-            return $this->terms()->where(function ($query) use ($taxonomy) {
-                $taxonomy = Taxonomy::where('slug', $taxonomy)->first();
-                $query->where('taxonomy_id', $taxonomy->id);
-            })->get();
-        }
-        return $this->terms()->get();
     }
 
     /**

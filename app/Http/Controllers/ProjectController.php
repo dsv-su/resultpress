@@ -42,7 +42,7 @@ use App\Notifications\NewProjectRequest;
 use App\Notifications\ProjectUpdated;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Myerscode\Laravel\Taxonomies\Taxonomy;
+
 
 class ProjectController extends Controller
 {
@@ -313,10 +313,6 @@ class ProjectController extends Controller
 
                 return view($formView, [
                     'project' => $project,
-                    'project_categories' => $project->terms('category')->pluck('name', 'slug'),
-                    'categories' => Taxonomy::where('name', 'category')->first()->terms,
-                    'project_regions' => $project->terms('region')->pluck('name', 'slug'),
-                    'regions' => Taxonomy::where('name', 'region')->first()->terms,
                     'activities' => $project->activities,
                     'outputs' => $project->submitted_outputs(),
                     'aggregated_outputs' => $project->aggregated_outputs(),
@@ -404,12 +400,6 @@ class ProjectController extends Controller
 
 
         $project->update($request->all());
-
-        // Managing project categories
-        $terms = collect();
-        $terms = $terms->merge($request->input('project_category', []));
-        $terms = $terms->merge($request->input('project_region', []));
-        $project->terms()->sync($terms->toArray());
 
         $project->project_area()->sync($request->input('project_area', []));
 

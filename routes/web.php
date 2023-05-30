@@ -69,10 +69,6 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::get('/programareas/{id}', 'ProgramAreaController@show')->name('programarea_show');
     Route::get('/programareas/{id}/edit', 'ProgramAreaController@edit')->name('programarea_edit');
     Route::post('/programareas/{id}/update', 'ProgramAreaController@update')->name('programarea_update');
-
-    // Taxonomies
-    Route::resource('taxonomies', TaxonomiesController::class);
-
     //Logging
     Route::get('/logs', 'LogsController@index')->name('logs');
     //Admin User/Role management

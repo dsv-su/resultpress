@@ -92,6 +92,13 @@
                                     <span>{{ $project->getHistory('areas') }}</span>
                                 </div>
                             </div>
+                            @if ($taxonomyTypes->count())
+                                @foreach ($taxonomyTypes as $taxonomyType)
+                                    @if ($taxonomyType->taxonomies->count())
+                                        @include('project.taxonomy_form', ['taxonomyType' => $taxonomyType, 'project' => $project, 'taxonomies' => $project->taxonomies($taxonomyType->slug)])
+                                    @endif
+                                @endforeach
+                            @endif
                             <div class="form-row mb-2 row">
                                 <label for="start" class="col-auto col-sm-3 col-form-label-sm">Start</label>
                                 <div class="col-auto">
@@ -444,6 +451,16 @@
                                 li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
                             }
                         });
+
+                        @if ($taxonomyTypes->count())
+                            @foreach ($taxonomyTypes as $taxonomyType)
+                                @if ($taxonomyType->taxonomies->count())
+                                    $('#{{ $taxonomyType->slug }}').multiselect({
+                                        buttonWidth: '100%',
+                                    })
+                                @endif
+                            @endforeach
+                        @endif
 
                         $('.currency').each(function () {
                             $(this).text($('#currency option:selected').text());

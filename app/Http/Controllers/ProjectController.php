@@ -42,6 +42,7 @@ use App\Notifications\NewProjectRequest;
 use App\Notifications\ProjectUpdated;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\TaxonomyType;
 
 
 class ProjectController extends Controller
@@ -249,7 +250,7 @@ class ProjectController extends Controller
 
         $projectDeadlines = ProjectReminder::where('project_id', $project->id)->get();
 
-        return view('project.show', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs, 'deadlines' => $projectDeadlines, 'aggregated_outputs' => $aggregated_outpus]);
+        return view('project.show', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs, 'deadlines' => $projectDeadlines, 'aggregated_outputs' => $aggregated_outpus, 'taxonomyTypes' => TaxonomyType::all()]);
     }
 
     public function project_dates(Project $project)
@@ -313,6 +314,7 @@ class ProjectController extends Controller
 
                 return view($formView, [
                     'project' => $project,
+                    'taxonomyTypes' => TaxonomyType::where('model', 'Project')->get(),
                     'activities' => $project->activities,
                     'outputs' => $project->submitted_outputs(),
                     'aggregated_outputs' => $project->aggregated_outputs(),
@@ -401,6 +403,18 @@ class ProjectController extends Controller
 
         $project->update($request->all());
 
+        // Managing taxonomies
+        $taxonomyTypes = TaxonomyType::all();
+        $taxonomyTypes->each(
+            function ($taxonomyType) use ($request, $project) {
+                $taxonomies = $request->collect($taxonomyType->slug);
+                if ($taxonomies->count() > 0) {
+                    $project->setTaxonomies($taxonomies, $taxonomyType->slug);
+                }
+            }
+        );
+
+        // Managing project areas
         $project->project_area()->sync($request->input('project_area', []));
 
         // Managing project reminders

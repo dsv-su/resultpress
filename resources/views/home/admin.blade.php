@@ -49,6 +49,15 @@
     </div>
     <div class="card my-3">
         <div class="card-header">
+            Taxonomies
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Manage Taxonomies</h5>
+            <a href="{{ route('types.index') }}" class="btn btn-outline-primary">Manage</a>
+        </div>
+    </div>
+    <div class="card my-3">
+        <div class="card-header">
             Settings
         </div>
         <div class="card-body">

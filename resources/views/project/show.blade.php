@@ -77,6 +77,13 @@
                 @endif
             </div>
         </div>
+        @if ($taxonomyTypes->count())
+            @foreach ($taxonomyTypes as $taxonomyType)
+                @if ($taxonomyType->taxonomies->count())
+                    @include('project.taxonomy_show', ['taxonomyType' => $taxonomyType, 'project' => $project, 'taxonomies' => $project->taxonomies($taxonomyType->slug)->get()])
+                @endif
+            @endforeach
+        @endif
         <div class="row my-1">
             <div class="col-sm col-md-3 font-weight-bold">Project period:</div>
             <div class="col-sm">{{ $project->dates }}</div>

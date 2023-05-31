@@ -73,6 +73,15 @@ Route::middleware('auth', 'entitlements')->group(function () {
     Route::get('/logs', 'LogsController@index')->name('logs');
     //Admin User/Role management
     Route::get('/admin', 'AdminController@index')->name('admin');
+
+    // Taxonomies
+    Route::group(['prefix' => 'taxonomies'], function(){
+        Route::redirect('/', '/taxonomies/types');
+        Route::get('/types/{type}/terms', 'TaxonomyTypeController@terms')->name('types.terms');
+        Route::resource('terms', TaxonomiesController::class);
+        Route::resource('types', TaxonomyTypeController::class);
+    });
+
     //Administrator routes
     Route::resource('settings', SettingsController::class);
     Route::resource('projectadmin','ProjectAdminController');

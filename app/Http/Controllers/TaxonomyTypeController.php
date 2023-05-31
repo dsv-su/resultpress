@@ -81,6 +81,7 @@ class TaxonomyTypeController extends Controller
     {
         $data = request()->validate([
             'name' => 'required',
+            'model' => 'required',
         ]);
         $taxonomyType = TaxonomyType::findOrfail($id);
         $taxonomyType->update($data);

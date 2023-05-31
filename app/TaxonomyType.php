@@ -19,6 +19,7 @@ class TaxonomyType extends Model
     protected $fillable = [
         'name',
         'slug',
+        'model',
     ];
 
     /**
@@ -64,6 +65,16 @@ class TaxonomyType extends Model
         return $taxonomy->parent_id ? $this->taxonomies()->find($taxonomy->parent_id)->first()->id : null;
     }
 
+    public function getModels()
+    {
+        return [
+            'Project',
+            'ProjectUpdate',
+            'Area',
+            'Organisation',
+        ];
+    }
+
     /**
      * Build html select input of taxonomies.
      */     
@@ -84,16 +95,17 @@ class TaxonomyType extends Model
     /**
      * Build html options tree of taxonomies.
      */
-    private function buildOptionsTree($taxonomies, $id = null, $parent = null, $subLevels = 0)
+    public function buildOptionsTree($taxonomies, $id = null, $parent = null, $subLevels = 0)
     {
         $html = '';
         $subPrefix = '';
+        if($parent && !is_array($parent)) $parent = [$parent];
         if ($subLevels > 0) {
             $subPrefix = str_repeat('--', $subLevels) . ' ';
         }
         foreach($taxonomies as $taxonomy) {
             if ($id && ($id == $taxonomy->id || $id == $taxonomy->parent_id)) {} else {
-                $selected = $parent && $parent == $taxonomy->id ? 'selected' : '';
+                $selected = $parent && is_array($parent) && in_array($taxonomy->id, $parent) ? 'selected' : '';
                 $html .= sprintf('<option %s value="%s">%s%s</option>', $selected, $taxonomy->id, $subPrefix, $taxonomy->title);
             };
             if($taxonomy->children->count()) {

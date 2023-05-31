@@ -44,6 +44,14 @@ class Project extends Model
     }
 
     /**
+     * Get taxonomies class.
+     */
+    public function taxClass(): string
+    {
+        return config('taxonomies.taxonomies_model', Hamedov\Taxonomies\Taxonomy::class);
+    }
+
+    /**
      * Get the reminders for the project.
      * 
      * @return HasMany

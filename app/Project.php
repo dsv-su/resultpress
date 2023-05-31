@@ -12,13 +12,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\URL;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Hamedov\Taxonomies\HasTaxonomies;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use App\Scopes\ObjectType;
 
 class Project extends Model
 {
-    use LogsActivity, HasSlug;
+    use LogsActivity, HasSlug, HasTaxonomies;
 
     //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
     protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state', 'object_type', 'object_id', 'summary'];

@@ -66,7 +66,7 @@ class NewComment extends Notification
     public function toDatabase()
     {
         return [
-            'message' => sprintf('%s has posted a new comment on your project %s', $this->comment->user->name, $this->project->name),
+            'message' => sprintf('%s has posted a new comment on project: %s', $this->comment->user->name, $this->project->name),
             'link' => $this->project->link,
             'user_id' => $this->comment->user->id,
         ];

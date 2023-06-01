@@ -7,11 +7,19 @@ use Illuminate\Support\Facades\Auth;
 
 class Notifications extends Component
 {
-    public $notifications;
+    private $notifications;
 
     public function mount()
     {
-        $this->notifications = Auth::user()->notifications->take(5);
+        $this->notifications = Auth::user()->notifications()->where(
+            function ($query) {
+                $query->where('read_at', null)
+                    ->orWhere(function ($query) {
+                        $query->where('read_at', '!=', null)
+                            ->where('created_at', '>', now()->subDays(30));
+                    });
+            }
+        )->limit(50)->get();
     }
 
     public function render()

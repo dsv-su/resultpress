@@ -34,7 +34,7 @@ class ProjectUpdated extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -63,6 +63,14 @@ class ProjectUpdated extends Notification
     {
         return [
             //
+        ];
+    }
+
+    public function toDatabase( $notifiable )
+    {
+        return [
+            'message' => sprintf('Project (%s) has been updated.', $this->project->name),
+            'link' => $this->project->link,
         ];
     }
 }

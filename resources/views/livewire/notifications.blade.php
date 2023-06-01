@@ -4,10 +4,10 @@
             href="{{ $notification->data['link'] }}" 
             class="list-group-item list-group-item-action list-group-item-light d-flex justify-content-between text-decoration-none
                 @if ($notification->read_at)
-                    list-group-item-light
+                    list-group-item-dark
                     text-muted
                 @else
-                    list-group-item-dark
+                    list-group-item-light
                     font-weight-bold
                 @endif
             "

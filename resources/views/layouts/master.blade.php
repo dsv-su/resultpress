@@ -20,7 +20,7 @@
                 </span>
                 <span class="btn-inner--text">{{ $user->name }}</span>
             </div>
-            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow mt-1" aria-labelledby="user-dropdown" data-toggle="user-dropdown" data-offset="" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; max-width:50%;">
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow mt-1" aria-labelledby="user-dropdown" data-toggle="user-dropdown" data-offset="" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; max-width:80%;">
                 {{-- <div class="dropdown-header">
                     <h6 class="text-overflow m-0"></h6>
                 </div> --}}

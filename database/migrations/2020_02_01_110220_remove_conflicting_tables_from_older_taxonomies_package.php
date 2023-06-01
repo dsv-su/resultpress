@@ -13,16 +13,15 @@ class RemoveConflictingTablesFromOlderTaxonomiesPackage extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
         if (Schema::hasTable('taxonomies')) {
             if (!Schema::hasColumn('taxonomies', 'type')) {
-                Schema::disableForeignKeyConstraints();
                 Schema::dropIfExists('taxonomies');
-                Schema::enableForeignKeyConstraints();
             }
         }
         Schema::dropIfExists('terms');
         Schema::dropIfExists('taggables');
-
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

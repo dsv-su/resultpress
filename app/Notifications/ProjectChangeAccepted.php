@@ -12,6 +12,11 @@ class ProjectChangeAccepted extends Notification
     use Queueable;
 
     /**
+     * @var \App\Project
+     */
+    protected $project;
+
+    /**
      * Create a new notification instance.
      *
      * @return void
@@ -29,7 +34,7 @@ class ProjectChangeAccepted extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -59,6 +64,14 @@ class ProjectChangeAccepted extends Notification
     {
         return [
             //
+        ];
+    }
+
+    public function toDatabase( $notifiable )
+    {
+        return [
+            'message' => sprintf('Changes on project `%s` have been accepted.', $this->project->name),
+            'link' => $this->project->link,
         ];
     }
 }

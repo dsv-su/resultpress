@@ -17,13 +17,19 @@ class NewProjectRequest extends Notification
     protected $project;
 
     /**
+     * @var \App\User
+     */
+    protected $partner;
+
+    /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct( $project )
+    public function __construct( $project, $partner = null )
     {
         $this->project = $project;
+        $this->partner = $partner;
     }
 
     /**
@@ -34,7 +40,7 @@ class NewProjectRequest extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -63,6 +69,15 @@ class NewProjectRequest extends Notification
     {
         return [
             //
+        ];
+    }
+
+    public function toDatabase($notifiable)
+    {
+        return [
+            'message' => sprintf('A new project suggestion `%s` has been created by %s.', $this->project->name, $this->partner->name),
+            'link' => $this->project->link,
+            'user_id' => $this->partner->id ?? null,
         ];
     }
 }

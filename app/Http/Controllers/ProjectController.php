@@ -545,7 +545,7 @@ class ProjectController extends Controller
                 $admin->notify(new NewProjectRequest($project));
             });
             $project->project_partner->each(function ($partner) use ($project) {
-                $partner->user->notify(new NewProjectRequest($project));
+                $partner->user->notify(new NewProjectRequest($project, $partner->user));
             });
         }
         if ($notifications['change_request']) {

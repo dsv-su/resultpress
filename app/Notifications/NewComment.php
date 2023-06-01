@@ -30,7 +30,7 @@ class NewComment extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database']; // 'database' is a Laravel default channel, 'mail' is a custom channel we created in app/Providers/AppServiceProvider.php
     }
 
     /**
@@ -60,6 +60,15 @@ class NewComment extends Notification
     {
         return [
             //
+        ];
+    }
+
+    public function toDatabase()
+    {
+        return [
+            'message' => sprintf('%s has posted a new comment on project: %s', $this->comment->user->name, $this->project->name),
+            'link' => $this->project->link,
+            'user_id' => $this->comment->user->id,
         ];
     }
 }

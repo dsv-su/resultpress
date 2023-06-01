@@ -34,7 +34,7 @@ class ProjectChangeRequest extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -63,6 +63,14 @@ class ProjectChangeRequest extends Notification
     {
         return [
             //
+        ];
+    }
+
+    public function toDatabase()
+    {
+        return [
+            'message' => sprintf('New change request on project `%s` has been created.', $this->project->name),
+            'link' => $this->project->link,
         ];
     }
 }

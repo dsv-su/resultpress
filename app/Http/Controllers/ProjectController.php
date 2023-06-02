@@ -250,7 +250,7 @@ class ProjectController extends Controller
 
         $projectDeadlines = ProjectReminder::where('project_id', $project->id)->get();
 
-        return view('project.show', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs, 'deadlines' => $projectDeadlines, 'aggregated_outputs' => $aggregated_outpus, 'taxonomyTypes' => TaxonomyType::all()]);
+        return view('project.show', ['project' => $project, 'activities' => $activities, 'outputs' => $outputs, 'deadlines' => $projectDeadlines, 'aggregated_outputs' => $aggregated_outpus, 'taxonomyTypes' => TaxonomyType::whereModel('Project')->get()]);
     }
 
     public function project_dates(Project $project)

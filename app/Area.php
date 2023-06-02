@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Hamedov\Taxonomies\HasTaxonomies;
+use App\Scopes\RegulatorArea;
 
 class Area extends Model
 {
+    use HasTaxonomies;
+
     protected $casts = [
         'archive' => 'boolean',
     ];
@@ -32,5 +36,13 @@ class Area extends Model
         return $this->belongsToMany(User::class, 'area_user');
     }
 
-
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new RegulatorArea);
+    }
 }

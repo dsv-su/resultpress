@@ -67,7 +67,7 @@
                             @endcan
                             @if(Auth::user()->hasRole('Partner'))
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#owned">Assigned Projects <span data-toggle="tooltip" title="These are the projects for which you are registered for this partner"><i class="fas fa-info-circle fa-1x"></i></span></a>
+                                <a class="nav-link active" data-toggle="tab" href="#owned">Projects <span data-toggle="tooltip" title="These are the projects for which you are registered for this partner"><i class="fas fa-info-circle fa-1x"></i></span></a>
                             </li>
                             @endif
                         </ul>

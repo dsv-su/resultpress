@@ -40,25 +40,39 @@
                 </div>
             </div>
         </div>
+        @if (auth()->user()->hasRole('Administrator'))
+            <div class="row px-3">
+                <label for="external_system_title" class="form-group-header">External System Title</label>
+                    <span data-toggle="tooltip" title="The name of external system of DSV. Example: Moodle"><i class="fas fa-info-circle fa-1x ml-1"></i></span>
+            </div>
 
-        <div class="row px-3">
-            <label for="external_system_title" class="form-group-header">External System Title</label>
-                <span data-toggle="tooltip" title="The name of external system of DSV. Example: Moodle"><i class="fas fa-info-circle fa-1x ml-1"></i></span>
-        </div>
+            <div class="row px-3 d-flex align-items-center">
+                <input class="form-control"  name="external_system_title" type="text" placeholder="External System Title" value="{{ old('external_system_title', empty($area) ? '' : $area->external_system_title) }}">
+            </div>
 
-        <div class="row px-3 d-flex align-items-center">
-            <input class="form-control"  name="external_system_title" type="text" placeholder="External System Title" value="{{ old('external_system_title', empty($area) ? '' : $area->external_system_title) }}">
-        </div>
+            <div class="row px-3 mt-4">
+                <label for="external_system_link" class="form-group-header">External System Link</label>
+                    <span data-toggle="tooltip" title="Link to external system of DSV, this link will be used to auto-login users to other systems using thier current session."><i class="fas fa-info-circle fa-1x ml-1"></i></span>
+            </div>
 
-        <div class="row px-3 mt-4">
-            <label for="external_system_link" class="form-group-header">External System Link</label>
-                <span data-toggle="tooltip" title="Link to external system of DSV, this link will be used to auto-login users to other systems using thier current session."><i class="fas fa-info-circle fa-1x ml-1"></i></span>
-        </div>
-
-        <div class="row px-3 d-flex align-items-center">
-            <input class="form-control"  name="external_system_link" type="text" placeholder="External System Link" value="{{ old('external_system_link', empty($area) ? '' : $area->external_system_link) }}">
-        </div>
-
+            <div class="row px-3 d-flex align-items-center">
+                <input class="form-control"  name="external_system_link" type="text" placeholder="External System Link" value="{{ old('external_system_link', empty($area) ? '' : $area->external_system_link) }}">
+            </div>
+        @endif
+        @if ($taxonomyTypes->count() && auth()->user()->hasRole('Administrator'))
+            @foreach ($taxonomyTypes as $taxonomyType)
+                <div class="row px-3 mt-4">
+                    <label for="users" class="form-group-header">{{ $taxonomyType->name }}</label>
+                        <span data-toggle="tooltip" title="Users and permissions associated with this program area"><i class="fas fa-info-circle fa-1x ml-1"></i></span>
+                </div>
+        
+                <div class="row px-3 d-flex align-items-center">
+                    <select name="{{ $taxonomyType->slug }}[]" class="custom-select" id="{{ $taxonomyType->slug }}" multiple="multiple" required>
+                        {!! $taxonomyType->buildOptionsTree($taxonomyType->taxonomiesTree(), null, $area->taxonomies($taxonomyType->slug)->pluck('id')->toArray()) !!}
+                    </select>
+                </div>
+            @endforeach
+        @endif
         <div class="row px-3 mt-4">
             <label for="users" class="form-group-header">Users</label>
                 <span data-toggle="tooltip" title="Users and permissions associated with this program area"><i class="fas fa-info-circle fa-1x ml-1"></i></span>
@@ -80,6 +94,11 @@
     </form>
 
     <script>
+        @if ($taxonomyTypes->count())
+            @foreach ($taxonomyTypes as $taxonomyType)
+                $('#{{ $taxonomyType->slug }}').multiselect();
+            @endforeach
+        @endif
         $('#managers').multiselect();
         var editor = new MediumEditor('.mediumEditor#description', {placeholder: {text: "Area description"}});
     </script>

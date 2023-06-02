@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\URL;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Hamedov\Taxonomies\HasTaxonomies;
@@ -29,7 +30,7 @@ class Project extends Model
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 
-    protected $appends = ['link', 'type'];
+    protected $appends = ['link', 'type', 'isRegulator'];
 
     /**
      * Get the options for generating the slug.
@@ -314,6 +315,13 @@ class Project extends Model
         return 'project';
     }
 
+    public function getIsRegulatorAttribute(): bool
+    {
+        return $this->areas()->whereHas('taxonomies', function ($query) {
+            $query->where('type', 'regulators-area')->where('slug', 'regulator-area');
+        })->exists();
+    }
+
     /**
      * The "booted" method of the model.
      *
@@ -328,12 +336,28 @@ class Project extends Model
      * Scope a query to only include projects of a given type.
      *
      * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @param  mixed                                 $type
+     * @param  mixed $type
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeOfType($query, $type = 'project')
     {
         return $query->where('object_type', $type);
+    }
+
+    /**
+     * Scope a query to only include projects of regulators.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  mixed $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRegulatorProject(Builder $builder)
+    {
+        return $builder->whereHas('areas', function ($query) {
+            $query->whereHas('taxonomies', function ($query) {
+                $query->where('type', 'regulators-area')->where('slug', 'regulator-area');
+            });
+        });
     }
 
     public function getHistory( $attribute = 'name', $id = null)

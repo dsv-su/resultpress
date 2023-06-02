@@ -6,6 +6,7 @@ use App\Area;
 use App\Project;
 use App\ProjectArea;
 use App\ProjectPartner;
+use App\TaxonomyType;
 use App\User;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
@@ -85,11 +86,11 @@ class ProgramAreaController extends Controller
                     return $query->where('area_id', '=', $id);
                 })->get();
                 return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas, 'area' => $area, 'token' => $shibboleth_token]);
-            } elseif ($user->hasRole(['Partner'])) {
+            } elseif ($user->hasRole(['Partner']) || $user->isRegulator || $user->isRegulatorAdmin) {
                 $id = ProjectPartner::where('partner_id', $user->id)->pluck('project_id');
                 $projects = Project::with('project_owner.user', 'areas')->whereIn('id', $id)->latest()->get();
 
-                return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas, 'area' => $area]);
+                return view('project.index', ['projects' => $projects, 'user' => $user, 'program_areas' => $program_areas, 'area' => $area, 'token' => $shibboleth_token]);
             }
         } elseif (Auth::check()) return abort(403);
         else return redirect()->route('partner-login');
@@ -104,17 +105,25 @@ class ProgramAreaController extends Controller
     public function edit($id)
     {
         if ($user = Auth::user()) {
-            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
+            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider']) || $user->isRegulatorAdmin) {
 
                 $users = User::whereDoesntHave('roles', function ($query) {
                     $query->where('name', 'Partner');
-                })->orderBy('name')->get();
+                })
+                ->when($user->isRegulatorAdmin, function ($query) {
+                    $query->whereHas('roles', function ($query) {
+                        $query->where('name', 'Regulator Admin');
+                    });
+                })
+                ->orderBy('name')->get();
 
                 $area = Area::findOrfail($id);
 
                 $areaUsers = $area->users->pluck('id')->toArray();
 
-                return view('programareas.edit', compact('area', 'users', 'areaUsers'));
+                $taxonomyTypes = TaxonomyType::where('model', 'Area')->get();
+
+                return view('programareas.edit', compact('area', 'users', 'areaUsers', 'taxonomyTypes'));
             }
         }
         abort(403);
@@ -130,15 +139,24 @@ class ProgramAreaController extends Controller
     public function update(Request $request, $id)
     {
         if ($user = Auth::user()) {
-            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider'])) {
+            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider', 'Regulator Admin'])) {
                 $area = Area::findOrfail($id);
                 $area->name = $request->name;
                 $area->description = $request->description;
-                $area->external_system_title = $request->external_system_title;
-                $area->external_system_link = $request->external_system_link;
+                if($request->has(['external_system_title', 'external_system_link'])) {
+                    $area->external_system_title = $request->external_system_title;
+                    $area->external_system_link = $request->external_system_link;
+                }
                 $area->users()->sync($request->user_id);
+                $taxonomyTypes = TaxonomyType::where('model', 'Area')->get();
+                $taxonomyTypes->each(function ($taxonomyType) use ($request, $area) {
+                    $taxonomies = $request->collect($taxonomyType->slug);
+                    if ($taxonomies->count() > 0) {
+                        $area->setTaxonomies($taxonomies, $taxonomyType->slug);
+                    }
+                });
                 $area->save();
-                return redirect()->route('programareas');
+                return redirect()->route('programareas')->with('success', 'Program area updated successfully');
             }
         }
         abort(403);

@@ -79,7 +79,7 @@
         </div>
         @if ($taxonomyTypes->count())
             @foreach ($taxonomyTypes as $taxonomyType)
-                @if ($taxonomyType->taxonomies->count())
+                @if ($taxonomyType->taxonomies->count() && $project->taxonomies($taxonomyType->slug)->count())
                     @include('project.taxonomy_show', ['taxonomyType' => $taxonomyType, 'project' => $project, 'taxonomies' => $project->taxonomies($taxonomyType->slug)->get()])
                 @endif
             @endforeach

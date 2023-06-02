@@ -35,14 +35,20 @@
     @include('layouts.partials.header')
     @include('layouts.partials.nav')
     @if ($errors->any())
-        <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems.<br><br>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-                </ul>
-        </div>
+        @if ($errors->count() > 1)
+            <div class="alert alert-danger">
+                <strong>Whoops!</strong> There were some problems.<br><br>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                    </ul>
+            </div>
+        @elseif ($errors->count() == 1)
+            <div class="alert alert-danger">
+                {{ $errors->first() }}
+            </div>
+        @endif
     @endif
     @if ($message = Session::get('success'))
         <div class="alert alert-success">

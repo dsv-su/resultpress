@@ -9,15 +9,7 @@
                     <div class="card-header">
                         Invite a partner to project, <strong>{{$project->name}}</strong>
                     </div>
-                    <div class="card-body">                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+                    <div class="card-body">
                         <form method="post" action="{{route('process_invite')}}">
                             @csrf
                             <label for="org">Select Organisation</label>

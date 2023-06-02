@@ -13,11 +13,7 @@
             <br>
         </div>
     </div>
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
-        </div>
-    @endif
+
     <table id="projectsTable" class="table table-bordered" data-order='[[ 0, "desc" ]]' data-page-length='10'>
         <thead>
         <tr>

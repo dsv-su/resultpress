@@ -163,13 +163,14 @@ select:focus {
 
 #header-dsv {
     float: left;
-    padding-top: 50px;
-    padding-bottom: 25px;
+    padding-top: 0px;
+    padding-bottom: 15px;
+    margin-top: -30px;
 }
 
 #header-dsv > img {
     width: 100%;
-    max-width: 284px;
+    max-width: 300px;
 }
 
 #header-su {

@@ -1,25 +1,27 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Settings Management</h2>
-            </div>
-            <div class="pull-right">
-                    <a class="btn btn-outline-primary" href="{{ route('admin') }}"> Back</a>
-                @can('admin-create')
-                    <a class="btn btn-outline-primary" href="{{ route('settings.create') }}"> Create New Setting</a>
-                @endcan
-            </div>
-            <br>
+    <div class="row my-4">
+        <div class="col-lg-6 margin-tb">
+            <h2>Settings Management</h2>
         </div>
+        <div class="col-lg-6 text-right">
+            <a class="btn btn-outline-primary" href="{{ route('admin') }}"> Back</a>
+        @can('admin-create')
+            <a class="btn btn-outline-primary" href="{{ route('settings.create') }}"> Create New Setting</a>
+        @endcan
     </div>
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
+    </div>
+    <div class="row my-4">
+        <div class="col-lg-12">
+            <h5>Required settings</h5>
+            logo, 
+            system-message-login, 
+            project-update-help, 
+            help
         </div>
-    @endif
+
+    </div>
     <table class="table table-bordered">
         <tr>
             <th>Setting key</th>

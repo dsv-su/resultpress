@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -50,6 +51,19 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+
+        if ($this->isHttpException($exception) && in_array($exception->getStatusCode(), [403, 401])) {
+            return redirect()->route('home')->withErrors(['error' => 'You do not have permission to view this page, redirected to home page.']);
+        }
+
+        if ($exception instanceof ModelNotFoundException) {
+            return redirect()->route('home')->withErrors(['error' => 'The resource you are looking for does not exist.']);
+        }
+
+        if ($this->isHttpException($exception) && in_array($exception->getStatusCode(), [500, 400])) {
+            return redirect()->route('home')->withErrors(['error' => 'Something went wrong. Please try again.']);
+        }
+
         return parent::render($request, $exception);
     }
 }

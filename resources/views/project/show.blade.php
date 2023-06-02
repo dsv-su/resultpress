@@ -32,28 +32,6 @@
         </div>
     </div>
 
-    @if ($errors->any())
-        <div class="form-row">
-            <div class="col">
-                @foreach ($errors->all() as $error)
-                    <div class="alert alert-danger" role="alert">
-                        {{ $error }}
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
-
-    @if (session()->has('success'))
-        <div class="form-row">
-            <div class="col">
-                <div class="alert alert-success" role="alert">
-                    {{ session()->get('success') }}
-                </div>
-            </div>
-        </div>
-    @endif
-
     <p>@include('project.action_links')</p>
     
     <h5 class="my-4">Project summary</h5>

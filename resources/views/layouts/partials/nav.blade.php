@@ -40,6 +40,12 @@
             @if (Auth::user()->hasRole('Administrator'))
                 <li><a class="nav-link" href="{{ route('admin') }}">Admin</a></li>
             @endif
+            @php
+                $helpPage = App\Settings::where('name', 'help')->first();
+            @endphp
+            @if ($helpPage && $helpPage->value && !empty($helpPage->value))
+                <li><a class="nav-link" href="{{ route('pages.show', 'help') }}">Help</a></li>
+            @endif
         </ul>
     </div>
 </nav>

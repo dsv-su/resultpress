@@ -82,6 +82,11 @@ Route::middleware('auth', 'entitlements')->group(function () {
         Route::resource('types', TaxonomyTypeController::class);
     });
 
+    Route::group(['prefix' => 'pages'], function(){
+        Route::redirect('/', '../');
+        Route::get('/{page}', 'SettingsController@page')->name('pages.show')->where('page', '.*');
+    });
+
     //Administrator routes
     Route::resource('settings', SettingsController::class);
     Route::resource('projectadmin','ProjectAdminController');

@@ -129,4 +129,18 @@ class SettingsController extends Controller
 
         return redirect()->route('admin')->with('success', 'Logo updated successfully');
     }
+
+    public function page(Request $request)
+    {
+        $page = $request->page;
+        try {
+            $settings = Settings::where('name', $page)->firstOrFail();
+            if(!in_array($settings->type, ['html', 'wysiwyg'])){
+                return redirect()->route('home')->withErrors(['Page not found']);
+            }
+        } catch (\Throwable $th) {
+            return redirect()->route('home')->withErrors(['Page not found']);
+        }
+        return view('settings.page', compact('settings'));
+    }
 }

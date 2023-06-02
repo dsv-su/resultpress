@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class SearchController extends Controller
 {
+    /**
+     * Search for projects
+     *
+     * @param string $q
+     * @param Request $request
+     * @return void
+     */
     public function search($q = null, Request $request = null)
     { 
         $projects = $q ? 
@@ -32,6 +39,12 @@ class SearchController extends Controller
         return view('home.search', compact('projects', 'q', 'projectpartners', 'projectmanagers', 'programareas', 'organisations', 'statuses', 'years'));
     }
 
+    /**
+     * Filter search results.
+     * 
+     * @param Request $request
+     * @return array
+     */
     public function filterSearch(Request $request): array
     {
         $q = $request->q ?? null;
@@ -154,12 +167,20 @@ class SearchController extends Controller
         ];
     }
 
-    public
-    function find(Request $request)
+    /**
+     * Find projects by query
+     */
+    public function find(Request $request)
     {
         return Project::search($request->get('query'), null, true, true)->get();
     }
 
+    /**
+     * Filter projects.
+     * 
+     * @param array $projects
+     * @param array $filter
+     */
     public function filter($projects, $filter)
     {
         foreach ($projects as $key => $project) {
@@ -186,8 +207,13 @@ class SearchController extends Controller
         return $projects;
     }
 
-    public
-    function extractManagers($projects): array
+    /**
+     * Extract Managers.
+     * 
+     * @param array $projects
+     * @return array
+     */
+    public function extractManagers($projects): array
     {
         $managers = array();
         foreach ($projects as $project) {
@@ -200,8 +226,13 @@ class SearchController extends Controller
         return $managers;
     }
 
-    public
-    function extractPartners($projects): array
+    /**
+     * Extract Partners.
+     * 
+     * @param array $projects
+     * @return array
+     */
+    public function extractPartners($projects): array
     {
         $partners = array();
         foreach ($projects as $project) {
@@ -214,8 +245,13 @@ class SearchController extends Controller
         return $partners;
     }
 
-    public
-    function extractAreas($projects): array
+    /**
+     * Extract Areas.
+     * 
+     * @param array $projects
+     * @return array
+     */
+    public function extractAreas($projects): array
     {
         $areas = array('noarea' => 'Not specified');
         foreach ($projects as $project) {
@@ -228,8 +264,13 @@ class SearchController extends Controller
         return $areas;
     }
 
-    public
-    function extractOrgs($projects): array
+    /**
+     * Extract Orgs.
+     * 
+     * @param array $projects
+     * @return array
+     */
+    public function extractOrgs($projects): array
     {
         $organisations = array();
         foreach ($this->extractPartners($projects) as $id => $name) {
@@ -243,8 +284,13 @@ class SearchController extends Controller
         return $organisations;
     }
 
-    public
-    function extractStatuses($projects): array
+    /**
+     * Extract Statuses.
+     * 
+     * @param array $projects
+     * @return array
+     */
+    public function extractStatuses($projects): array
     {
         $statuses = array();
         foreach ($projects as $project) {
@@ -255,6 +301,12 @@ class SearchController extends Controller
         return $statuses;
     }
 
+    /**
+     * Extract Years.
+     * 
+     * @param array $projects
+     * @return array
+     */
     public function extractYears($projects): array
     {
         $end = 0;

@@ -506,3 +506,7 @@ button.multiselect {
 .font-sm {
     font-size: 0.875rem !important;
 }
+
+.alert p {
+    margin-bottom: 0px;
+}

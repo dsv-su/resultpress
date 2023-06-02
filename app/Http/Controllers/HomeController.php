@@ -31,29 +31,28 @@ class HomeController extends Controller
     public function index()
     {
         if ($user = Auth::user()) {
-            if ($user->hasRole(['Administrator', 'Program administrator', 'Spider', 'Partner'])) {
-                //Summary of project/programareas
-                $data['programareas'] = DB::table('areas')
-                    ->join('project_areas', 'areas.id', '=', 'project_areas.area_id')
-                    ->join('projects', 'project_areas.project_id', '=', 'projects.id')
-                    ->select('areas.name', DB::raw('project_areas.area_id, count(*) as count'))
-                    ->where('projects.object_type', '=', 'project')
-                    ->groupby('project_areas.area_id', 'areas.name')
-                    ->get();
+            //Summary of project/programareas
+            $data['programareas'] = DB::table('areas')
+                ->join('project_areas', 'areas.id', '=', 'project_areas.area_id')
+                ->join('projects', 'project_areas.project_id', '=', 'projects.id')
+                ->select('areas.name', DB::raw('project_areas.area_id, count(*) as count'))
+                ->where('projects.object_type', '=', 'project')
+                ->when($user->isRegulatorAdmin || $user->isRegulator, function ($query) {
+                    return $query->join('taxables', 'areas.id', '=', 'taxable_id')
+                        ->join('taxonomies', 'taxables.taxonomy_id', '=', 'taxonomies.id')
+                        ->where('taxonomies.slug', '=', 'regulator-area');
+                })
+                ->groupby('project_areas.area_id', 'areas.name')
+                ->get();
 
-                $data['user'] = User::find(auth()->user()->id);
+            $data['user'] = User::find(auth()->user()->id);
 
-                $data['areas'] = Area::with('projects.project_owner.user')->get();
+            $data['areas'] = Area::with('projects.project_owner.user')->get();
 
-                $data['otherprojects'] = Project::doesntHave('project_area')->get();
+            $data['otherprojects'] = Project::doesntHave('project_area')->get();
 
-                return view('home.home', $data);
-            }
-            elseif ($user->hasRole(['Partner'])) {
-                return redirect()->back();
-            }
+            return view('home.home', $data);
         }
-
     }
 
     public function store(Request $request)

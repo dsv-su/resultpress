@@ -11,7 +11,10 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject as JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable, LogsActivity, CausesActivity, HasRoles;
+    use Notifiable, LogsActivity, CausesActivity;
+    use HasRoles {
+        hasRole as public parentHasRole;
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -40,7 +43,7 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['fullviewname', 'nameWithOrg'];
+    protected $appends = ['fullviewname', 'nameWithOrg', 'isRegulator', 'isRegulatorAdmin'];
 
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
@@ -137,6 +140,41 @@ class User extends Authenticatable implements JWTSubject
             $organisations = ' - ' . $this->organisations->pluck('org')->implode(', ');
         }
         return $this->name . $organisations;
+    }
+
+    /**
+     * Get isRegulator for the user.
+     */
+    public function getIsRegulatorAttribute()
+    {
+        return $this->hasRole('Regulator');
+    }
+
+    /**
+     * Get isRegulatorAdmin for the user.
+     */
+    public function getIsRegulatorAdminAttribute()
+    {
+        return $this->hasRole('Regulator Admin');
+    }
+
+    /**
+     * Assign Partner role to Regulator User or Regulator Admin.
+     * This is a workaround for the issue that many Partner functionalities,
+     * should be available for Regulator User or Regulator Admin.
+     */
+    public function hasRole($role)
+    {
+        if ($this->parentHasRole($role)) {
+            return true;
+        }
+        
+        $isPartner = (is_string($role) && $role == 'Partner') || (is_array($role) && in_array('Partner', $role));
+        if ($isPartner && ($this->parentHasRole(['Regulator User', 'Regulator Admin']))) {
+            return true;
+        }
+
+        return false;
     }
 
 

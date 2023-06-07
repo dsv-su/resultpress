@@ -65,6 +65,18 @@
         </div>
 
         <div class="form-group">
+            <label for="overall_spent" class="form-group-header mt-4">Total Spent</label>
+            <div class="input-group">
+                <input type="number" class="form-control form-control-sm @error('overall_spent') is-danger @enderror" name="overall_spent" id="overall_spent" value="{{ old('overall_spent', empty($project_update) ? '' : $project_update->overall_spent) }}" required placeholder="0.00">
+            </div>
+            @error('overall_spent')
+                <div class="text-danger">
+                    {{ $errors->first('overall_spent') }}
+                </div>
+            @enderror
+        </div>
+
+        <div class="form-group">
             <label for="outcomes" class="form-group-header mt-4">Outcomes</label>
                 <div id="outcomes">
                     @if (!empty($project_update->outcome_updates))

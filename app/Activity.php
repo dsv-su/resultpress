@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use App\Settings;
 
 class Activity extends Model
 {
@@ -43,6 +44,7 @@ class Activity extends Model
 
     public function status(): string
     {
+        $delayedAfter = Settings::where('name', 'activities-delayed-after-x-days')->first()->value ?? 90;
         foreach ($this->activity_updates->sortBy('created_at', SORT_REGULAR, true) as $au) {
             if ($au->project_update->status == 'approved') {
                 if ($au->state == 'completed') {
@@ -58,12 +60,14 @@ class Activity extends Model
             }
         }
 
-        if ($this->end->lt(Carbon::now())) {
+        if ($this->end->lt(Carbon::now()->subDays($delayedAfter))) {
             if ($this->priority == 'high') {
                 return 'delayedhigh';
             } else {
                 return 'delayednormal';
             }
+        } else {
+            return 'inprogress';
         }
 
         if ($this->start->gte(Carbon::now()) && $this->activity_updates()->count() == 0) {

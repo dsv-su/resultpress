@@ -46,6 +46,21 @@
                                 </div>
                             </div>
                             <div class="form-row mb-2 row">
+                                <label for="name" class="col-sm-3 col-form-label-sm">Overall budget</label>
+                                <div class="px-1 col-sm-9">
+                                    <input class="form-control form-control-sm @error('overall_budget') is-danger @enderror"
+                                           type="number" name="overall_budget" id="overall_budget"
+                                           placeholder="0.00"
+                                           required
+                                           value="{{ old('overall_budget', empty($project) ? '' : $project->overall_budget) }}">
+                                           <span>{{ $project->getHistory('overall_budget') }}</span>
+                                           <span>{{ $project->getSuggestedChanges('overall_budget') }}</span>
+                                    @error('overall_budget')
+                                    <div class="text-danger">{{ $errors->first('overall_budget') }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="form-row mb-2 row">
                                 <label for="summary" class="col-sm-3 col-form-label-sm">Summary</label>
                                 <div class="col-sm-9 px-1 py-2">
                                     <textarea rows="2" class="form-control text-limit-1000 generalMediumEditor form-control-sm @error('summary') is-danger @enderror" name="summary" id="summary" maxlength="1000" data-maxlength="1000">{!! old('summary', empty($project) ? '' : $project->summary) !!}</textarea>

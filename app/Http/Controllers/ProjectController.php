@@ -673,6 +673,7 @@ class ProjectController extends Controller
         $dates = explode(' - ', request('dates'));
         $projectupdate->start = Carbon::createFromFormat('d/m/Y', $dates[0]);
         $projectupdate->end = Carbon::createFromFormat('d/m/Y', $dates[1]);
+        $projectupdate->overall_spent = request('overall_spent') ?? 0;
 
         $status = '';
         if ($request->input('draft')) {

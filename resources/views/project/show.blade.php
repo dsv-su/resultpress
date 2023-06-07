@@ -42,6 +42,14 @@
 
     <div class="my-3 col card bg-light p-2">
         <div class="row my-1">
+            <div class="col-sm col-md-3 font-weight-bold">Overall budget</div>
+            <div class="col-sm">
+                {{ $project->totalSpent ?? 0 }} {{ $project->getCurrencySymbol() }} of {{ $project->overall_budget ?? 0 }} {{ $project->getCurrencySymbol() }}
+                 ({{ $project->overall_budget - $project->totalSpent }} {{ $project->getCurrencySymbol() }} remaining)
+                  ({{ round($project->spentPercentage, 2) }}% spent)
+            </div>
+        </div>
+        <div class="row my-1">
             <div class="col-sm col-md-3 font-weight-bold">Project area(s):</div>
             <div class="col-sm">
                 @if (!$project->areas->isEmpty())

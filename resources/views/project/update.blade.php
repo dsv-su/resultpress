@@ -65,8 +65,8 @@
         </div>
 
         <div class="form-group">
-            <label for="overall_spent" class="form-group-header mt-4">Total Spent</label>
-            <div class="input-group">
+            <label for="overall_spent" class="form-group-header mt-4">Total Spent (Reported so far: {{ $project->totalSpent }} {{ $project->getCurrencySymbol() }})</label>
+            <div class="input-group col-6 ml-0 pl-0">
                 <input type="number" class="form-control form-control-sm @error('overall_spent') is-danger @enderror" name="overall_spent" id="overall_spent" value="{{ old('overall_spent', empty($project_update) ? '' : $project_update->overall_spent) }}" required placeholder="0.00">
             </div>
             @error('overall_spent')

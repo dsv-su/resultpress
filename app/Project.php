@@ -334,6 +334,9 @@ class Project extends Model
     // Spent percentage of overall budget
     public function getSpentPercentageAttribute(): float
     {
+        if ($this->overall_budget == 0) {
+            return 0;
+        }
         return $this->totalSpent / $this->overall_budget * 100;
     }
 

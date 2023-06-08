@@ -16,6 +16,21 @@ class AddNewUserRoleWithItsPermissions extends Migration
      */
     public function up()
     {
+        $permissions = [
+            'admin-list',
+            'admin-update',
+            'admin-create',
+            'admin-edit',
+            'admin-delete',
+            'project-list',
+            'project-update',
+            'project-create',
+            'project-edit',
+            'project-delete',
+        ];
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
         $permission = Permission::where('name', 'reviewer');
         if (!$permission->count()) {
             $permission = Permission::create([
@@ -65,7 +80,7 @@ class AddNewUserRoleWithItsPermissions extends Migration
                 $taxonomyType = TaxonomyType::create([
                     'name' => $type,
                     'description' => $type,
-                    'model' => $type == 'Regulators Area' ? 'Area' : null,
+                    'model' => $type == 'Regulators Area' ? 'Area' : 'Project',
                 ]);
 
                 if ($type == 'Regulators Area' && $taxonomyType->taxonomies()->count() == 0) {

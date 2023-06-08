@@ -65,7 +65,7 @@ class AddNewUserRoleWithItsPermissions extends Migration
                 $taxonomyType = TaxonomyType::create([
                     'name' => $type,
                     'description' => $type,
-                    'model' => $type == 'Regulators Area' ? 'Area' : null,
+                    'model' => $type == 'Regulators Area' ? 'Area' : 'Project',
                 ]);
 
                 if ($type == 'Regulators Area' && $taxonomyType->taxonomies()->count() == 0) {

@@ -23,14 +23,14 @@ class Project extends Model
     use LogsActivity, HasSlug, HasTaxonomies;
 
     //protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id']; -->refactored<--
-    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state', 'object_type', 'object_id', 'summary'];
+    protected $fillable = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state', 'object_type', 'object_id', 'summary', 'overall_budget'];
     protected $dates = ['start', 'end'];
     //protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'status', 'project_area_id'];  -->refactored<--
     protected static $logAttributes = ['name', 'description', 'template', 'start', 'end', 'currency', 'cumulative', 'state'];
     protected static $logName = 'Project';
     protected static $logOnlyDirty = true;
 
-    protected $appends = ['link', 'type', 'isRegulator'];
+    protected $appends = ['link', 'type', 'isRegulator', 'totalSpent'];
 
     /**
      * Get the options for generating the slug.
@@ -234,6 +234,10 @@ class Project extends Model
             return 'delayedhigh';
         } elseif ($delayednormal) {
             return 'delayednormal';
+        } elseif ($completed) {
+            return 'completed';
+        } else {
+            return 'inprogress';
         }
 
         if ($this->pending_updates()->count()) {
@@ -320,6 +324,20 @@ class Project extends Model
         return $this->areas()->whereHas('taxonomies', function ($query) {
             $query->where('type', 'regulators-area')->where('slug', 'regulator-area');
         })->exists();
+    }
+
+    public function getTotalSpentAttribute(): float
+    {
+        return $this->project_updates->where('status', 'approved')->sum('overall_spent');
+    }
+
+    // Spent percentage of overall budget
+    public function getSpentPercentageAttribute(): float
+    {
+        if ($this->overall_budget == 0) {
+            return 0;
+        }
+        return $this->totalSpent / $this->overall_budget * 100;
     }
 
     /**

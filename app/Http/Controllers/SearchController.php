@@ -6,6 +6,7 @@ use App\Project;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\TaxonomyType;
 
 class SearchController extends Controller
 {
@@ -36,7 +37,8 @@ class SearchController extends Controller
         $organisations = $this->extractOrgs($projects);
         $statuses = $this->extractStatuses($projects);
         $years = $this->extractYears($projects);
-        return view('home.search', compact('projects', 'q', 'projectpartners', 'projectmanagers', 'programareas', 'organisations', 'statuses', 'years'));
+        $taxonomyTypes = TaxonomyType::whereModel('Project')->get();
+        return view('home.search', compact('projects', 'q', 'projectpartners', 'projectmanagers', 'programareas', 'organisations', 'statuses', 'years', 'taxonomyTypes'));
     }
 
     /**
@@ -69,6 +71,21 @@ class SearchController extends Controller
 
         if (in_array('archived', $filter)) {
             $projects = Project::withoutGlobalScopes()->OfType('project_archive')->get();
+        }
+
+        $taxonomyTypes = TaxonomyType::whereModel('Project')->get();
+        foreach ($taxonomyTypes as $taxonomyType) {
+            $requestTaxonomy = request($taxonomyType->slug) ? explode(',', request($taxonomyType->slug)) : null;
+            if (!empty($requestTaxonomy)) {
+                $projects = $projects->filter(function ($project) use ($requestTaxonomy) {
+                    foreach ($requestTaxonomy as $taxonomy) {
+                        if ($project->taxonomies->contains('id', $taxonomy)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+            }
         }
 
         // Prefilter presets

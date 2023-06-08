@@ -42,7 +42,7 @@
                         @foreach ($years as $year)
                             <option value="{{ $year }}">{{ $year }}</option>
                         @endforeach
-                    </select>
+                    </select> 
                     @if (Auth::user()->hasRole(['Spider', 'Administrator']))
                         <select name="status" @if (empty($statuses)) disabled @endif class="mb-2 form-control mx-1 selectpicker" data-none-selected-text="Status" multiple style="width: 400px">
                             @foreach ($statuses as $status)
@@ -69,6 +69,15 @@
                                 </option>
                             @endforeach
                         </select>
+                    @endif
+                    @if ($taxonomyTypes->count() > 0)
+                        @foreach ($taxonomyTypes as $taxonomyType)
+                            @if ($taxonomyType->taxonomiesTree()->count() > 0)
+                                <select name="{{ $taxonomyType->slug }}" class="mb-2 form-control mx-2 selectpicker" data-none-selected-text="{{ $taxonomyType->name }}" multiple style="width: 400px">
+                                    {!! $taxonomyType->buildOptionsTree($taxonomyType->taxonomiesTree(), null, []) !!}
+                                </select>
+                            @endif
+                        @endforeach
                     @endif
                     <button type="button" title='Clear selection' data-toggle="tooltip" class="mb-2 btn btn-outline-secondary" onclick="$('.selectpicker').selectpicker('deselectAll'); $('.selectpicker').selectpicker('refresh');
 "><i class="fas fa-times"></i>
@@ -105,6 +114,13 @@
             if ($('select[name="status"]').length) {
                 formData.append("status", $('select[name="status"]').val());
             }
+            @if ($taxonomyTypes->count() > 0)
+                @foreach ($taxonomyTypes as $taxonomyType)
+                    @if ($taxonomyType->taxonomiesTree()->count() > 0)
+                        formData.append("{{ $taxonomyType->slug }}", $('select[name="{{ $taxonomyType->slug }}"]').val());
+                    @endif
+                @endforeach
+            @endif
             formData.append("my", $('select[name="my"]').val());
             $.ajax({
                 type: 'POST',

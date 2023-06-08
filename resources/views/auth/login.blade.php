@@ -92,16 +92,9 @@
                         <hr class="my-4" />
 
                         <label>Or log in with a social network account:</label>
-                        <div class="d-flex justify-content-center">
-                            <a href="/partner-login/github" role="button" class="btn btn-outline-primary btn-lg btn-block text-uppercase"><i class="fab fa-github"></i> GitHub</a>
-                        </div>
                         <br>
                         <div class="d-flex justify-content-center">
                             <a href="/partner-login/facebook" role="button" class="btn btn-outline-primary btn-lg btn-block text-uppercase"><i class="fab fa-facebook"></i> Facebook</a>
-                        </div>
-                        <br>
-                        <div class="d-flex justify-content-center">
-                            <a href="/partner-login/linkedin" role="button" class="btn btn-outline-primary btn-lg btn-block text-uppercase"><i class="fab fa-linkedin"></i> Linkedin</a>
                         </div>
                         <br>
                         <div class="d-flex justify-content-center">

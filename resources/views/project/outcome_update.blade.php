@@ -83,7 +83,7 @@
     <div class="card-body p-1">
         <div class="p-2">
             @if ($outcome->project && $outcome->project->outputs)
-                <div class="form-group row">
+                <div class="form-group row @if ($outputsConnection !== 'yes') d-none @endif">
                     <div class="col-auto col-sm-4 col-md-3">
                         <input name="outcome_id[{{ $outcome->id }}]" value="{{ $outcome->id }}" hidden>
                         <label for="project_area" class="col-form-labe">Connected outputs:</label>

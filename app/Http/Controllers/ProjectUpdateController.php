@@ -15,6 +15,7 @@ use App\Project;
 use App\ProjectHistory;
 use App\ProjectReminder;
 use App\ProjectUpdate;
+use App\Settings;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -230,8 +231,9 @@ class ProjectUpdateController extends Controller
         } else {
             $ou = 0;
         }
+        $outputsConnection = Settings::where('name', 'allow-outcomes-outputs-connection')->first()->value ?? 'no';
         $outcome = $outcome ? Outcome::findorfail($outcome) : new Outcome();
-        return view('project.outcome_update', ['outcome' => $outcome, 'outcome_update' => $ou])->render();
+        return view('project.outcome_update', ['outcome' => $outcome, 'outcome_update' => $ou, 'outputsConnection' => $outputsConnection])->render();
     }
 
     /**

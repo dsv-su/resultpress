@@ -171,6 +171,22 @@
         </div>
     @endif
 
+    <div class="accordion my-3" id="total_spent">
+        <label for="outcomes" class="form-group-header mt-4">Total Spent</label>
+        <div class="card">
+            <div class="card-header bg-white">
+                <div class="row">
+                    <div class="col-auto pl-1">
+                        {{ $project_update->overall_spent }} {{ $project_update->project->getCurrencySymbol() }}
+                         of {{ $project_update->project->overall_budget }} {{ $project_update->project->getCurrencySymbol() }}
+                          ({{ $project_update->project->overall_budget - $project_update->project->totalSpent }} {{ $project->getCurrencySymbol() }} remaining)
+                          ({{ round($project->spentPercentage, 2) }}% spent)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- TODO: Change the date before deploying to production --}}
     @if ($review)
         <form action="{{ route('projectupdate_update', $project_update) }}" method="POST">

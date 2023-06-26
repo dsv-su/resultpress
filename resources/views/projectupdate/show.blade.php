@@ -236,7 +236,7 @@
             </div>
         </form>
     @else
-        @if ($project_update->project->created_at <= date('Y-m-d H:i:s', strtotime('2023-05-16')) && ($project_update->partner_comment || $project_update->internal_comment))
+        @if ($project_update->project->created_at <= date('Y-m-d H:i:s', strtotime('2023-05-16')) && ($project_update->partner_comment || $project_update->internal_comment || $project_update->reviewer_comment ))
             @if ($project_update->partner_comment)
                 <label class="form-group-header mt-4">Partner's comment</label>
                 <table class="table table-striped table-bordered">

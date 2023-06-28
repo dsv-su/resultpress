@@ -27,6 +27,11 @@
                     <div class="col-md-3">
                         <div class="text-center">User picture</div>
                         <!-- Profile picture -->
+                        @php
+                            $hideDashboard = App\Settings::where('name', 'hide-dashboard')->first();
+                        @endphp
+                        @if ($hideDashboard && $hideDashboard->value && $hideDashboard->value !== 'yes')
+                       
                         <div class="text-center col-6 col-md m-auto p-md-0">
                             @if ($user->avatar == null)
                                 <img src="{{ asset('images/spider_avatar.png') }}" class="avatar img-circle img-thumbnail" alt="avatar">
@@ -34,6 +39,7 @@
                                 <img src="{{ asset('storage/' . $user->avatar) }}" class="avatar img-circle img-thumbnail" alt="avatar">
                             @endif
                         </div>
+                        @endif
                         <div class="text-center mb-3 col-6 col-md m-auto p-md-0">
                             <label for="avatar" class="form-label">Upload a different photo</label>
                             <input id="avatar" name="profile" class="form-control form-control-sm border-0 file-upload" type="file">

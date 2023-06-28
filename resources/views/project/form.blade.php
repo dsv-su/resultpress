@@ -361,7 +361,7 @@
                             @if (!Auth::user()->hasRole('Partner'))
                                 <div class="form-group">
                                     <div class="col-lg-6 my-2 px-2" style="min-width: 16rem;">
-                                        <label for="users" class="form-group-header">Users</label>
+                                        <label for="users" class="form-group-header">Users Detta ar ett test</label>
                                         <span data-toggle="tooltip"
                                             title="Users and permissions associated with this project"><i
                                                     class="fas fa-info-circle fa-1x"></i></span>

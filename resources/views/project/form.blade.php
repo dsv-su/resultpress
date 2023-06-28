@@ -407,7 +407,7 @@
                             <div class="form-group">
                                 <div class="col-lg-6 my-2 px-2">
                                     <input class="btn btn-primary btn-lg" @empty($project->id) value="Save"
-                                           @else value="Update"
+                                           @else value="Save project" 
                                            @endempty
                                            data-toggle="tooltip" title="Save the project"
                                            type="submit">

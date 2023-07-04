@@ -48,6 +48,10 @@
     </div>
 </div>
 
+@php
+    $outputsConnection = 'no';
+@endphp
+
 @if (isset($show) && $show)
     @if ($outcome_update && $outcome_update->outputs)
         <div class="card-body">

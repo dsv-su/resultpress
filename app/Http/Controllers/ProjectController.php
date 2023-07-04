@@ -747,7 +747,7 @@ class ProjectController extends Controller
 
         // Remove deleted activity updates
         foreach ($projectupdate->outcome_updates()->get() as $ou) {
-            if (!$outcome_update_array['outcome_id'] || !in_array($ou->id, $outcome_update_array['outcome_update_id'])) {
+            if (!$outcome_update_array['outcome_id'] || !in_array($ou->id, $outcome_update_array['outcome_update_id'] ?? [])) {
                 OutcomeUpdate::findOrFail($ou->id)->delete();
             }
         }
@@ -755,21 +755,26 @@ class ProjectController extends Controller
         if ($outcome_update_array['outcome_id']) {
             foreach ($outcome_update_array['outcome_id'] as $key => $id) {
                 $ou = OutcomeUpdate::firstOrNew(['id' => $outcome_update_array['outcome_update_id'][$key] ?? null]);
-                $ou->outcome_id = Outcome::findOrFail($id)->id;
-                $ou->outputs = $outcome_update_array['outcome_outputs'][$key];
-                $ou->summary = $outcome_update_array['outcome_summary'][$key];
-                $ou->completed_on = $outcome_update_array['outcome_completion'][$key] ? Carbon::now() : null;
-                $ou->project_update_id = $projectupdate_id;
-                $ou->save();
-                activity()
-                    ->causedBy(Auth::user())
-                    ->performedOn($ou)
-                    ->log('OutcomeUpdateReported');
-                if ($status == 'approved') {
+
+                if ($ou) {
+                    $ou->outcome_id = Outcome::findOrFail($id)->id;
+                    $ou->outputs = $outcome_update_array['outcome_outputs'][$key] ?? null;
+                    $ou->summary = $outcome_update_array['outcome_summary'][$key] ?? null;
+                    $ou->completed_on = isset($outcome_update_array['outcome_completion'][$key]) && $outcome_update_array['outcome_completion'][$key] ? Carbon::now() : null;
+                    $ou->project_update_id = $projectupdate_id;
+                    $ou->save();
+
                     activity()
                         ->causedBy(Auth::user())
                         ->performedOn($ou)
-                        ->log('OutcomeUpdateApproved');
+                        ->log('OutcomeUpdateReported');
+
+                    if ($status == 'approved') {
+                        activity()
+                            ->causedBy(Auth::user())
+                            ->performedOn($ou)
+                            ->log('OutcomeUpdateApproved');
+                    }
                 }
             }
         }

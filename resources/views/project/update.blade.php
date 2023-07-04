@@ -112,7 +112,7 @@
                                 <th>Output</th>
                                 <th>Target</th>
                                 <th>Previously reported</th>
-                                <th>Value</th>
+                                <th>Additions</th>
                                 <th></th>
                             </thead>
                             @if (!empty($ous))
@@ -123,10 +123,10 @@
                                             <input type="hidden" id="output" name="output_id[]" value="{{ $ou->output_id }}">{{ $ou->indicator }}
                                         </td>
                                         <td class="">
-                                            dddd-origin
+                                            {{ $ou->target }}
                                         </td>
                                         <td class="">
-                                            dddd-origin
+                                            {{ $ou->value }}
                                         </td>
                                         <td class="">
                                             <input type="number" name="output_value[]" class="form-control form-control-sm" size="3" required value="{{ $ou->value }}">

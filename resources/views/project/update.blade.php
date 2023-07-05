@@ -134,13 +134,17 @@
                                         <td>
                                             <button type="button" name="remove" id="{{ $ou->output_id }}" class="btn btn-outline-danger btn-sm remove"><i class="fas fa-trash-alt"></i></button>
                                         </td>
+                                        <tr>
+                                        <td colspan="5">
+                                            <textarea name="output_progress[]" class="form-control form-control-sm mediumEditor" placeholder="Enter output progress" rows="2">
+                                                @php echo preg_replace('/\s+/', ' ', trim($ou->progress)); @endphp
+                                            </textarea>
+                                        </td>
+    
+                                    </tr>                                        
                                     </tr>
+
                                 @endforeach
-                                <tr>
-                                    <td colspan="5">
-                                        <textarea name="output_progress[]" class="form-control form-control-sm mediumEditor" placeholder="Enter output progress" rows="2"></textarea>
-                                    </td>
-                                </tr>
                             @endif
                         </table>
                     </div>

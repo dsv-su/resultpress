@@ -59,60 +59,69 @@
                 <div class="card-body p-1">
                     <table class="table table-sm table-borderless mb-0" id="outputs_table">
                         <thead>
-                            <th>Output</th>
-                            <th class="text-right">Target</th>
-                            <th class="text-right">This update added</th>
-                            <th class="text-right">Total reported</th>
-                        </thead>
-                        @foreach ($output_updates as $ou)
-                            @php
-                                $completedStyle = $ou->output->target == 1 && $ou->output->target == $ou->output->valuesumnew ? 'style=display:none;' : '';
-                            @endphp
                             <tr>
-                                <td class="w-50">{!! $ou->indicator !!}</td>
-                                <td class="text-right" {{ $completedStyle }}>{{ $ou->target }}</td>
-                                <td class="text-right" {{ $completedStyle }}>{{ $ou->value }}</td>
-                                <td class="text-right" {{ $completedStyle }}>{{ $ou->output->valuesumnew }}</td>
-                                @if ($ou->output->target == 1 && $ou->output->target == $ou->output->valuesumnew)
-                                    <td class="text-right" colspan="3">
-                                        <span class="badge badge-success font-100 ml-1">Completed</span>
-                                    </td>
-                                @endif
+                                <th></th>
+                                <th class="text-right">Target</th>
+                                <th class="text-right">This update added</th>
+                                <th class="text-right">Total reported</th>
                             </tr>
-                            @foreach ($ou->aggregated as $a)
-                                <tr class="update">
-                                    <td colspan="4" class="px-1">
-                                        <span class="badge badge-warning font-100 my-1">Contributes to {{ $a }} output</span>
-                                    </td>
+                            <tr>
+                                <td colspan="4"><hr></td>
+                            </tr>
+                        </thead>
+                        <tbody>    
+                            @foreach ($output_updates as $ou)
+                                @php
+                                    $completedStyle = $ou->output->target == 1 && $ou->output->target == $ou->output->valuesumnew ? 'style=display:none;' : '';
+                                @endphp
+                                <tr>
+                                    <td class="w-50"><strong>{!! $ou->indicator !!}</strong></td>
+                                    <td class="text-right" {{ $completedStyle }}>{{ $ou->target }}</td>
+                                    <td class="text-right" {{ $completedStyle }}>{{ $ou->value }}</td>
+                                    <td class="text-right" {{ $completedStyle }}>{{ $ou->output->valuesumnew }}</td>
+                                    @if ($ou->output->target == 1 && $ou->output->target == $ou->output->valuesumnew)
+                                        <td class="text-right" colspan="3">
+                                            <span class="badge badge-success font-100 ml-1">Completed</span>
+                                        </td>
+                                    @endif
                                 </tr>
+                                @foreach ($ou->aggregated as $a)
+                                    <tr class="update">
+                                        <td colspan="4" class="px-1">
+                                            <span class="badge badge-warning font-100 my-1">Contributes to {{ $a }} output</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                @if ($review && ($ou->contributionstring || $ou->totalstring) && Auth::user()->hasRole(['Spider', 'Administrator']))
+                                    <tr class="update">
+                                        <td colspan="4" class="px-1">
+                                            <span class="badge badge-info font-100 text-left my-1">
+                                                @if ($ou->contributionstring)
+                                                    {{ $ou->contributionstring }}<br />
+                                                @endif
+                                                @if ($ou->totalstring)
+                                                    {{ $ou->totalstring }}
+                                                @endif
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if ($ou->progress)
+                                    <tr>
+                                        <th colspan="4" class="px-1 progress-label">
+                                            <em>Progress:</em>
+                                        </th>
+                                    </tr>                                    <tr>
+                                        <td colspan="4" class="px-1 mt-2">
+                                            {!! $ou->progress !!}
+                                            @if (!$loop->last)  <!-- Check if it's not the last iteration of the loop -->
+                                                <hr>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
-                            @if ($review && ($ou->contributionstring || $ou->totalstring) && Auth::user()->hasRole(['Spider', 'Administrator']))
-                                <tr class="update">
-                                    <td colspan="4" class="px-1">
-                                        <span class="badge badge-info font-100 text-left my-1">
-                                            @if ($ou->contributionstring)
-                                                {{ $ou->contributionstring }}<br />
-                                            @endif
-                                            @if ($ou->totalstring)
-                                                {{ $ou->totalstring }}
-                                            @endif
-                                        </span>
-                                    </td>
-                                </tr>
-                            @endif
-                            @if ($ou->progress)
-                                <tr>
-                                    <th colspan="4" class="px-1">
-                                        Progress:
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" class="px-1 mt-2">
-                                        {!! $ou->progress !!}
-                                    </td>
-                                </tr>
-                            @endif
-                        @endforeach
+                        </tbody>     
                     </table>
                 </div>
             </div>

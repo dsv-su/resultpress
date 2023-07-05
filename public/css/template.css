@@ -511,3 +511,6 @@ button.multiselect {
 .alert p {
     margin-bottom: 0px;
 }
+.progress-label {
+    font-weight: normal;
+}

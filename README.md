@@ -1,3 +1,9 @@
+## Archived
+
+This repository is no longer maintained and has been archived.
+
+No further updates, bug fixes, or security patches will be provided.
+
 ## 1. Overview
 Development setup for ResultPress.
 
